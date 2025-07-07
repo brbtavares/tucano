@@ -10,18 +10,10 @@ exchanges - batteries included. It is:
 **See: [`Toucan`], [`Toucan-Instrument`], [`Toucan-Execution`] & [`Toucan-Integration`] for
 comprehensive documentation of other Toucan libraries.**
 
-[![MIT licensed][mit-badge]][mit-url]
-
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
-[API Documentation]
-
 [`Toucan`]: https://github.com/brbtavares/toucan
 [`Toucan-Instrument`]: https://github.com/brbtavares/toucan/tree/main/toucan-instrument
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
 [`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
-[API Documentation]: https://docs.rs/toucan-data/latest/toucan_data
 
 ## Overview
 Toucan-Data is a high-performance WebSocket integration library for streaming public market data from leading cryptocurrency 
@@ -140,26 +132,6 @@ async fn main() {
 }
 ```
 
-## Getting Help
-For questions, issues, or support with Toucan-Data, please:
-- Check the [API Documentation] for detailed usage examples
-- Open an issue on the [GitHub repository](https://github.com/brbtavares/toucan/issues)
-- Review the examples in the `/examples` directory
-
-## Support Development
-If you find Toucan-Data useful, consider:
-- ⭐ Starring the repository
-- 🐛 Reporting bugs or issues  
-- 🔧 Contributing new exchange integrations
-- 📖 Improving documentation
-
-## Contributing
-Thanks for helping to develop the Toucan ecosystem! To contribute:
-- Open issues for bugs or feature requests
-- Submit pull requests for improvements
-- Add new exchange connectors or subscription types
-- Improve documentation and examples
-
 ### Adding A New Exchange Connector
 1. Add a new `Connector` trait implementation in src/exchange/<exchange_name>.mod.rs (eg/ see exchange::okx::Okx).
 2. Follow on from "Adding A New Subscription Kind For An Existing Exchange Connector" below!
@@ -171,21 +143,6 @@ Thanks for helping to develop the Toucan ecosystem! To contribute:
    ie/ `impl StreamSelector<SubscriptionKind> for <ExistingExchangeConnector> { ... }`
 4. Try to compile and follow the remaining steps!
 5. Add a toucan-data-rs/examples/<sub_kind_name>_streams.rs example in the standard format :)
-
-### Licence
-This project is licensed under the [MIT license].
-
-[MIT license]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
-### Contribution License Agreement
-
-Any contribution you intentionally submit for inclusion in Toucan workspace crates shall be:
-1. Licensed under MIT
-2. Subject to all disclaimers and limitations of liability stated below
-3. Provided without any additional terms or conditions
-4. Submitted with the understanding that the educational-only purpose and risk warnings apply
-
-By submitting a contribution, you certify that you have the right to do so under these terms.
 
 ## LEGAL DISCLAIMER AND LIMITATION OF LIABILITY
 

@@ -4,11 +4,6 @@ Toucan-Instrument contains core Exchange, Instrument and Asset data structures a
 **See: [`Toucan`], [`Toucan-Data`], [`Toucan-Execution`] & [`Toucan-Integration`] for
 comprehensive documentation of other Toucan libraries.**
 
-[![MIT licensed][mit-badge]][mit-url]
-
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
 [`Toucan`]: https://github.com/brbtavares/toucan
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
@@ -23,41 +18,6 @@ Toucan-Instrument contains core Exchange, Instrument and Asset data structures a
 ## Examples
 * See [here][toucan-examples] for example of Toucan-Instrument in action.
 * See other sub-crates for further examples of each library.
-
-## Getting Help
-For questions, issues, or support with Toucan-Instrument, please:
-- Check the [API Documentation] for detailed usage examples
-- Open an issue on the [GitHub repository](https://github.com/brbtavares/toucan/issues)
-- Review the examples in the [toucan-examples] directory
-
-## Support Development
-If you find Toucan-Instrument useful, consider:
-- ⭐ Starring the repository
-- 🐛 Reporting bugs or issues
-- 🔧 Contributing improvements
-- 📖 Improving documentation
-
-## Contributing
-Thanks for helping to develop the Toucan ecosystem! To contribute:
-- Open issues for bugs or feature requests
-- Submit pull requests for improvements
-- Add new instrument types or utilities
-- Improve documentation and examples
-
-### Licence
-This project is licensed under the [MIT license].
-
-[MIT license]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
-### Contribution License Agreement
-
-Any contribution you intentionally submit for inclusion in Toucan workspace crates shall be:
-1. Licensed under MIT
-2. Subject to all disclaimers and limitations of liability stated below
-3. Provided without any additional terms or conditions
-4. Submitted with the understanding that the educational-only purpose and risk warnings apply
-
-By submitting a contribution, you certify that you have the right to do so under these terms.
 
 ## LEGAL DISCLAIMER AND LIMITATION OF LIABILITY
 

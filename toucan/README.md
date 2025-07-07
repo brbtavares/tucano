@@ -8,11 +8,6 @@ Toucan core is a Rust framework for building high-performance live-trading, pape
 **See: [`Toucan-Data`], [`Toucan-Instrument`], [`Toucan-Execution`] & [`Toucan-Integration`] for
 comprehensive documentation of other Toucan libraries.**
 
-[![MIT licensed][mit-badge]][mit-url]
-
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
 [`Toucan-Instrument`]: https://github.com/brbtavares/toucan/tree/main/toucan-instrument
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
@@ -145,18 +140,12 @@ Thanks for helping to develop the Toucan ecosystem! To contribute:
 - Add new strategies or risk managers
 - Improve documentation and examples
 
-### Licence
-This project is licensed under the [MIT license].
-
-[MIT license]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
 ### Contribution License Agreement
 
 Any contribution you intentionally submit for inclusion in Toucan workspace crates shall be:
-1. Licensed under MIT
-2. Subject to all disclaimers and limitations of liability stated below
-3. Provided without any additional terms or conditions
-4. Submitted with the understanding that the educational-only purpose and risk warnings apply
+1. Subject to all disclaimers and limitations of liability stated below
+2. Provided without any additional terms or conditions
+3. Submitted with the understanding that the educational-only purpose and risk warnings apply
 
 By submitting a contribution, you certify that you have the right to do so under these terms.
 

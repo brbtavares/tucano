@@ -7,7 +7,6 @@ This project is based on and adapted from the excellent work done by the **Barte
 ### Original Repository
 - **Project**: Barter-rs
 - **Repository**: https://github.com/barter-rs/barter-rs
-- **License**: MIT License
 - **Original Authors**: The Barter-rs development team
 
 ## Acknowledgments
@@ -32,9 +31,9 @@ This fork was created to:
 
 ## Legal Compliance
 
-This project maintains full compliance with the original MIT License terms:
+This project maintains compliance with the original terms:
 - All original copyright notices are preserved
-- The MIT License is maintained for all derivative work
+- All derivative work maintains proper attribution
 - No warranty claims are made regarding the original or modified code
 - Full attribution is provided to the original authors
 
@@ -49,7 +48,7 @@ While maintaining the core architecture and design principles, this fork include
 
 When contributing to this project, please be aware that:
 - This is a derivative work based on Barter-rs
-- All contributions must comply with the MIT License
+- All contributions must comply with proper attribution standards
 - Contributors should respect the original work and maintain appropriate attribution
 
 ## Contact

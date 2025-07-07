@@ -3,7 +3,6 @@ name = "toucan-integration"
 version = "0.9.1"
 edition = "2024"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-license = "MIT"
 documentation = "https://docs.rs/toucan-integration"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"

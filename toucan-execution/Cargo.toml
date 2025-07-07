@@ -3,7 +3,6 @@ name = "toucan-execution"
 version = "0.5.3"
 edition = "2024"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-license = "MIT"
 documentation = "https://docs.rs/toucan-execution/"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"

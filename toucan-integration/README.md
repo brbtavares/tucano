@@ -16,11 +16,6 @@ Both core abstractions provide the robust glue you need to conveniently translat
 
 **See: [`Toucan`], [`Toucan-Data`] & [`Toucan-Execution`]**
 
-[![MIT licensed][mit-badge]][mit-url]
-
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
 [API Documentation]
 
 [`Toucan`]: https://github.com/brbtavares/toucan
@@ -324,19 +319,6 @@ where
 ```
 **For a larger, "real world" example, see the [`Toucan-Data`] repository.**
 
-## Getting Help
-For questions, issues, or support with Toucan-Integration, please:
-- Check the [API Documentation] for detailed usage examples
-- Open an issue on the [GitHub repository](https://github.com/brbtavares/toucan/issues)
-- Review the examples in the `/examples` directory
-
-## Contributing
-Thanks for helping to develop the Toucan ecosystem! To contribute:
-- Open issues for bugs or feature requests
-- Submit pull requests for improvements
-- Add new integration patterns or utilities
-- Improve documentation and examples
-
 ## Related Projects
 In addition to the Toucan-Integration crate, the Toucan project also maintains:
 * [`Toucan`]: High-performance, extensible & modular trading components with batteries-included. Contains a
@@ -347,13 +329,3 @@ In addition to the Toucan-Integration crate, the Toucan project also maintains:
 
 ## Roadmap
 * Add new default StreamParser implementations to enable integration with other popular systems such as Kafka. 
-
-## Licence
-This project is licensed under the [MIT license].
-
-[MIT license]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
-### Contribution
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in Toucan-Integration by you, shall be licensed as MIT, without any additional
-terms or conditions.

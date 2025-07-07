@@ -3,7 +3,6 @@ name = "toucan-data"
 version = "0.10.1"
 edition = "2024"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-license = "MIT"
 documentation = "https://docs.rs/toucan-data"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
