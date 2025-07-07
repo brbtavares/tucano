@@ -1,4 +1,4 @@
-#![forbid(unsafe_/// Utilised by other Toucan trading ecosystem crates to build robust financial execution integrations,ode)]
+#![forbid(unsafe_code)]
 #![warn(
     unused,
     clippy::cognitive_complexity,
