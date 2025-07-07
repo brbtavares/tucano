@@ -9,17 +9,11 @@ Toucan is an algorithmic trading ecosystem of Rust libraries for building high-p
 
 **See: [`Toucan`], [`Toucan-Data`], [`Toucan-Instrument`], [`Toucan-Execution`] & [`Toucan-Integration`] for comprehensive documentation and examples for each library.**
 
-[![MIT licensed][mit-badge]][mit-url]
-
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
 [`Toucan`]: https://github.com/brbtavares/toucan
 [`Toucan-Instrument`]: https://github.com/brbtavares/toucan/tree/main/toucan-instrument
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
 [`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
-[API Documentation]: https://docs.rs/toucan/latest/toucan/
 
 ## Overview
 
@@ -163,45 +157,6 @@ fn load_config() -> Result<SystemConfig, Box<dyn std::error::Error>> {
 
 This project is based on the excellent [Barter-rs](https://github.com/barter-rs/barter-rs) project. See [CREDITS.md](CREDITS.md) for full attribution and acknowledgments to the original developers.
 
-## Getting Help
-
-For questions, issues, or support, please:
-- Open an issue on the [GitHub repository](https://github.com/brbtavares/toucan/issues)
-- Check the [API Documentation] for detailed usage examples
-- Review the examples in the `/examples` directories of each crate
-
-## Support Development
-
-If you find this project useful, consider:
-- ⭐ Starring the repository
-- 🐛 Reporting bugs or issues
-- 🔧 Contributing improvements
-- 📖 Improving documentation
-
-## Contributing
-
-Thanks in advance for helping to develop the Toucan ecosystem! Please feel free to:
-- Open issues for bugs or feature requests
-- Submit pull requests for improvements
-- Improve documentation and examples
-- Share your experience and use cases
-
-### Licence
-
-This project is licensed under the [MIT license].
-
-[MIT license]: https://github.com/brbtavares/toucan/blob/main/LICENSE
-
-### Contribution License Agreement
-
-Any contribution you intentionally submit for inclusion in Toucan workspace crates shall be:
-
-1. Licensed under MIT
-2. Subject to all disclaimers and limitations of liability stated below
-3. Provided without any additional terms or conditions
-4. Submitted with the understanding that the educational-only purpose and risk warnings apply
-
-By submitting a contribution, you certify that you have the right to do so under these terms.
 
 ## LEGAL DISCLAIMER AND LIMITATION OF LIABILITY
 
