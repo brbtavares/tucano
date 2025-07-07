@@ -1,0 +1,1425 @@
+# Toucan Framework - Complete Documentation
+
+## Overview
+
+Toucan is a high-performance Rust framework for building algorithmic trading systems, including:
+- **Live-trading**
+- **Paper-trading** (simulated trading)  
+- **Back-testing** (historical testing)
+
+### Key Features
+
+- **Fast**: Written in native Rust with minimal allocations and data-oriented state management
+- **Robust**: Strongly typed, thread-safe, with extensive test coverage
+- **Customizable**: Pluggable Strategy and RiskManager components that facilitate most trading strategies
+- **Scalable**: Multi-threaded architecture with modular design, using Tokio for I/O
+
+## Project Structure
+
+The Toucan project is organized into several specialized crates:
+
+### 1. **toucan** (Core Library)
+The main library that contains:
+
+#### Main Modules:
+
+##### `engine` - Trading Engine
+- **Function**: Central core that processes events and coordinates all trading operations
+- **Responsibilities**:
+  - Processing market and account events
+  - Executing algorithmic strategies
+  - Centralized state management
+  - Coordination between multiple exchanges
+
+##### `strategy` - Strategy Interface
+- **Function**: Defines interfaces for implementing trading strategies
+- **Strategy Types**:
+  - `AlgoStrategy`: Main algorithmic strategies
+  - `ClosePositionsStrategy`: Strategies for closing positions
+  - `OnDisconnectStrategy`: Actions in case of disconnection
+
+##### `risk` - Risk Management
+- **Function**: Interface for reviewing and filtering algorithmic orders
+- **Responsibilities**:
+  - Order validation before execution
+  - Implementation of custom risk rules
+  - Prevention of excessive exposure
+
+##### `execution` - Order Execution
+- **Function**: Components for multi-exchange execution
+- **Responsibilities**:
+  - Routing of `ExecutionRequest`s
+  - Managing exchange connections
+  - Processing account events
+
+##### `statistic` - Statistical Analysis
+- **Function**: Statistical algorithms for performance analysis
+- **Included Metrics**:
+  - PnL (Profit and Loss)
+  - Sharpe Ratio
+  - Sortino Ratio
+  - Drawdown
+  - `TradingSummary` and `TearSheet`
+
+##### `backtest` - Backtesting System
+- **Function**: Utilities for historical strategy testing
+- **Capabilities**:
+  - Concurrent backtest execution
+  - Historical market condition simulation
+  - Comparative strategy analysis
+
+##### `system` - System Configuration
+- **Function**: Utilities for initialization and interaction with complete trading system
+
+### 2. **toucan-data** (Market Data Library)
+Library specialized in market data:
+
+#### Main Modules:
+
+##### `exchange` - Exchange Connectors
+- **Function**: Specific implementations for each exchange
+- **Supported Exchanges**:
+  - Binance (Spot and Futures)
+  - Coinbase
+  - Kraken
+  - Bybit
+  - BitMEX
+  - Bitfinex
+  - OKX
+  - GateIO
+
+##### `streams` - Data Streams
+- **Function**: Management of real-time data streams
+- **Stream Types**:
+  - Public trades
+  - Order books (L1 and L2)
+  - Liquidations
+  - Candles/Klines
+
+##### `books` - Order Books
+- **Function**: Order book management and maintenance
+- **Components**:
+  - `manager`: Order book manager
+  - `map`: Efficient order book mapping
+
+##### `subscriber` - Data Subscription
+- **Function**: Data subscription and validation system
+- **Responsibilities**:
+  - Validation of received messages
+  - Mapping exchange data to internal format
+
+##### `transformer` - Data Transformation
+- **Function**: Data transformation between formats
+- **Types**:
+  - Stateless transformations
+  - Data normalization between exchanges
+
+### 3. **toucan-execution** (Execution Library)
+Library for order execution:
+
+#### Main Components:
+
+##### `order` - Order Management
+- **Function**: Structures and logic for trading orders
+- **Order Types**:
+  - Market orders
+  - Limit orders
+  - Stop orders
+
+##### `trade` - Trade Processing
+- **Function**: Processing and tracking of executed trades
+
+##### `balance` - Balance Management
+- **Function**: Real-time asset balance tracking
+
+##### `client` - Exchange Clients
+- **Function**: HTTP/WebSocket clients for exchange communication
+
+### 4. **toucan-instrument** (Instrument Library)
+Library for financial instruments:
+
+#### Components:
+
+##### `instrument` - Instrument Definitions
+- **Function**: Financial instrument definitions (trading pairs)
+
+##### `asset` - Asset Management
+- **Function**: Asset definitions and management (BTC, ETH, USD, etc.)
+
+##### `exchange` - Exchange Identification
+- **Function**: Exchange identification and indexing system
+
+### 5. **toucan-integration** (Integration Library)
+Library for integration and communication:
+
+#### Components:
+
+##### `protocol` - Communication Protocols
+- **Function**: Protocols for inter-component communication
+
+##### `stream` - Integration Streams
+- **Function**: Data flows for integration with external systems
+
+##### `channel` - Communication Channels
+- **Function**: Channels for asynchronous communication
+
+### 6. **toucan-macro** (Macro Library)
+Library for automatic code generation macros:
+
+#### Main Macros:
+
+##### `DeExchange` and `SerExchange`
+- **Function**: Generate automatic `Deserialize` and `Serialize` implementations for exchanges
+- **Usage**: Simplify serialization/deserialization of exchange identifiers
+- **Example**:
+```rust
+#[derive(DeExchange, SerExchange)]
+pub struct BinanceSpot;
+
+impl BinanceSpot {
+    const ID: ExchangeId = ExchangeId::BinanceSpot;
+}
+```
+
+##### `DeSubKind` and `SerSubKind`
+- **Function**: Generate serialization implementations for subscription types
+- **Conversion**: Automatic between PascalCase (Rust) and snake_case (JSON)
+- **Usage**: Standardization of communication formats with exchanges
+
+#### Macro Advantages:
+- Reduction of boilerplate code
+- Consistency in serialization between exchanges
+- Simplified maintenance of new exchanges
+- Type safety maintained at compile time
+
+## Main Data Structures
+
+### EngineEvent - System Events
+Main Engine event that encompasses all event types:
+
+```rust
+pub enum EngineEvent<MarketKind, ExchangeKey, AssetKey, InstrumentKey> {
+    Shutdown(Shutdown),                    // Shutdown command
+    Command(Command),                      // External commands
+    TradingStateUpdate(TradingState),      // Trading state update
+    Account(AccountStreamEvent),           // Account/balance events
+    Market(MarketStreamEvent),             // Market events
+}
+```
+
+### AccountEvent - Account Events
+Events related to account state changes:
+
+```rust
+pub enum AccountEventKind<ExchangeKey, AssetKey, InstrumentKey> {
+    Snapshot(AccountSnapshot),             // Complete account snapshot
+    BalanceSnapshot(AssetBalance),         // Specific balance snapshot
+    OrderSnapshot(Order),                  // Order snapshot
+    OrderCancelled(OrderResponseCancel),   // Cancellation confirmation
+    Trade(Trade),                          // Executed trade
+}
+```
+
+### MarketEvent - Market Events
+Real-time market data events:
+
+```rust
+pub struct MarketEvent<InstrumentKey, Kind> {
+    pub time_exchange: DateTime<Utc>,      // Exchange timestamp
+    pub time_received: DateTime<Utc>,      // Reception timestamp
+    pub exchange: ExchangeId,              // Source exchange
+    pub instrument: MarketDataInstrument,  // Instrument
+    pub kind: Kind,                        // Specific data type
+}
+```
+
+#### Market Data Types (DataKind):
+```rust
+pub enum DataKind {
+    Trade(PublicTrade),                    // Public trade
+    OrderBookL1(OrderBookL1),              // Best bid/ask
+    OrderBookL2(OrderBookL2),              // Complete order book
+    Liquidation(Liquidation),              // Liquidation
+    Candle(Candle),                        // Candlestick/OHLC
+}
+```
+
+### Instruments and Assets
+
+#### ExchangeId - Exchange Identification
+```rust
+pub enum ExchangeId {
+    BinanceSpot,
+    BinanceFuturesUsd,
+    BinanceFuturesCoin,
+    Coinbase,
+    Kraken,
+    Bybit,
+    Bitmex,
+    Bitfinex,
+    Okx,
+    GateioSpot,
+    // ... many others
+}
+```
+
+#### Instrument - Instrument Definition
+```rust
+pub struct Instrument<BaseAsset, QuoteAsset, InstrumentKind> {
+    pub base: BaseAsset,                   // Base asset (BTC, ETH, etc)
+    pub quote: QuoteAsset,                 // Quote asset (USDT, USD, etc)
+    pub kind: InstrumentKind,              // Instrument type
+}
+
+pub enum InstrumentKind {
+    Spot,                                  // Spot trading
+    Perpetual,                             // Perpetual futures
+    Future(FutureContract),                // Futures with expiration date
+    Option(OptionContract),                // Option contracts
+}
+```
+
+### Orders and Execution
+
+#### Order - Order Structure
+```rust
+pub struct Order<ExchangeKey, InstrumentKey, State> {
+    pub id: OrderId,                       // Unique order ID
+    pub client_order_id: ClientOrderId,    // Client ID
+    pub exchange: ExchangeKey,             // Exchange
+    pub instrument: InstrumentKey,         // Instrument
+    pub strategy: StrategyId,              // Strategy that generated it
+    pub side: Side,                        // Buy/Sell
+    pub order_type: OrderType,             // Market/Limit/Stop
+    pub time_in_force: TimeInForce,        // GTC/IOC/FOK
+    pub price: Option<Price>,              // Price (if applicable)
+    pub quantity: Quantity,                // Quantity
+    pub state: State,                      // Current state
+}
+
+pub enum OrderState {
+    Pending,                               // Order sent, awaiting confirmation
+    Open { filled_quantity: Quantity },   // Order open (partially filled)
+    Filled,                                // Order completely filled
+    Cancelled,                             // Order cancelled
+    Rejected { reason: String },           // Order rejected
+}
+```
+
+#### Trade - Executed Trade Structure
+```rust
+pub struct Trade<FeeAsset, InstrumentKey> {
+    pub id: TradeId,                       // Unique trade ID
+    pub order_id: OrderId,                 // Related order ID
+    pub instrument: InstrumentKey,         // Traded instrument
+    pub strategy: StrategyId,              // Strategy
+    pub time_exchange: DateTime<Utc>,      // Exchange timestamp
+    pub side: Side,                        // Buy/Sell
+    pub price: Price,                      // Execution price
+    pub quantity: Quantity,                // Executed quantity
+    pub fees: AssetFees<FeeAsset>,         // Fees paid
+}
+```
+
+### Engine State
+
+#### EngineState - Centralized State
+```rust
+pub struct EngineState<GlobalData, InstrumentData> {
+    pub time_last_update: DateTime<Utc>,  // Last update
+    pub trading: TradingState,             // Trading state
+    pub connectivity: ConnectivityStates,  // Connectivity states
+    pub global: GlobalData,                // Global data
+    pub instruments: InstrumentStates<InstrumentData>, // States per instrument
+}
+
+pub enum TradingState {
+    Enabled,                               // Algorithmic trading active
+    Disabled,                              // Algorithmic trading disabled
+}
+```
+
+#### ConnectivityState - Connectivity State
+```rust
+pub enum ConnectivityState {
+    Connected,                             // Connected normally
+    Disconnected,                          // Disconnected
+    Reconnecting,                          // Trying to reconnect
+}
+```
+
+#### AssetState - Asset State
+```rust
+pub struct AssetState {
+    pub asset: AssetIndex,                 // Asset identifier
+    pub balance: Option<Timed<Balance>>,   // Current balance
+    pub statistics: TearSheetAssetGenerator, // Asset statistics
+}
+
+pub struct Balance {
+    pub total: Decimal,                    // Total balance
+    pub free: Decimal,                     // Free balance (available)
+}
+```
+
+#### Position - Positions
+```rust
+pub struct Position {
+    pub instrument: InstrumentIndex,       // Instrument
+    pub exchange: ExchangeIndex,           // Exchange
+    pub side: Side,                        // Long/Short
+    pub quantity: PositionQuantity,        // Quantity (can be negative)
+    pub value: PositionValue,              // Position value
+    pub last_update_time: DateTime<Utc>,  // Last update
+    pub meta: PositionMeta,                // Additional metadata
+}
+
+pub enum PositionExited {
+    NotExited,                             // Position still open
+    Exited {                               // Position closed
+        time_exited: DateTime<Utc>,
+        final_quantity: PositionQuantity,
+        pnl: Pnl,
+    },
+}
+```
+
+### Statistics and Metrics
+
+#### TradingSummary - Trading Summary
+```rust
+pub struct TradingSummary {
+    pub instruments: HashMap<InstrumentIndex, TradingSummaryInstrument>,
+    pub total_fees: TotalFees,
+    pub starting_balance: TotalBalance,
+    pub ending_balance: TotalBalance,
+    pub time_range: TimeRange,
+}
+
+pub struct TradingSummaryInstrument {
+    pub pnl: PnL,                          // Profit and Loss
+    pub pnl_per_trade: Decimal,            // Average PnL per trade
+    pub trade_count: TradeCount,           // Trade count
+    pub avg_trade_duration: Duration,      // Average trade duration
+    pub volume: Volume,                    // Total volume traded
+    pub fees: TotalFees,                   // Total fees paid
+}
+
+pub struct TradeCount {
+    pub total: u64,                        // Total trades
+    pub winners: u64,                      // Winning trades
+    pub losers: u64,                       // Losing trades
+}
+```
+
+#### TearSheet - Detailed Analysis
+```rust
+pub struct TearSheet {
+    pub sharpe_ratio: Option<f64>,         // Sharpe ratio
+    pub sortino_ratio: Option<f64>,        // Sortino ratio
+    pub calmar_ratio: Option<f64>,         // Calmar ratio
+    pub max_drawdown: MaxDrawdown,         // Maximum drawdown
+    pub win_rate: f64,                     // Win rate
+    pub profit_factor: f64,                // Profit factor
+    pub expectancy: f64,                   // Expectancy per trade
+}
+
+pub struct MaxDrawdown {
+    pub peak: Decimal,                     // Peak before drawdown
+    pub trough: Decimal,                   // Drawdown trough
+    pub drawdown: Decimal,                 // Drawdown value
+    pub duration: Duration,                // Drawdown duration
+}
+```
+
+### Subscriptions and Streams
+
+#### Subscription - Data Subscription
+```rust
+pub struct Subscription<Exchange, Kind> {
+    pub exchange: Exchange,                // Exchange to connect to
+    pub base: String,                      // Base asset
+    pub quote: String,                     // Quote asset
+    pub instrument_kind: InstrumentKind,   // Instrument type
+    pub subscription_kind: Kind,           // Subscription type
+}
+
+// Available subscription types
+pub struct PublicTrades;                   // Public trades
+pub struct OrderBookL1;                   // Best bid/ask
+pub struct OrderBookL2;                   // Complete order book
+pub struct Liquidations;                  // Liquidations
+pub struct Candles {                      // Candlesticks
+    pub interval: CandleInterval,
+}
+```
+
+#### StreamBuilder - Stream Builder
+```rust
+impl<Kind> StreamBuilder<Kind> {
+    pub fn subscribe<Exchange, InstrumentKey>(
+        self,
+        subscriptions: impl IntoIterator<Item = (Exchange, &str, &str, InstrumentKind, Kind)>
+    ) -> Self;
+    
+    pub async fn init(self) -> Result<Streams<Kind>, DataError>;
+}
+```
+
+### Backtesting
+
+#### BacktestArgs - Backtest Arguments
+```rust
+pub struct BacktestArgsConstant<State> {
+    pub instruments: IndexedInstruments,   // Indexed instruments
+    pub executions: IndexedExecutions,     // Execution configurations
+    pub market_data: MarketDataInMemory,   // Historical data
+    pub summary_interval: SummaryInterval, // Summary interval
+    pub engine_state: State,               // Initial engine state
+}
+
+pub struct BacktestArgsDynamic<Strategy, Risk> {
+    pub id: SmolStr,                       // Unique backtest ID
+    pub risk_free_return: Decimal,         // Risk-free rate
+    pub strategy: Strategy,                // Strategy to test
+    pub risk: Risk,                        // Risk manager
+}
+```
+
+#### MarketDataInMemory - Historical Data
+```rust
+pub struct MarketDataInMemory {
+    events: Arc<Vec<MarketStreamEvent>>,   // Historical events
+    current_index: AtomicUsize,            // Current index
+}
+
+impl BacktestMarketData for MarketDataInMemory {
+    async fn next_event(&self) -> Option<MarketStreamEvent>;
+    async fn time_first_event(&self) -> Option<DateTime<Utc>>;
+    async fn time_last_event(&self) -> Option<DateTime<Utc>>;
+}
+```
+
+### Utilities and Traits
+
+#### Timed<T> - Value with Timestamp
+```rust
+pub struct Timed<T> {
+    pub value: T,                          // Value
+    pub time: DateTime<Utc>,               // Timestamp
+}
+```
+
+#### Sequence - Event Sequencing
+```rust
+pub struct Sequence(pub u64);
+
+impl Sequence {
+    pub fn fetch_add(&mut self) -> Sequence; // Increment and return previous value
+    pub fn value(&self) -> u64;              // Current value
+}
+```
+
+#### Processor<Event> - Event Processing
+```rust
+pub trait Processor<Event> {
+    type Audit;
+    fn process(&mut self, event: Event) -> Self::Audit;
+}
+```
+
+#### Auditor - Audit Interface
+```rust
+pub trait Auditor<Audit> {
+    type Context;
+    fn audit(&self, audit: Audit) -> AuditTick<Audit, Self::Context>;
+}
+```
+
+## Detailed Module Documentation
+
+### Engine (Trading Engine)
+
+#### Main Structure
+The `Engine` is the system core, implementing the `Processor<Event>` trait to process events:
+
+```rust
+pub struct Engine<Clock, State, ExecutionTxs, Strategy, Risk> {
+    pub clock: Clock,           // Time control (real-time or backtest)
+    pub meta: EngineMeta,       // Metadata (initial timestamp, sequence)
+    pub state: State,           // Complete engine state
+    pub execution_txs: ExecutionTxs, // Execution channels
+    pub strategy: Strategy,     // Trading strategy
+    pub risk: Risk,            // Risk manager
+}
+```
+
+#### Engine Submodules:
+
+##### `action` - Engine Actions
+- **`CancelOrders`**: Cancels existing orders
+- **`ClosePositions`**: Closes open positions
+- **`GenerateAlgoOrders`**: Generates algorithmic orders
+- **`SendRequests`**: Sends execution requests
+
+##### `audit` - Audit and Logs
+- **`AuditTick`**: Record of each executed operation
+- **`EngineAudit`**: Complete engine audit
+- **`StateReplicaManager`**: Maintains state replica for audit
+
+##### `clock` - Time Control
+- **`EngineClock`**: Interface for time control
+- Allows using historical timestamps in backtests
+- Real-time support for live trading
+
+##### `command` - External Commands
+- **`Command`**: Commands sent from external processes
+- Types: `ClosePositions`, `CancelOrders`, `SendOpenRequests`, `SendCancelRequests`
+
+##### `state` - State Management
+- **`EngineState`**: Centralized cache-friendly state
+- **`ConnectivityState`**: Exchange connectivity state
+- **`AssetState`**: Asset state (balances, statistics)
+- **`InstrumentState`**: Instrument state (market data)
+- **`Position`**: Open and historical positions
+- **`OrderState`**: Order state (open, filled, cancelled)
+
+### Strategy (Trading Strategies)
+
+#### Main Interfaces:
+
+##### `AlgoStrategy`
+```rust
+trait AlgoStrategy {
+    type State;
+    
+    fn generate_algo_orders(&self, state: &Self::State) -> (
+        impl IntoIterator<Item = OrderRequestCancel>,
+        impl IntoIterator<Item = OrderRequestOpen>,
+    );
+}
+```
+
+##### `ClosePositionsStrategy`
+```rust
+trait ClosePositionsStrategy {
+    type State;
+    
+    fn close_positions_requests(&self, state: &Self::State, filter: &InstrumentFilter) -> (
+        impl IntoIterator<Item = OrderRequestCancel>,
+        impl IntoIterator<Item = OrderRequestOpen>,
+    );
+}
+```
+
+##### `OnDisconnectStrategy`
+- Defines actions when there's exchange disconnection
+- Allows custom strategies for different failure scenarios
+
+##### `OnTradingDisabled`
+- Defines actions when trading is disabled
+- Useful for cleanup and controlled position closing
+
+### Risk Management
+
+#### Main Interface:
+```rust
+trait RiskManager {
+    type State;
+    
+    fn check(&self, state: &Self::State, 
+             cancels: impl IntoIterator<Item = OrderRequestCancel>,
+             opens: impl IntoIterator<Item = OrderRequestOpen>) -> (
+        impl IntoIterator<Item = RiskApproved<OrderRequestCancel>>,
+        impl IntoIterator<Item = RiskApproved<OrderRequestOpen>>,
+        impl IntoIterator<Item = RiskRefused<OrderRequestCancel>>,
+        impl IntoIterator<Item = RiskRefused<OrderRequestOpen>>,
+    );
+}
+```
+
+#### Functionalities:
+- **Exposure Filters**: Prevents excessive exposure
+- **Quantity Validation**: Verifies quantity limits
+- **Order Adjustment**: Automatically modifies order parameters
+- **Cross Prevention**: Avoids orders that would cross the order book
+
+### Execution (Order Execution)
+
+#### Components:
+
+##### `ExecutionManager`
+- Manages execution per exchange
+- Processes Engine requests
+- Returns responses and state updates
+
+##### `ExecutionRequest`
+```rust
+enum ExecutionRequest {
+    CancelOrders(Vec<OrderRequestCancel>),
+    OpenOrders(Vec<OrderRequestOpen>),
+    Shutdown,
+}
+```
+
+##### `AccountStreamEvent`
+- Account event stream (balances, trades, orders)
+- Integrates with automatic reconnection system
+
+### Toucan-Data (Market Data)
+
+#### Stream Architecture:
+
+##### `StreamBuilder`
+```rust
+let streams = Streams::<PublicTrades>::builder()
+    .subscribe([(BinanceSpot::default(), "btc", "usdt", PublicTrades)])
+    .subscribe([(Coinbase, "eth", "usd", PublicTrades)])
+    .init()
+    .await?;
+```
+
+##### Supported Data Types:
+- **`PublicTrades`**: Real-time public trades
+- **`OrderBookL1`**: Best bid/ask
+- **`OrderBookL2`**: Complete order book
+- **`Liquidations`**: Liquidations (derivatives)
+- **`Candles`**: Candlestick/OHLC data
+
+##### Supported Exchanges:
+- **Binance**: Spot, Futures USD-M, Futures COIN-M
+- **Coinbase**: Spot
+- **Kraken**: Spot
+- **Bybit**: Spot, Derivatives
+- **BitMEX**: Derivatives
+- **Bitfinex**: Spot
+- **OKX**: Spot, Derivatives
+- **Gate.io**: Spot, Futures, Options
+
+#### Order Book Management:
+
+##### `OrderBookManager`
+- Maintains updated L2 order books
+- Processes snapshots and incremental updates
+- Automatic integrity validation
+
+##### `OrderBookL2`
+```rust
+struct OrderBookL2 {
+    pub bids: BTreeMap<Price, Quantity>,
+    pub asks: BTreeMap<Price, Quantity>,
+    pub last_update_id: u64,
+    pub time_last_update: DateTime<Utc>,
+}
+```
+
+### Statistics (Statistics and Metrics)
+
+#### Main Metrics:
+
+##### `TradingSummary`
+- Total and per-instrument PnL
+- Number of trades (winners/losers)
+- Total volume traded
+- Fees paid
+
+##### `TearSheet`
+- **Sharpe Ratio**: Risk-adjusted return
+- **Sortino Ratio**: Downside-focused Sharpe
+- **Maximum Drawdown**: Largest consecutive loss
+- **Calmar Ratio**: Annualized return / Max Drawdown
+- **Win Rate**: Percentage of winning trades
+
+##### `StatisticGenerators`
+- `Daily`, `Weekly`, `Monthly`: Temporal aggregation
+- `Rolling`: Rolling window metrics
+- `Cumulative`: Cumulative metrics
+
+### Backtest (Backtesting System)
+
+#### Functionalities:
+
+##### `BacktestEngine`
+- Deterministic execution using historical data
+- Latency and slippage simulation
+- Processing thousands of concurrent backtests
+
+##### `MarketDataInMemory`
+```rust
+struct MarketDataInMemory {
+    events: Arc<Vec<MarketStreamEvent>>,
+    current_index: usize,
+}
+```
+
+##### `BacktestArgs`
+```rust
+struct BacktestArgsConstant {
+    pub instruments: IndexedInstruments,
+    pub executions: IndexedExecutions,
+    pub market_data: MarketDataInMemory,
+    pub summary_interval: SummaryInterval,
+    pub engine_state: EngineState,
+}
+
+struct BacktestArgsDynamic {
+    pub id: SmolStr,
+    pub risk_free_return: Decimal,
+    pub strategy: Strategy,
+    pub risk: RiskManager,
+}
+```
+
+## Detailed Operation Flow
+
+### 1. Initialization
+```rust
+// Configure instruments
+let instruments = IndexedInstruments::new(instrument_configs);
+
+// Initialize market data
+let market_data = MarketDataInMemory::new(historical_events);
+
+// Build engine state
+let engine_state = EngineStateBuilder::new(&instruments, global_data, |_| instrument_data)
+    .time_engine_start(start_time)
+    .trading_state(TradingState::Enabled)
+    .build();
+
+// Create engine
+let engine = Engine::new(clock, engine_state, execution_txs, strategy, risk);
+```
+
+### 2. Event Processing
+```rust
+// Main engine loop
+while let Some(event) = event_stream.next().await {
+    let audit = engine.process(event);
+    
+    // Audit logs
+    if let Some(unrecoverable) = audit.unrecoverable_errors() {
+        error!("Unrecoverable error: {:?}", unrecoverable);
+        break;
+    }
+}
+```
+
+### 3. Algorithmic Order Generation
+```rust
+// Inside engine when TradingState::Enabled
+let (cancels, opens) = strategy.generate_algo_orders(&engine.state);
+
+// Risk validation
+let (approved_cancels, approved_opens, refused_cancels, refused_opens) = 
+    risk_manager.check(&engine.state, cancels, opens);
+
+// Send for execution
+for request in approved_opens {
+    execution_tx.send(ExecutionRequest::OpenOrders(vec![request]))?;
+}
+```
+
+### 4. State Update
+```rust
+// Process market event
+match market_event.kind {
+    DataKind::Trade(trade) => {
+        engine.state.update_last_trade(&trade);
+        engine.state.update_statistics(&trade);
+    },
+    DataKind::OrderBookL1(book) => {
+        engine.state.update_best_bid_ask(&book);
+    },
+    // ... other types
+}
+```
+
+## 6. Backtesting System
+
+### 6.1 Backtesting Architecture
+
+The `backtest` module provides complete infrastructure for historical strategy simulation:
+
+#### Main Components:
+- **`BacktestArgsConstant`**: Configuration shared between backtests (instruments, market data, execution configurations)
+- **`BacktestArgsDynamic`**: Parameters specific per backtest (strategy, risk management, identifier)
+- **`BacktestSummary`**: Results of an individual backtest
+- **`MultiBacktestSummary`**: Aggregation of multiple backtests
+
+#### Functionalities:
+```rust
+// Execute multiple concurrent backtests
+pub async fn run_backtests<MarketData, SummaryInterval, Strategy, Risk, GlobalData, InstrumentData>(
+    args_constant: Arc<BacktestArgsConstant<MarketData, SummaryInterval, EngineState<GlobalData, InstrumentData>>>,
+    args_dynamic_iter: impl IntoIterator<Item = BacktestArgsDynamic<Strategy, Risk>>,
+) -> Result<MultiBacktestSummary<SummaryInterval>, ToucanError>
+
+// Execute individual backtest
+pub async fn backtest<MarketData, SummaryInterval, Strategy, Risk, GlobalData, InstrumentData>(
+    args_constant: Arc<BacktestArgsConstant<...>>,
+    args_dynamic: BacktestArgsDynamic<Strategy, Risk>,
+) -> Result<BacktestSummary<SummaryInterval>, ToucanError>
+```
+
+### 6.2 Market Data for Backtesting
+
+`BacktestMarketData` interface allows different historical data sources:
+- Timestamp support for temporal replay
+- Chronologically ordered market event stream
+- Integration with `HistoricalClock` for precise timing
+
+### 6.3 Backtest Parallelization
+
+- Concurrent execution using `try_join_all`
+- Efficient sharing of constant data via `Arc`
+- Independent dynamic configurations per thread
+
+#### Usage Example:
+```rust
+// Shared constant configuration
+let args_constant = Arc::new(BacktestArgsConstant {
+    instruments,
+    executions,
+    market_data,
+    summary_interval: Daily,
+    engine_state,
+});
+
+// Multiple dynamic configurations
+let args_dynamic_iter = (0..NUM_BACKTESTS).map(|index| {
+    BacktestArgsDynamic {
+        id: index.to_smolstr(),
+        risk_free_return,
+        strategy: CustomStrategy::new(params[index]),
+        risk: CustomRiskManager::new(risk_params[index]),
+    }
+});
+
+let summary = run_backtests(args_constant, args_dynamic_iter).await?;
+```
+
+## 7. Main System (System)
+
+### 7.1 System Architecture
+
+The `system` module provides top-level architecture for composing trading systems:
+
+#### Components:
+- **`System<Engine, Event>`**: Main initialized and running system
+- **`SystemAuxillaryHandles`**: Handles for auxiliary components
+- **`SystemBuilder`**: Builder for system configuration
+
+#### Main Functionalities:
+```rust
+impl<Engine, Event> System<Engine, Event> {
+    // Graceful shutdown
+    pub async fn shutdown(self) -> Result<(Engine, Engine::Audit), JoinError>
+    
+    // Backtest-specific shutdown
+    pub async fn shutdown_after_backtest(self) -> Result<(Engine, Engine::Audit), JoinError>
+    
+    // Send commands
+    pub fn send_cancel_requests(&self, requests: OneOrMany<OrderRequestCancel>)
+    pub fn send_open_requests(&self, requests: OneOrMany<OrderRequestOpen>)
+    pub fn close_positions(&self, filter: InstrumentFilter)
+    pub fn cancel_orders(&self, filter: InstrumentFilter)
+    pub fn trading_state(&self, trading_state: TradingState)
+}
+```
+
+### 7.2 Lifecycle Management
+
+- **Graceful shutdown**: Ordered finalization of all components
+- **Abort functionality**: Immediate termination when necessary
+- **Backtest-specific shutdown**: Waits for data stream end before finalizing
+- **Task management**: Coordination of multiple asynchronous tasks
+
+### 7.3 Inter-component Communication
+
+- Unbounded channels for asynchronous communication
+- Event forwarding between market data and engine
+- Account event routing to execution components
+
+## 8. Time Management (Clock)
+
+### 8.1 Clock Abstraction
+
+`EngineClock` interface defines how the engine determines current time:
+
+```rust
+pub trait EngineClock {
+    fn time(&self) -> DateTime<Utc>;
+}
+```
+
+### 8.2 Implementations
+
+#### LiveClock
+- For live trading
+- Uses `Utc::now()` directly
+- Simple implementation for real-time
+
+#### HistoricalClock
+- For backtesting
+- Derives current time from processed event timestamps
+- Compensates latency using exchange timestamps
+- Thread-safe with `Arc<RwLock<>>`
+
+```rust
+impl HistoricalClock {
+    pub fn new(last_exchange_time: DateTime<Utc>) -> Self
+}
+
+impl EngineClock for HistoricalClock {
+    fn time(&self) -> DateTime<Utc> {
+        // Calculate time based on last event + real time delta
+        let delta_since_last_event = Utc::now() - self.time_live_last_event;
+        self.time_exchange_last + delta_since_last_event
+    }
+}
+```
+
+### 8.3 Time Exchange Trait
+
+```rust
+pub trait TimeExchange {
+    fn time_exchange(&self) -> Option<DateTime<Utc>>;
+}
+```
+
+Allows extraction of timestamps from events for precise temporal synchronization.
+
+## 9. Logging System
+
+### 9.1 Logging Configuration
+
+The `logging` module provides standardized configuration for logs:
+
+```rust
+pub fn init_logging()      // Standard structured logs
+pub fn init_json_logging() // JSON format logs
+```
+
+### 9.2 Specialized Filtering
+
+- **AuditSpanFilter**: Filters duplicate logs from audit updates
+- **Tracing Integration**: Uses tracing-subscriber for structured logs
+- **Environment Configuration**: Configuration via environment variables
+
+### 9.3 Observability
+
+- Structured logs for debugging
+- JSON support for monitoring system integration
+- Intelligent filtering to reduce noise
+
+## 10. Toucan-Integration Framework
+
+### 10.1 Low-Level Abstraction
+
+High-performance web integration framework:
+
+#### Core Abstractions:
+- **RestClient**: Configurable and signed HTTP communication
+- **ExchangeStream**: Communication over asynchronous stream protocols
+
+### 10.2 Fundamental Traits
+
+```rust
+pub trait Transformer {
+    type Error;
+    type Input: for<'de> Deserialize<'de>;
+    type Output;
+    type OutputIter: IntoIterator<Item = Result<Self::Output, Self::Error>>;
+    fn transform(&mut self, input: Self::Input) -> Self::OutputIter;
+}
+
+pub trait Validator {
+    fn validate(self) -> Result<Self, SocketError> where Self: Sized;
+}
+
+pub trait Unrecoverable {
+    fn is_unrecoverable(&self) -> bool;
+}
+
+pub trait Terminal {
+    fn is_terminal(&self) -> bool;
+}
+```
+
+### 10.3 Flexibility
+
+- **Protocol Agnostic**: WebSocket, FIX, HTTP, etc.
+- **Data Model Agnostic**: Arbitrary transformations between models
+- **Error Handling**: Categorization of recoverable vs. terminal errors
+
+## 11. Configuration and Development
+
+### 11.1 Project Configuration
+
+The project uses Cargo as package and build manager, with workspace organizing multiple related crates.
+
+### 11.2 Build Structure
+
+Uses Rust's `async`/`await` for asynchronous operations and multiple specialized dependencies for trading:
+- `tokio` for asynchronous runtime
+- `serde` for serialization
+- `tracing` for structured logging
+- `rust_decimal` for precise arithmetic
+- `chrono` for timestamps
+- `parking_lot` for high-performance synchronization
+
+### 11.3 Testing and Quality
+
+- Unit tests organized by module
+- Practical examples in `examples/`
+- Inline documentation with `cargo doc`
+- Backtests as validation tool
+
+## 12. Performance and Scalability
+
+### 12.1 Performance Architecture
+
+- **Asynchronous communication**: Extensive use of channels for inter-component communication
+- **Zero-copy when possible**: Use of references and efficient types like `SmolStr`
+- **Parallelization**: Support for concurrent processing of market data and backtests
+- **Optimized memory layout**: Efficient data structures for low latency
+- **Lock-free when possible**: Use of unbounded channels to avoid contention
+
+### 12.2 Scalability
+
+- **Modularity**: Different crates allow using only necessary components
+- **Configurability**: Systems can be configured for different scenarios
+- **Extensibility**: Traits allow custom implementations of strategies and connectors
+- **Concurrency**: Parallel backtests and multi-threaded processing
+- **Resource pooling**: Efficient reuse of connections and resources
+
+### 12.3 Optimizations
+
+- Use of `IndexedInstruments` for fast instrument access
+- Optimized data structures for order books
+- Efficient algorithms for statistics calculation
+- `Arc` for efficient sharing of immutable data
+- `RwLock` for optimized concurrent access
+- Resource pooling when appropriate
+
+## Implementation Examples
+
+### Simple Market Making Strategy
+```rust
+impl AlgoStrategy for SimpleMarketMaker {
+    type State = EngineState<GlobalData, InstrumentData>;
+    
+    fn generate_algo_orders(&self, state: &Self::State) -> (Vec<CancelRequest>, Vec<OpenRequest>) {
+        let mut cancels = Vec::new();
+        let mut opens = Vec::new();
+        
+        for instrument in state.instruments() {
+            if let Some(mid_price) = instrument.mid_price() {
+                // Cancel existing orders
+                cancels.extend(instrument.open_orders().map(|order| 
+                    OrderRequestCancel::new(order.id)));
+                
+                // Place new bid/ask
+                let spread = mid_price * self.spread_pct;
+                
+                opens.push(OrderRequestOpen::limit_buy(
+                    instrument.id(),
+                    mid_price - spread / 2.0,
+                    self.order_size
+                ));
+                
+                opens.push(OrderRequestOpen::limit_sell(
+                    instrument.id(), 
+                    mid_price + spread / 2.0,
+                    self.order_size
+                ));
+            }
+        }
+        
+        (cancels, opens)
+    }
+}
+```
+
+### Custom Risk Manager
+```rust
+impl RiskManager for CustomRiskManager {
+    type State = EngineState<GlobalData, InstrumentData>;
+    
+    fn check(&self, state: &Self::State, 
+             cancels: impl IntoIterator<Item = OrderRequestCancel>,
+             opens: impl IntoIterator<Item = OrderRequestOpen>) -> (...) {
+        
+        let mut approved_opens = Vec::new();
+        let mut refused_opens = Vec::new();
+        
+        for order in opens {
+            // Check position limits
+            let current_position = state.position(&order.instrument);
+            let new_exposure = current_position.size() + order.quantity();
+            
+            if new_exposure.abs() > self.max_position_size {
+                refused_opens.push(RiskRefused::new(order, "Position limit exceeded"));
+            } else {
+                approved_opens.push(RiskApproved::new(order));
+            }
+        }
+        
+        // Approve all cancels (usually safe)
+        let approved_cancels = cancels.into_iter().map(RiskApproved::new);
+        
+        (approved_cancels, approved_opens, std::iter::empty(), refused_opens)
+    }
+}
+```
+
+## Performance and Optimizations
+
+### Optimized Data Structures
+- **`IndexedInstruments`**: HashMap with O(1) lookups
+- **`OrderBookL2`**: BTreeMap for efficient ordering
+- **`PositionMap`**: Cache-friendly for fast access
+
+### Memory Management
+- Extensive use of `Arc<T>` for shared data
+- Object pools for reusable structures
+- Zero-copy parsing where possible
+
+### Concurrency
+- Actor model with asynchronous channels
+- Lock-free where possible
+- Parallel backtest processing
+
+### Monitoring
+- End-to-end latency metrics
+- Processed event counters
+- Performance degradation alerts
+
+## Advanced Configuration and Best Practices
+
+### System Configuration
+```rust
+// Typical production system configuration
+let system_config = SystemConfig {
+    instruments: vec![
+        // Define active instruments
+        InstrumentConfig::new("BTCUSDT", ExchangeId::BinanceSpot),
+        InstrumentConfig::new("ETHUSDT", ExchangeId::BinanceSpot),
+    ],
+    executions: vec![
+        ExecutionConfig::Mock(MockExecutionConfig::default()),
+        // For production, use ExecutionConfig::Live
+    ],
+};
+
+// Production logging configuration
+toucan::logging::init_json_logging();
+
+// Engine state with custom data
+let engine_state = EngineStateBuilder::new(&instruments, GlobalData::default(), |_| {
+    InstrumentData::default()
+})
+.time_engine_start(Utc::now())
+.trading_state(TradingState::Enabled)
+.build();
+```
+
+### Implementation Patterns
+
+#### Indicator-Based Strategy
+```rust
+pub struct MovingAverageStrategy {
+    short_window: usize,
+    long_window: usize,
+    prices: VecDeque<Decimal>,
+}
+
+impl AlgoStrategy for MovingAverageStrategy {
+    type State = EngineState<GlobalData, InstrumentData>;
+    
+    fn generate(&mut self, state: &Self::State) -> Option<Signal> {
+        let last_price = state.last_trade_price()?;
+        self.prices.push_back(last_price);
+        
+        if self.prices.len() < self.long_window {
+            return None; // Insufficient data
+        }
+        
+        let short_ma = self.moving_average(self.short_window);
+        let long_ma = self.moving_average(self.long_window);
+        
+        if short_ma > long_ma && !self.is_long_position(state) {
+            Some(Signal::long(self.position_size))
+        } else if short_ma < long_ma && !self.is_short_position(state) {
+            Some(Signal::short(self.position_size))
+        } else {
+            None
+        }
+    }
+}
+```
+
+#### Advanced Risk Manager
+```rust
+pub struct AdvancedRiskManager {
+    max_position_size: Decimal,
+    max_daily_loss: Decimal,
+    max_leverage: Decimal,
+    daily_pnl: Decimal,
+}
+
+impl RiskManager for AdvancedRiskManager {
+    type State = EngineState<GlobalData, InstrumentData>;
+    
+    fn check(&self, state: &Self::State, 
+             cancels: impl IntoIterator<Item = OrderRequestCancel>,
+             opens: impl IntoIterator<Item = OrderRequestOpen>) -> (...) {
+        
+        // Check maximum daily loss
+        if self.daily_pnl < -self.max_daily_loss {
+            return self.reject_all_opens(opens, "Daily loss limit reached");
+        }
+        
+        // Check leverage
+        let current_leverage = self.calculate_leverage(state);
+        if current_leverage > self.max_leverage {
+            return self.reject_all_opens(opens, "Leverage limit exceeded");
+        }
+        
+        // Other risk checks...
+        self.process_orders(cancels, opens, state)
+    }
+}
+```
+
+### Debugging and Troubleshooting
+
+#### Structured Logs
+```rust
+// Configure logs with specific levels
+std::env::set_var("RUST_LOG", "toucan=debug,toucan_data=info");
+toucan::logging::init_logging();
+
+// In strategies, use tracing for debugging
+#[tracing::instrument(skip(state))]
+fn generate_signal(&self, state: &EngineState) -> Option<Signal> {
+    tracing::debug!("Generating signal for strategy: {}", self.name);
+    // ... strategy logic
+}
+```
+
+#### Audit Trail
+```rust
+// Enable auditing for debugging
+let system = SystemBuild::new(
+    engine,
+    EngineFeedMode::Stream,
+    AuditMode::Enabled, // Important for debugging
+    market_stream,
+    account_channel,
+    futures,
+)
+.init()
+.await?;
+
+// Access audit trail
+if let Some(audit) = system.take_audit() {
+    // Process audit events
+    while let Ok(audit_tick) = audit.updates.try_recv() {
+        println!("Audit: {:?}", audit_tick);
+    }
+}
+```
+
+### Performance Optimizations
+
+#### Object Pooling
+```rust
+// Use pools for reusable objects
+pub struct OrderPool {
+    pool: Vec<Order>,
+}
+
+impl OrderPool {
+    pub fn get(&mut self) -> Order {
+        self.pool.pop().unwrap_or_else(Order::new)
+    }
+    
+    pub fn return_order(&mut self, mut order: Order) {
+        order.reset();
+        self.pool.push(order);
+    }
+}
+```
+
+#### Batch Processing
+```rust
+// Process multiple events in batch for better throughput
+pub fn process_market_events_batch(&mut self, events: Vec<MarketEvent>) {
+    for chunk in events.chunks(BATCH_SIZE) {
+        self.process_chunk(chunk);
+        // Yield to other tasks
+        tokio::task::yield_now().await;
+    }
+}
+```
+
+### Deployment and Monitoring
+
+#### Custom Metrics
+```rust
+use metrics::{counter, histogram, gauge};
+
+pub struct StrategyMetrics {
+    signals_generated: u64,
+    orders_executed: u64,
+    latency_histogram: Histogram,
+}
+
+impl StrategyMetrics {
+    pub fn record_signal(&mut self) {
+        counter!("strategy.signals_generated").increment(1);
+        self.signals_generated += 1;
+    }
+    
+    pub fn record_order_latency(&mut self, duration: Duration) {
+        histogram!("strategy.order_latency").record(duration.as_millis() as f64);
+    }
+}
+```
+
+#### Health Checks
+```rust
+pub struct SystemHealthChecker {
+    last_market_data: Option<DateTime<Utc>>,
+    last_heartbeat: DateTime<Utc>,
+}
+
+impl SystemHealthChecker {
+    pub fn is_healthy(&self) -> bool {
+        let now = Utc::now();
+        
+        // Check if market data is recent
+        if let Some(last_data) = self.last_market_data {
+            if now.signed_duration_since(last_data).num_seconds() > 30 {
+                return false; // Market data too old
+            }
+        }
+        
+        // Check system heartbeat
+        now.signed_duration_since(self.last_heartbeat).num_seconds() < 60
+    }
+}
+```
+
+### Conclusion
+
+The Toucan framework provides a solid and flexible foundation for developing algorithmic trading systems in Rust. Its modular architecture, optimized performance, and extensibility make it a robust choice for:
+
+- **High-frequency algorithmic trading**
+- **Complex strategy backtesting**
+- **Market making and arbitrage**
+- **Portfolio management**
+- **Real-time risk management**
+
+The combination of Rust's type safety, modern asynchronous architecture, and well-designed abstractions allows building trading systems that are both performant and safe and maintainable.
