@@ -157,7 +157,6 @@ fn load_config() -> Result<SystemConfig, Box<dyn std::error::Error>> {
 
 This project is based on the excellent [Barter-rs](https://github.com/barter-rs/barter-rs) project. See [CREDITS.md](CREDITS.md) for full attribution and acknowledgments to the original developers.
 
-
 ## LEGAL DISCLAIMER AND LIMITATION OF LIABILITY
 
 PLEASE READ THIS DISCLAIMER CAREFULLY BEFORE USING THE SOFTWARE. BY ACCESSING OR USING THE SOFTWARE, YOU ACKNOWLEDGE AND AGREE TO BE BOUND BY THE TERMS HEREIN.

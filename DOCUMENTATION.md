@@ -256,6 +256,7 @@ pub enum AccountEventKind<ExchangeKey, AssetKey, InstrumentKey> {
 ```
 
 ### MarketEvent - Market Events
+
 Real-time market data events:
 
 ```rust
@@ -268,7 +269,8 @@ pub struct MarketEvent<InstrumentKey, Kind> {
 }
 ```
 
-#### Market Data Types (DataKind):
+#### Market Data Types (DataKind)
+
 ```rust
 pub enum DataKind {
     Trade(PublicTrade),                    // Public trade
@@ -282,6 +284,7 @@ pub enum DataKind {
 ### Instruments and Assets
 
 #### ExchangeId - Exchange Identification
+
 ```rust
 pub enum ExchangeId {
     BinanceSpot,
@@ -299,6 +302,7 @@ pub enum ExchangeId {
 ```
 
 #### Instrument - Instrument Definition
+
 ```rust
 pub struct Instrument<BaseAsset, QuoteAsset, InstrumentKind> {
     pub base: BaseAsset,                   // Base asset (BTC, ETH, etc)
@@ -317,6 +321,7 @@ pub enum InstrumentKind {
 ### Orders and Execution
 
 #### Order - Order Structure
+
 ```rust
 pub struct Order<ExchangeKey, InstrumentKey, State> {
     pub id: OrderId,                       // Unique order ID
@@ -342,6 +347,7 @@ pub enum OrderState {
 ```
 
 #### Trade - Executed Trade Structure
+
 ```rust
 pub struct Trade<FeeAsset, InstrumentKey> {
     pub id: TradeId,                       // Unique trade ID
@@ -359,6 +365,7 @@ pub struct Trade<FeeAsset, InstrumentKey> {
 ### Engine State
 
 #### EngineState - Centralized State
+
 ```rust
 pub struct EngineState<GlobalData, InstrumentData> {
     pub time_last_update: DateTime<Utc>,  // Last update
@@ -375,6 +382,7 @@ pub enum TradingState {
 ```
 
 #### ConnectivityState - Connectivity State
+
 ```rust
 pub enum ConnectivityState {
     Connected,                             // Connected normally
@@ -384,6 +392,7 @@ pub enum ConnectivityState {
 ```
 
 #### AssetState - Asset State
+
 ```rust
 pub struct AssetState {
     pub asset: AssetIndex,                 // Asset identifier
@@ -398,6 +407,7 @@ pub struct Balance {
 ```
 
 #### Position - Positions
+
 ```rust
 pub struct Position {
     pub instrument: InstrumentIndex,       // Instrument
@@ -422,6 +432,7 @@ pub enum PositionExited {
 ### Statistics and Metrics
 
 #### TradingSummary - Trading Summary
+
 ```rust
 pub struct TradingSummary {
     pub instruments: HashMap<InstrumentIndex, TradingSummaryInstrument>,
@@ -448,6 +459,7 @@ pub struct TradeCount {
 ```
 
 #### TearSheet - Detailed Analysis
+
 ```rust
 pub struct TearSheet {
     pub sharpe_ratio: Option<f64>,         // Sharpe ratio
@@ -470,6 +482,7 @@ pub struct MaxDrawdown {
 ### Subscriptions and Streams
 
 #### Subscription - Data Subscription
+
 ```rust
 pub struct Subscription<Exchange, Kind> {
     pub exchange: Exchange,                // Exchange to connect to
@@ -490,6 +503,7 @@ pub struct Candles {                      // Candlesticks
 ```
 
 #### StreamBuilder - Stream Builder
+
 ```rust
 impl<Kind> StreamBuilder<Kind> {
     pub fn subscribe<Exchange, InstrumentKey>(
@@ -504,6 +518,7 @@ impl<Kind> StreamBuilder<Kind> {
 ### Backtesting
 
 #### BacktestArgs - Backtest Arguments
+
 ```rust
 pub struct BacktestArgsConstant<State> {
     pub instruments: IndexedInstruments,   // Indexed instruments
@@ -522,6 +537,7 @@ pub struct BacktestArgsDynamic<Strategy, Risk> {
 ```
 
 #### MarketDataInMemory - Historical Data
+
 ```rust
 pub struct MarketDataInMemory {
     events: Arc<Vec<MarketStreamEvent>>,   // Historical events
@@ -538,6 +554,7 @@ impl BacktestMarketData for MarketDataInMemory {
 ### Utilities and Traits
 
 #### Timed<T> - Value with Timestamp
+
 ```rust
 pub struct Timed<T> {
     pub value: T,                          // Value
@@ -546,6 +563,7 @@ pub struct Timed<T> {
 ```
 
 #### Sequence - Event Sequencing
+
 ```rust
 pub struct Sequence(pub u64);
 
@@ -556,6 +574,7 @@ impl Sequence {
 ```
 
 #### Processor<Event> - Event Processing
+
 ```rust
 pub trait Processor<Event> {
     type Audit;
@@ -564,6 +583,7 @@ pub trait Processor<Event> {
 ```
 
 #### Auditor - Audit Interface
+
 ```rust
 pub trait Auditor<Audit> {
     type Context;
@@ -576,6 +596,7 @@ pub trait Auditor<Audit> {
 ### Engine (Trading Engine)
 
 #### Main Structure
+
 The `Engine` is the system core, implementing the `Processor<Event>` trait to process events:
 
 ```rust
@@ -589,29 +610,34 @@ pub struct Engine<Clock, State, ExecutionTxs, Strategy, Risk> {
 }
 ```
 
-#### Engine Submodules:
+#### Engine Submodules
 
 ##### `action` - Engine Actions
+
 - **`CancelOrders`**: Cancels existing orders
 - **`ClosePositions`**: Closes open positions
 - **`GenerateAlgoOrders`**: Generates algorithmic orders
 - **`SendRequests`**: Sends execution requests
 
 ##### `audit` - Audit and Logs
+
 - **`AuditTick`**: Record of each executed operation
 - **`EngineAudit`**: Complete engine audit
 - **`StateReplicaManager`**: Maintains state replica for audit
 
 ##### `clock` - Time Control
+
 - **`EngineClock`**: Interface for time control
 - Allows using historical timestamps in backtests
 - Real-time support for live trading
 
 ##### `command` - External Commands
+
 - **`Command`**: Commands sent from external processes
 - Types: `ClosePositions`, `CancelOrders`, `SendOpenRequests`, `SendCancelRequests`
 
 ##### `state` - State Management
+
 - **`EngineState`**: Centralized cache-friendly state
 - **`ConnectivityState`**: Exchange connectivity state
 - **`AssetState`**: Asset state (balances, statistics)
@@ -621,9 +647,10 @@ pub struct Engine<Clock, State, ExecutionTxs, Strategy, Risk> {
 
 ### Strategy (Trading Strategies)
 
-#### Main Interfaces:
+#### Main Interfaces
 
 ##### `AlgoStrategy`
+
 ```rust
 trait AlgoStrategy {
     type State;
@@ -636,6 +663,7 @@ trait AlgoStrategy {
 ```
 
 ##### `ClosePositionsStrategy`
+
 ```rust
 trait ClosePositionsStrategy {
     type State;
@@ -648,16 +676,19 @@ trait ClosePositionsStrategy {
 ```
 
 ##### `OnDisconnectStrategy`
+
 - Defines actions when there's exchange disconnection
 - Allows custom strategies for different failure scenarios
 
 ##### `OnTradingDisabled`
+
 - Defines actions when trading is disabled
 - Useful for cleanup and controlled position closing
 
 ### Risk Management
 
-#### Main Interface:
+#### Main Interface
+
 ```rust
 trait RiskManager {
     type State;
@@ -673,7 +704,8 @@ trait RiskManager {
 }
 ```
 
-#### Functionalities:
+#### Functionalities
+
 - **Exposure Filters**: Prevents excessive exposure
 - **Quantity Validation**: Verifies quantity limits
 - **Order Adjustment**: Automatically modifies order parameters
@@ -681,14 +713,16 @@ trait RiskManager {
 
 ### Execution (Order Execution)
 
-#### Components:
+#### Components
 
 ##### `ExecutionManager`
+
 - Manages execution per exchange
 - Processes Engine requests
 - Returns responses and state updates
 
 ##### `ExecutionRequest`
+
 ```rust
 enum ExecutionRequest {
     CancelOrders(Vec<OrderRequestCancel>),
@@ -698,14 +732,16 @@ enum ExecutionRequest {
 ```
 
 ##### `AccountStreamEvent`
+
 - Account event stream (balances, trades, orders)
 - Integrates with automatic reconnection system
 
 ### Toucan-Data (Market Data)
 
-#### Stream Architecture:
+#### Stream Architecture
 
 ##### `StreamBuilder`
+
 ```rust
 let streams = Streams::<PublicTrades>::builder()
     .subscribe([(BinanceSpot::default(), "btc", "usdt", PublicTrades)])
@@ -714,14 +750,16 @@ let streams = Streams::<PublicTrades>::builder()
     .await?;
 ```
 
-##### Supported Data Types:
+##### Supported Data Types
+
 - **`PublicTrades`**: Real-time public trades
 - **`OrderBookL1`**: Best bid/ask
 - **`OrderBookL2`**: Complete order book
 - **`Liquidations`**: Liquidations (derivatives)
 - **`Candles`**: Candlestick/OHLC data
 
-##### Supported Exchanges:
+##### Supported Exchanges
+
 - **Binance**: Spot, Futures USD-M, Futures COIN-M
 - **Coinbase**: Spot
 - **Kraken**: Spot
@@ -731,14 +769,16 @@ let streams = Streams::<PublicTrades>::builder()
 - **OKX**: Spot, Derivatives
 - **Gate.io**: Spot, Futures, Options
 
-#### Order Book Management:
+#### Order Book Management
 
 ##### `OrderBookManager`
+
 - Maintains updated L2 order books
 - Processes snapshots and incremental updates
 - Automatic integrity validation
 
 ##### `OrderBookL2`
+
 ```rust
 struct OrderBookL2 {
     pub bids: BTreeMap<Price, Quantity>,
@@ -750,15 +790,17 @@ struct OrderBookL2 {
 
 ### Statistics (Statistics and Metrics)
 
-#### Main Metrics:
+#### Main Metrics
 
 ##### `TradingSummary`
+
 - Total and per-instrument PnL
 - Number of trades (winners/losers)
 - Total volume traded
 - Fees paid
 
 ##### `TearSheet`
+
 - **Sharpe Ratio**: Risk-adjusted return
 - **Sortino Ratio**: Downside-focused Sharpe
 - **Maximum Drawdown**: Largest consecutive loss
@@ -766,20 +808,23 @@ struct OrderBookL2 {
 - **Win Rate**: Percentage of winning trades
 
 ##### `StatisticGenerators`
+
 - `Daily`, `Weekly`, `Monthly`: Temporal aggregation
 - `Rolling`: Rolling window metrics
 - `Cumulative`: Cumulative metrics
 
 ### Backtest (Backtesting System)
 
-#### Functionalities:
+#### Functionalities
 
 ##### `BacktestEngine`
+
 - Deterministic execution using historical data
 - Latency and slippage simulation
 - Processing thousands of concurrent backtests
 
 ##### `MarketDataInMemory`
+
 ```rust
 struct MarketDataInMemory {
     events: Arc<Vec<MarketStreamEvent>>,
@@ -788,6 +833,7 @@ struct MarketDataInMemory {
 ```
 
 ##### `BacktestArgs`
+
 ```rust
 struct BacktestArgsConstant {
     pub instruments: IndexedInstruments,
@@ -808,6 +854,7 @@ struct BacktestArgsDynamic {
 ## Detailed Operation Flow
 
 ### 1. Initialization
+
 ```rust
 // Configure instruments
 let instruments = IndexedInstruments::new(instrument_configs);
@@ -826,6 +873,7 @@ let engine = Engine::new(clock, engine_state, execution_txs, strategy, risk);
 ```
 
 ### 2. Event Processing
+
 ```rust
 // Main engine loop
 while let Some(event) = event_stream.next().await {
@@ -840,6 +888,7 @@ while let Some(event) = event_stream.next().await {
 ```
 
 ### 3. Algorithmic Order Generation
+
 ```rust
 // Inside engine when TradingState::Enabled
 let (cancels, opens) = strategy.generate_algo_orders(&engine.state);
@@ -855,6 +904,7 @@ for request in approved_opens {
 ```
 
 ### 4. State Update
+
 ```rust
 // Process market event
 match market_event.kind {
@@ -875,13 +925,15 @@ match market_event.kind {
 
 The `backtest` module provides complete infrastructure for historical strategy simulation:
 
-#### Main Components:
+#### Main Components
+
 - **`BacktestArgsConstant`**: Configuration shared between backtests (instruments, market data, execution configurations)
 - **`BacktestArgsDynamic`**: Parameters specific per backtest (strategy, risk management, identifier)
 - **`BacktestSummary`**: Results of an individual backtest
 - **`MultiBacktestSummary`**: Aggregation of multiple backtests
 
-#### Functionalities:
+#### Functionalities
+
 ```rust
 // Execute multiple concurrent backtests
 pub async fn run_backtests<MarketData, SummaryInterval, Strategy, Risk, GlobalData, InstrumentData>(
@@ -899,6 +951,7 @@ pub async fn backtest<MarketData, SummaryInterval, Strategy, Risk, GlobalData, I
 ### 6.2 Market Data for Backtesting
 
 `BacktestMarketData` interface allows different historical data sources:
+
 - Timestamp support for temporal replay
 - Chronologically ordered market event stream
 - Integration with `HistoricalClock` for precise timing
@@ -909,7 +962,8 @@ pub async fn backtest<MarketData, SummaryInterval, Strategy, Risk, GlobalData, I
 - Efficient sharing of constant data via `Arc`
 - Independent dynamic configurations per thread
 
-#### Usage Example:
+#### Usage Example
+
 ```rust
 // Shared constant configuration
 let args_constant = Arc::new(BacktestArgsConstant {
@@ -939,12 +993,14 @@ let summary = run_backtests(args_constant, args_dynamic_iter).await?;
 
 The `system` module provides top-level architecture for composing trading systems:
 
-#### Components:
+#### Components
+
 - **`System<Engine, Event>`**: Main initialized and running system
 - **`SystemAuxillaryHandles`**: Handles for auxiliary components
 - **`SystemBuilder`**: Builder for system configuration
 
-#### Main Functionalities:
+#### Main Functionalities
+
 ```rust
 impl<Engine, Event> System<Engine, Event> {
     // Graceful shutdown
@@ -990,11 +1046,13 @@ pub trait EngineClock {
 ### 8.2 Implementations
 
 #### LiveClock
+
 - For live trading
 - Uses `Utc::now()` directly
 - Simple implementation for real-time
 
 #### HistoricalClock
+
 - For backtesting
 - Derives current time from processed event timestamps
 - Compensates latency using exchange timestamps
@@ -1053,7 +1111,8 @@ pub fn init_json_logging() // JSON format logs
 
 High-performance web integration framework:
 
-#### Core Abstractions:
+#### Core Abstractions
+
 - **RestClient**: Configurable and signed HTTP communication
 - **ExchangeStream**: Communication over asynchronous stream protocols
 
@@ -1096,6 +1155,7 @@ The project uses Cargo as package and build manager, with workspace organizing m
 ### 11.2 Build Structure
 
 Uses Rust's `async`/`await` for asynchronous operations and multiple specialized dependencies for trading:
+
 - `tokio` for asynchronous runtime
 - `serde` for serialization
 - `tracing` for structured logging
@@ -1140,6 +1200,7 @@ Uses Rust's `async`/`await` for asynchronous operations and multiple specialized
 ## Implementation Examples
 
 ### Simple Market Making Strategy
+
 ```rust
 impl AlgoStrategy for SimpleMarketMaker {
     type State = EngineState<GlobalData, InstrumentData>;
@@ -1177,6 +1238,7 @@ impl AlgoStrategy for SimpleMarketMaker {
 ```
 
 ### Custom Risk Manager
+
 ```rust
 impl RiskManager for CustomRiskManager {
     type State = EngineState<GlobalData, InstrumentData>;
@@ -1211,21 +1273,25 @@ impl RiskManager for CustomRiskManager {
 ## Performance and Optimizations
 
 ### Optimized Data Structures
+
 - **`IndexedInstruments`**: HashMap with O(1) lookups
 - **`OrderBookL2`**: BTreeMap for efficient ordering
 - **`PositionMap`**: Cache-friendly for fast access
 
 ### Memory Management
+
 - Extensive use of `Arc<T>` for shared data
 - Object pools for reusable structures
 - Zero-copy parsing where possible
 
 ### Concurrency
+
 - Actor model with asynchronous channels
 - Lock-free where possible
 - Parallel backtest processing
 
 ### Monitoring
+
 - End-to-end latency metrics
 - Processed event counters
 - Performance degradation alerts
@@ -1233,6 +1299,7 @@ impl RiskManager for CustomRiskManager {
 ## Advanced Configuration and Best Practices
 
 ### System Configuration
+
 ```rust
 // Typical production system configuration
 let system_config = SystemConfig {
@@ -1262,6 +1329,7 @@ let engine_state = EngineStateBuilder::new(&instruments, GlobalData::default(), 
 ### Implementation Patterns
 
 #### Indicator-Based Strategy
+
 ```rust
 pub struct MovingAverageStrategy {
     short_window: usize,
@@ -1295,6 +1363,7 @@ impl AlgoStrategy for MovingAverageStrategy {
 ```
 
 #### Advanced Risk Manager
+
 ```rust
 pub struct AdvancedRiskManager {
     max_position_size: Decimal,
@@ -1330,6 +1399,7 @@ impl RiskManager for AdvancedRiskManager {
 ### Debugging and Troubleshooting
 
 #### Structured Logs
+
 ```rust
 // Configure logs with specific levels
 std::env::set_var("RUST_LOG", "toucan=debug,toucan_data=info");
@@ -1344,6 +1414,7 @@ fn generate_signal(&self, state: &EngineState) -> Option<Signal> {
 ```
 
 #### Audit Trail
+
 ```rust
 // Enable auditing for debugging
 let system = SystemBuild::new(
@@ -1369,6 +1440,7 @@ if let Some(audit) = system.take_audit() {
 ### Performance Optimizations
 
 #### Object Pooling
+
 ```rust
 // Use pools for reusable objects
 pub struct OrderPool {
@@ -1388,6 +1460,7 @@ impl OrderPool {
 ```
 
 #### Batch Processing
+
 ```rust
 // Process multiple events in batch for better throughput
 pub fn process_market_events_batch(&mut self, events: Vec<MarketEvent>) {
@@ -1402,6 +1475,7 @@ pub fn process_market_events_batch(&mut self, events: Vec<MarketEvent>) {
 ### Deployment and Monitoring
 
 #### Custom Metrics
+
 ```rust
 use metrics::{counter, histogram, gauge};
 
@@ -1424,6 +1498,7 @@ impl StrategyMetrics {
 ```
 
 #### Health Checks
+
 ```rust
 pub struct SystemHealthChecker {
     last_market_data: Option<DateTime<Utc>>,

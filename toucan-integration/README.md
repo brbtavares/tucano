@@ -8,11 +8,11 @@ primarily for public data collection & trade execution. It is:
 * **Flexible**: Compatible with any protocol (WebSocket, FIX, Http, etc.), any input/output model, and any user defined transformations.
 
 Core abstractions include:
+
 - **RestClient** providing configurable signed Http communication between client & server.
 - **ExchangeStream** providing configurable communication over any asynchronous stream protocols (WebSocket, FIX, etc.).
 
 Both core abstractions provide the robust glue you need to conveniently translate between server & client data models.
-
 
 **See: [`Toucan`], [`Toucan-Data`] & [`Toucan-Execution`]**
 
@@ -29,6 +29,7 @@ Toucan-Integration is a high-performance, low-level, configurable framework for 
 integrations. 
 
 ### RestClient
+
 **(sync private & public Http communication)**
 
 At a high level, a `RestClient` is has a few major components that allow it to execute `RestRequests`:
@@ -36,6 +37,7 @@ At a high level, a `RestClient` is has a few major components that allow it to e
 * `HttpParser` that translates API specific responses into the desired output types.
 
 ### ExchangeStream
+
 **(async communication using streaming protocols such as WebSocket and FIX)**
 
 At a high level, an `ExchangeStream` is made up of a few major components:
@@ -46,7 +48,8 @@ At a high level, an `ExchangeStream` is made up of a few major components:
 
 ## Examples
 
-#### Fetch Ftx Account Balances Using Signed GET request:
+#### Fetch Ftx Account Balances Using Signed GET request
+
 ```rust,no_run
 use std::borrow::Cow;
 
@@ -207,7 +210,7 @@ async fn main() {
 }
 ```
 
-#### Consume Binance Futures tick-by-tick Trades and calculate a rolling sum of volume:
+#### Consume Binance Futures tick-by-tick Trades and calculate a rolling sum of volume
 
 ```rust,no_run
 use toucan_integration::{
@@ -317,9 +320,11 @@ where
     data.parse::<T>().map_err(de::Error::custom)
 }
 ```
+
 **For a larger, "real world" example, see the [`Toucan-Data`] repository.**
 
 ## Related Projects
+
 In addition to the Toucan-Integration crate, the Toucan project also maintains:
 * [`Toucan`]: High-performance, extensible & modular trading components with batteries-included. Contains a
   pre-built trading Engine that can serve as a live-trading or backtesting system.
@@ -328,4 +333,5 @@ In addition to the Toucan-Integration crate, the Toucan project also maintains:
 * [`Toucan-Execution`]: Financial exchange integrations for trade execution.
 
 ## Roadmap
+
 * Add new default StreamParser implementations to enable integration with other popular systems such as Kafka. 

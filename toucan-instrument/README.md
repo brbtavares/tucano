@@ -1,4 +1,5 @@
 # Toucan-Instrument
+
 Toucan-Instrument contains core Exchange, Instrument and Asset data structures and associated utilities.
 
 **See: [`Toucan`], [`Toucan-Data`], [`Toucan-Execution`] & [`Toucan-Integration`] for
@@ -13,9 +14,11 @@ comprehensive documentation of other Toucan libraries.**
 [toucan-examples]: https://github.com/brbtavares/toucan/tree/main/toucan/examples
 
 ## Overview
+
 Toucan-Instrument contains core Exchange, Instrument and Asset data structures and associated utilities.
 
 ## Examples
+
 * See [here][toucan-examples] for example of Toucan-Instrument in action.
 * See other sub-crates for further examples of each library.
 

@@ -1,4 +1,5 @@
 # Toucan
+
 Toucan core is a Rust framework for building high-performance live-trading, paper-trading and back-testing systems.
 * **Fast**: Written in native Rust. Minimal allocations. Data-oriented state management system with direct index lookups.
 * **Robust**: Strongly typed. Thread safe. Extensive test coverage.
@@ -17,6 +18,7 @@ comprehensive documentation of other Toucan libraries.**
 [toucan-examples]: https://github.com/brbtavares/toucan/tree/main/toucan/examples
 
 ## Overview
+
 Toucan core is a Rust framework for building professional grade live-trading, paper-trading and back-testing systems. The
 central Engine facilitates executing on many exchanges simultaneously, and offers the flexibility to run most types of
 trading strategies. It allows turning algorithmic order generation on/off and can action Commands issued from external
@@ -33,6 +35,7 @@ At a high-level, it provides a few major components:
 * Comprehensive statistics package that provides a summary of key performance metrics (PnL, Sharpe, Sortino, Drawdown, etc.).
 
 ## Examples
+
 * For a comprehensive list of compilable examples see [here][toucan-examples].
 * See other sub-crates for further examples of each library.
 
@@ -121,20 +124,26 @@ fn load_config() -> Result<SystemConfig, Box<dyn std::error::Error>> {
 ```
 
 ## Getting Help
+
 For questions, issues, or support with Toucan core, please:
+
 - Check the [API Documentation] for detailed usage examples
 - Open an issue on the [GitHub repository](https://github.com/brbtavares/toucan/issues)
 - Review the examples in the [toucan-examples] directory
 
 ## Support Development
+
 If you find Toucan useful, consider:
+
 - ⭐ Starring the repository
 - 🐛 Reporting bugs or issues
 - 🔧 Contributing improvements and new features
 - 📖 Improving documentation
 
 ## Contributing
+
 Thanks for helping to develop the Toucan ecosystem! To contribute:
+
 - Open issues for bugs or feature requests
 - Submit pull requests for improvements
 - Add new strategies or risk managers

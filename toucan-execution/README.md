@@ -1,4 +1,5 @@
 # Toucan-Execution
+
 Stream private account data from financial venues, and execute (live or mock) orders. Also provides
 a feature rich MockExchange and MockExecutionClient to assist with backtesting and paper-trading.
 
@@ -20,11 +21,13 @@ comprehensive documentation of other Toucan libraries.**
 [API Documentation]: https://docs.rs/toucan-execution/latest/toucan_execution
 
 ## Overview
+
 High-performance and normalised trading interface capable of executing across many financial venues. Also provides
 a feature rich simulated exchange to assist with backtesting and dry-trading. Communicate with an exchange by 
 initialising it's associated `ExecutionClient` instance. 
 
 ## Examples
+
 * See [here][toucan-examples] for example of Toucan-Instrument in action.
 * See other sub-crates for further examples of each library.
 
