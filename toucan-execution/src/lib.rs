@@ -1,4 +1,4 @@
-#![forbid(unsafe_code/// * **Extensible**: Toucan-Execution is highly extensible, making it easy to contribute by adding new exchange integrations!]
+#![forbid(unsafe_code)]
 #![warn(
     unused,
     clippy::cognitive_complexity,
