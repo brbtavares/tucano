@@ -1,7 +1,9 @@
 
 # Toucan-Data
-A high-performance WebSocket integration library for streaming public market data from leading cryptocurrency 
+
+A high-performance WebSocket integration library for streaming public market data from leading cryptocurrency
 exchanges - batteries included. It is:
+
 * **Easy**: Toucan-Data's simple StreamBuilder interface allows for easy & quick setup (see example below!).
 * **Normalised**: Toucan-Data's unified interface for consuming public WebSocket data means every Exchange returns a normalised data model.
 * **Real-Time**: Toucan-Data utilises real-time WebSocket integrations enabling the consumption of normalised tick-by-tick data.
@@ -16,19 +18,20 @@ comprehensive documentation of other Toucan libraries.**
 [`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
 
 ## Overview
-Toucan-Data is a high-performance WebSocket integration library for streaming public market data from leading cryptocurrency 
+
+Toucan-Data is a high-performance WebSocket integration library for streaming public market data from leading cryptocurrency
 exchanges. It presents an easy-to-use and extensible set of interfaces that can deliver normalised exchange data in real-time.
 
-From a user perspective, the major component is the `StreamBuilder` structures that assists in initialising an 
-arbitrary number of exchange `MarketStream`s using input `Subscription`s. Simply build your dream set of 
+From a user perspective, the major component is the `StreamBuilder` structures that assists in initialising an
+arbitrary number of exchange `MarketStream`s using input `Subscription`s. Simply build your dream set of
 `MarketStreams` and `Toucan-Data` will do the rest!
 
 ### Supported Exchange Subscriptions
 
 |        Exchange         |         Constructor Code         |               InstrumentKinds               |                SubscriptionKinds                 |
 |:-----------------------:|:--------------------------------:|:-------------------------------------------:|:------------------------------------------------:|
-|     **BinanceSpot**     |     `BinanceSpot::default()`     |                    Spot                     | PublicTrades <br> OrderBooksL1 <br> OrderBooksL2 |
-|  **BinanceFuturesUsd**  |  `BinanceFuturesUsd::default()`  |                  Perpetual                  | PublicTrades <br> OrderBooksL1 <br> OrderBooksL2 |
+|     **BinanceSpot**     |     `BinanceSpot::default()`     |                    Spot                     | PublicTrades, OrderBooksL1, OrderBooksL2 |
+|  **BinanceFuturesUsd**  |  `BinanceFuturesUsd::default()`  |                  Perpetual                  | PublicTrades, OrderBooksL1, OrderBooksL2 |
 |      **Bitfinex**       |            `Bitfinex`            |                    Spot                     |                   PublicTrades                   |
 |       **Bitmex**        |             `Bitmex`             |                  Perpetual                  |                   PublicTrades                   |
 |      **BybitSpot**      |      `BybitSpot::default()`      |                    Spot                     |                   PublicTrades                   |
@@ -40,14 +43,15 @@ arbitrary number of exchange `MarketStream`s using input `Subscription`s. Simply
 | **GateioPerpetualsUsd** | `GateioPerpetualsUsd::default()` |                  Perpetual                  |                   PublicTrades                   |
 | **GateioPerpetualsBtc** | `GateioPerpetualsBtc::default()` |                  Perpetual                  |                   PublicTrades                   |
 |  **GateioOptionsBtc**   |    `GateioOptions::default()`    |                   Option                    |                   PublicTrades                   |
-|       **Kraken**        |             `Kraken`             |                    Spot                     |          PublicTrades <br> OrderBooksL1          |
-|         **Okx**         |              `Okx`               | Spot <br> Future <br> Perpetual <br> Option |                   PublicTrades                   |
-
+|       **Kraken**        |             `Kraken`             |                    Spot                     |          PublicTrades, OrderBooksL1          |
+|         **Okx**         |              `Okx`               | Spot, Future, Perpetual, Option |                   PublicTrades                   |
 
 ## Examples
-See the `/examples` directory for a comprehensive selection of usage examples! 
+
+See the `/examples` directory for a comprehensive selection of usage examples!
 
 ### Multi Exchange Public Trades
+
 ```rust,no_run
 use toucan_data::{
     exchange::{
@@ -133,13 +137,15 @@ async fn main() {
 ```
 
 ### Adding A New Exchange Connector
+
 1. Add a new `Connector` trait implementation in src/exchange/<exchange_name>.mod.rs (eg/ see exchange::okx::Okx).
 2. Follow on from "Adding A New Subscription Kind For An Existing Exchange Connector" below!
 
 ### Adding A New SubscriptionKind For An Existing Exchange Connector
+
 1. Add a new `SubscriptionKind` trait implementation in src/subscription/<sub_kind_name>.rs (eg/ see subscription::trade::PublicTrades).
 2. Define the `SubscriptionKind::Event` data model (eg/ see subscription::trade::PublicTrade).
-3. Define the `MarketStream` type the exchange `Connector` will initialise for the new `SubscriptionKind`: <br>
+3. Define the `MarketStream` type the exchange `Connector` will initialise for the new `SubscriptionKind`:
    ie/ `impl StreamSelector<SubscriptionKind> for <ExistingExchangeConnector> { ... }`
 4. Try to compile and follow the remaining steps!
 5. Add a toucan-data-rs/examples/<sub_kind_name>_streams.rs example in the standard format :)
