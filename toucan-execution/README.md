@@ -11,14 +11,11 @@ a feature rich MockExchange and MockExecutionClient to assist with backtesting a
 **See: [`Toucan`], [`Toucan-Data`], [`Toucan-Instrument`] & [`Toucan-Integration`] for
 comprehensive documentation of other Toucan libraries.**
 
-[API Documentation]
-
 [`Toucan`]: https://github.com/brbtavares/toucan
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Instrument`]: https://github.com/brbtavares/toucan/tree/main/toucan-instrument
 [`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
 [toucan-examples]: https://github.com/brbtavares/toucan/tree/main/toucan/examples
-[API Documentation]: https://docs.rs/toucan-execution/latest/toucan_execution
 
 ## Overview
 

@@ -13,7 +13,6 @@ comprehensive documentation of other Toucan libraries.**
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
 [`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
-[API Documentation]: https://docs.rs/toucan/latest/toucan/
 
 [toucan-examples]: https://github.com/brbtavares/toucan/tree/main/toucan/examples
 
@@ -127,7 +126,6 @@ fn load_config() -> Result<SystemConfig, Box<dyn std::error::Error>> {
 
 For questions, issues, or support with Toucan core, please:
 
-- Check the [API Documentation] for detailed usage examples
 - Open an issue on the [GitHub repository](https://github.com/brbtavares/toucan/issues)
 - Review the examples in the [toucan-examples] directory
 

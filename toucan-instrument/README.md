@@ -9,7 +9,6 @@ comprehensive documentation of other Toucan libraries.**
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
 [`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
-[API Documentation]: https://docs.rs/toucan/latest/toucan/
 
 [toucan-examples]: https://github.com/brbtavares/toucan/tree/main/toucan/examples
 

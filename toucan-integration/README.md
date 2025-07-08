@@ -16,12 +16,9 @@ Both core abstractions provide the robust glue you need to conveniently translat
 
 **See: [`Toucan`], [`Toucan-Data`] & [`Toucan-Execution`]**
 
-[API Documentation]
-
 [`Toucan`]: https://github.com/brbtavares/toucan
 [`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
 [`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
-[API Documentation]: https://docs.rs/toucan-data/latest/toucan_integration
 
 ## Overview
 
