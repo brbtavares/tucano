@@ -1,6 +1,14 @@
 # Binance Client Implementation
 
-This document describes the current state of the Binance execution client and the roadmap for completing the implementation.
+## 🏗️ Architecture Context
+
+**⚠️ Important**: This is the **PRIVATE account data** implementation for Binance in the `toucan-execution` subcrate. This is completely separate from the **public market data** implementation in `toucan-data`.
+
+### Data Stream Separation
+- **This implementation** (`toucan-execution`): Private account data (balances, orders, trades) - requires API authentication
+- **Different implementation** (`toucan-data`): Public market data (order books, public trades) - no authentication required
+
+See [../../../../../ARCHITECTURE.md](../../../../../ARCHITECTURE.md) for detailed information about this separation.
 
 ## Current Status
 
