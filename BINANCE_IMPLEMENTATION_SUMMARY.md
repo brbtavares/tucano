@@ -1,5 +1,15 @@
 # Binance Client Implementation - Completion Summary
 
+## 🏗️ Architecture Context
+
+This implementation is part of the **`toucan-execution`** subcrate, which handles **private account data** and order execution. This is completely separate from the **`toucan-data`** subcrate that handles public market data streams.
+
+**Key Distinction:**
+- **`toucan-data`**: Public market data (order books, trades) - ✅ fully implemented
+- **`toucan-execution`**: Private account data (balances, orders) - 🚧 skeleton ready for API integration
+
+See [ARCHITECTURE.md](../ARCHITECTURE.md) and [TOUCAN_WEBSOCKET_SEPARATION_GUIDE.md](../TOUCAN_WEBSOCKET_SEPARATION_GUIDE.md) for detailed information about this separation.
+
 ## ✅ Successfully Completed
 
 The Binance execution client has been successfully implemented as a working skeleton that integrates fully with the Toucan project architecture. Here's what has been accomplished:

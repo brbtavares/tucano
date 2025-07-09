@@ -25,6 +25,15 @@ Toucan is an algorithmic trading ecosystem of Rust libraries for building high-p
 * **Toucan-Execution**: Stream private account data and execute orders. Easily extensible via the ExecutionClient interface.
 * **Toucan-Integration**: Low-level frameworks for flexible REST/WebSocket integrations.
 
+## 🏗️ Architecture
+
+Toucan maintains a clear separation between **public market data** and **private account data**:
+
+* **📊 Public Data** (`toucan-data`): Real-time market information (order books, trades, liquidations) - no authentication required
+* **🔐 Private Data** (`toucan-execution`): Account-specific information (balances, orders, trades) - requires API keys and authentication
+
+This separation ensures security, performance, and clean code organization. See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed information about the data flow and implementation status.
+
 ## Notable Features
 
 * Stream public market data from financial venues via the [`Toucan-Data`] library.
