@@ -4,3 +4,6 @@ Cargo.lock
 
 # utils
 fix_markdown.py
+
+# Context file
+repo_context.md
