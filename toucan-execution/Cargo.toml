@@ -34,6 +34,15 @@ thiserror = { workspace = true }
 
 # SerDe
 serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# Crypto for Binance signing (commented out for now)
+# hex = "0.4"
+# hmac = "0.12"
+# sha2 = "0.10"
+
+# HTTP client (commented out for now due to OpenSSL issues)
+# reqwest = { version = "0.11", features = ["json"] }
 
 # Misc
 rand = { workspace = true }
