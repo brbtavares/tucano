@@ -1,7 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
-    "toucan",
+    "toucan-core",
     "toucan-data",
     "toucan-execution",
     "toucan-integration",
@@ -11,6 +11,7 @@ members = [
 
 [workspace.dependencies]
 # Toucan Ecosystem
+toucan-core = { path = "./toucan-core", version = "0.12.2" }
 toucan-integration = { path = "./toucan-integration", version = "0.9.1" }
 toucan-instrument = { path = "./toucan-instrument", version = "0.3.1" }
 toucan-data = { path = "./toucan-data", version = "0.10.1" }

@@ -1,4 +1,4 @@
-use toucan::{
+use toucan_core::{
     engine::{
         clock::LiveClock,
         state::{

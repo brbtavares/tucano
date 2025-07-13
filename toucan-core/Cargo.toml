@@ -1,9 +1,9 @@
 [package]
-name = "toucan"
+name = "toucan-core"
 version = "0.12.2"
 edition = "2024"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-documentation = "https://docs.rs/toucan"
+documentation = "https://docs.rs/toucan-core"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
 description = "Framework for building high-performance live-trading, paper-trading and back-testing systems"

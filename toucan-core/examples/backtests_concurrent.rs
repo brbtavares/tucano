@@ -1,4 +1,4 @@
-use toucan::{
+use toucan_core::{
     backtest::{
         BacktestArgsConstant, BacktestArgsDynamic,
         market_data::{BacktestMarketData, MarketDataInMemory},
@@ -38,7 +38,7 @@ pub struct Config {
 #[tokio::main]
 async fn main() {
     // Initialise Tracing
-    toucan::logging::init_logging();
+    toucan_core::logging::init_logging();
 
     let Config {
         risk_free_return,

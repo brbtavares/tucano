@@ -1,4 +1,4 @@
-use toucan::{
+use toucan_core::{
     EngineEvent,
     engine::{
         audit::state_replica::StateReplicaManager,
