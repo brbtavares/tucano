@@ -3,9 +3,9 @@ use crate::{
         Engine, EngineOutput, UpdateFromAccountOutput, UpdateFromMarketOutput,
         audit::context::EngineContext, clock::EngineClock, error::UnrecoverableEngineError,
     },
-    strategy::{on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled},
 };
 use toucan_integration::{FeedEnded, Terminal, collection::none_one_or_many::NoneOneOrMany};
+use toucan_strategy::{OnDisconnectStrategy, OnTradingDisabled};
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 

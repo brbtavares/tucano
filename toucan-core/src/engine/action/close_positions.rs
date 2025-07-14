@@ -8,9 +8,9 @@ use crate::{
             order::in_flight_recorder::InFlightRequestRecorder,
         },
     },
-    strategy::close_positions::ClosePositionsStrategy,
 };
 use toucan_instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use toucan_strategy::ClosePositionsStrategy;
 use std::fmt::Debug;
 
 /// Trait that defines how the [`Engine`] generates & sends order requests for closing open
@@ -43,20 +43,21 @@ where
     ExecutionTxs: ExecutionTxMap<ExchangeKey, InstrumentKey>,
     Strategy: ClosePositionsStrategy<ExchangeKey, AssetKey, InstrumentKey, State = State>,
     ExchangeKey: Debug + Clone,
+    AssetKey: Debug,
     InstrumentKey: Debug + Clone,
 {
     fn close_positions(
         &mut self,
         filter: &InstrumentFilter<ExchangeKey, AssetKey, InstrumentKey>,
     ) -> SendCancelsAndOpensOutput<ExchangeKey, InstrumentKey> {
-        // Generate orders
+        // Generate orders - filter implements Debug so we can pass it directly
         let (cancels, opens) = self.strategy.close_positions_requests(&self.state, filter);
 
         // Bypass risk checks...
 
         // Send order requests
-        let cancels = self.send_requests(cancels);
-        let opens = self.send_requests(opens);
+        let cancels = self.send_requests(cancels.into_iter());
+        let opens = self.send_requests(opens.into_iter());
 
         // Record in flight order requests
         self.state.record_in_flight_cancels(&cancels.sent);

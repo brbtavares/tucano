@@ -7,12 +7,12 @@ use crate::{
         state::order::in_flight_recorder::InFlightRequestRecorder,
     },
     risk::{RiskApproved, RiskManager, RiskRefused},
-    strategy::algo::AlgoStrategy,
 };
 use toucan_execution::order::request::{
     OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen,
 };
 use toucan_instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use toucan_strategy::AlgoStrategy;
 use toucan_integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

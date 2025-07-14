@@ -28,6 +28,7 @@ toucan-integration = { workspace = true }
 toucan-instrument = { workspace = true }
 toucan-data = { workspace = true }
 toucan-execution = { workspace = true }
+toucan-strategy = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

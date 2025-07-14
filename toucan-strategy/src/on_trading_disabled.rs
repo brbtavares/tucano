@@ -1,6 +1,4 @@
-use crate::engine::Engine;
-
-/// Strategy interface that defines what actions an [`Engine`] should perform after the
+/// Strategy interface that defines what actions should be performed after the
 /// `TradingState` is set to `TradingState::Disabled`.
 ///
 /// For example, some strategies may wish to cancel all orders, close all positions, etc.
@@ -13,8 +11,9 @@ where
     /// For example, this could include any order requests generated.
     type OnTradingDisabled;
 
-    /// Perform [`Engine`] actions after the `TradingState` is set to `TradingState::Disabled`.
-    fn on_trading_disabled(
-        engine: &mut Engine<Clock, State, ExecutionTxs, Self, Risk>,
-    ) -> Self::OnTradingDisabled;
+    /// Perform actions after the `TradingState` is set to `TradingState::Disabled`.
+    ///
+    /// This method is called when trading is disabled.
+    /// Implementations should not assume access to the engine internals.
+    fn on_trading_disabled() -> Self::OnTradingDisabled;
 }

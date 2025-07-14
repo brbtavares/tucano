@@ -1,0 +1,19 @@
+[package]
+name = "toucan-strategy"
+version = "0.1.0"
+edition = "2024"
+authors = ["JustAStream <justastream.code@gmail.com>"]
+documentation = "https://docs.rs/toucan-strategy"
+repository = "https://github.com/brbtavares/toucan"
+readme = "README.md"
+description = "Strategy interfaces and implementations for the Toucan trading ecosystem"
+keywords = ["trading", "strategies", "algo", "crypto", "investment"]
+categories = ["algorithms", "finance"]
+
+[dependencies]
+# Toucan Ecosystem
+toucan-execution = { workspace = true }
+toucan-instrument = { workspace = true }
+
+# Data Structures
+rust_decimal = { workspace = true }

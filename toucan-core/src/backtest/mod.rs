@@ -16,10 +16,6 @@ use crate::{
     error::ToucanError,
     risk::RiskManager,
     statistic::time::TimeInterval,
-    strategy::{
-        algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
-        on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
-    },
     system::{builder::EngineFeedMode, config::ExecutionConfig},
 };
 use crate::{
@@ -28,6 +24,9 @@ use crate::{
     system::builder::{AuditMode, SystemBuild},
 };
 use toucan_data::event::MarketEvent;
+use toucan_strategy::{
+    AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
+};
 use toucan_execution::AccountEvent;
 use toucan_instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
 use futures::future::try_join_all;

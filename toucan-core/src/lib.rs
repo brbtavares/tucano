@@ -28,7 +28,7 @@
 //! At a high-level, it provides a few major components:
 //! * `Engine` with plug and play `Strategy` and `RiskManager` components.
 //! * Centralised cache friendly `EngineState` management with O(1) constant lookups using indexed data structures.
-//! * `Strategy` interfaces for customising Engine behavior (AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, etc.).
+//! * Strategy interfaces available in the `toucan-strategy` crate for customising Engine behavior.
 //! * `RiskManager` interface for defining custom risk logic which checking generated algorithmic orders.
 //! * Event-driven system that allows for Commands to be issued from external processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.),
 //!   as well as turning algorithmic trading on/off.
@@ -79,7 +79,11 @@ pub mod statistic;
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
-pub mod strategy;
+/// 
+/// **Note**: Strategy interfaces have been moved to the `toucan-strategy` crate.
+/// Import them with: `use toucan_strategy::{AlgoStrategy, ClosePositionsStrategy, ...};`
+// Remove the strategy module as it's now a separate crate
+// pub mod strategy;
 
 /// Utilities for initialising and interacting with a full trading system.
 pub mod system;

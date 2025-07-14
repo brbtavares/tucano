@@ -22,12 +22,11 @@ use crate::{
     risk::RiskManager,
     shutdown::SyncShutdown,
     statistic::summary::TradingSummaryGenerator,
-    strategy::{
-        algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
-        on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
-    },
 };
 use toucan_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use toucan_strategy::{
+    AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
+};
 use toucan_execution::AccountEvent;
 use toucan_instrument::{asset::QuoteAsset, exchange::ExchangeIndex, instrument::InstrumentIndex};
 use toucan_integration::channel::Tx;
@@ -253,7 +252,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
             .trading
             .update(update)
             .transitioned_to_disabled()
-            .then(|| Strategy::on_trading_disabled(self))
+            .then(|| Strategy::on_trading_disabled())
     }
 
     /// Update the [`Engine`] from an [`AccountStreamEvent`].
@@ -275,7 +274,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
                     .connectivity
                     .update_from_account_reconnecting(exchange);
 
-                UpdateFromAccountOutput::OnDisconnect(Strategy::on_disconnect(self, *exchange))
+                UpdateFromAccountOutput::OnDisconnect(Strategy::on_disconnect(*exchange))
             }
             AccountStreamEvent::Item(event) => self
                 .state
@@ -305,7 +304,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
                     .connectivity
                     .update_from_market_reconnecting(exchange);
 
-                UpdateFromMarketOutput::OnDisconnect(Strategy::on_disconnect(self, *exchange))
+                UpdateFromMarketOutput::OnDisconnect(Strategy::on_disconnect(*exchange))
             }
             MarketStreamEvent::Item(event) => {
                 self.state.update_from_market(event);

@@ -1,8 +1,3 @@
-use crate::engine::state::{
-    EngineState,
-    instrument::{InstrumentState, data::InstrumentDataState, filter::InstrumentFilter},
-    position::Position,
-};
 use toucan_execution::order::{
     OrderKey, OrderKind, TimeInForce,
     id::{ClientOrderId, StrategyId},
@@ -36,16 +31,14 @@ pub trait ClosePositionsStrategy<
     /// State used by the `ClosePositionsStrategy` to determine what open and cancel requests
     /// to generate.
     ///
-    /// For Toucan ecosystem strategies, this is the full `EngineState` of the trading system.
-    ///
-    /// eg/ `EngineState<DefaultGlobalData, DefaultInstrumentMarketData>`
+    /// For Toucan ecosystem strategies, this is typically the full `EngineState` of the trading system.
     type State;
 
     /// Generate orders based on current system `State`.
     fn close_positions_requests<'a>(
         &'a self,
         state: &'a Self::State,
-        filter: &'a InstrumentFilter<ExchangeKey, AssetKey, InstrumentKey>,
+        filter: &'a impl std::fmt::Debug, // Use a generic Debug bound instead of Any
     ) -> (
         impl IntoIterator<Item = OrderRequestCancel<ExchangeKey, InstrumentKey>> + 'a,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeKey, InstrumentKey>> + 'a,
@@ -56,53 +49,15 @@ pub trait ClosePositionsStrategy<
         InstrumentKey: 'a;
 }
 
-/// Naive `ClosePositionsStrategy` logic for closing open positions with market orders only.
+/// Build an equal but opposite `Side` `ImmediateOrCancel` `Market` order that neutralises a position.
 ///
-/// This function finds all open positions and generates equal but opposite `Side` market orders
-/// that will neutralise the position.
-pub fn close_open_positions_with_market_orders<'a, GlobalData, InstrumentData>(
-    strategy_id: &'a StrategyId,
-    state: &'a EngineState<GlobalData, InstrumentData>,
-    filter: &'a InstrumentFilter,
-    gen_cid: impl Fn(&InstrumentState<InstrumentData>) -> ClientOrderId + Copy + 'a,
-) -> (
-    impl IntoIterator<Item = OrderRequestCancel<ExchangeIndex, InstrumentIndex>> + 'a,
-    impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>> + 'a,
-)
-where
-    InstrumentData: InstrumentDataState,
-    ExchangeIndex: 'a,
-    AssetIndex: 'a,
-    InstrumentIndex: 'a,
-{
-    let open_requests = state
-        .instruments
-        .instruments(filter)
-        .filter_map(move |state| {
-            // Only generate orders if there is a Position and we have market data
-            let position = state.position.current.as_ref()?;
-            let price = state.data.price()?;
-
-            Some(build_ioc_market_order_to_close_position(
-                state.instrument.exchange,
-                position,
-                strategy_id.clone(),
-                price,
-                || gen_cid(state),
-            ))
-        });
-
-    (std::iter::empty(), open_requests)
-}
-
-/// Build an equal but opposite `Side` `ImmediateOrCancel` `Market` order that neutralises the
-/// provided [`Position`].
-///
-/// For example, if [`Position`] is LONG by 100, build a market order request to sell 100.
-pub fn build_ioc_market_order_to_close_position<ExchangeKey, AssetKey, InstrumentKey>(
+/// For example, if position is LONG by 100, build a market order request to sell 100.
+pub fn build_ioc_market_order_to_close_position<ExchangeKey, InstrumentKey>(
     exchange: ExchangeKey,
-    position: &Position<AssetKey, InstrumentKey>,
+    instrument: InstrumentKey,
     strategy_id: StrategyId,
+    side: Side,
+    quantity: Decimal,
     price: Decimal,
     gen_cid: impl Fn() -> ClientOrderId,
 ) -> OrderRequestOpen<ExchangeKey, InstrumentKey>
@@ -113,17 +68,17 @@ where
     OrderRequestOpen {
         key: OrderKey {
             exchange: exchange.clone(),
-            instrument: position.instrument.clone(),
+            instrument: instrument.clone(),
             strategy: strategy_id,
             cid: gen_cid(),
         },
         state: RequestOpen {
-            side: match position.side {
+            side: match side {
                 Side::Buy => Side::Sell,
                 Side::Sell => Side::Buy,
             },
             price,
-            quantity: position.quantity_abs,
+            quantity,
             kind: OrderKind::Market,
             time_in_force: TimeInForce::ImmediateOrCancel,
         },
