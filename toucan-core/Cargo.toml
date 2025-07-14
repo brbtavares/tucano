@@ -23,6 +23,7 @@ tokio = { workspace = true, features = ["fs"]}
 criterion = { workspace = true }
 
 [dependencies]
+toucan-analytics = { workspace = true }
 toucan-risk = { workspace = true }
 # Toucan Ecosystem
 toucan-integration = { workspace = true }

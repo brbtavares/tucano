@@ -70,13 +70,14 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
+pub use toucan_analytics as statistic;
 pub use toucan_risk as risk;
 pub use toucan_strategy as strategy;
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
-pub mod statistic;
+pub use toucan_analytics as statistic;
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
