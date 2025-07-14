@@ -1,11 +1,10 @@
+pub mod util;
+
+pub use util::*;
+
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-
-/// Utilities to assist with RiskManager checks.
-///
-/// For example, calculating notional values, price differences, etc.
-pub mod util;
 
 /// General interface for implementing simple RiskManager checks.
 ///
@@ -37,33 +36,40 @@ where
     T: Clone + PartialOrd,
 {
     type Input = T;
-    type Error = CheckFailHigherThan<T>;
+    type Error = CheckHigherThanError<T>;
 
     fn name() -> &'static str {
         "CheckHigherThan"
     }
 
     fn check(&self, input: &Self::Input) -> Result<(), Self::Error> {
-        if *input <= self.limit {
-            Ok(())
-        } else {
-            Err(CheckFailHigherThan {
-                limit: self.limit.clone(),
+        if input > &self.limit {
+            Err(CheckHigherThanError {
                 input: input.clone(),
+                limit: self.limit.clone(),
             })
+        } else {
+            Ok(())
         }
     }
 }
 
 /// Error returned when a [`CheckHigherThan`] validation fails.
 #[derive(
-    Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Deserialize, Serialize, Constructor, Error,
+    Debug,
+    Clone,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Deserialize,
+    Serialize,
+    Error,
+    Constructor,
 )]
-#[error("CheckHigherThanFailed: input {input} > limit {limit}")]
-pub struct CheckFailHigherThan<T> {
-    /// The limit value that was exceeded.
-    pub limit: T,
-
-    /// The input value that caused the check to fail.
+#[error("CheckHigherThan failed: input {input:?} > limit {limit:?}")]
+pub struct CheckHigherThanError<T> {
     pub input: T,
+    pub limit: T,
 }

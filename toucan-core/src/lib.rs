@@ -70,7 +70,8 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
-pub mod risk;
+pub use toucan_risk as risk;
+pub use toucan_strategy as strategy;
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///

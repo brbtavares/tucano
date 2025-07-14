@@ -95,3 +95,6 @@ impl<Clock, State, ExecutionTxs, Risk> OnTradingDisabled<Clock, State, Execution
         // Default implementation: do nothing
     }
 }
+
+/// Alias for DefaultStrategy for backward compatibility.
+pub type NoStrategy<State> = DefaultStrategy<State>;

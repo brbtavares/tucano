@@ -84,3 +84,35 @@ where
         },
     }
 }
+
+/// Generate market orders to close open positions.
+/// 
+/// This is a utility function that generates market orders to close all open positions
+/// for a given instrument and strategy.
+pub fn close_open_positions_with_market_orders<ExchangeKey, InstrumentKey>(
+    exchange: ExchangeKey,
+    instrument: InstrumentKey,
+    strategy_id: StrategyId,
+    side: Side,
+    quantity: Decimal,
+    price: Decimal,
+    gen_cid: impl Fn() -> ClientOrderId,
+) -> Vec<OrderRequestOpen<ExchangeKey, InstrumentKey>>
+where
+    ExchangeKey: Clone,
+    InstrumentKey: Clone,
+{
+    if quantity.is_zero() {
+        return vec![];
+    }
+    
+    vec![build_ioc_market_order_to_close_position(
+        exchange,
+        instrument,
+        strategy_id,
+        side,
+        quantity,
+        price,
+        gen_cid,
+    )]
+}

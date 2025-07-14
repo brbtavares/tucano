@@ -26,20 +26,15 @@ use toucan_core::{
         },
     },
     execution::{AccountStreamEvent, request::ExecutionRequest},
-    risk::DefaultRiskManager,
-    strategy::{
-        algo::AlgoStrategy,
-        close_positions::{ClosePositionsStrategy, close_open_positions_with_market_orders},
-        on_disconnect::OnDisconnectStrategy,
-        on_trading_disabled::OnTradingDisabled,
-    },
     test_utils::time_plus_days,
 };
+
 use toucan_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
     subscription::trade::PublicTrade,
 };
+
 use toucan_execution::{
     AccountEvent, AccountEventKind, AccountSnapshot,
     balance::{AssetBalance, Balance},
@@ -51,6 +46,7 @@ use toucan_execution::{
     },
     trade::{AssetFees, Trade, TradeId},
 };
+
 use toucan_instrument::{
     Side, Underlying,
     asset::AssetIndex,
@@ -64,6 +60,16 @@ use toucan_instrument::{
         },
     },
 };
+
+use toucan_risk::DefaultRiskManager;
+
+use toucan_strategy::{
+    algo::AlgoStrategy,
+    close_positions::{ClosePositionsStrategy, close_open_positions_with_market_orders},
+    on_disconnect::OnDisconnectStrategy,
+    on_trading_disabled::OnTradingDisabled,
+};
+
 use toucan_integration::{
     channel::{UnboundedTx, mpsc_unbounded},
     collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany},
