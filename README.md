@@ -1,167 +1,214 @@
-# Toucan
+# Toucan Trading Framework
 
-Toucan is an algorithmic trading ecosystem of Rust libraries for building high-performance live-trading, paper-trading and back-testing systems.
+A comprehensive Rust framework for building high-performance live-trading, paper-trading, and back-testing systems for cryptocurrency markets.
 
-* **Fast**: Written in native Rust. Minimal allocations. Data-oriented state management system with direct index lookups.
-* **Robust**: Strongly typed. Thread safe. Extensive test coverage.
-* **Customisable**: Plug and play Strategy and RiskManager components that facilitates most trading strategies (MarketMaking, StatArb, HFT, etc.).
-* **Scalable**: Multithreaded architecture with modular design. Leverages Tokio for I/O. Memory efficient data structures.
-
-**See: [`Toucan`], [`Toucan-Data`], [`Toucan-Instrument`], [`Toucan-Execution`] & [`Toucan-Integration`] for comprehensive documentation and examples for each library.**
-
-[`Toucan`]: https://github.com/brbtavares/toucan
-[`Toucan-Instrument`]: https://github.com/brbtavares/toucan/tree/main/toucan-instrument
-[`Toucan-Data`]: https://github.com/brbtavares/toucan/tree/main/toucan-data
-[`Toucan-Execution`]: https://github.com/brbtavares/toucan/tree/main/toucan-execution
-[`Toucan-Integration`]: https://github.com/brbtavares/toucan/tree/main/toucan-integration
+[![Documentation](https://img.shields.io/badge/docs-wiki-blue)](https://github.com/brbtavares/toucan/wiki)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Rust](https://img.shields.io/badge/rust-1.82+-orange)](https://www.rust-lang.org/)
 
 ## Overview
 
-Toucan is an algorithmic trading ecosystem of Rust libraries for building high-performance live-trading, paper-trading and back-testing systems. It is made up of several easy-to-use, extensible crates:
+Toucan is a modular, high-performance trading framework designed for cryptocurrency markets. It provides a complete ecosystem for:
 
-* **Toucan**: Algorithmic trading Engine with feature rich state management system.
-* **Toucan-Instrument**: Exchange, Instrument and Asset data structures and utilities.
-* **Toucan-Data**: Stream public market data from financial venues. Easily extensible via the MarketStream interface.
-* **Toucan-Execution**: Stream private account data and execute orders. Easily extensible via the ExecutionClient interface.
-* **Toucan-Integration**: Low-level frameworks for flexible REST/WebSocket integrations.
+- **Live Trading**: Real-time order execution across multiple exchanges
+- **Paper Trading**: Risk-free strategy testing with simulated execution
+- **Backtesting**: Historical strategy validation with comprehensive analytics
+- **Market Data**: Real-time WebSocket streams from leading exchanges
+- **Risk Management**: Configurable risk controls and position management
+- **Analytics**: Comprehensive performance metrics and reporting
 
-## 🏗️ Architecture
+## Key Features
 
-Toucan maintains a clear separation between **public market data** and **private account data**:
+- **🚀 High Performance**: Built in Rust with zero-cost abstractions and minimal allocations
+- **🔒 Type Safety**: Strongly typed architecture preventing runtime errors
+- **🔄 Multi-Exchange**: Unified interface for trading across different exchanges
+- **📊 Real-Time Data**: WebSocket integrations for live market data
+- **🎯 Modular Design**: Plugin architecture for strategies, risk managers, and execution
+- **� Comprehensive Analytics**: Built-in performance metrics and reporting
+- **🛡️ Risk Management**: Configurable risk controls and position limits
+- **🔧 Extensible**: Easy to add new exchanges, strategies, and features
 
-* **📊 Public Data** (`toucan-data`): Real-time market information (order books, trades, liquidations) - no authentication required
-* **🔐 Private Data** (`toucan-execution`): Account-specific information (balances, orders, trades) - requires API keys and authentication
+## Architecture
 
-This separation ensures security, performance, and clean code organization. See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed information about the data flow and implementation status.
+The Toucan framework consists of several interconnected crates:
 
-## Notable Features
+### Core Components
 
-* Stream public market data from financial venues via the [`Toucan-Data`] library.
-* Stream private account data, execute orders (live or mock)** via the [`Toucan-Execution`] library.
-* Plug and play Strategy and RiskManager components that facilitate most trading strategies.
-* Backtest utilities for efficiently running thousands of concurrent backtests.
-* Flexible Engine that facilitates trading strategies that execute on many exchanges simultaneously.
-* Use mock MarketStream or Execution components to enable back-testing on a near-identical trading system as live-trading.
-* Centralised cache friendly state management system with O(1) constant lookups using indexed data structures.
-* Robust Order management system - use stand-alone or with Toucan.
-* Trading summaries with comprehensive performance metrics (PnL, Sharpe, Sortino, Drawdown, etc.).
-* Turn on/off algorithmic trading from an external process (eg/ UI, Telegram, etc.) whilst still processing market/account data.
-* Issue Engine Commands from an external process (eg/ UI, Telegram, etc.) to initiate actions (CloseAllPositions, OpenOrders, CancelOrders, etc.).
-* EngineState replica manager that processes the Engine AuditStream to facilitate non-hot path monitoring components (eg/ UI, Telegram, etc.).
+- **[`core`](https://github.com/brbtavares/toucan/wiki/Core)** - Main trading engine and orchestration
+- **[`data`](https://github.com/brbtavares/toucan/wiki/Data)** - Market data streaming and normalization
+- **[`execution`](https://github.com/brbtavares/toucan/wiki/Execution)** - Order execution and exchange connectivity
+- **[`analytics`](https://github.com/brbtavares/toucan/wiki/Analytics)** - Performance metrics and statistical analysis
 
-[toucan-examples]: https://github.com/brbtavares/toucan/tree/main/toucan/examples
+### Supporting Components
 
-## Examples
+- **[`instrument`](https://github.com/brbtavares/toucan/wiki/Instrument)** - Financial instrument definitions and indexing
+- **[`integration`](https://github.com/brbtavares/toucan/wiki/Integration)** - WebSocket and HTTP client utilities
+- **[`strategy`](https://github.com/brbtavares/toucan/wiki/Strategy)** - Trading strategy interfaces and implementations
+- **[`risk`](https://github.com/brbtavares/toucan/wiki/Risk)** - Risk management and position controls
+- **[`macro`](https://github.com/brbtavares/toucan/wiki/Macro)** - Procedural macros for code generation
 
-* See [toucan examples][toucan-examples] for the compilable example including imports.
-* See sub-crates for further examples of each library.
+## Supported Exchanges
 
-### Paper Trading With Live Market Data & Mock Execution
+### Market Data Streaming
 
-```rust,no_run
-const FILE_PATH_SYSTEM_CONFIG: &str = "toucan/examples/config/system_config.json";
-const RISK_FREE_RETURN: Decimal = dec!(0.05);
+| Exchange | Spot | Futures | Options | Perpetuals |
+|----------|------|---------|---------|------------|
+| **Binance** | ✅ | ✅ | ❌ | ✅ |
+| **Bybit** | ✅ | ❌ | ❌ | ✅ |
+| **Coinbase** | ✅ | ❌ | ❌ | ❌ |
+| **Kraken** | ✅ | ❌ | ❌ | ❌ |
+| **OKX** | ✅ | ✅ | ✅ | ✅ |
+| **Gate.io** | ✅ | ✅ | ✅ | ✅ |
+| **Bitmex** | ❌ | ❌ | ❌ | ✅ |
+| **Bitfinex** | ✅ | ❌ | ❌ | ❌ |
+
+### Order Execution
+
+| Exchange | Trading | Authentication | WebSocket | REST API |
+|----------|---------|----------------|-----------|----------|
+| **Binance** | ✅ | ✅ | ✅ | ✅ |
+
+> **Note**: More exchanges are actively being added. See the [Exchange Integration Guide](https://github.com/brbtavares/toucan/wiki/Exchange-Integration) for details.
+
+## Quick Start
+
+### Installation
+
+Add Toucan to your `Cargo.toml`:
+
+```toml
+[dependencies]
+toucan-core = "0.12"
+toucan-data = "0.10"
+toucan-execution = "0.5"
+toucan-analytics = "0.1"
+```
+
+### Basic Usage
+
+```rust
+use toucan_core::prelude::*;
+use toucan_data::exchange::binance::BinanceSpot;
+use toucan_strategy::AlgoStrategy;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Initialise Tracing
-    init_logging();
-
-    // Load SystemConfig
-    let SystemConfig {
-        instruments,
-        executions,
-    } = load_config()?;
-
-    // Construct IndexedInstruments
-    let instruments = IndexedInstruments::new(instruments);
-
-    // Initialise MarketData Stream
-    let market_stream = init_indexed_multi_exchange_market_stream(
-        &instruments,
-        &[SubKind::PublicTrades, SubKind::OrderBooksL1],
-    )
-    .await?;
-
-    // Construct System Args
-    let args = SystemArgs::new(
-        &instruments,
-        executions,
-        LiveClock,
-        DefaultStrategy::default(),
-        DefaultRiskManager::default(),
-        market_stream,
-    );
-
-    // Build & run full system:
-    // See SystemBuilder for all configuration options
-    let mut system = SystemBuilder::new(args)
-        // Engine feed in Sync mode (Iterator input)
-        .engine_feed_mode(EngineFeedMode::Iterator)
-
-        // Audit feed is enabled (Engine sends audits)
-        .audit_mode(AuditMode::Enabled)
-
-        // Engine starts with TradingState::Disabled
-        .trading_state(TradingState::Disabled)
-
-        // Build System, but don't start spawning tasks yet
-        .build::<EngineEvent, DefaultGlobalData, DefaultInstrumentMarketData>()?
-
-        // Init System, spawning component tasks on the current runtime
-        .init_with_runtime(tokio::runtime::Handle::current())
+    // Initialize the trading engine
+    let mut engine = Engine::builder()
+        .with_exchange(BinanceSpot::default())
+        .with_strategy(MyStrategy::default())
+        .build()
         .await?;
 
-    // Take ownership of Engine audit receiver
-    let audit_rx = system.audit_rx.take().unwrap();
-
-    // Run dummy asynchronous AuditStream consumer
-    // Note: you probably want to use this Stream to replicate EngineState, or persist events, etc.
-    //  --> eg/ see examples/engine_sync_with_audit_replica_engine_state
-    let audit_task = tokio::spawn(async move {
-        let mut audit_stream = audit_rx.into_stream();
-        while let Some(audit) = audit_stream.next().await {
-            debug!(?audit, "AuditStream consumed AuditTick");
-            if let EngineAudit::Shutdown(_) = audit.event {
-                break;
-            }
-        }
-        audit_stream
-    });
-
-    // Enable trading
-    system.trading_state(TradingState::Enabled);
-
-    // Let the example run for 5 seconds...
-    tokio::time::sleep(Duration::from_secs(5)).await;
-
-    // Before shutting down, CancelOrders and then ClosePositions
-    system.cancel_orders(InstrumentFilter::None);
-    system.close_positions(InstrumentFilter::None);
-
-    // Shutdown
-    let (engine, _shutdown_audit) = system.shutdown().await?;
-    let _audit_stream = audit_task.await?;
-
-    // Generate TradingSummary<Daily>
-    let trading_summary = engine
-        .trading_summary_generator(RISK_FREE_RETURN)
-        .generate(Daily);
-
-    // Print TradingSummary<Daily> to terminal (could save in a file, send somewhere, etc.)
-    trading_summary.print_summary();
-
+    // Start live trading
+    engine.run().await?;
+    
     Ok(())
 }
-
-fn load_config() -> Result<SystemConfig, Box<dyn std::error::Error>> {
-    let file = File::open(FILE_PATH_SYSTEM_CONFIG)?;
-    let reader = BufReader::new(file);
-    let config = serde_json::from_reader(reader)?;
-    Ok(config)
-}
 ```
+
+### Examples
+
+The framework includes comprehensive examples:
+
+- **[Live Trading](core/examples/engine_sync_with_live_market_data_and_mock_execution_and_audit.rs)** - Real-time trading with live market data
+- **[Backtesting](core/examples/backtests_concurrent.rs)** - Historical strategy validation
+- **[Market Data Streaming](data/examples/multi_stream_multi_exchange.rs)** - Multi-exchange data feeds
+- **[Risk Management](core/examples/engine_sync_with_risk_manager_open_order_checks.rs)** - Risk controls implementation
+- **[Strategy Development](core/examples/engine_sync_with_multiple_strategies.rs)** - Custom strategy examples
+
+## Documentation
+
+Comprehensive documentation is available in the [Project Wiki](https://github.com/brbtavares/toucan/wiki):
+
+### Getting Started
+- [Installation Guide](https://github.com/brbtavares/toucan/wiki/Installation)
+- [Quick Start Tutorial](https://github.com/brbtavares/toucan/wiki/Quick-Start)
+- [Architecture Overview](https://github.com/brbtavares/toucan/wiki/Architecture)
+
+### Components
+- [Core Engine](https://github.com/brbtavares/toucan/wiki/Core)
+- [Market Data](https://github.com/brbtavares/toucan/wiki/Data)
+- [Order Execution](https://github.com/brbtavares/toucan/wiki/Execution)
+- [Analytics & Metrics](https://github.com/brbtavares/toucan/wiki/Analytics)
+
+### Development
+- [Strategy Development](https://github.com/brbtavares/toucan/wiki/Strategy-Development)
+- [Risk Management](https://github.com/brbtavares/toucan/wiki/Risk-Management)
+- [Exchange Integration](https://github.com/brbtavares/toucan/wiki/Exchange-Integration)
+- [Contributing Guide](https://github.com/brbtavares/toucan/wiki/Contributing)
+
+## Performance
+
+Toucan is designed for high-performance trading with:
+
+- **Low Latency**: Sub-millisecond order processing
+- **High Throughput**: Thousands of orders per second
+- **Memory Efficient**: Minimal allocations and zero-copy operations
+- **Scalable**: Multi-threaded architecture with async I/O
+
+## Development
+
+### Building
+
+```bash
+# Clone the repository
+git clone https://github.com/brbtavares/toucan.git
+cd toucan
+
+# Build all crates
+cargo build --release
+
+# Run tests
+cargo test
+
+# Run examples
+cargo run --example engine_sync_with_live_market_data_and_mock_execution_and_audit
+```
+
+### Project Structure
+
+```
+toucan/
+├── analytics/          # Performance metrics and analytics
+├── core/               # Main trading engine
+├── data/               # Market data streaming
+├── execution/          # Order execution and exchange APIs
+├── instrument/         # Financial instrument definitions
+├── integration/        # WebSocket and HTTP utilities
+├── macro/              # Procedural macros
+├── risk/               # Risk management
+├── strategy/           # Trading strategy interfaces
+└── examples/           # Usage examples
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](https://github.com/brbtavares/toucan/wiki/Contributing) for details on:
+
+- Code of Conduct
+- Development Process
+- Testing Requirements
+- Documentation Standards
+
+## Support
+
+- **Documentation**: [Project Wiki](https://github.com/brbtavares/toucan/wiki)
+- **Issues**: [GitHub Issues](https://github.com/brbtavares/toucan/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/brbtavares/toucan/discussions)
+
+## Roadmap
+
+See our [Project Roadmap](https://github.com/brbtavares/toucan/wiki/Roadmap) for upcoming features and improvements.
 
 ## Credits
 
 This project is based on the excellent [Barter-rs](https://github.com/barter-rs/barter-rs) project. See [CREDITS.md](CREDITS.md) for full attribution and acknowledgments to the original developers.
+
+---
+
+**⚠️ Disclaimer**: This software is for educational and research purposes. Always test thoroughly before using in production trading environments. Trading involves significant risk of loss.
