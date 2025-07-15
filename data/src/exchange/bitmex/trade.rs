@@ -3,7 +3,7 @@ use crate::{
     exchange::bitmex::message::BitmexMessage,
     subscription::trade::PublicTrade,
 };
-use instrument::{Side, exchange::ExchangeId};
+use markets::{Side, exchange::ExchangeId};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 

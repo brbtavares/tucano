@@ -5,7 +5,7 @@ use crate::engine::state::{
     trading::TradingState,
 };
 use execution::balance::{AssetBalance, Balance};
-use instrument::{
+use markets::{
     Keyed,
     asset::{AssetIndex, ExchangeAsset, name::AssetNameInternal},
     exchange::{ExchangeId, ExchangeIndex},

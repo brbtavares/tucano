@@ -1,5 +1,5 @@
 use execution::error::ClientError;
-use instrument::index::error::IndexError;
+use markets::index::error::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

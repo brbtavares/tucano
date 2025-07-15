@@ -24,7 +24,7 @@ use data::{
         reconnect::{Event, stream::ReconnectingStream},
     },
 };
-use instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
+use markets::{index::IndexedInstruments, instrument::InstrumentIndex};
 use futures::{Stream, StreamExt, stream};
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

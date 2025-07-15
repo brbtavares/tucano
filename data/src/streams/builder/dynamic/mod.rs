@@ -29,7 +29,7 @@ use crate::{
         trade::{PublicTrade, PublicTrades},
     },
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{
     Validator,
     channel::{UnboundedRx, UnboundedTx, mpsc_unbounded},

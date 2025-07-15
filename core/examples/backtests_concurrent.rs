@@ -14,7 +14,7 @@ use core::{
     system::config::SystemConfig,
 };
 use data::streams::consumer::MarketStreamEvent;
-use instrument::index::IndexedInstruments;
+use markets::index::IndexedInstruments;
 use rust_decimal::Decimal;
 use serde::Deserialize;
 use smol_str::{SmolStr, ToSmolStr};

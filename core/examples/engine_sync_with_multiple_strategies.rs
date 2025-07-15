@@ -42,7 +42,7 @@ use execution::{
         request::{OrderRequestCancel, OrderRequestOpen},
     },
 };
-use instrument::{
+use markets::{
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
     index::IndexedInstruments,

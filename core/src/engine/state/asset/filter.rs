@@ -1,4 +1,4 @@
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 

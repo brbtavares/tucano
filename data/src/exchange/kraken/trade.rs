@@ -4,7 +4,7 @@ use crate::{
     event::{MarketEvent, MarketIter},
     subscription::trade::PublicTrade,
 };
-use instrument::{Side, exchange::ExchangeId};
+use markets::{Side, exchange::ExchangeId};
 use integration::{
     de::{datetime_utc_from_epoch_duration, extract_next},
     subscription::SubscriptionId,
@@ -210,7 +210,7 @@ mod tests {
 
     mod de {
         use super::*;
-        use instrument::Side;
+        use markets::Side;
         use integration::{
             de::datetime_utc_from_epoch_duration, error::SocketError, subscription::SubscriptionId,
         };

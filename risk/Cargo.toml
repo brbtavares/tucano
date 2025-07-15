@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-execution = { path = "../execution" }
-instrument = { path = "../instrument" }
+execution = { workspace = true }
+markets = { workspace = true }
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
 derive_more = { version = "1", features = ["constructor", "display", "from"] }

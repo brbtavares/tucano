@@ -7,7 +7,7 @@ use crate::{
     subscription::{Map, SubscriptionKind},
 };
 use async_trait::async_trait;
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{
     Transformer, protocol::websocket::WsMessage, subscription::SubscriptionId,
 };

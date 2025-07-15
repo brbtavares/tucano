@@ -9,7 +9,7 @@ use crate::{
 };
 use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
 use execution::AccountEvent;
-use instrument::instrument::InstrumentIndex;
+use markets::instrument::InstrumentIndex;
 use integration::Terminal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

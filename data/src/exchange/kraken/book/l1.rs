@@ -6,7 +6,7 @@ use crate::{
     exchange::{kraken::channel::KrakenChannel, subscription::ExchangeSub},
     subscription::book::OrderBookL1,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{de::extract_next, subscription::SubscriptionId};
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;

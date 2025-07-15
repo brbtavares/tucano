@@ -10,7 +10,7 @@ use execution::{
     AccountEvent,
     order::request::{OrderRequestCancel, OrderRequestOpen},
 };
-use instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
 use derive_more::Constructor;
 use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};

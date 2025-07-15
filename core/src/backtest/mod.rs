@@ -28,7 +28,7 @@ use strategy::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
 use execution::AccountEvent;
-use instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
+use markets::{index::IndexedInstruments, instrument::InstrumentIndex};
 use futures::future::try_join_all;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;

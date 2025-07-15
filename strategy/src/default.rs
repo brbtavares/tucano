@@ -8,7 +8,7 @@ use execution::order::{
     id::StrategyId,
     request::{OrderRequestCancel, OrderRequestOpen},
 };
-use instrument::{
+use markets::{
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
     instrument::InstrumentIndex,

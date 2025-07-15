@@ -14,7 +14,7 @@ use crate::{
     },
     trade::Trade,
 };
-use instrument::{
+use markets::{
     asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     index::error::IndexError,

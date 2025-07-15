@@ -16,7 +16,7 @@ use data::event::MarketEvent;
 use execution::{
     AccountEvent, AccountEventKind, UnindexedAccountSnapshot, balance::AssetBalance,
 };
-use instrument::{
+use markets::{
     Keyed,
     asset::{AssetIndex, QuoteAsset},
     exchange::{ExchangeId, ExchangeIndex},

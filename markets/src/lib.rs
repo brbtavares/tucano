@@ -11,8 +11,8 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Toucan-Instrument
-//! Toucan-Instrument contains core Exchange, Instrument and Asset data structures and associated utilities.
+//! # Markets
+//! Markets contains core Exchange, Instrument and Asset data structures and associated utilities.
 //!
 //! ## Examples
 //! For a comprehensive collection of examples, see the Toucan core Engine /examples directory.

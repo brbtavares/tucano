@@ -5,7 +5,7 @@ use crate::{
     exchange::{binance::channel::BinanceChannel, subscription::ExchangeSub},
     subscription::book::OrderBookL1,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;

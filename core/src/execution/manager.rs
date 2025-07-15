@@ -21,7 +21,7 @@ use execution::{
         state::{Open, OrderState},
     },
 };
-use instrument::{
+use markets::{
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     index::error::IndexError,

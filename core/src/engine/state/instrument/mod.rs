@@ -6,7 +6,7 @@ use crate::{
     },
 };
 use analytics::summary::instrument::TearSheetGenerator;
-use data::event::MarketEvent;
+use ::data::event::{MarketEvent, DataKind};
 use execution::{
     InstrumentAccountSnapshot,
     order::{
@@ -16,7 +16,7 @@ use execution::{
     },
     trade::Trade,
 };
-use instrument::{
+use markets::{
     Keyed,
     asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
@@ -332,7 +332,7 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
             .update_from_trade(trade)
             .inspect(|closed| {
                 // Convert core PositionExited to analytics PositionExited
-                let analytics_position = toucan_analytics::summary::PositionExited {
+                let analytics_position = analytics::summary::PositionExited {
                     timestamp: closed.time_exit,
                     pnl_realised: closed.pnl_realised,
                     time_exit: closed.time_exit,

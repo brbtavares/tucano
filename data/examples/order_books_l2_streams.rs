@@ -3,7 +3,7 @@ use data::{
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::book::OrderBooksL2,
 };
-use instrument::{
+use markets::{
     exchange::ExchangeId, instrument::market_data::kind::MarketDataInstrumentKind,
 };
 use futures_util::StreamExt;

@@ -3,7 +3,7 @@ use data::{
     exchange::binance::spot::BinanceSpot,
     subscription::book::OrderBooksL2,
 };
-use instrument::instrument::market_data::{
+use markets::instrument::market_data::{
     MarketDataInstrument, kind::MarketDataInstrumentKind,
 };
 use std::time::Duration;

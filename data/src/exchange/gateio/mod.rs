@@ -3,7 +3,7 @@ use crate::{
     exchange::{Connector, ExchangeServer, subscription::ExchangeSub},
     subscriber::{WebSocketSubscriber, validator::WebSocketSubValidator},
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{error::SocketError, protocol::websocket::WsMessage};
 use serde_json::json;
 use std::{fmt::Debug, marker::PhantomData};

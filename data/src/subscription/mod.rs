@@ -1,5 +1,5 @@
 use crate::{exchange::Connector, instrument::InstrumentData};
-use instrument::{
+use markets::{
     Keyed,
     asset::name::AssetNameInternal,
     exchange::ExchangeId,
@@ -187,7 +187,7 @@ pub fn exchange_supports_instrument_kind(
     exchange: ExchangeId,
     instrument_kind: &MarketDataInstrumentKind,
 ) -> bool {
-    use instrument::{
+    use markets::{
         exchange::ExchangeId::*, instrument::market_data::kind::MarketDataInstrumentKind::*,
     };
 
@@ -339,7 +339,7 @@ mod tests {
             exchange::{coinbase::Coinbase, okx::Okx},
             subscription::trade::PublicTrades,
         };
-        use instrument::instrument::market_data::MarketDataInstrument;
+        use markets::instrument::market_data::MarketDataInstrument;
 
         mod de {
             use super::*;
@@ -351,7 +351,7 @@ mod tests {
                 },
                 subscription::{book::OrderBooksL2, trade::PublicTrades},
             };
-            use instrument::instrument::market_data::MarketDataInstrument;
+            use markets::instrument::market_data::MarketDataInstrument;
 
             #[test]
             fn test_subscription_okx_spot_public_trades() {
@@ -552,7 +552,7 @@ mod tests {
 
     mod instrument_map {
         use super::*;
-        use instrument::instrument::market_data::MarketDataInstrument;
+        use markets::instrument::market_data::MarketDataInstrument;
 
         #[test]
         fn test_find_instrument() {

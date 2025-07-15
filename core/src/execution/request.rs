@@ -1,5 +1,5 @@
 use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 use std::{

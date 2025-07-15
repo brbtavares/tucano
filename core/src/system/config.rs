@@ -3,7 +3,7 @@
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
 use execution::client::mock::MockExecutionConfig;
-use instrument::{
+use markets::{
     Underlying,
     asset::{Asset, name::AssetNameExchange},
     exchange::ExchangeId,

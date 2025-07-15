@@ -6,7 +6,7 @@ use data::{
     },
     subscription::SubKind,
 };
-use instrument::{
+use markets::{
     exchange::ExchangeId,
     instrument::market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
 };

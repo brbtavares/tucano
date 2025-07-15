@@ -20,7 +20,7 @@ use crate::{
     transformer::ExchangeTransformer,
 };
 use async_trait::async_trait;
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{
     Transformer, error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId,
 };

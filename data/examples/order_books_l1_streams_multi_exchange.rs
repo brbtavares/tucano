@@ -3,7 +3,7 @@ use data::{
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::book::OrderBooksL1,
 };
-use instrument::instrument::market_data::kind::MarketDataInstrumentKind;
+use markets::instrument::market_data::kind::MarketDataInstrumentKind;
 use futures::StreamExt;
 use tracing::{info, warn};
 

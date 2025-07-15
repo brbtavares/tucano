@@ -1,4 +1,4 @@
-use instrument::index::error::IndexError;
+use markets::index::error::IndexError;
 use derive_more::Constructor;
 use futures::Stream;
 use pin_project::pin_project;

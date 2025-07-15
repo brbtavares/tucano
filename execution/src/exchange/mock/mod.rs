@@ -15,7 +15,7 @@ use crate::{
     },
     trade::{AssetFees, Trade, TradeId},
 };
-use instrument::{
+use markets::{
     Side,
     asset::{QuoteAsset, name::AssetNameExchange},
     exchange::ExchangeId,

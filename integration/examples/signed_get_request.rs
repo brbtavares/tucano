@@ -1,4 +1,4 @@
-use instrument::asset::name::AssetNameInternal;
+use markets::asset::name::AssetNameInternal;
 use integration::{
     error::SocketError,
     protocol::http::{

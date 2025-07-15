@@ -17,7 +17,7 @@ use crate::{
 };
 use data::streams::reconnect::stream::ReconnectingStream;
 use execution::balance::Balance;
-use instrument::{
+use markets::{
     Keyed,
     asset::{AssetIndex, ExchangeAsset, name::AssetNameInternal},
     exchange::{ExchangeId, ExchangeIndex},

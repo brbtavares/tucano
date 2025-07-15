@@ -35,7 +35,7 @@ use execution::order::{
     OrderKind,
     request::{OrderRequestCancel, OrderRequestOpen},
 };
-use instrument::{index::IndexedInstruments, instrument::kind::InstrumentKind};
+use markets::{index::IndexedInstruments, instrument::kind::InstrumentKind};
 use derive_more::Constructor;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

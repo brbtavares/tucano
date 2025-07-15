@@ -1,4 +1,4 @@
-use instrument::{
+use markets::{
     Underlying, asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex,
 };
 use integration::collection::one_or_many::OneOrMany;

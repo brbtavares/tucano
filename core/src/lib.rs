@@ -44,8 +44,8 @@ use data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use execution::AccountEvent;
-use instrument::{
+use ::execution::AccountEvent;
+use markets::{
     asset::{Asset, AssetIndex},
     exchange::ExchangeIndex,
     instrument::InstrumentIndex,
@@ -198,7 +198,7 @@ pub mod test_utils {
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
-    use instrument::{
+    use markets::{
         Side,
         asset::{Asset, AssetIndex, QuoteAsset},
         instrument::name::InstrumentNameInternal,

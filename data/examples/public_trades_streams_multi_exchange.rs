@@ -13,7 +13,7 @@ use data::{
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::trade::PublicTrades,
 };
-use instrument::instrument::{
+use markets::instrument::{
     kind::option::{OptionExercise, OptionKind},
     market_data::kind::{
         MarketDataFutureContract, MarketDataInstrumentKind, MarketDataOptionContract,

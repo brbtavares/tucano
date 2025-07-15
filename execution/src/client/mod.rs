@@ -9,7 +9,7 @@ use crate::{
     },
     trade::Trade,
 };
-use instrument::{
+use markets::{
     asset::{QuoteAsset, name::AssetNameExchange},
     exchange::ExchangeId,
     instrument::name::InstrumentNameExchange,

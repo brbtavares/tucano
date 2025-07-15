@@ -9,7 +9,7 @@ use crate::{
     subscription::trade::PublicTrades,
     transformer::stateless::StatelessTransformer,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{error::SocketError, protocol::websocket::WsMessage};
 use macros::{DeExchange, SerExchange};
 use derive_more::Display;

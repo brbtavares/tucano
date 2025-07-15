@@ -3,7 +3,7 @@ use execution::order::{
     id::{ClientOrderId, StrategyId},
     request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
 };
-use instrument::{
+use markets::{
     Side, asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex,
 };
 use rust_decimal::Decimal;

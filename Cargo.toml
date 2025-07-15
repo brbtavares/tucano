@@ -7,7 +7,7 @@ members = [
     "execution",
     "integration",
     "macros", 
-    "instrument",
+    "markets",
     "risk",
     "strategy"
 ]
@@ -17,7 +17,7 @@ members = [
 analytics = { path = "./analytics", version = "0.1.0" }
 core = { path = "./core", version = "0.12.2" }
 integration = { path = "./integration", version = "0.9.1" }
-instrument = { path = "./instrument", version = "0.3.1" }
+markets = { path = "./markets", version = "0.3.1" }
 data = { path = "./data", version = "0.10.1" }
 execution = { path = "./execution", version = "0.5.3" }
 macros = { path = "./macros", version = "0.2.0" }

@@ -3,7 +3,7 @@ use crate::order::{
     request::{OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen},
     state::UnindexedOrderState,
 };
-use instrument::{
+use markets::{
     Side,
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},

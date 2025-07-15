@@ -4,7 +4,7 @@ use crate::{
     streams::{consumer::MarketStreamResult, reconnect::stream::ReconnectingStream},
     subscription::SubscriptionKind,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::channel::Channel;
 use futures_util::StreamExt;
 use std::{collections::HashMap, fmt::Debug, future::Future, pin::Pin};

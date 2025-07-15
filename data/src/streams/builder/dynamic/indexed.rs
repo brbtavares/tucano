@@ -9,7 +9,7 @@ use crate::{
     },
     subscription::{SubKind, Subscription},
 };
-use instrument::{
+use markets::{
     Keyed,
     exchange::ExchangeId,
     index::{IndexedInstruments, error::IndexError},

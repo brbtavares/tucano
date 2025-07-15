@@ -1,5 +1,5 @@
 use super::SubscriptionKind;
-use instrument::Side;
+use markets::Side;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 

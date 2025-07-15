@@ -8,7 +8,7 @@ use crate::{
         trade::PublicTrade,
     },
 };
-use instrument::{exchange::ExchangeId, instrument::market_data::MarketDataInstrument};
+use markets::{exchange::ExchangeId, instrument::market_data::MarketDataInstrument};
 use chrono::{DateTime, Utc};
 use derive_more::From;
 use serde::{Deserialize, Serialize};

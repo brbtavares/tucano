@@ -1,5 +1,5 @@
 use super::SubscriptionKind;
-use instrument::Side;
+use markets::Side;
 use macros::{DeSubKind, SerSubKind};
 use serde::{Deserialize, Serialize};
 

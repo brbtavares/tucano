@@ -10,7 +10,7 @@ use crate::{
     subscription::{Map, book::OrderBooksL1, trade::PublicTrades},
     transformer::stateless::StatelessTransformer,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{error::SocketError, protocol::websocket::WsMessage};
 use std::{fmt::Debug, marker::PhantomData};
 use url::Url;

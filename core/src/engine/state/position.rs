@@ -1,5 +1,5 @@
 use execution::trade::{AssetFees, Trade, TradeId};
-use instrument::{
+use markets::{
     Side,
     asset::{AssetIndex, QuoteAsset},
     instrument::InstrumentIndex,
@@ -66,9 +66,9 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// use core::engine::state::position::Position;
 /// use execution::order::id::{OrderId, StrategyId};
 /// use execution::trade::{AssetFees, Trade, TradeId};
-/// use instrument::asset::QuoteAsset;
-/// use instrument::instrument::name::InstrumentNameInternal;
-/// use instrument::Side;
+/// use markets::asset::QuoteAsset;
+/// use markets::instrument::name::InstrumentNameInternal;
+/// use markets::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -114,9 +114,9 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// use core::engine::state::position::Position;
 /// use execution::order::id::{OrderId, StrategyId};
 /// use execution::trade::{AssetFees, Trade, TradeId};
-/// use instrument::asset::QuoteAsset;
-/// use instrument::instrument::name::InstrumentNameInternal;
-/// use instrument::Side;
+/// use markets::asset::QuoteAsset;
+/// use markets::instrument::name::InstrumentNameInternal;
+/// use markets::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -558,7 +558,7 @@ pub fn calculate_pnl_return(
 mod tests {
     use super::*;
     use crate::test_utils::{time_plus_days, trade};
-    use instrument::instrument::name::InstrumentNameInternal;
+    use markets::instrument::name::InstrumentNameInternal;
     use rust_decimal_macros::dec;
 
     #[test]

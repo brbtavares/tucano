@@ -1,5 +1,5 @@
 use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 
 /// Strategy interface for generating algorithmic open and cancel order requests based on the
 /// current `EngineState`.

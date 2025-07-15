@@ -8,7 +8,7 @@ use crate::{
     subscription::trade::PublicTrades,
     transformer::stateless::StatelessTransformer,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use std::fmt::Display;
 
 /// [`GateioOptions`] WebSocket server base url.

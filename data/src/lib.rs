@@ -42,7 +42,7 @@
 //!     streams::{Streams, reconnect::stream::ReconnectingStream},
 //!     subscription::trade::PublicTrades,
 //! };
-//! use instrument::instrument::market_data::kind::MarketDataInstrumentKind;
+//! use markets::instrument::market_data::kind::MarketDataInstrumentKind;
 //! use futures::StreamExt;
 //! use tracing::warn;
 //!
@@ -99,7 +99,7 @@ use crate::{
     transformer::ExchangeTransformer,
 };
 use async_trait::async_trait;
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{
     Transformer,
     error::SocketError,
@@ -376,7 +376,7 @@ pub mod test_utils {
         event::{DataKind, MarketEvent},
         subscription::trade::PublicTrade,
     };
-    use instrument::{Side, exchange::ExchangeId};
+    use markets::{Side, exchange::ExchangeId};
     use chrono::{DateTime, Utc};
 
     pub fn market_event_trade_buy<InstrumentKey>(

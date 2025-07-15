@@ -5,7 +5,7 @@ use crate::{
     subscriber::{Subscriber, validator::SubscriptionValidator},
     subscription::{Map, SubscriptionKind},
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{Validator, error::SocketError, protocol::websocket::WsMessage};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{fmt::Debug, time::Duration};

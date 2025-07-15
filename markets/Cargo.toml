@@ -1,5 +1,5 @@
 [package]
-name = "instrument"
+name = "markets"
 version = "0.3.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]

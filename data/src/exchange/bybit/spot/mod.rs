@@ -1,5 +1,5 @@
 use super::{Bybit, ExchangeServer};
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use std::fmt::Display;
 
 /// [`BybitSpot`] WebSocket server base url.

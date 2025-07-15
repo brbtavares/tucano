@@ -7,7 +7,7 @@ use execution::order::{
     request::{OrderRequestCancel, OrderRequestOpen, OrderResponseCancel},
     state::{ActiveOrderState, CancelInFlight, OrderState},
 };
-use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use integration::snapshot::Snapshot;
 use derive_more::Constructor;
 use fnv::FnvHashMap;
@@ -405,7 +405,7 @@ mod tests {
             state::{ActiveOrderState, CancelInFlight, Cancelled, Open, OpenInFlight},
         },
     };
-    use instrument::{Side, exchange::ExchangeId};
+    use markets::{Side, exchange::ExchangeId};
     use chrono::{DateTime, Utc};
     use rust_decimal_macros::dec;
     use smol_str::SmolStr;

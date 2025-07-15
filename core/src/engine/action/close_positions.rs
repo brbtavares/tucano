@@ -9,7 +9,7 @@ use crate::{
         },
     },
 };
-use instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
 use strategy::ClosePositionsStrategy;
 use std::fmt::Debug;
 

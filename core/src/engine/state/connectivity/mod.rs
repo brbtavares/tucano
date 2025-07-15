@@ -1,4 +1,4 @@
-use instrument::{
+use markets::{
     exchange::{ExchangeId, ExchangeIndex},
     index::IndexedInstruments,
 };

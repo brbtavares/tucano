@@ -15,7 +15,7 @@ sha2 = { workspace = true }
 
 [dependencies]
 # Toucan Ecosystem
-instrument = { workspace = true }
+markets = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

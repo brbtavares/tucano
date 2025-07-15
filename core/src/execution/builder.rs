@@ -20,7 +20,7 @@ use execution::{
     indexer::AccountEventIndexer,
     map::generate_execution_instrument_map,
 };
-use instrument::{
+use markets::{
     Keyed, Underlying,
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},

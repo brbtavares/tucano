@@ -10,7 +10,7 @@ use execution::{
     order::{OrderKind, TimeInForce, OrderKey},
     order::id::{StrategyId, ClientOrderId},
 };
-use instrument::{
+use markets::{
     Side,
     asset::name::AssetNameExchange,
     exchange::ExchangeId,

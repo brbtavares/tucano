@@ -1,4 +1,4 @@
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 
 /// Strategy interface that defines what actions should be performed after an
 /// [`ExchangeId`] connection disconnects.

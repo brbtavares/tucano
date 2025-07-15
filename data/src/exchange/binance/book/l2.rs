@@ -3,7 +3,7 @@ use crate::{
     Identifier, books::OrderBook, event::MarketEvent, exchange::subscription::ExchangeSub,
     subscription::book::OrderBookEvent,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;

@@ -2,7 +2,9 @@
 
 A comprehensive Rust framework for building high-performance live-trading, paper-trading, and back-testing systems for cryptocurrency markets.
 
-[![Documentation](https://img.shields.io/badge/docs-wiki-blue)](https://github.com/brbtavares/toucan/wiki)
+[![D├── instrument/         # Financial instrument definitions
+├── integration/        # WebSocket and HTTP utilities
+├── macros/             # Procedural macrosmentation](https://img.shields.io/badge/docs-wiki-blue)](https://github.com/brbtavares/toucan/wiki)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.82+-orange)](https://www.rust-lang.org/)
 
@@ -41,11 +43,11 @@ The Toucan framework consists of several interconnected crates:
 
 ### Supporting Components
 
-- **[`instrument`](https://github.com/brbtavares/toucan/wiki/Instrument)** - Financial instrument definitions and indexing
+- **[`markets`](https://github.com/brbtavares/toucan/wiki/Markets)** - Financial instrument definitions and indexing
 - **[`integration`](https://github.com/brbtavares/toucan/wiki/Integration)** - WebSocket and HTTP client utilities
 - **[`strategy`](https://github.com/brbtavares/toucan/wiki/Strategy)** - Trading strategy interfaces and implementations
 - **[`risk`](https://github.com/brbtavares/toucan/wiki/Risk)** - Risk management and position controls
-- **[`macro`](https://github.com/brbtavares/toucan/wiki/Macro)** - Procedural macros for code generation
+- **[`macros`](https://github.com/brbtavares/toucan/wiki/Macros)** - Procedural macros for code generation
 
 ## Supported Exchanges
 
@@ -174,7 +176,7 @@ toucan/
 ├── core/               # Main trading engine
 ├── data/               # Market data streaming
 ├── execution/          # Order execution and exchange APIs
-├── instrument/         # Financial instrument definitions
+├── markets/         # Financial instrument definitions
 ├── integration/        # WebSocket and HTTP utilities
 ├── macro/              # Procedural macros
 ├── risk/               # Risk management

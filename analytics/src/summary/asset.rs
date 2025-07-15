@@ -88,7 +88,7 @@ impl TearSheetAssetGenerator {
 mod tests {
     use super::*;
     use crate::test_utils::time_plus_days;
-    use instrument::asset::AssetIndex;
+    use markets::asset::AssetIndex;
     use chrono::{DateTime, Utc};
     use rust_decimal_macros::dec;
 

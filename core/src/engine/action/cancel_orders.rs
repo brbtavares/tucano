@@ -9,7 +9,7 @@ use crate::engine::{
     },
 };
 use execution::order::{Order, request::RequestCancel};
-use instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
 
 /// Trait that defines how the [`Engine`] cancels open order requests.
 ///

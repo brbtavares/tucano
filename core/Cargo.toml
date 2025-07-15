@@ -26,7 +26,7 @@ analytics = { workspace = true }
 risk = { workspace = true }
 # Toucan Ecosystem
 integration = { workspace = true }
-instrument = { workspace = true }
+markets = { workspace = true }
 data = { workspace = true }
 execution = { workspace = true }
 strategy = { workspace = true }

@@ -3,7 +3,7 @@ use crate::{
     instrument::InstrumentData,
     subscription::{Subscription, trade::PublicTrades},
 };
-use instrument::instrument::market_data::kind::MarketDataInstrumentKind;
+use markets::instrument::market_data::kind::MarketDataInstrumentKind;
 use serde::Serialize;
 
 /// Type that defines how to translate a Toucan [`Subscription`] into a

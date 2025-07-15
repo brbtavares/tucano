@@ -3,7 +3,7 @@ use data::{
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::trade::PublicTrades,
 };
-use instrument::instrument::market_data::kind::MarketDataInstrumentKind;
+use markets::instrument::market_data::kind::MarketDataInstrumentKind;
 use futures_util::StreamExt;
 use tracing::{info, warn};
 

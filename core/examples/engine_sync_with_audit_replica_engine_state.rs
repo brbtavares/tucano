@@ -22,7 +22,7 @@ use data::{
     streams::builder::dynamic::indexed::init_indexed_multi_exchange_market_stream,
     subscription::SubKind,
 };
-use instrument::index::IndexedInstruments;
+use markets::index::IndexedInstruments;
 use integration::snapshot::SnapUpdates;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

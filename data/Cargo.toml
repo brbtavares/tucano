@@ -16,7 +16,7 @@ rust_decimal_macros = { workspace = true }
 [dependencies]
 # Toucan Ecosystem
 integration = { workspace = true }
-instrument = { workspace = true }
+markets = { workspace = true }
 macros = { workspace = true }
 
 # Logging

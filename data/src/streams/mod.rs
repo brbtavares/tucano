@@ -1,6 +1,6 @@
 use self::builder::{StreamBuilder, multi::MultiStreamBuilder};
 use crate::subscription::SubscriptionKind;
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::channel::UnboundedRx;
 use fnv::FnvHashMap;
 use futures::Stream;

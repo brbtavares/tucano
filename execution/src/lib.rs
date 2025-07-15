@@ -27,7 +27,7 @@ use crate::{
     order::{Order, OrderSnapshot, request::OrderResponseCancel},
     trade::Trade,
 };
-use instrument::{
+use markets::{
     asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     instrument::{InstrumentIndex, name::InstrumentNameExchange},

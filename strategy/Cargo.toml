@@ -12,7 +12,7 @@ categories = ["algorithms", "finance"]
 [dependencies]
 # Toucan Ecosystem
 execution = { workspace = true }
-instrument = { workspace = true }
+markets = { workspace = true }
 
 # Data Structures
 rust_decimal = { workspace = true }

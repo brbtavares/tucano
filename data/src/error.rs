@@ -1,5 +1,5 @@
 use crate::subscription::SubKind;
-use instrument::{exchange::ExchangeId, index::error::IndexError};
+use markets::{exchange::ExchangeId, index::error::IndexError};
 use integration::{error::SocketError, subscription::SubscriptionId};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;

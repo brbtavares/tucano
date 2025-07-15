@@ -2,7 +2,7 @@ use crate::{
     Identifier, exchange::bitmex::Bitmex, instrument::MarketInstrumentData,
     subscription::Subscription,
 };
-use instrument::{
+use markets::{
     Keyed, asset::name::AssetNameInternal, instrument::market_data::MarketDataInstrument,
 };
 use serde::{Deserialize, Serialize};

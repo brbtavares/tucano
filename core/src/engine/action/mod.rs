@@ -6,7 +6,7 @@ use crate::engine::{
     error::UnrecoverableEngineError,
 };
 use execution::order::request::{RequestCancel, RequestOpen};
-use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use integration::collection::one_or_many::OneOrMany;
 use derive_more::From;
 use serde::{Deserialize, Serialize};

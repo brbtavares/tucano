@@ -47,7 +47,7 @@ use execution::{
     trade::{AssetFees, Trade, TradeId},
 };
 
-use instrument::{
+use markets::{
     Side, Underlying,
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},

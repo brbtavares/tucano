@@ -10,7 +10,7 @@ use crate::{
     },
     subscription::{Subscription, SubscriptionKind},
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{Validator, channel::Channel};
 use std::{
     collections::HashMap,

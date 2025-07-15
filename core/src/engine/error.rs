@@ -1,4 +1,4 @@
-use instrument::index::error::IndexError;
+use markets::index::error::IndexError;
 use integration::Unrecoverable;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;

@@ -4,7 +4,7 @@ use crate::{
     exchange::ExchangeSub,
     subscription::trade::PublicTrade,
 };
-use instrument::{Side, exchange::ExchangeId};
+use markets::{Side, exchange::ExchangeId};
 use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};

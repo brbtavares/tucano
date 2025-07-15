@@ -168,7 +168,7 @@ impl<MarketEventKind: Debug> TimeExchange for EngineEvent<MarketEventKind> {
 mod tests {
     use super::*;
     use data::event::MarketEvent;
-    use instrument::{exchange::ExchangeId, instrument::InstrumentIndex};
+    use markets::{exchange::ExchangeId, instrument::InstrumentIndex};
     use chrono::TimeDelta;
 
     fn market_event(time_exchange: DateTime<Utc>) -> EngineEvent<()> {

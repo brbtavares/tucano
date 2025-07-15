@@ -10,7 +10,7 @@ use execution::order::{
     OrderEvent,
     request::{RequestCancel, RequestOpen},
 };
-use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use integration::{Unrecoverable, channel::Tx, collection::none_one_or_many::NoneOneOrMany};
 use derive_more::Constructor;
 use itertools::Itertools;

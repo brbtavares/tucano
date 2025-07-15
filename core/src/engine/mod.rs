@@ -28,7 +28,7 @@ use strategy::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
 use execution::AccountEvent;
-use instrument::{asset::QuoteAsset, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{asset::QuoteAsset, exchange::ExchangeIndex, instrument::InstrumentIndex};
 use integration::channel::Tx;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
@@ -319,7 +319,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
         Clock: EngineClock,
     {
         use integration::collection::FnvIndexMap;
-        use instrument::{asset::AssetIndex, instrument::InstrumentIndex};
+        use markets::{asset::AssetIndex, instrument::InstrumentIndex};
         use execution::balance::AssetBalance;
         
         // Create placeholder empty collections since analytics expects simplified types

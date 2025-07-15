@@ -3,7 +3,7 @@ use crate::{
 };
 use analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
 use execution::balance::{AssetBalance, Balance};
-use instrument::{
+use markets::{
     asset::{
         Asset, AssetIndex, ExchangeAsset,
         name::{AssetNameExchange, AssetNameInternal},
@@ -177,7 +177,7 @@ pub fn generate_empty_indexed_asset_states(instruments: &IndexedInstruments) -> 
 mod tests {
     use super::*;
     use crate::test_utils::asset_state;
-    use instrument::asset::name::AssetNameExchange;
+    use markets::asset::name::AssetNameExchange;
     use chrono::{DateTime, TimeZone, Utc};
     use rust_decimal_macros::dec;
 

@@ -5,7 +5,7 @@ pub use check::*;
 use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, hash::Hash, marker::PhantomData};
 use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use derive_more::{Constructor, Display, From};
 
 /// Approved result from a [`RiskManager`] check.

@@ -14,7 +14,7 @@ use crate::{
     },
     transformer::stateless::StatelessTransformer,
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use integration::{error::SocketError, protocol::websocket::WsMessage};
 use book::{BybitOrderBookMessage, l2::BybitOrderBooksL2Transformer};
 use serde::de::{Error, Unexpected};

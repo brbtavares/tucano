@@ -2,7 +2,7 @@ use crate::{
     event::{MarketEvent, MarketIter},
     subscription::trade::PublicTrade,
 };
-use instrument::{Side, exchange::ExchangeId};
+use markets::{Side, exchange::ExchangeId};
 use integration::de::{datetime_utc_from_epoch_duration, extract_next};
 use chrono::{DateTime, Utc};
 use serde::Serialize;

@@ -12,7 +12,7 @@ use crate::{
     },
     subscription::{Subscription, SubscriptionKind, display_subscriptions_without_exchange},
 };
-use instrument::exchange::ExchangeId;
+use markets::exchange::ExchangeId;
 use derive_more::Constructor;
 use futures::Stream;
 use serde::{Deserialize, Serialize};

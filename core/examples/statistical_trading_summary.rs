@@ -9,7 +9,7 @@ use execution::{
     balance::{AssetBalance, Balance},
     trade::{AssetFees, TradeId},
 };
-use instrument::{
+use markets::{
     Side, Underlying,
     asset::{AssetIndex, QuoteAsset},
     exchange::ExchangeId,
