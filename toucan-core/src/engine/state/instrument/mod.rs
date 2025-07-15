@@ -330,7 +330,18 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     {
         self.position
             .update_from_trade(trade)
-            .inspect(|closed| self.tear_sheet.update_from_position(closed))
+            .inspect(|closed| {
+                // Convert core PositionExited to analytics PositionExited
+                let analytics_position = toucan_analytics::summary::PositionExited {
+                    timestamp: closed.time_exit,
+                    pnl_realised: closed.pnl_realised,
+                    time_exit: closed.time_exit,
+                    instrument: InstrumentIndex(0), // Placeholder conversion
+                    price_entry_average: closed.price_entry_average,
+                    quantity_abs_max: closed.quantity_abs_max,
+                };
+                self.tear_sheet.update_from_position::<AssetKey, InstrumentKey>(&analytics_position);
+            })
     }
 
     /// Updates the instrument state based on a new market event.

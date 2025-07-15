@@ -7,8 +7,7 @@
     clippy::unused_self,
     clippy::useless_let_if_seq,
     missing_debug_implementations,
-    rust_2018_idioms,
-    rust_2024_compatibility
+    rust_2018_idioms
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
@@ -46,7 +45,11 @@ use toucan_data::{
     streams::consumer::MarketStreamEvent,
 };
 use toucan_execution::AccountEvent;
-use toucan_instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use toucan_instrument::{
+    asset::{Asset, AssetIndex},
+    exchange::ExchangeIndex,
+    instrument::InstrumentIndex,
+};
 use toucan_integration::Terminal;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
@@ -70,7 +73,6 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
-pub use toucan_analytics as statistic;
 pub use toucan_risk as risk;
 pub use toucan_strategy as strategy;
 
@@ -191,12 +193,15 @@ pub mod test_utils {
         Timed, engine::state::asset::AssetState, statistic::summary::asset::TearSheetAssetGenerator,
     };
     use toucan_execution::{
-        balance::Balance,
+        balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
     use toucan_instrument::{
-        Side, asset::QuoteAsset, instrument::name::InstrumentNameInternal, test_utils::asset,
+        Side,
+        asset::{Asset, AssetIndex, QuoteAsset},
+        instrument::name::InstrumentNameInternal,
+        test_utils::asset,
     };
     use chrono::{DateTime, Days, TimeDelta, Utc};
     use rust_decimal::Decimal;
@@ -272,10 +277,17 @@ pub mod test_utils {
             time_exchange,
         );
 
+        // Create AssetBalance for the analytics
+        let asset_balance = AssetBalance {
+            asset: AssetIndex(0), // Placeholder asset index
+            balance: balance.value,
+            time_exchange: balance.time,
+        };
+
         AssetState {
-            asset: asset(symbol),
+            asset: Asset::new_from_exchange(symbol),
             balance: Some(balance),
-            statistics: TearSheetAssetGenerator::init(&balance),
+            statistics: TearSheetAssetGenerator::init(&asset_balance),
         }
     }
 }

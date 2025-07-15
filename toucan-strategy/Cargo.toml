@@ -1,7 +1,7 @@
 [package]
 name = "toucan-strategy"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
 documentation = "https://docs.rs/toucan-strategy"
 repository = "https://github.com/brbtavares/toucan"

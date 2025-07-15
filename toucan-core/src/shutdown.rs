@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::future::Future;
 
 pub trait SyncShutdown {
     type Result;

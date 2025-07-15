@@ -2,6 +2,7 @@ use crate::{
     Timed, engine::state::asset::filter::AssetFilter,
     statistic::summary::asset::TearSheetAssetGenerator,
 };
+use toucan_analytics::summary::LocalSnapshot;
 use toucan_execution::balance::{AssetBalance, Balance};
 use toucan_instrument::{
     asset::{
@@ -115,14 +116,14 @@ impl AssetState {
     pub fn update_from_balance<AssetKey>(&mut self, snapshot: Snapshot<&AssetBalance<AssetKey>>) {
         let Some(balance) = &mut self.balance else {
             self.balance = Some(Timed::new(snapshot.0.balance, snapshot.0.time_exchange));
-            self.statistics.update_from_balance(snapshot);
+            self.statistics.update_from_balance(LocalSnapshot(snapshot.0));
             return;
         };
 
         if balance.time <= snapshot.value().time_exchange {
             balance.time = snapshot.value().time_exchange;
             balance.value = snapshot.value().balance;
-            self.statistics.update_from_balance(snapshot);
+            self.statistics.update_from_balance(LocalSnapshot(snapshot.0));
         }
     }
 }

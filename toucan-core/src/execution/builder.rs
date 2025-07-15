@@ -35,7 +35,7 @@ use toucan_instrument::{
 use toucan_integration::channel::{Channel, UnboundedTx, mpsc_unbounded};
 use fnv::FnvHashMap;
 use futures::{FutureExt, future::try_join_all};
-use std::{pin::Pin, sync::Arc, time::Duration};
+use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{
     sync::{broadcast, mpsc},
     task::{JoinError, JoinHandle},

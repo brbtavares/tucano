@@ -3,7 +3,7 @@ use toucan_data::streams::consumer::MarketStreamEvent;
 use toucan_instrument::instrument::InstrumentIndex;
 use chrono::{DateTime, Utc};
 use futures::Stream;
-use std::sync::Arc;
+use std::{future::Future, sync::Arc};
 
 /// Interface that provides the backtest MarketStream and associated
 /// [`HistoricalClock`](crate::engine::clock::HistoricalClock).

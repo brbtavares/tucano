@@ -318,12 +318,20 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-        TradingSummaryGenerator::init(
+        use toucan_integration::collection::FnvIndexMap;
+        use toucan_instrument::{asset::AssetIndex, instrument::InstrumentIndex};
+        use toucan_execution::balance::AssetBalance;
+        
+        // Create placeholder empty collections since analytics expects simplified types
+        let instruments: FnvIndexMap<InstrumentIndex, ()> = FnvIndexMap::default();
+        let assets: FnvIndexMap<AssetIndex, AssetBalance<AssetIndex>> = FnvIndexMap::default();
+        
+        TradingSummaryGenerator::init::<(), AssetIndex>(
             risk_free_return,
             self.meta.time_start,
             self.time(),
-            &self.state.instruments,
-            &self.state.assets,
+            &instruments,
+            &assets,
         )
     }
 }
