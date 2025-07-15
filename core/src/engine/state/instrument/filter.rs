@@ -1,7 +1,7 @@
-use toucan_instrument::{
+use instrument::{
     Underlying, asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex,
 };
-use toucan_integration::collection::one_or_many::OneOrMany;
+use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 
 /// Instrument filter.

@@ -1,6 +1,6 @@
 use crate::error::ToucanError;
-use toucan_data::streams::consumer::MarketStreamEvent;
-use toucan_instrument::instrument::InstrumentIndex;
+use data::streams::consumer::MarketStreamEvent;
+use instrument::instrument::InstrumentIndex;
 use chrono::{DateTime, Utc};
 use futures::Stream;
 use std::{future::Future, sync::Arc};

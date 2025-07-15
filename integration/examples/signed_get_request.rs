@@ -1,5 +1,5 @@
-use toucan_instrument::asset::name::AssetNameInternal;
-use toucan_integration::{
+use instrument::asset::name::AssetNameInternal;
+use integration::{
     error::SocketError,
     protocol::http::{
         HttpParser,

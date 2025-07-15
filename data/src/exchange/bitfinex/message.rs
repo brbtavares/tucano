@@ -1,11 +1,11 @@
 use super::trade::BitfinexTrade;
 use crate::{Identifier, event::MarketIter, subscription::trade::PublicTrade};
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{de::extract_next, subscription::SubscriptionId};
+use instrument::exchange::ExchangeId;
+use integration::{de::extract_next, subscription::SubscriptionId};
 use serde::Serialize;
 
 /// [`Bitfinex`](super::Bitfinex) message received over
-/// [`WebSocket`](toucan_integration::protocol::websocket::WebSocket) relating to an active
+/// [`WebSocket`](integration::protocol::websocket::WebSocket) relating to an active
 /// [`Subscription`](crate::Subscription).
 ///
 /// The message is associated with the original [`Subscription`](crate::Subscription) using the
@@ -132,8 +132,8 @@ impl<'de> serde::Deserialize<'de> for BitfinexMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use toucan_instrument::Side;
-    use toucan_integration::{de::datetime_utc_from_epoch_duration, error::SocketError};
+    use instrument::Side;
+    use integration::{de::datetime_utc_from_epoch_duration, error::SocketError};
     use std::time::Duration;
 
     #[test]

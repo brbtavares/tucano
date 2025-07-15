@@ -1,12 +1,12 @@
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
-use toucan_data::streams::reconnect;
-use toucan_execution::AccountEvent;
-use toucan_instrument::{
+use data::streams::reconnect;
+use execution::AccountEvent;
+use instrument::{
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
     instrument::InstrumentIndex,
 };
-use toucan_integration::channel::Channel;
+use integration::channel::Channel;
 
 /// Provides an execution manager builder for ergonomically initialising multiple execution links
 /// to mock and live exchanges.

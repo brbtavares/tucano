@@ -4,13 +4,13 @@
 /// though it currently returns placeholder data since the actual 
 /// API implementation is marked with TODOs.
 
-use toucan_execution::{
+use execution::{
     client::{binance::BinanceExecution, ExecutionClient},
     order::request::{OrderRequestOpen, RequestOpen},
     order::{OrderKind, TimeInForce, OrderKey},
     order::id::{StrategyId, ClientOrderId},
 };
-use toucan_instrument::{
+use instrument::{
     Side,
     asset::name::AssetNameExchange,
     exchange::ExchangeId,

@@ -1,5 +1,5 @@
 use super::message::GateioMessage;
-use toucan_integration::{Validator, error::SocketError};
+use integration::{Validator, error::SocketError};
 use serde::{Deserialize, Serialize};
 
 /// Expected [`Gateio`](super::Gateio) [`Subscription`](crate::subscription::Subscription) response

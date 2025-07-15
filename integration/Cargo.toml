@@ -1,9 +1,8 @@
 [package]
-name = "toucan-integration"
+name = "integration"
 version = "0.9.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-documentation = "https://docs.rs/toucan-integration"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
 description = "Low-level framework for composing flexible web integrations, especially with financial exchanges"
@@ -16,7 +15,7 @@ sha2 = { workspace = true }
 
 [dependencies]
 # Toucan Ecosystem
-toucan-instrument = { workspace = true }
+instrument = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

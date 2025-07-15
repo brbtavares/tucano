@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     EngineEvent,
     engine::{
         audit::state_replica::StateReplicaManager,
@@ -18,12 +18,12 @@ use toucan_core::{
         config::SystemConfig,
     },
 };
-use toucan_data::{
+use data::{
     streams::builder::dynamic::indexed::init_indexed_multi_exchange_market_stream,
     subscription::SubKind,
 };
-use toucan_instrument::index::IndexedInstruments;
-use toucan_integration::snapshot::SnapUpdates;
+use instrument::index::IndexedInstruments;
+use integration::snapshot::SnapUpdates;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 use std::{fs::File, io::BufReader, time::Duration};

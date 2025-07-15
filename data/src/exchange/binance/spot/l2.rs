@@ -20,8 +20,8 @@ use crate::{
     transformer::ExchangeTransformer,
 };
 use async_trait::async_trait;
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{
+use instrument::exchange::ExchangeId;
+use integration::{
     Transformer, error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId,
 };
 use chrono::{DateTime, Utc};
@@ -302,7 +302,7 @@ pub struct BinanceSpotOrderBookL2Update {
     pub subscription_id: SubscriptionId,
     #[serde(
         alias = "E",
-        deserialize_with = "toucan_integration::de::de_u64_epoch_ms_as_datetime_utc"
+        deserialize_with = "integration::de::de_u64_epoch_ms_as_datetime_utc"
     )]
     pub time_exchange: DateTime<Utc>,
     #[serde(alias = "U")]

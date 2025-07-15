@@ -17,18 +17,18 @@ use crate::{
     risk::RiskManager,
     system::{builder::EngineFeedMode, config::ExecutionConfig},
 };
-use toucan_analytics::time::TimeInterval;
+use analytics::time::TimeInterval;
 use crate::{
     engine::Engine,
     execution::builder::{ExecutionBuild, ExecutionBuilder},
     system::builder::{AuditMode, SystemBuild},
 };
-use toucan_data::event::MarketEvent;
-use toucan_strategy::{
+use data::event::MarketEvent;
+use strategy::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
-use toucan_execution::AccountEvent;
-use toucan_instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
+use execution::AccountEvent;
+use instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
 use futures::future::try_join_all;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;

@@ -1,6 +1,6 @@
 use crate::execution::error::ExecutionError;
-use toucan_data::error::DataError;
-use toucan_instrument::index::error::IndexError;
+use data::error::DataError;
+use instrument::index::error::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

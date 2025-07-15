@@ -5,12 +5,12 @@ use crate::{
     },
     time::TimeInterval,
 };
-use toucan_execution::balance::AssetBalance;
-use toucan_instrument::{
+use execution::balance::AssetBalance;
+use instrument::{
     asset::{AssetIndex, ExchangeAsset, name::AssetNameInternal},
     instrument::{InstrumentIndex, name::InstrumentNameInternal},
 };
-use toucan_integration::{collection::FnvIndexMap};
+use integration::{collection::FnvIndexMap};
 use chrono::{DateTime, TimeDelta, Utc};
 use derive_more::Constructor;
 use rust_decimal::Decimal;

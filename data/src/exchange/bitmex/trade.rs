@@ -3,7 +3,7 @@ use crate::{
     exchange::bitmex::message::BitmexMessage,
     subscription::trade::PublicTrade,
 };
-use toucan_instrument::{Side, exchange::ExchangeId};
+use instrument::{Side, exchange::ExchangeId};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -80,7 +80,7 @@ mod tests {
 
     mod de {
         use super::*;
-        use toucan_integration::error::SocketError;
+        use integration::error::SocketError;
         use chrono::{Duration, TimeZone};
 
         #[test]

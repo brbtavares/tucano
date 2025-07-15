@@ -10,7 +10,7 @@ use crate::{
     instrument::InstrumentData,
     subscription::book::OrderBooksL2,
 };
-use toucan_instrument::exchange::ExchangeId;
+use instrument::exchange::ExchangeId;
 use std::fmt::{Display, Formatter};
 
 /// Level 2 OrderBook types.

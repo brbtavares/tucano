@@ -10,8 +10,8 @@ use crate::{
     subscription::{Map, book::OrderBooksL1, trade::PublicTrades},
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
 use std::{fmt::Debug, marker::PhantomData};
 use url::Url;
 
@@ -36,7 +36,7 @@ pub mod market;
 pub mod spot;
 
 /// [`Subscription`](crate::subscription::Subscription) response type and response
-/// [`Validator`](toucan_integration::Validator) common to both [`BinanceSpot`](spot::BinanceSpot)
+/// [`Validator`](integration::Validator) common to both [`BinanceSpot`](spot::BinanceSpot)
 /// and [`BinanceFuturesUsd`](futures::BinanceFuturesUsd).
 pub mod subscription;
 

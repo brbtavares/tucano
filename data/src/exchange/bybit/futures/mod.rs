@@ -1,5 +1,5 @@
 use super::{Bybit, ExchangeServer};
-use toucan_instrument::exchange::ExchangeId;
+use instrument::exchange::ExchangeId;
 use std::fmt::Display;
 
 /// [`BybitPerpetualsUsd`] WebSocket server base url.

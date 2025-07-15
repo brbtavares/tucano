@@ -1,5 +1,5 @@
 use crate::{Identifier, exchange::bitmex::trade::BitmexTrade};
-use toucan_integration::subscription::SubscriptionId;
+use integration::subscription::SubscriptionId;
 use serde::{Deserialize, Serialize};
 use smol_str::format_smolstr;
 

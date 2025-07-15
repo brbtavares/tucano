@@ -3,8 +3,8 @@ use crate::{
     exchange::{Connector, ExchangeServer, subscription::ExchangeSub},
     subscriber::{WebSocketSubscriber, validator::WebSocketSubValidator},
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
 use serde_json::json;
 use std::{fmt::Debug, marker::PhantomData};
 use url::Url;

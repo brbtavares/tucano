@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     engine::{
         clock::LiveClock,
         state::{
@@ -16,12 +16,12 @@ use toucan_core::{
         config::SystemConfig,
     },
 };
-use toucan_data::{
+use data::{
     streams::builder::dynamic::indexed::init_indexed_multi_exchange_market_stream,
     subscription::SubKind,
 };
-use toucan_instrument::index::IndexedInstruments;
-use toucan_integration::Terminal;
+use instrument::index::IndexedInstruments;
+use integration::Terminal;
 use futures::StreamExt;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

@@ -1,6 +1,6 @@
 use super::Binance;
 use crate::{Identifier, instrument::MarketInstrumentData, subscription::Subscription};
-use toucan_instrument::{
+use instrument::{
     Keyed, asset::name::AssetNameInternal, instrument::market_data::MarketDataInstrument,
 };
 use serde::{Deserialize, Serialize};

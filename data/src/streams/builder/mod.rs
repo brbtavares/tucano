@@ -10,8 +10,8 @@ use crate::{
     },
     subscription::{Subscription, SubscriptionKind},
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{Validator, channel::Channel};
+use instrument::exchange::ExchangeId;
+use integration::{Validator, channel::Channel};
 use std::{
     collections::HashMap,
     fmt::{Debug, Display},
@@ -70,7 +70,7 @@ where
     }
 
     /// Add a collection of [`Subscription`]s to the [`StreamBuilder`] that will be actioned on
-    /// a distinct [`WebSocket`](toucan_integration::protocol::websocket::WebSocket) connection.
+    /// a distinct [`WebSocket`](integration::protocol::websocket::WebSocket) connection.
     ///
     /// Note that [`Subscription`]s are not actioned until the
     /// [`init()`](StreamBuilder::init()) method is invoked.

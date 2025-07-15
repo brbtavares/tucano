@@ -5,8 +5,8 @@ use crate::{
     exchange::ExchangeSub,
     subscription::trade::PublicTrade,
 };
-use toucan_instrument::{Side, exchange::ExchangeId};
-use toucan_integration::subscription::SubscriptionId;
+use instrument::{Side, exchange::ExchangeId};
+use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -57,14 +57,14 @@ pub struct BinanceTrade {
     pub subscription_id: SubscriptionId,
     #[serde(
         alias = "T",
-        deserialize_with = "toucan_integration::de::de_u64_epoch_ms_as_datetime_utc"
+        deserialize_with = "integration::de::de_u64_epoch_ms_as_datetime_utc"
     )]
     pub time: DateTime<Utc>,
     #[serde(alias = "t")]
     pub id: u64,
-    #[serde(alias = "p", deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(alias = "p", deserialize_with = "integration::de::de_str")]
     pub price: f64,
-    #[serde(alias = "q", deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(alias = "q", deserialize_with = "integration::de::de_str")]
     pub amount: f64,
     #[serde(alias = "m", deserialize_with = "de_side_from_buyer_is_maker")]
     pub side: Side,
@@ -130,7 +130,7 @@ mod tests {
     mod de {
         use std::time::Duration;
 
-        use toucan_integration::{de::datetime_utc_from_epoch_duration, error::SocketError};
+        use integration::{de::datetime_utc_from_epoch_duration, error::SocketError};
         use serde::de::Error;
 
         use super::*;

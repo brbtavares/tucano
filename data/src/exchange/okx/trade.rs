@@ -4,8 +4,8 @@ use crate::{
     exchange::ExchangeSub,
     subscription::trade::PublicTrade,
 };
-use toucan_instrument::{Side, exchange::ExchangeId};
-use toucan_integration::subscription::SubscriptionId;
+use instrument::{Side, exchange::ExchangeId};
+use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -80,14 +80,14 @@ impl<T> Identifier<Option<SubscriptionId>> for OkxMessage<T> {
 pub struct OkxTrade {
     #[serde(rename = "tradeId")]
     pub id: String,
-    #[serde(rename = "px", deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(rename = "px", deserialize_with = "integration::de::de_str")]
     pub price: f64,
-    #[serde(rename = "sz", deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(rename = "sz", deserialize_with = "integration::de::de_str")]
     pub amount: f64,
     pub side: Side,
     #[serde(
         rename = "ts",
-        deserialize_with = "toucan_integration::de::de_str_u64_epoch_ms_as_datetime_utc"
+        deserialize_with = "integration::de::de_str_u64_epoch_ms_as_datetime_utc"
     )]
     pub time: DateTime<Utc>,
 }
@@ -141,7 +141,7 @@ mod tests {
 
     mod de {
         use super::*;
-        use toucan_integration::{de::datetime_utc_from_epoch_duration, error::SocketError};
+        use integration::{de::datetime_utc_from_epoch_duration, error::SocketError};
         use std::time::Duration;
 
         #[test]

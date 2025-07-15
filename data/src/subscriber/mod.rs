@@ -9,7 +9,7 @@ use crate::{
     subscription::{Map, Subscription, SubscriptionKind, SubscriptionMeta},
 };
 use async_trait::async_trait;
-use toucan_integration::{
+use integration::{
     error::SocketError,
     protocol::websocket::{WebSocket, WsMessage, connect},
 };

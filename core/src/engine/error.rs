@@ -1,5 +1,5 @@
-use toucan_instrument::index::error::IndexError;
-use toucan_integration::Unrecoverable;
+use instrument::index::error::IndexError;
+use integration::Unrecoverable;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

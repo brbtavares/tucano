@@ -78,18 +78,18 @@ Add Toucan to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-toucan-core = "0.12"
-toucan-data = "0.10"
-toucan-execution = "0.5"
-toucan-analytics = "0.1"
+core = "0.12"
+data = "0.10"
+execution = "0.5"
+analytics = "0.1"
 ```
 
 ### Basic Usage
 
 ```rust
-use toucan_core::prelude::*;
-use toucan_data::exchange::binance::BinanceSpot;
-use toucan_strategy::AlgoStrategy;
+use core::prelude::*;
+use data::exchange::binance::BinanceSpot;
+use strategy::AlgoStrategy;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

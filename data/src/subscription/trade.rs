@@ -1,6 +1,6 @@
 use super::SubscriptionKind;
-use toucan_instrument::Side;
-use toucan_macro::{DeSubKind, SerSubKind};
+use instrument::Side;
+use macros::{DeSubKind, SerSubKind};
 use serde::{Deserialize, Serialize};
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`PublicTrade`]

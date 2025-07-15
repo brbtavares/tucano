@@ -2,7 +2,7 @@ use crate::{
     error::OrderError,
     order::{OrderEvent, OrderKind, TimeInForce, id::OrderId, state::Cancelled},
 };
-use toucan_instrument::{
+use instrument::{
     Side,
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},

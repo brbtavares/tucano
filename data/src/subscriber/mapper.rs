@@ -4,7 +4,7 @@ use crate::{
     instrument::InstrumentData,
     subscription::{Map, Subscription, SubscriptionKind, SubscriptionMeta},
 };
-use toucan_integration::subscription::SubscriptionId;
+use integration::subscription::SubscriptionId;
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
 
@@ -23,7 +23,7 @@ pub trait SubscriptionMapper {
 }
 
 /// Standard [`SubscriptionMapper`] for
-/// [`WebSocket`](toucan_integration::protocol::websocket::WebSocket)s suitable for most exchanges.
+/// [`WebSocket`](integration::protocol::websocket::WebSocket)s suitable for most exchanges.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Deserialize, Serialize)]
 pub struct WebSocketSubMapper;
 

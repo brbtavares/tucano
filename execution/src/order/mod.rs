@@ -3,7 +3,7 @@ use crate::order::{
     request::{OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen},
     state::UnindexedOrderState,
 };
-use toucan_instrument::{
+use instrument::{
     Side,
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},

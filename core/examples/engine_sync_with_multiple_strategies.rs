@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     EngineEvent,
     engine::{
         Engine, Processor,
@@ -30,25 +30,25 @@ use toucan_core::{
         config::SystemConfig,
     },
 };
-use toucan_data::{
+use data::{
     event::{DataKind, MarketEvent},
     streams::builder::dynamic::indexed::init_indexed_multi_exchange_market_stream,
     subscription::SubKind,
 };
-use toucan_execution::{
+use execution::{
     AccountEvent, AccountEventKind,
     order::{
         id::{ClientOrderId, StrategyId},
         request::{OrderRequestCancel, OrderRequestOpen},
     },
 };
-use toucan_instrument::{
+use instrument::{
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
     index::IndexedInstruments,
     instrument::InstrumentIndex,
 };
-use toucan_integration::Terminal;
+use integration::Terminal;
 use chrono::{DateTime, Utc};
 use futures::StreamExt;
 use rust_decimal::Decimal;

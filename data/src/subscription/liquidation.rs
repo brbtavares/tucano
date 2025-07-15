@@ -1,5 +1,5 @@
 use super::SubscriptionKind;
-use toucan_instrument::Side;
+use instrument::Side;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 

@@ -14,13 +14,13 @@ use crate::{
     },
     trade::Trade,
 };
-use toucan_instrument::{
+use instrument::{
     asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     index::error::IndexError,
     instrument::{InstrumentIndex, name::InstrumentNameExchange},
 };
-use toucan_integration::{
+use integration::{
     snapshot::Snapshot,
     stream::indexed::{IndexedStream, Indexer},
 };

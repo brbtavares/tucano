@@ -1,22 +1,22 @@
-use toucan_core::{
+use core::{
     engine::state::{
         EngineState, global::DefaultGlobalData, instrument::data::DefaultInstrumentMarketData,
         position::PositionExited, trading::TradingState,
     },
     analytics::{summary::TradingSummaryGenerator, time::Annual365},
 };
-use toucan_execution::{
+use execution::{
     balance::{AssetBalance, Balance},
     trade::{AssetFees, TradeId},
 };
-use toucan_instrument::{
+use instrument::{
     Side, Underlying,
     asset::{AssetIndex, QuoteAsset},
     exchange::ExchangeId,
     index::IndexedInstruments,
     instrument::{Instrument, InstrumentIndex},
 };
-use toucan_integration::snapshot::Snapshot;
+use integration::snapshot::Snapshot;
 use chrono::{DateTime, Days, Utc};
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

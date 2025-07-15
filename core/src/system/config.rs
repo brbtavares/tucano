@@ -2,8 +2,8 @@
 ///
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
-use toucan_execution::client::mock::MockExecutionConfig;
-use toucan_instrument::{
+use execution::client::mock::MockExecutionConfig;
+use instrument::{
     Underlying,
     asset::{Asset, name::AssetNameExchange},
     exchange::ExchangeId,

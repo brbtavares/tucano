@@ -8,12 +8,12 @@ use crate::{
     },
     risk::{RiskApproved, RiskManager, RiskRefused},
 };
-use toucan_execution::order::request::{
+use execution::order::request::{
     OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen,
 };
-use toucan_instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
-use toucan_strategy::AlgoStrategy;
-use toucan_integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
+use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use strategy::AlgoStrategy;
+use integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 

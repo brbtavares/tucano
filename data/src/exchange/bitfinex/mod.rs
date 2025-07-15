@@ -31,9 +31,9 @@ use crate::{
     subscription::trade::PublicTrades,
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
-use toucan_macro::{DeExchange, SerExchange};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
+use macros::{DeExchange, SerExchange};
 use derive_more::Display;
 use serde_json::json;
 use url::Url;
@@ -50,7 +50,7 @@ pub mod market;
 pub mod message;
 
 /// [`Subscription`](crate::subscription::Subscription) response types and response
-/// [`Validator`](toucan_integration::Validator) for [`Bitfinex`].
+/// [`Validator`](integration::Validator) for [`Bitfinex`].
 pub mod subscription;
 
 /// Public trade types for [`Bitfinex`].

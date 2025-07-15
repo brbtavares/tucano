@@ -1,5 +1,5 @@
 use super::message::KrakenError;
-use toucan_integration::{Validator, error::SocketError};
+use integration::{Validator, error::SocketError};
 use serde::{Deserialize, Serialize};
 
 /// [`Kraken`](super::Kraken) message received in response to WebSocket subscription requests.

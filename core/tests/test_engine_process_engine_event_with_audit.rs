@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     EngineEvent, Sequence, Timed,
     engine::{
         Engine, EngineOutput,
@@ -29,13 +29,13 @@ use toucan_core::{
     test_utils::time_plus_days,
 };
 
-use toucan_data::{
+use data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
     subscription::trade::PublicTrade,
 };
 
-use toucan_execution::{
+use execution::{
     AccountEvent, AccountEventKind, AccountSnapshot,
     balance::{AssetBalance, Balance},
     order::{
@@ -47,7 +47,7 @@ use toucan_execution::{
     trade::{AssetFees, Trade, TradeId},
 };
 
-use toucan_instrument::{
+use instrument::{
     Side, Underlying,
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
@@ -61,16 +61,16 @@ use toucan_instrument::{
     },
 };
 
-use toucan_risk::DefaultRiskManager;
+use risk::DefaultRiskManager;
 
-use toucan_strategy::{
+use strategy::{
     algo::AlgoStrategy,
     close_positions::{ClosePositionsStrategy, close_open_positions_with_market_orders},
     on_disconnect::OnDisconnectStrategy,
     on_trading_disabled::OnTradingDisabled,
 };
 
-use toucan_integration::{
+use integration::{
     channel::{UnboundedTx, mpsc_unbounded},
     collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany},
     snapshot::Snapshot,

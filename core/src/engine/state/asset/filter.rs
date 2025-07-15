@@ -1,5 +1,5 @@
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::collection::one_or_many::OneOrMany;
+use instrument::exchange::ExchangeId;
+use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 
 /// Asset filter.

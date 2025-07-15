@@ -1,4 +1,4 @@
-use toucan_instrument::index::error::IndexError;
+use instrument::index::error::IndexError;
 use derive_more::Constructor;
 use futures::Stream;
 use pin_project::pin_project;

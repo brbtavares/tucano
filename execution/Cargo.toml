@@ -1,9 +1,8 @@
 [package]
-name = "toucan-execution"
+name = "execution"
 version = "0.5.3"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-documentation = "https://docs.rs/toucan-execution/"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
 description = "Stream private account data from financial venues, and execute (live or mock) orders."
@@ -13,8 +12,8 @@ categories = ["accessibility", "simulation"]
 
 [dependencies]
 # Toucan Ecosystem
-toucan-integration = { workspace = true }
-toucan-instrument = { workspace = true }
+integration = { workspace = true }
+instrument = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

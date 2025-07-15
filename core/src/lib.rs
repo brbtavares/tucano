@@ -40,17 +40,17 @@ use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
 };
-use toucan_data::{
+use data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use toucan_execution::AccountEvent;
-use toucan_instrument::{
+use execution::AccountEvent;
+use instrument::{
     asset::{Asset, AssetIndex},
     exchange::ExchangeIndex,
     instrument::InstrumentIndex,
 };
-use toucan_integration::Terminal;
+use integration::Terminal;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use serde::{Deserialize, Serialize};
@@ -73,19 +73,19 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
-pub use toucan_risk as risk;
-pub use toucan_strategy as strategy;
+pub use risk;
+pub use strategy;
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
-pub use toucan_analytics as analytics;
+pub use analytics;
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
 /// 
 /// **Note**: Strategy interfaces have been moved to the `toucan-strategy` crate.
-/// Import them with: `use toucan_strategy::{AlgoStrategy, ClosePositionsStrategy, ...};`
+/// Import them with: `use strategy::{AlgoStrategy, ClosePositionsStrategy, ...};`
 // Remove the strategy module as it's now a separate crate
 // pub mod strategy;
 
@@ -192,13 +192,13 @@ pub mod test_utils {
     use crate::{
         Timed, engine::state::asset::AssetState,
     };
-    use toucan_analytics::summary::asset::TearSheetAssetGenerator;
-    use toucan_execution::{
+    use analytics::summary::asset::TearSheetAssetGenerator;
+    use execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
-    use toucan_instrument::{
+    use instrument::{
         Side,
         asset::{Asset, AssetIndex, QuoteAsset},
         instrument::name::InstrumentNameInternal,

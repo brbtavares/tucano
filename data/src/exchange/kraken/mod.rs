@@ -10,9 +10,9 @@ use crate::{
     subscription::{book::OrderBooksL1, trade::PublicTrades},
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
-use toucan_macro::{DeExchange, SerExchange};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
+use macros::{DeExchange, SerExchange};
 use derive_more::Display;
 use serde_json::json;
 use url::Url;

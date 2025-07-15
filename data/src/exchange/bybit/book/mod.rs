@@ -3,7 +3,7 @@ use crate::{
     event::{MarketEvent, MarketIter},
     subscription::book::OrderBookEvent,
 };
-use toucan_instrument::exchange::ExchangeId;
+use instrument::exchange::ExchangeId;
 use chrono::Utc;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};

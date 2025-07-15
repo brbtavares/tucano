@@ -1,4 +1,4 @@
-use toucan_data::{
+use data::{
     event::DataKind,
     exchange::{
         binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},
@@ -10,7 +10,7 @@ use toucan_data::{
         trade::PublicTrades,
     },
 };
-use toucan_instrument::instrument::market_data::{
+use instrument::instrument::market_data::{
     MarketDataInstrument, kind::MarketDataInstrumentKind,
 };
 use tokio_stream::StreamExt;

@@ -9,7 +9,7 @@ use crate::{
     },
     trade::Trade,
 };
-use toucan_instrument::{
+use instrument::{
     asset::{QuoteAsset, name::AssetNameExchange},
     exchange::ExchangeId,
     instrument::name::InstrumentNameExchange,

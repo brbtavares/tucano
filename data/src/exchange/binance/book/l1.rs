@@ -5,8 +5,8 @@ use crate::{
     exchange::{binance::channel::BinanceChannel, subscription::ExchangeSub},
     subscription::book::OrderBookL1,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::subscription::SubscriptionId;
+use instrument::exchange::ExchangeId;
+use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
@@ -45,7 +45,7 @@ pub struct BinanceOrderBookL1 {
     pub subscription_id: SubscriptionId,
     #[serde(
         alias = "T",
-        deserialize_with = "toucan_integration::de::de_u64_epoch_ms_as_datetime_utc",
+        deserialize_with = "integration::de::de_u64_epoch_ms_as_datetime_utc",
         default = "Utc::now"
     )]
     pub time: DateTime<Utc>,

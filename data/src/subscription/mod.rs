@@ -1,11 +1,11 @@
 use crate::{exchange::Connector, instrument::InstrumentData};
-use toucan_instrument::{
+use instrument::{
     Keyed,
     asset::name::AssetNameInternal,
     exchange::ExchangeId,
     instrument::market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
 };
-use toucan_integration::{
+use integration::{
     Validator, error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId,
 };
 use derive_more::Display;
@@ -187,7 +187,7 @@ pub fn exchange_supports_instrument_kind(
     exchange: ExchangeId,
     instrument_kind: &MarketDataInstrumentKind,
 ) -> bool {
-    use toucan_instrument::{
+    use instrument::{
         exchange::ExchangeId::*, instrument::market_data::kind::MarketDataInstrumentKind::*,
     };
 
@@ -339,7 +339,7 @@ mod tests {
             exchange::{coinbase::Coinbase, okx::Okx},
             subscription::trade::PublicTrades,
         };
-        use toucan_instrument::instrument::market_data::MarketDataInstrument;
+        use instrument::instrument::market_data::MarketDataInstrument;
 
         mod de {
             use super::*;
@@ -351,7 +351,7 @@ mod tests {
                 },
                 subscription::{book::OrderBooksL2, trade::PublicTrades},
             };
-            use toucan_instrument::instrument::market_data::MarketDataInstrument;
+            use instrument::instrument::market_data::MarketDataInstrument;
 
             #[test]
             fn test_subscription_okx_spot_public_trades() {
@@ -552,7 +552,7 @@ mod tests {
 
     mod instrument_map {
         use super::*;
-        use toucan_instrument::instrument::market_data::MarketDataInstrument;
+        use instrument::instrument::market_data::MarketDataInstrument;
 
         #[test]
         fn test_find_instrument() {

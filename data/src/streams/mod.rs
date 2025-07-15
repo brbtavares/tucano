@@ -1,7 +1,7 @@
 use self::builder::{StreamBuilder, multi::MultiStreamBuilder};
 use crate::subscription::SubscriptionKind;
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::channel::UnboundedRx;
+use instrument::exchange::ExchangeId;
+use integration::channel::UnboundedRx;
 use fnv::FnvHashMap;
 use futures::Stream;
 

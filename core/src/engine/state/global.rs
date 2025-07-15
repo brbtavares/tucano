@@ -1,6 +1,6 @@
 use crate::engine::Processor;
-use toucan_data::event::MarketEvent;
-use toucan_execution::AccountEvent;
+use data::event::MarketEvent;
+use execution::AccountEvent;
 use serde::{Deserialize, Serialize};
 
 /// Empty `GlobalData` that can be used for `Strategy` and `RiskManager` combinations that

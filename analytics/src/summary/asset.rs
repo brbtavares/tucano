@@ -5,7 +5,7 @@ use crate::{
         mean::{MeanDrawdown, MeanDrawdownGenerator},
     },
 };
-use toucan_execution::balance::{AssetBalance, Balance};
+use execution::balance::{AssetBalance, Balance};
 use super::LocalSnapshot;
 use serde::{Deserialize, Serialize};
 
@@ -88,7 +88,7 @@ impl TearSheetAssetGenerator {
 mod tests {
     use super::*;
     use crate::test_utils::time_plus_days;
-    use toucan_instrument::asset::AssetIndex;
+    use instrument::asset::AssetIndex;
     use chrono::{DateTime, Utc};
     use rust_decimal_macros::dec;
 

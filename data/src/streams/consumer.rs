@@ -12,7 +12,7 @@ use crate::{
     },
     subscription::{Subscription, SubscriptionKind, display_subscriptions_without_exchange},
 };
-use toucan_instrument::exchange::ExchangeId;
+use instrument::exchange::ExchangeId;
 use derive_more::Constructor;
 use futures::Stream;
 use serde::{Deserialize, Serialize};

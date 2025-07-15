@@ -7,8 +7,8 @@ use crate::{
     subscription::trade::PublicTrades,
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_macro::{DeExchange, SerExchange};
+use instrument::exchange::ExchangeId;
+use macros::{DeExchange, SerExchange};
 use std::fmt::Display;
 
 /// Public trades types.

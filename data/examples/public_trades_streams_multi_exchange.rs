@@ -1,4 +1,4 @@
-use toucan_data::{
+use data::{
     exchange::{
         binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},
         bitmex::Bitmex,
@@ -13,7 +13,7 @@ use toucan_data::{
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::trade::PublicTrades,
 };
-use toucan_instrument::instrument::{
+use instrument::instrument::{
     kind::option::{OptionExercise, OptionKind},
     market_data::kind::{
         MarketDataFutureContract, MarketDataInstrumentKind, MarketDataOptionContract,

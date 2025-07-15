@@ -3,7 +3,7 @@ use crate::{
     exchange::bybit::message::BybitPayload,
     subscription::trade::PublicTrade,
 };
-use toucan_instrument::{Side, exchange::ExchangeId};
+use instrument::{Side, exchange::ExchangeId};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -29,7 +29,7 @@ pub type BybitTrade = BybitPayload<Vec<BybitTradeInner>>;
 pub struct BybitTradeInner {
     #[serde(
         alias = "T",
-        deserialize_with = "toucan_integration::de::de_u64_epoch_ms_as_datetime_utc"
+        deserialize_with = "integration::de::de_u64_epoch_ms_as_datetime_utc"
     )]
     pub time: DateTime<Utc>,
 
@@ -39,10 +39,10 @@ pub struct BybitTradeInner {
     #[serde(rename = "S")]
     pub side: Side,
 
-    #[serde(alias = "v", deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(alias = "v", deserialize_with = "integration::de::de_str")]
     pub amount: f64,
 
-    #[serde(alias = "p", deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(alias = "p", deserialize_with = "integration::de::de_str")]
     pub price: f64,
 
     #[serde(rename = "i")]
@@ -84,7 +84,7 @@ mod tests {
         use crate::exchange::bybit::message::BybitPayloadKind;
 
         use super::*;
-        use toucan_integration::{
+        use integration::{
             de::datetime_utc_from_epoch_duration, error::SocketError, subscription::SubscriptionId,
         };
         use smol_str::ToSmolStr;

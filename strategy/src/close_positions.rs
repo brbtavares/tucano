@@ -1,9 +1,9 @@
-use toucan_execution::order::{
+use execution::order::{
     OrderKey, OrderKind, TimeInForce,
     id::{ClientOrderId, StrategyId},
     request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
 };
-use toucan_instrument::{
+use instrument::{
     Side, asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex,
 };
 use rust_decimal::Decimal;

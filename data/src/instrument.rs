@@ -1,4 +1,4 @@
-use toucan_instrument::{
+use instrument::{
     Keyed,
     instrument::{
         Instrument,

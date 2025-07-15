@@ -1,4 +1,4 @@
-use toucan_instrument::exchange::ExchangeId;
+use instrument::exchange::ExchangeId;
 use chrono::Utc;
 
 use crate::{

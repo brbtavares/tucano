@@ -5,9 +5,9 @@ use crate::{
         position::{PositionExited, PositionManager},
     },
 };
-use toucan_analytics::summary::instrument::TearSheetGenerator;
-use toucan_data::event::MarketEvent;
-use toucan_execution::{
+use analytics::summary::instrument::TearSheetGenerator;
+use data::event::MarketEvent;
+use execution::{
     InstrumentAccountSnapshot,
     order::{
         Order, OrderKey,
@@ -16,7 +16,7 @@ use toucan_execution::{
     },
     trade::Trade,
 };
-use toucan_instrument::{
+use instrument::{
     Keyed,
     asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
@@ -26,7 +26,7 @@ use toucan_instrument::{
         name::{InstrumentNameExchange, InstrumentNameInternal},
     },
 };
-use toucan_integration::{collection::FnvIndexMap, snapshot::Snapshot};
+use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use itertools::Either;

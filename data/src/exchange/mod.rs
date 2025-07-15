@@ -5,8 +5,8 @@ use crate::{
     subscriber::{Subscriber, validator::SubscriptionValidator},
     subscription::{Map, SubscriptionKind},
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{Validator, error::SocketError, protocol::websocket::WsMessage};
+use instrument::exchange::ExchangeId;
+use integration::{Validator, error::SocketError, protocol::websocket::WsMessage};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{fmt::Debug, time::Duration};
 use url::Url;
@@ -100,7 +100,7 @@ where
 
     /// Deserialisable type that the [`Self::SubValidator`] expects to receive from the exchange server in
     /// response to the `Subscription` [`Self::requests`]
-    /// sent over the [`WebSocket`](toucan_integration::protocol::websocket::WebSocket). Implements
+    /// sent over the [`WebSocket`](integration::protocol::websocket::WebSocket). Implements
     /// [`Validator`] in order to determine if [`Self`]
     /// communicates a successful `Subscription` outcome.
     type SubResponse: Validator + Debug + DeserializeOwned;
@@ -109,7 +109,7 @@ where
     fn url() -> Result<Url, SocketError>;
 
     /// Defines [`PingInterval`] of custom application-level
-    /// [`WebSocket`](toucan_integration::protocol::websocket::WebSocket) pings for the exchange
+    /// [`WebSocket`](integration::protocol::websocket::WebSocket) pings for the exchange
     /// server being connected with.
     ///
     /// Defaults to `None`, meaning that no custom pings are sent.
@@ -148,7 +148,7 @@ pub trait ExchangeServer: Default + Debug + Clone + Send {
 }
 
 /// Defines the frequency and construction function for custom
-/// [`WebSocket`](toucan_integration::protocol::websocket::WebSocket) pings - used for exchanges
+/// [`WebSocket`](integration::protocol::websocket::WebSocket) pings - used for exchanges
 /// that require additional application-level pings.
 #[derive(Debug)]
 pub struct PingInterval {

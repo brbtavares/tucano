@@ -1,9 +1,9 @@
-use toucan_instrument::{
+use instrument::{
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::ExchangeId,
     instrument::{InstrumentIndex, name::InstrumentNameExchange},
 };
-use toucan_integration::error::SocketError;
+use integration::error::SocketError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

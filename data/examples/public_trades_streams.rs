@@ -1,9 +1,9 @@
-use toucan_data::{
+use data::{
     exchange::binance::futures::BinanceFuturesUsd,
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::trade::PublicTrades,
 };
-use toucan_instrument::instrument::market_data::kind::MarketDataInstrumentKind;
+use instrument::instrument::market_data::kind::MarketDataInstrumentKind;
 use futures_util::StreamExt;
 use tracing::{info, warn};
 

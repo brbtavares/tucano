@@ -1,10 +1,10 @@
 use crate::{Identifier, subscription::Subscription};
-use toucan_integration::subscription::SubscriptionId;
+use integration::subscription::SubscriptionId;
 use serde::Deserialize;
 
 /// Defines an exchange specific market and channel combination used by an exchange
 /// [`Connector`](super::Connector) to build the
-/// [`WsMessage`](toucan_integration::protocol::websocket::WsMessage) subscription payloads to
+/// [`WsMessage`](integration::protocol::websocket::WsMessage) subscription payloads to
 /// send to the exchange server.
 ///
 /// ### Examples

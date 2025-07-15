@@ -2,7 +2,7 @@ use crate::{
     Identifier, exchange::bybit::Bybit, instrument::MarketInstrumentData,
     subscription::Subscription,
 };
-use toucan_instrument::{
+use instrument::{
     Keyed, asset::name::AssetNameInternal, instrument::market_data::MarketDataInstrument,
 };
 use serde::{Deserialize, Serialize};

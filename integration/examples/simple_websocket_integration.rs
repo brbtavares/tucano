@@ -1,4 +1,4 @@
-use toucan_integration::{
+use integration::{
     Transformer,
     error::SocketError,
     protocol::websocket::{WebSocket, WebSocketParser, WsMessage},

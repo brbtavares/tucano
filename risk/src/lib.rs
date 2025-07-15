@@ -4,8 +4,8 @@ pub use check::*;
 
 use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, hash::Hash, marker::PhantomData};
-use toucan_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use toucan_instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
+use instrument::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use derive_more::{Constructor, Display, From};
 
 /// Approved result from a [`RiskManager`] check.

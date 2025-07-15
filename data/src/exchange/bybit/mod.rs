@@ -14,8 +14,8 @@ use crate::{
     },
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
 use book::{BybitOrderBookMessage, l2::BybitOrderBooksL2Transformer};
 use serde::de::{Error, Unexpected};
 use std::{fmt::Debug, marker::PhantomData, time::Duration};
@@ -44,7 +44,7 @@ pub mod message;
 pub mod spot;
 
 /// [`Subscription`](crate::subscription::Subscription) response type and response
-/// [`Validator`](toucan_integration::Validator) common to both [`BybitSpot`](spot::BybitSpot)
+/// [`Validator`](integration::Validator) common to both [`BybitSpot`](spot::BybitSpot)
 /// and [`BybitFuturesUsd`](futures::BybitPerpetualsUsd).
 pub mod subscription;
 

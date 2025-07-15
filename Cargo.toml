@@ -6,7 +6,7 @@ members = [
     "data",
     "execution",
     "integration",
-    "macro", 
+    "macros", 
     "instrument",
     "risk",
     "strategy"
@@ -14,15 +14,15 @@ members = [
 
 [workspace.dependencies]
 # Toucan Ecosystem
-toucan-analytics = { path = "./analytics", version = "0.1.0" }
-toucan-core = { path = "./core", version = "0.12.2" }
-toucan-integration = { path = "./integration", version = "0.9.1" }
-toucan-instrument = { path = "./instrument", version = "0.3.1" }
-toucan-data = { path = "./data", version = "0.10.1" }
-toucan-execution = { path = "./execution", version = "0.5.3" }
-toucan-macro = { path = "./macro", version = "0.2.0" }
-toucan-risk = { path = "./risk", version = "0.1.0" }
-toucan-strategy = { path = "./strategy", version = "0.1.0" }
+analytics = { path = "./analytics", version = "0.1.0" }
+core = { path = "./core", version = "0.12.2" }
+integration = { path = "./integration", version = "0.9.1" }
+instrument = { path = "./instrument", version = "0.3.1" }
+data = { path = "./data", version = "0.10.1" }
+execution = { path = "./execution", version = "0.5.3" }
+macros = { path = "./macros", version = "0.2.0" }
+risk = { path = "./risk", version = "0.1.0" }
+strategy = { path = "./strategy", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }

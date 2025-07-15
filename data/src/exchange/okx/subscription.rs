@@ -1,6 +1,6 @@
 use super::{channel::OkxChannel, market::OkxMarket};
 use crate::exchange::subscription::ExchangeSub;
-use toucan_integration::{Validator, error::SocketError};
+use integration::{Validator, error::SocketError};
 use serde::{Deserialize, Serialize, Serializer, ser::SerializeStruct};
 
 // Implement custom Serialize to assist aesthetics of <Okx as Connector>::requests() function.

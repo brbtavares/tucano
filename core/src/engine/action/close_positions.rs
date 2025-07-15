@@ -9,8 +9,8 @@ use crate::{
         },
     },
 };
-use toucan_instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
-use toucan_strategy::ClosePositionsStrategy;
+use instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use strategy::ClosePositionsStrategy;
 use std::fmt::Debug;
 
 /// Trait that defines how the [`Engine`] generates & sends order requests for closing open

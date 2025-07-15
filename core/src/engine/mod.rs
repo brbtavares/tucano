@@ -22,14 +22,14 @@ use crate::{
     risk::RiskManager,
     shutdown::SyncShutdown,
 };
-use toucan_analytics::summary::TradingSummaryGenerator;
-use toucan_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use toucan_strategy::{
+use analytics::summary::TradingSummaryGenerator;
+use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use strategy::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
-use toucan_execution::AccountEvent;
-use toucan_instrument::{asset::QuoteAsset, exchange::ExchangeIndex, instrument::InstrumentIndex};
-use toucan_integration::channel::Tx;
+use execution::AccountEvent;
+use instrument::{asset::QuoteAsset, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use integration::channel::Tx;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
@@ -318,9 +318,9 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-        use toucan_integration::collection::FnvIndexMap;
-        use toucan_instrument::{asset::AssetIndex, instrument::InstrumentIndex};
-        use toucan_execution::balance::AssetBalance;
+        use integration::collection::FnvIndexMap;
+        use instrument::{asset::AssetIndex, instrument::InstrumentIndex};
+        use execution::balance::AssetBalance;
         
         // Create placeholder empty collections since analytics expects simplified types
         let instruments: FnvIndexMap<InstrumentIndex, ()> = FnvIndexMap::default();

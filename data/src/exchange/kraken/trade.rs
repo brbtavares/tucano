@@ -4,8 +4,8 @@ use crate::{
     event::{MarketEvent, MarketIter},
     subscription::trade::PublicTrade,
 };
-use toucan_instrument::{Side, exchange::ExchangeId};
-use toucan_integration::{
+use instrument::{Side, exchange::ExchangeId};
+use integration::{
     de::{datetime_utc_from_epoch_duration, extract_next},
     subscription::SubscriptionId,
 };
@@ -210,8 +210,8 @@ mod tests {
 
     mod de {
         use super::*;
-        use toucan_instrument::Side;
-        use toucan_integration::{
+        use instrument::Side;
+        use integration::{
             de::datetime_utc_from_epoch_duration, error::SocketError, subscription::SubscriptionId,
         };
 

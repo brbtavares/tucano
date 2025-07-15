@@ -7,10 +7,10 @@ use crate::{
     },
     shutdown::AsyncShutdown,
 };
-use toucan_data::streams::{
+use data::streams::{
     consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream,
 };
-use toucan_execution::{
+use execution::{
     UnindexedAccountEvent,
     client::{
         ExecutionClient,
@@ -20,7 +20,7 @@ use toucan_execution::{
     indexer::AccountEventIndexer,
     map::generate_execution_instrument_map,
 };
-use toucan_instrument::{
+use instrument::{
     Keyed, Underlying,
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
@@ -32,7 +32,7 @@ use toucan_instrument::{
         spec::{InstrumentSpec, InstrumentSpecQuantity, OrderQuantityUnits},
     },
 };
-use toucan_integration::channel::{Channel, UnboundedTx, mpsc_unbounded};
+use integration::channel::{Channel, UnboundedTx, mpsc_unbounded};
 use fnv::FnvHashMap;
 use futures::{FutureExt, future::try_join_all};
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};

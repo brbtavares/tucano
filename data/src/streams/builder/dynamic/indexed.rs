@@ -9,7 +9,7 @@ use crate::{
     },
     subscription::{SubKind, Subscription},
 };
-use toucan_instrument::{
+use instrument::{
     Keyed,
     exchange::ExchangeId,
     index::{IndexedInstruments, error::IndexError},

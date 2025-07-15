@@ -13,8 +13,8 @@ use crate::{
     subscription::{Map, trade::PublicTrades},
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
 use derive_more::Display;
 use serde::de::{Error, Unexpected};
 use std::fmt::Debug;
@@ -32,7 +32,7 @@ pub mod market;
 pub mod message;
 
 /// [`Subscription`](crate::subscription::Subscription) response type and response
-/// [`Validator`](toucan_integration::Validator) for [`Bitmex`].
+/// [`Validator`](integration::Validator) for [`Bitmex`].
 pub mod subscription;
 
 /// Public trade types for [`Bitmex`].

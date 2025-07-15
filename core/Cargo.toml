@@ -1,9 +1,8 @@
 [package]
-name = "toucan-core"
+name = "core"
 version = "0.12.2"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-documentation = "https://docs.rs/toucan-core"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
 description = "Framework for building high-performance live-trading, paper-trading and back-testing systems"
@@ -23,14 +22,14 @@ tokio = { workspace = true, features = ["fs"]}
 criterion = { workspace = true }
 
 [dependencies]
-toucan-analytics = { workspace = true }
-toucan-risk = { workspace = true }
+analytics = { workspace = true }
+risk = { workspace = true }
 # Toucan Ecosystem
-toucan-integration = { workspace = true }
-toucan-instrument = { workspace = true }
-toucan-data = { workspace = true }
-toucan-execution = { workspace = true }
-toucan-strategy = { workspace = true }
+integration = { workspace = true }
+instrument = { workspace = true }
+data = { workspace = true }
+execution = { workspace = true }
+strategy = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

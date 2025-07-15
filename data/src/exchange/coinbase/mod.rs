@@ -10,9 +10,9 @@ use crate::{
     subscription::trade::PublicTrades,
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
-use toucan_macro::{DeExchange, SerExchange};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
+use macros::{DeExchange, SerExchange};
 use derive_more::Display;
 use serde_json::json;
 use url::Url;
@@ -26,7 +26,7 @@ pub mod channel;
 pub mod market;
 
 /// [`Subscription`](crate::subscription::Subscription) response type and response
-/// [`Validator`](toucan_integration::Validator) for [`Coinbase`].
+/// [`Validator`](integration::Validator) for [`Coinbase`].
 pub mod subscription;
 
 /// Public trade types for [`Coinbase`].

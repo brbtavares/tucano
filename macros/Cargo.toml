@@ -1,9 +1,8 @@
 [package]
-name = "toucan-macro"
+name = "macros"
 version = "0.2.0"
 authors = ["JustAStream"]
 edition = "2021"
-documentation = "https://docs.rs/toucan-macro/"
 repository = "https://github.com/brbtavares/toucan"
 description = "Toucan ecosystem macros"
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]

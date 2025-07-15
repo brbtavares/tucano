@@ -6,8 +6,8 @@ use crate::{
     exchange::{kraken::channel::KrakenChannel, subscription::ExchangeSub},
     subscription::book::OrderBookL1,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{de::extract_next, subscription::SubscriptionId};
+use instrument::exchange::ExchangeId;
+use integration::{de::extract_next, subscription::SubscriptionId};
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
@@ -39,7 +39,7 @@ pub struct KrakenSpread {
     pub best_bid_price: Decimal,
     #[serde(with = "rust_decimal::serde::str")]
     pub best_ask_price: Decimal,
-    #[serde(deserialize_with = "toucan_integration::de::de_str_f64_epoch_s_as_datetime_utc")]
+    #[serde(deserialize_with = "integration::de::de_str_f64_epoch_s_as_datetime_utc")]
     pub time: DateTime<Utc>,
     #[serde(with = "rust_decimal::serde::str")]
     pub best_bid_amount: Decimal,
@@ -156,7 +156,7 @@ mod tests {
 
     mod de {
         use super::*;
-        use toucan_integration::{
+        use integration::{
             de::datetime_utc_from_epoch_duration, error::SocketError, subscription::SubscriptionId,
         };
         use rust_decimal_macros::dec;

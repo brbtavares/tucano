@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     EngineEvent,
     engine::{
         clock::LiveClock,
@@ -27,15 +27,15 @@ use toucan_core::{
         config::SystemConfig,
     },
 };
-use toucan_data::{
+use data::{
     streams::builder::dynamic::indexed::init_indexed_multi_exchange_market_stream,
     subscription::SubKind,
 };
-use toucan_execution::order::{
+use execution::order::{
     OrderKind,
     request::{OrderRequestCancel, OrderRequestOpen},
 };
-use toucan_instrument::{index::IndexedInstruments, instrument::kind::InstrumentKind};
+use instrument::{index::IndexedInstruments, instrument::kind::InstrumentKind};
 use derive_more::Constructor;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

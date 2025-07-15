@@ -1,7 +1,7 @@
 use crate::engine::state::instrument::filter::InstrumentFilter;
-use toucan_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use toucan_instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
-use toucan_integration::collection::one_or_many::OneOrMany;
+use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
+use instrument::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
+use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 
 /// Trading related commands for the [`Engine`](super::Engine) to action, sent from an

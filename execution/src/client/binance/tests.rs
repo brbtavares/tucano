@@ -1,5 +1,5 @@
 use crate::client::{binance::BinanceExecution, ExecutionClient};
-use toucan_instrument::{
+use instrument::{
     asset::name::AssetNameExchange,
     exchange::ExchangeId,
     instrument::name::InstrumentNameExchange,
@@ -78,7 +78,7 @@ async fn test_binance_order_operations() {
     use crate::order::{OrderKind, TimeInForce, OrderKey};
     use crate::order::request::{OrderRequestOpen, RequestOpen, OrderRequestCancel, RequestCancel};
     use crate::order::id::{StrategyId, ClientOrderId};
-    use toucan_instrument::Side;
+    use instrument::Side;
     use rust_decimal::Decimal;
     use std::str::FromStr;
     

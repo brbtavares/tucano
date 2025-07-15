@@ -7,10 +7,10 @@ use crate::{
     },
     execution::AccountStreamEvent,
 };
-use toucan_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use toucan_execution::AccountEvent;
-use toucan_instrument::instrument::InstrumentIndex;
-use toucan_integration::Terminal;
+use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use execution::AccountEvent;
+use instrument::instrument::InstrumentIndex;
+use integration::Terminal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::{info, info_span};

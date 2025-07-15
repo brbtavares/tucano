@@ -1,5 +1,5 @@
-use toucan_execution::trade::{AssetFees, Trade, TradeId};
-use toucan_instrument::{
+use execution::trade::{AssetFees, Trade, TradeId};
+use instrument::{
     Side,
     asset::{AssetIndex, QuoteAsset},
     instrument::InstrumentIndex,
@@ -63,12 +63,12 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// # Examples
 /// ## Partially Reduce LONG Position
 /// ```rust
-/// use toucan_core::engine::state::position::Position;
-/// use toucan_execution::order::id::{OrderId, StrategyId};
-/// use toucan_execution::trade::{AssetFees, Trade, TradeId};
-/// use toucan_instrument::asset::QuoteAsset;
-/// use toucan_instrument::instrument::name::InstrumentNameInternal;
-/// use toucan_instrument::Side;
+/// use core::engine::state::position::Position;
+/// use execution::order::id::{OrderId, StrategyId};
+/// use execution::trade::{AssetFees, Trade, TradeId};
+/// use instrument::asset::QuoteAsset;
+/// use instrument::instrument::name::InstrumentNameInternal;
+/// use instrument::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -111,12 +111,12 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 ///
 /// ## Flip Position - Close SHORT and Open LONG
 /// ```rust
-/// use toucan_core::engine::state::position::Position;
-/// use toucan_execution::order::id::{OrderId, StrategyId};
-/// use toucan_execution::trade::{AssetFees, Trade, TradeId};
-/// use toucan_instrument::asset::QuoteAsset;
-/// use toucan_instrument::instrument::name::InstrumentNameInternal;
-/// use toucan_instrument::Side;
+/// use core::engine::state::position::Position;
+/// use execution::order::id::{OrderId, StrategyId};
+/// use execution::trade::{AssetFees, Trade, TradeId};
+/// use instrument::asset::QuoteAsset;
+/// use instrument::instrument::name::InstrumentNameInternal;
+/// use instrument::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -558,7 +558,7 @@ pub fn calculate_pnl_return(
 mod tests {
     use super::*;
     use crate::test_utils::{time_plus_days, trade};
-    use toucan_instrument::instrument::name::InstrumentNameInternal;
+    use instrument::instrument::name::InstrumentNameInternal;
     use rust_decimal_macros::dec;
 
     #[test]

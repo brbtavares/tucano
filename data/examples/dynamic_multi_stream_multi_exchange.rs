@@ -1,4 +1,4 @@
-use toucan_data::{
+use data::{
     event::DataKind,
     streams::{
         builder::dynamic::DynamicStreams, consumer::MarketStreamResult,
@@ -6,7 +6,7 @@ use toucan_data::{
     },
     subscription::SubKind,
 };
-use toucan_instrument::{
+use instrument::{
     exchange::ExchangeId,
     instrument::market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
 };

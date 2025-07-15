@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     EngineEvent,
     engine::{
         clock::HistoricalClock,
@@ -17,14 +17,14 @@ use toucan_core::{
         config::SystemConfig,
     },
 };
-use toucan_data::{
+use data::{
     event::DataKind,
     streams::{
         consumer::{MarketStreamEvent, MarketStreamResult},
         reconnect::{Event, stream::ReconnectingStream},
     },
 };
-use toucan_instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
+use instrument::{index::IndexedInstruments, instrument::InstrumentIndex};
 use futures::{Stream, StreamExt, stream};
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;

@@ -4,11 +4,11 @@ use crate::{
     on_disconnect::OnDisconnectStrategy,
     on_trading_disabled::OnTradingDisabled,
 };
-use toucan_execution::order::{
+use execution::order::{
     id::{ClientOrderId, StrategyId},
     request::{OrderRequestCancel, OrderRequestOpen},
 };
-use toucan_instrument::{
+use instrument::{
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
     instrument::InstrumentIndex,

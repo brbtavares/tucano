@@ -29,8 +29,8 @@ use crate::{
         trade::{PublicTrade, PublicTrades},
     },
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{
+use instrument::exchange::ExchangeId;
+use integration::{
     Validator,
     channel::{UnboundedRx, UnboundedTx, mpsc_unbounded},
     error::SocketError,

@@ -1,4 +1,4 @@
-use toucan_instrument::{
+use instrument::{
     exchange::{ExchangeId, ExchangeIndex},
     index::IndexedInstruments,
 };

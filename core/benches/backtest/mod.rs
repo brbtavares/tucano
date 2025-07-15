@@ -27,12 +27,12 @@ use toucan::{
     },
     system::config::{ExecutionConfig, InstrumentConfig, SystemConfig},
 };
-use toucan_data::{
+use data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
     subscription::trade::PublicTrade,
 };
-use toucan_execution::{
+use execution::{
     AccountEvent,
     order::{
         OrderKey, OrderKind, TimeInForce,
@@ -40,7 +40,7 @@ use toucan_execution::{
         request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
     },
 };
-use toucan_instrument::{
+use instrument::{
     Side,
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},

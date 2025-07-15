@@ -6,7 +6,7 @@ use crate::{
     },
     shutdown::SyncShutdown,
 };
-use toucan_integration::{
+use integration::{
     FeedEnded, Terminal,
     channel::{ChannelTxDroppable, Tx},
 };

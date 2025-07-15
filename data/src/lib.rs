@@ -32,7 +32,7 @@
 //!
 //! ### Multi Exchange Public Trades
 //! ```rust,no_run
-//! use toucan_data::{
+//! use data::{
 //!     exchange::{
 //!         gateio::spot::GateioSpot,
 //!         binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},
@@ -42,7 +42,7 @@
 //!     streams::{Streams, reconnect::stream::ReconnectingStream},
 //!     subscription::trade::PublicTrades,
 //! };
-//! use toucan_instrument::instrument::market_data::kind::MarketDataInstrumentKind;
+//! use instrument::instrument::market_data::kind::MarketDataInstrumentKind;
 //! use futures::StreamExt;
 //! use tracing::warn;
 //!
@@ -99,8 +99,8 @@ use crate::{
     transformer::ExchangeTransformer,
 };
 use async_trait::async_trait;
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{
+use instrument::exchange::ExchangeId;
+use integration::{
     Transformer,
     error::SocketError,
     protocol::{
@@ -161,7 +161,7 @@ pub mod books;
 pub mod transformer;
 
 /// Convenient type alias for an [`ExchangeStream`] utilising a tungstenite
-/// [`WebSocket`](toucan_integration::protocol::websocket::WebSocket).
+/// [`WebSocket`](integration::protocol::websocket::WebSocket).
 pub type ExchangeWsStream<Transformer> = ExchangeStream<WebSocketParser, WsStream, Transformer>;
 
 /// Defines a generic identification type for the implementor.
@@ -332,7 +332,7 @@ pub async fn distribute_messages_to_exchange(
 ) {
     while let Some(message) = ws_sink_rx.recv().await {
         if let Err(error) = ws_sink.send(message).await {
-            if toucan_integration::protocol::websocket::is_websocket_disconnected(&error) {
+            if integration::protocol::websocket::is_websocket_disconnected(&error) {
                 break;
             }
 
@@ -376,7 +376,7 @@ pub mod test_utils {
         event::{DataKind, MarketEvent},
         subscription::trade::PublicTrade,
     };
-    use toucan_instrument::{Side, exchange::ExchangeId};
+    use instrument::{Side, exchange::ExchangeId};
     use chrono::{DateTime, Utc};
 
     pub fn market_event_trade_buy<InstrumentKey>(

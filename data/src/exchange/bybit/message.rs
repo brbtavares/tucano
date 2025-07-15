@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use crate::{Identifier, exchange::bybit::channel::BybitChannel};
-use toucan_integration::subscription::SubscriptionId;
+use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use serde::{
     Deserialize, Serialize,
@@ -40,7 +40,7 @@ pub struct BybitPayload<T> {
 
     #[serde(
         alias = "ts",
-        deserialize_with = "toucan_integration::de::de_u64_epoch_ms_as_datetime_utc"
+        deserialize_with = "integration::de::de_u64_epoch_ms_as_datetime_utc"
     )]
     pub time: DateTime<Utc>,
 
@@ -97,7 +97,7 @@ mod tests {
 
     mod de {
         use crate::exchange::bybit::subscription::{BybitResponse, BybitReturnMessage};
-        use toucan_integration::error::SocketError;
+        use integration::error::SocketError;
 
         #[test]
         fn test_bybit_pong() {

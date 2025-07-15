@@ -1,6 +1,6 @@
 use super::SubscriptionKind;
 use crate::books::{Level, OrderBook, mid_price, volume_weighted_mid_price};
-use toucan_macro::{DeSubKind, SerSubKind};
+use macros::{DeSubKind, SerSubKind};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use rust_decimal::Decimal;

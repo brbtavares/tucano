@@ -1,5 +1,5 @@
-use toucan_execution::error::ClientError;
-use toucan_instrument::index::error::IndexError;
+use execution::error::ClientError;
+use instrument::index::error::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

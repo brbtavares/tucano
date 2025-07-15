@@ -7,8 +7,8 @@ use crate::{
     subscription::{Map, SubscriptionKind},
 };
 use async_trait::async_trait;
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{
+use instrument::exchange::ExchangeId;
+use integration::{
     Transformer, protocol::websocket::WsMessage, subscription::SubscriptionId,
 };
 use serde::Deserialize;

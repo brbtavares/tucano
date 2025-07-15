@@ -9,9 +9,9 @@ use crate::{
     subscription::trade::PublicTrades,
     transformer::stateless::StatelessTransformer,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::{error::SocketError, protocol::websocket::WsMessage};
-use toucan_macro::{DeExchange, SerExchange};
+use instrument::exchange::ExchangeId;
+use integration::{error::SocketError, protocol::websocket::WsMessage};
+use macros::{DeExchange, SerExchange};
 use derive_more::Display;
 use serde_json::json;
 use std::time::Duration;
@@ -26,7 +26,7 @@ pub mod channel;
 pub mod market;
 
 /// [`Subscription`](crate::subscription::Subscription) response type and response
-/// [`Validator`](toucan_integration::Validator) for [`Okx`].
+/// [`Validator`](integration::Validator) for [`Okx`].
 pub mod subscription;
 
 /// Public trade types for [`Okx`].

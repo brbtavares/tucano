@@ -3,8 +3,8 @@ use crate::{
     Identifier, books::OrderBook, event::MarketEvent, exchange::subscription::ExchangeSub,
     subscription::book::OrderBookEvent,
 };
-use toucan_instrument::exchange::ExchangeId;
-use toucan_integration::subscription::SubscriptionId;
+use instrument::exchange::ExchangeId;
+use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};

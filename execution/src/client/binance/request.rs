@@ -1,4 +1,4 @@
-use toucan_integration::{
+use integration::{
     protocol::http::{
         private::RequestSigner,
         rest::RestRequest,

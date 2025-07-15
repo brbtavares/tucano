@@ -1,5 +1,5 @@
 use crate::{error::OrderError, order::id::OrderId};
-use toucan_instrument::{
+use instrument::{
     asset::{AssetIndex, name::AssetNameExchange},
     instrument::{InstrumentIndex, name::InstrumentNameExchange},
 };

@@ -1,4 +1,4 @@
-use toucan_instrument::exchange::ExchangeId;
+use instrument::exchange::ExchangeId;
 
 /// Strategy interface that defines what actions should be performed after an
 /// [`ExchangeId`] connection disconnects.

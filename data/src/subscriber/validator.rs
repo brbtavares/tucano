@@ -3,7 +3,7 @@ use crate::{
     subscription::{Map, SubscriptionKind},
 };
 use async_trait::async_trait;
-use toucan_integration::{
+use integration::{
     Validator,
     error::SocketError,
     protocol::{

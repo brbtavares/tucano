@@ -1,4 +1,4 @@
-use toucan_integration::{Validator, error::SocketError};
+use integration::{Validator, error::SocketError};
 use serde::{Deserialize, Serialize};
 
 /// [`Coinbase`](super::Coinbase) WebSocket subscription response.

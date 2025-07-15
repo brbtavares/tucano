@@ -5,8 +5,8 @@ use crate::{
     exchange::ExchangeSub,
     subscription::trade::PublicTrade,
 };
-use toucan_instrument::{Side, exchange::ExchangeId};
-use toucan_integration::subscription::SubscriptionId;
+use instrument::{Side, exchange::ExchangeId};
+use integration::subscription::SubscriptionId;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -49,11 +49,11 @@ pub struct GateioFuturesTradeInner {
     pub market: String,
     #[serde(
         rename = "create_time_ms",
-        deserialize_with = "toucan_integration::de::de_u64_epoch_ms_as_datetime_utc"
+        deserialize_with = "integration::de::de_u64_epoch_ms_as_datetime_utc"
     )]
     pub time: DateTime<Utc>,
     pub id: u64,
-    #[serde(deserialize_with = "toucan_integration::de::de_str")]
+    #[serde(deserialize_with = "integration::de::de_str")]
     pub price: f64,
     #[serde(rename = "size")]
     pub amount: f64,

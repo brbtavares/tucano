@@ -15,13 +15,13 @@ use crate::{
     },
     trade::{AssetFees, Trade, TradeId},
 };
-use toucan_instrument::{
+use instrument::{
     Side,
     asset::{QuoteAsset, name::AssetNameExchange},
     exchange::ExchangeId,
     instrument::{Instrument, name::InstrumentNameExchange},
 };
-use toucan_integration::snapshot::Snapshot;
+use integration::snapshot::Snapshot;
 use chrono::{DateTime, TimeDelta, Utc};
 use fnv::FnvHashMap;
 use futures::stream::BoxStream;

@@ -15,7 +15,7 @@ use crate::{
     transformer::ExchangeTransformer,
 };
 use async_trait::async_trait;
-use toucan_integration::{Transformer, protocol::websocket::WsMessage};
+use integration::{Transformer, protocol::websocket::WsMessage};
 use derive_more::Constructor;
 use tokio::sync::mpsc::UnboundedSender;
 use tracing::debug;

@@ -27,12 +27,12 @@ use crate::{
     order::{Order, OrderSnapshot, request::OrderResponseCancel},
     trade::Trade,
 };
-use toucan_instrument::{
+use instrument::{
     asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     instrument::{InstrumentIndex, name::InstrumentNameExchange},
 };
-use toucan_integration::snapshot::Snapshot;
+use integration::snapshot::Snapshot;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use order::state::OrderState;

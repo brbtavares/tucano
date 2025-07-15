@@ -1,4 +1,4 @@
-use toucan_core::{
+use core::{
     backtest::{
         BacktestArgsConstant, BacktestArgsDynamic,
         market_data::{BacktestMarketData, MarketDataInMemory},
@@ -13,8 +13,8 @@ use toucan_core::{
     strategy::DefaultStrategy,
     system::config::SystemConfig,
 };
-use toucan_data::streams::consumer::MarketStreamEvent;
-use toucan_instrument::index::IndexedInstruments;
+use data::streams::consumer::MarketStreamEvent;
+use instrument::index::IndexedInstruments;
 use rust_decimal::Decimal;
 use serde::Deserialize;
 use smol_str::{SmolStr, ToSmolStr};
@@ -38,7 +38,7 @@ pub struct Config {
 #[tokio::main]
 async fn main() {
     // Initialise Tracing
-    toucan_core::logging::init_logging();
+    core::logging::init_logging();
 
     let Config {
         risk_free_return,

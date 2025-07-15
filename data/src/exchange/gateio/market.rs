@@ -1,6 +1,6 @@
 use super::Gateio;
 use crate::{Identifier, instrument::MarketInstrumentData, subscription::Subscription};
-use toucan_instrument::{
+use instrument::{
     Keyed,
     instrument::{
         kind::option::OptionKind,

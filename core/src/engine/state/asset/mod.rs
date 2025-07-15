@@ -1,16 +1,16 @@
 use crate::{
     Timed, engine::state::asset::filter::AssetFilter,
 };
-use toucan_analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
-use toucan_execution::balance::{AssetBalance, Balance};
-use toucan_instrument::{
+use analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
+use execution::balance::{AssetBalance, Balance};
+use instrument::{
     asset::{
         Asset, AssetIndex, ExchangeAsset,
         name::{AssetNameExchange, AssetNameInternal},
     },
     index::IndexedInstruments,
 };
-use toucan_integration::{collection::FnvIndexMap, snapshot::Snapshot};
+use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use chrono::Utc;
 use derive_more::Constructor;
 use itertools::Either;
@@ -177,7 +177,7 @@ pub fn generate_empty_indexed_asset_states(instruments: &IndexedInstruments) -> 
 mod tests {
     use super::*;
     use crate::test_utils::asset_state;
-    use toucan_instrument::asset::name::AssetNameExchange;
+    use instrument::asset::name::AssetNameExchange;
     use chrono::{DateTime, TimeZone, Utc};
     use rust_decimal_macros::dec;
 

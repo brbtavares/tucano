@@ -1,12 +1,12 @@
 use crate::error::KeyError;
-use toucan_instrument::{
+use instrument::{
     Keyed,
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     index::{IndexedInstruments, error::IndexError},
     instrument::{InstrumentIndex, name::InstrumentNameExchange},
 };
-use toucan_integration::collection::{FnvIndexMap, FnvIndexSet};
+use integration::collection::{FnvIndexMap, FnvIndexSet};
 use fnv::FnvHashMap;
 
 /// Indexed instrument map used to associate the internal Toucan representation of instruments and

@@ -1,5 +1,5 @@
 use crate::streams::{consumer::StreamKey, reconnect::Event};
-use toucan_integration::channel::Tx;
+use integration::channel::Tx;
 use derive_more::Constructor;
 use futures::Stream;
 use futures_util::StreamExt;

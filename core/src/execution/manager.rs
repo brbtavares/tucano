@@ -3,11 +3,11 @@ use crate::execution::{
     error::ExecutionError,
     request::{ExecutionRequest, RequestFuture},
 };
-use toucan_data::streams::{
+use data::streams::{
     consumer::StreamKey,
     reconnect::stream::{ReconnectingStream, ReconnectionBackoffPolicy, init_reconnecting_stream},
 };
-use toucan_execution::{
+use execution::{
     AccountEvent, AccountEventKind,
     client::ExecutionClient,
     error::{ConnectivityError, OrderError, UnindexedOrderError},
@@ -21,13 +21,13 @@ use toucan_execution::{
         state::{Open, OrderState},
     },
 };
-use toucan_instrument::{
+use instrument::{
     asset::{AssetIndex, name::AssetNameExchange},
     exchange::{ExchangeId, ExchangeIndex},
     index::error::IndexError,
     instrument::{InstrumentIndex, name::InstrumentNameExchange},
 };
-use toucan_integration::{
+use integration::{
     channel::{Tx, UnboundedTx, mpsc_unbounded},
     snapshot::Snapshot,
     stream::merge::merge,

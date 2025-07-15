@@ -1,9 +1,8 @@
 [package]
-name = "toucan-data"
+name = "data"
 version = "0.10.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-documentation = "https://docs.rs/toucan-data"
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
 description = "High performance & normalised WebSocket intergration for leading cryptocurrency exchanges - batteries included."
@@ -16,9 +15,9 @@ rust_decimal_macros = { workspace = true }
 
 [dependencies]
 # Toucan Ecosystem
-toucan-integration = { workspace = true }
-toucan-instrument = { workspace = true }
-toucan-macro = { workspace = true }
+integration = { workspace = true }
+instrument = { workspace = true }
+macros = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

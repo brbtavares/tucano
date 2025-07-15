@@ -1,9 +1,9 @@
 use crate::Identifier;
-use toucan_integration::subscription::SubscriptionId;
+use integration::subscription::SubscriptionId;
 use serde::{Deserialize, Serialize};
 
 /// [`Kraken`](super::Kraken) message variants that can be received over
-/// [`WebSocket`](toucan_integration::protocol::websocket::WebSocket).
+/// [`WebSocket`](integration::protocol::websocket::WebSocket).
 ///
 /// ### Raw Payload Examples
 /// See docs: <https://docs.kraken.com/websockets/#overview>
@@ -125,7 +125,7 @@ mod tests {
 
     mod de {
         use super::*;
-        use toucan_integration::error::SocketError;
+        use integration::error::SocketError;
 
         #[test]
         fn test_kraken_message_event() {

@@ -1,6 +1,6 @@
 use crate::subscription::SubKind;
-use toucan_instrument::{exchange::ExchangeId, index::error::IndexError};
-use toucan_integration::{error::SocketError, subscription::SubscriptionId};
+use instrument::{exchange::ExchangeId, index::error::IndexError};
+use integration::{error::SocketError, subscription::SubscriptionId};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
