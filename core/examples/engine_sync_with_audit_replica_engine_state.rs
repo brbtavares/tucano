@@ -28,7 +28,7 @@ use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 use std::{fs::File, io::BufReader, time::Duration};
 
-const FILE_PATH_SYSTEM_CONFIG: &str = "toucan/examples/config/system_config.json";
+const FILE_PATH_SYSTEM_CONFIG: &str = "core/examples/config/system_config.json";
 
 // Risk-free rate of 5% (configure as needed)
 const RISK_FREE_RETURN: Decimal = dec!(0.05);
