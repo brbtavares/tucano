@@ -3,7 +3,7 @@ use toucan_core::{
         EngineState, global::DefaultGlobalData, instrument::data::DefaultInstrumentMarketData,
         position::PositionExited, trading::TradingState,
     },
-    statistic::{summary::TradingSummaryGenerator, time::Annual365},
+    analytics::{summary::TradingSummaryGenerator, time::Annual365},
 };
 use toucan_execution::{
     balance::{AssetBalance, Balance},

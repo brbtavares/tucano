@@ -17,7 +17,7 @@ use toucan_core::{
     },
     logging::init_logging,
     risk::DefaultRiskManager,
-    statistic::{summary::instrument::TearSheetGenerator, time::Daily},
+    analytics::{summary::instrument::TearSheetGenerator, time::Daily},
     strategy::{
         DefaultStrategy,
         algo::AlgoStrategy,

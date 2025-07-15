@@ -18,7 +18,7 @@ use toucan::{
         },
     },
     risk::DefaultRiskManager,
-    statistic::time::Daily,
+    analytics::time::Daily,
     strategy::{
         algo::AlgoStrategy,
         close_positions::{ClosePositionsStrategy, close_open_positions_with_market_orders},

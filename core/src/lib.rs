@@ -79,7 +79,7 @@ pub use toucan_strategy as strategy;
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
-pub use toucan_analytics as statistic;
+pub use toucan_analytics as analytics;
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
@@ -190,8 +190,9 @@ impl Sequence {
 /// Toucan core test utilities.
 pub mod test_utils {
     use crate::{
-        Timed, engine::state::asset::AssetState, statistic::summary::asset::TearSheetAssetGenerator,
+        Timed, engine::state::asset::AssetState,
     };
+    use toucan_analytics::summary::asset::TearSheetAssetGenerator;
     use toucan_execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},

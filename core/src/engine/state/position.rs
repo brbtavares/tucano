@@ -63,7 +63,7 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// # Examples
 /// ## Partially Reduce LONG Position
 /// ```rust
-/// use toucan::engine::state::position::Position;
+/// use toucan_core::engine::state::position::Position;
 /// use toucan_execution::order::id::{OrderId, StrategyId};
 /// use toucan_execution::trade::{AssetFees, Trade, TradeId};
 /// use toucan_instrument::asset::QuoteAsset;
@@ -111,7 +111,7 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 ///
 /// ## Flip Position - Close SHORT and Open LONG
 /// ```rust
-/// use toucan::engine::state::position::Position;
+/// use toucan_core::engine::state::position::Position;
 /// use toucan_execution::order::id::{OrderId, StrategyId};
 /// use toucan_execution::trade::{AssetFees, Trade, TradeId};
 /// use toucan_instrument::asset::QuoteAsset;

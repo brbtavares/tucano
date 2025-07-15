@@ -21,8 +21,8 @@ use crate::{
     execution::{AccountStreamEvent, request::ExecutionRequest},
     risk::RiskManager,
     shutdown::SyncShutdown,
-    statistic::summary::TradingSummaryGenerator,
 };
+use toucan_analytics::summary::TradingSummaryGenerator;
 use toucan_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
 use toucan_strategy::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,

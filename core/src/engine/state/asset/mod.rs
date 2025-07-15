@@ -1,8 +1,7 @@
 use crate::{
     Timed, engine::state::asset::filter::AssetFilter,
-    statistic::summary::asset::TearSheetAssetGenerator,
 };
-use toucan_analytics::summary::LocalSnapshot;
+use toucan_analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
 use toucan_execution::balance::{AssetBalance, Balance};
 use toucan_instrument::{
     asset::{

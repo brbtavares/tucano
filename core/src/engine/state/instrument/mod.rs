@@ -4,8 +4,8 @@ use crate::{
         order::{Orders, manager::OrderManager},
         position::{PositionExited, PositionManager},
     },
-    statistic::summary::instrument::TearSheetGenerator,
 };
+use toucan_analytics::summary::instrument::TearSheetGenerator;
 use toucan_data::event::MarketEvent;
 use toucan_execution::{
     InstrumentAccountSnapshot,

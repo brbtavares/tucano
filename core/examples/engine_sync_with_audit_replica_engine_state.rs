@@ -11,7 +11,7 @@ use toucan_core::{
     },
     logging::init_logging,
     risk::DefaultRiskManager,
-    statistic::time::Daily,
+    analytics::time::Daily,
     strategy::DefaultStrategy,
     system::{
         builder::{AuditMode, EngineFeedMode, SystemArgs, SystemBuilder},

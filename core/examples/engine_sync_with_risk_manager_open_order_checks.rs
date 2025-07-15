@@ -20,7 +20,7 @@ use toucan_core::{
             util::{calculate_abs_percent_difference, calculate_quote_notional},
         },
     },
-    statistic::time::Daily,
+    analytics::time::Daily,
     strategy::DefaultStrategy,
     system::{
         builder::{AuditMode, EngineFeedMode, SystemArgs, SystemBuilder},
@@ -43,7 +43,7 @@ use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, fs::File, io::BufReader, marker::PhantomData, time::Duration};
 use tracing::warn;
 
-const FILE_PATH_SYSTEM_CONFIG: &str = "toucan/examples/config/system_config.json";
+const FILE_PATH_SYSTEM_CONFIG: &str = "core/examples/config/system_config.json";
 const RISK_FREE_RETURN: Decimal = dec!(0.05);
 
 const MAX_MARKET_ORDER_PRICE_PERCENT_FROM_MARKET: CheckHigherThan<Decimal> = CheckHigherThan {

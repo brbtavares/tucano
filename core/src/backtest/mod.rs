@@ -15,9 +15,9 @@ use crate::{
     },
     error::ToucanError,
     risk::RiskManager,
-    statistic::time::TimeInterval,
     system::{builder::EngineFeedMode, config::ExecutionConfig},
 };
+use toucan_analytics::time::TimeInterval;
 use crate::{
     engine::Engine,
     execution::builder::{ExecutionBuild, ExecutionBuilder},

@@ -28,7 +28,7 @@ pub mod dispersion;
 /// # Example
 /// ```
 /// use rust_decimal_macros::dec;
-/// use toucan::statistic::summary::dataset::DataSetSummary;
+/// use toucan_analytics::summary::dataset::DataSetSummary;
 ///
 /// // Initialise empty DataSetSummary
 /// let mut stats = DataSetSummary::default();
