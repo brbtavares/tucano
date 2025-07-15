@@ -149,4 +149,3 @@ async fn main() {
    ie/ `impl StreamSelector<SubscriptionKind> for <ExistingExchangeConnector> { ... }`
 4. Try to compile and follow the remaining steps!
 5. Add a toucan-data-rs/examples/<sub_kind_name>_streams.rs example in the standard format :)
-
