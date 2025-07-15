@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-toucan-execution = { path = "../toucan-execution" }
-toucan-instrument = { path = "../toucan-instrument" }
+toucan-execution = { path = "../execution" }
+toucan-instrument = { path = "../instrument" }
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
 derive_more = { version = "1", features = ["constructor", "display", "from"] }

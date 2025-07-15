@@ -1,28 +1,28 @@
 [workspace]
 resolver = "2"
 members = [
-    "toucan-analytics",
-    "toucan-core",
-    "toucan-data",
-    "toucan-execution",
-    "toucan-integration",
-    "toucan-macro", 
-    "toucan-instrument",
-    "toucan-risk",
-    "toucan-strategy"
+    "analytics",
+    "core",
+    "data",
+    "execution",
+    "integration",
+    "macro", 
+    "instrument",
+    "risk",
+    "strategy"
 ]
 
 [workspace.dependencies]
 # Toucan Ecosystem
-toucan-analytics = { path = "./toucan-analytics", version = "0.1.0" }
-toucan-core = { path = "./toucan-core", version = "0.12.2" }
-toucan-integration = { path = "./toucan-integration", version = "0.9.1" }
-toucan-instrument = { path = "./toucan-instrument", version = "0.3.1" }
-toucan-data = { path = "./toucan-data", version = "0.10.1" }
-toucan-execution = { path = "./toucan-execution", version = "0.5.3" }
-toucan-macro = { path = "./toucan-macro", version = "0.2.0" }
-toucan-risk = { path = "./toucan-risk", version = "0.1.0" }
-toucan-strategy = { path = "./toucan-strategy", version = "0.1.0" }
+toucan-analytics = { path = "./analytics", version = "0.1.0" }
+toucan-core = { path = "./core", version = "0.12.2" }
+toucan-integration = { path = "./integration", version = "0.9.1" }
+toucan-instrument = { path = "./instrument", version = "0.3.1" }
+toucan-data = { path = "./data", version = "0.10.1" }
+toucan-execution = { path = "./execution", version = "0.5.3" }
+toucan-macro = { path = "./macro", version = "0.2.0" }
+toucan-risk = { path = "./risk", version = "0.1.0" }
+toucan-strategy = { path = "./strategy", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }
