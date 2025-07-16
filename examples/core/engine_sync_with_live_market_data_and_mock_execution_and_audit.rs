@@ -1,7 +1,5 @@
 use core::{
-    EngineEvent,
     engine::{
-        audit::state_replica::StateReplicaManager,
         clock::LiveClock,
         state::{
             global::DefaultGlobalData,
@@ -23,14 +21,14 @@ use data::{
     subscription::SubKind,
 };
 use markets::index::IndexedInstruments;
-use integration::snapshot::SnapUpdates;
+use integration::Terminal;
+use futures::StreamExt;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 use std::{fs::File, io::BufReader, time::Duration};
+use tracing::debug;
 
-const FILE_PATH_SYSTEM_CONFIG: &str = "core/examples/config/system_config.json";
-
-// Risk-free rate of 5% (configure as needed)
+const FILE_PATH_SYSTEM_CONFIG: &str = "examples/assets/config/system_config.json";
 const RISK_FREE_RETURN: Decimal = dec!(0.05);
 
 #[tokio::main]
@@ -66,7 +64,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         |_| DefaultInstrumentMarketData::default(),
     );
 
-    // Construct SystemBuild:
+    // Build & run full system:
     // See SystemBuilder for all configuration options
     let mut system = SystemBuilder::new(args)
         // Engine feed in Sync mode (Iterator input)
@@ -76,24 +74,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Engine starts with TradingState::Disabled
         .trading_state(TradingState::Disabled)
         // Build System, but don't start spawning tasks yet
-        .build::<EngineEvent, _>()?
+        .build()?
         // Init System, spawning component tasks on the current runtime
         .init_with_runtime(tokio::runtime::Handle::current())
         .await?;
 
     // Take ownership of the Engine audit snapshot with updates
-    let SnapUpdates {
-        snapshot: audit_snapshot,
-        updates: audit_updates,
-    } = system.audit.take().unwrap();
+    let audit = system.audit.take().unwrap();
 
-    // Construct StateReplicaManager w/ initial EngineState
-    let mut state_replica_manager = StateReplicaManager::new(audit_snapshot, audit_updates);
-
-    // Run synchronous AuditReplicaStateManager on blocking task
-    let state_replica_task = tokio::task::spawn_blocking(move || {
-        state_replica_manager.run().unwrap();
-        state_replica_manager
+    // Run dummy asynchronous AuditStream consumer
+    // Note: you probably want to use this Stream to replicate EngineState, or persist events, etc.
+    //  --> eg/ see examples/engine_sync_with_audit_replica_engine_state
+    let audit_task = tokio::spawn(async move {
+        let mut audit_stream = audit.updates.into_stream();
+        while let Some(audit) = audit_stream.next().await {
+            debug!(?audit, "AuditStream consumed AuditTick");
+            if audit.event.is_terminal() {
+                break;
+            }
+        }
+        audit_stream
     });
 
     // Enable trading
@@ -108,7 +108,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Shutdown
     let (engine, _shutdown_audit) = system.shutdown().await?;
-    state_replica_task.await?;
+    let _audit_stream = audit_task.await?;
 
     // Generate TradingSummary<Daily>
     let trading_summary = engine

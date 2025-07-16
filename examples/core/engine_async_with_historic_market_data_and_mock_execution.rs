@@ -31,9 +31,9 @@ use rust_decimal_macros::dec;
 use std::{fs::File, io::BufReader, time::Duration};
 use tracing::{info, warn};
 
-const FILE_PATH_SYSTEM_CONFIG: &str = "core/examples/config/system_config.json";
+const FILE_PATH_SYSTEM_CONFIG: &str = "examples/assets/config/system_config.json";
 const FILE_PATH_HISTORIC_MARKET_EVENTS: &str =
-    "core/examples/data/binance_spot_market_data_with_disconnect_events.json";
+    "examples/assets/data/binance_spot_market_data_with_disconnect_events.json";
 const RISK_FREE_RETURN: Decimal = dec!(0.05);
 
 #[tokio::main]
