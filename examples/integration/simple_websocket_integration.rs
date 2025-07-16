@@ -58,7 +58,7 @@ impl Transformer for StatefulTransformer {
     }
 }
 
-/// See Toucan-Data for a comprehensive real-life example, as well as code you can use out of the
+/// See Data for a comprehensive real-life example, as well as code you can use out of the
 /// box to collect real-time public market data from many exchanges.
 #[tokio::main]
 async fn main() {

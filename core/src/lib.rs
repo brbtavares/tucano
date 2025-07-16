@@ -11,15 +11,15 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Toucan
-//! Toucan core is a Rust framework for building high-performance live-trading, paper-trading and back-testing systems.
+//! # Core
+//! Core is a Rust framework for building high-performance live-trading, paper-trading and back-testing systems.
 //! * **Fast**: Written in native Rust. Minimal allocations. Data-oriented state management system with direct index lookups.
 //! * **Robust**: Strongly typed. Thread safe. Extensive test coverage.
 //! * **Customisable**: Plug and play Strategy and RiskManager components that facilitates most trading strategies (MarketMaking, StatArb, HFT, etc.).
 //! * **Scalable**: Multithreaded architecture with modular design. Leverages Tokio for I/O. Memory efficient data structures.
 //!
 //! ## Overview
-//! Toucan core is a Rust framework for building professional grade live-trading, paper-trading and back-testing systems. The
+//! Core is a Rust framework for building professional grade live-trading, paper-trading and back-testing systems. The
 //! central Engine facilitates executing on many exchanges simultaneously, and offers the flexibility to run most types of
 //! trading strategies.  It allows turning algorithmic order generation on/off and can action Commands issued from external
 //! processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.)
@@ -27,14 +27,14 @@
 //! At a high-level, it provides a few major components:
 //! * `Engine` with plug and play `Strategy` and `RiskManager` components.
 //! * Centralised cache friendly `EngineState` management with O(1) constant lookups using indexed data structures.
-//! * Strategy interfaces available in the `toucan-strategy` crate for customising Engine behavior.
+//! * Strategy interfaces available in the `strategy` crate for customising Engine behavior.
 //! * `RiskManager` interface for defining custom risk logic which checking generated algorithmic orders.
 //! * Event-driven system that allows for Commands to be issued from external processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.),
 //!   as well as turning algorithmic trading on/off.
 //! * Comprehensive statistics package that provides a summary of key performance metrics (PnL, Sharpe, Sortino, Drawdown, etc.).
 //!
 //! ## Getting Started Via Engine Examples
-//! [See Engine Examples](https://github.com/brbtavares/toucan/tree/master/toucan/examples)
+//! [See Engine Examples](https://github.com/brbtavares/toucan/tree/master/examples)
 
 use crate::{
     engine::{command::Command, state::trading::TradingState},
@@ -61,14 +61,14 @@ use shutdown::Shutdown;
 /// eg/ `Engine`, `run`, `process_with_audit`, etc.
 pub mod engine;
 
-/// Defines all possible errors in Toucan core.
+/// Defines all possible errors in Core.
 pub mod error;
 
 /// Components for initialising multi-exchange execution, routing `ExecutionRequest`s and other
 /// execution logic.
 pub mod execution;
 
-/// Provides default Toucan core Tracing logging initialisers.
+/// Provides default Core Tracing logging initialisers.
 pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
@@ -84,7 +84,7 @@ pub use analytics;
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
 /// 
-/// **Note**: Strategy interfaces have been moved to the `toucan-strategy` crate.
+/// **Note**: Strategy interfaces have been moved to the `strategy` crate.
 /// Import them with: `use strategy::{AlgoStrategy, ClosePositionsStrategy, ...};`
 // Remove the strategy module as it's now a separate crate
 // pub mod strategy;
@@ -187,7 +187,7 @@ impl Sequence {
     }
 }
 
-/// Toucan core test utilities.
+/// Core test utilities.
 pub mod test_utils {
     use crate::{
         Timed, engine::state::asset::AssetState,

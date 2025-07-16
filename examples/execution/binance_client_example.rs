@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("Starting Binance client example");
 
     // Create Binance configuration (testnet mode)
-    let config = toucan_execution::client::binance::BinanceConfig {
+    let config = execution::client::binance::BinanceConfig {
         api_key: String::new(), // Empty for this example
         secret_key: String::new(),
         testnet: true,

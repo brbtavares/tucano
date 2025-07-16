@@ -1,5 +1,5 @@
 [package]
-name = "toucan-examples"
+name = "examples"
 version = "0.1.0"
 edition = "2021"
 
@@ -40,10 +40,6 @@ tokio-tungstenite = { version = "0.20", features = ["native-tls"] }
 
 # Core examples
 [[bin]]
-name = "backtests_concurrent"
-path = "core/backtests_concurrent.rs"
-
-[[bin]]
 name = "engine_async_with_historic_market_data_and_mock_execution"
 path = "core/engine_async_with_historic_market_data_and_mock_execution.rs"
 
@@ -56,16 +52,8 @@ name = "engine_sync_with_live_market_data_and_mock_execution_and_audit"
 path = "core/engine_sync_with_live_market_data_and_mock_execution_and_audit.rs"
 
 [[bin]]
-name = "engine_sync_with_multiple_strategies"
-path = "core/engine_sync_with_multiple_strategies.rs"
-
-[[bin]]
 name = "engine_sync_with_risk_manager_open_order_checks"
 path = "core/engine_sync_with_risk_manager_open_order_checks.rs"
-
-[[bin]]
-name = "statistical_trading_summary"
-path = "core/statistical_trading_summary.rs"
 
 # Data examples
 [[bin]]
@@ -108,15 +96,6 @@ path = "data/public_trades_streams_multi_exchange.rs"
 [[bin]]
 name = "binance_client_example"
 path = "execution/binance_client_example.rs"
-
-# Integration examples
-[[bin]]
-name = "signed_get_request"
-path = "integration/signed_get_request.rs"
-
-[[bin]]
-name = "simple_websocket_integration"
-path = "integration/simple_websocket_integration.rs"
 
 # Complete examples
 # [[bin]]

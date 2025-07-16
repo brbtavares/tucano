@@ -17,7 +17,7 @@ use data::streams::consumer::MarketStreamEvent;
 use markets::index::IndexedInstruments;
 use rust_decimal::Decimal;
 use serde::Deserialize;
-use smol_str::{SmolStr, ToSmolStr};
+use smol_str::SmolStr;
 use std::{
     fs::File,
     io::{BufRead, BufReader},
@@ -85,7 +85,7 @@ async fn main() {
     // Note that concurrent backtests should be run with different BacktestArgsDynamic!
     let args_dynamic_iter = (0..NUM_BACKTESTS).map(|index| {
         let mut dynamic_args = dynamic_arg.clone();
-        dynamic_args.id = index.to_smolstr();
+        dynamic_args.id = SmolStr::new(&index.to_string());
         dynamic_args
     });
 

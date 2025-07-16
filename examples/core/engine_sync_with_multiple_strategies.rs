@@ -215,7 +215,7 @@ impl<Clock, State, ExecutionTxs, Risk> OnTradingDisabled<Clock, State, Execution
 struct StrategyA;
 
 impl StrategyA {
-    const ID: StrategyId = StrategyId(SmolStr::new_static("strategy_a"));
+    const ID: StrategyId = StrategyId(SmolStr::new("strategy_a"));
 }
 
 impl AlgoStrategy for StrategyA {
@@ -235,7 +235,7 @@ impl AlgoStrategy for StrategyA {
 struct StrategyB;
 
 impl StrategyB {
-    const ID: StrategyId = StrategyId(SmolStr::new_static("strategy_b"));
+    const ID: StrategyId = StrategyId(SmolStr::new("strategy_b"));
 }
 
 impl AlgoStrategy for StrategyB {

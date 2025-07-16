@@ -26,7 +26,7 @@
 ```
 
 ## 4. **Documentation & Examples**
-- ✅ Created `/home/bbt80/toucan/toucan-execution/examples/binance_client_example.rs`
+- ✅ Created `/home/bbt80/toucan/execution/examples/binance_client_example.rs`
 - ✅ Added comprehensive README with implementation roadmap
 - ✅ Example compiles and runs successfully
 - ✅ Demonstrates all client methods

@@ -11,7 +11,7 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Toucan-Integration
+//! # Integration
 //! High-performance, low-level framework for composing flexible web integrations.
 //!
 //! Utilised by other Toucan trading ecosystem crates to build robust financial execution integrations,
@@ -28,7 +28,7 @@
 use crate::error::SocketError;
 use serde::{Deserialize, Serialize};
 
-/// All [`Error`](std::error::Error)s generated in Toucan-Integration.
+/// All [`Error`](std::error::Error)s generated in Integration.
 pub mod error;
 
 /// Contains `StreamParser` implementations for transforming communication protocol specific

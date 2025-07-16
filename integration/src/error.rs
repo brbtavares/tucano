@@ -2,7 +2,7 @@ use crate::subscription::SubscriptionId;
 use reqwest::Error;
 use thiserror::Error;
 
-/// All socket IO related errors generated in `toucan-integration`.
+/// All socket IO related errors generated in `integration`.
 #[derive(Debug, Error)]
 pub enum SocketError {
     #[error("Sink error")]

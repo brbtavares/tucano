@@ -5,8 +5,8 @@ use std::fmt::{Display, Formatter};
 /// New type representing a unique `String` identifier for a stream that has been subscribed to.
 /// This is used to identify data structures received over the socket.
 ///
-/// For example, `Toucan-Data` uses this identifier to associate received data structures from the
-/// execution with the original `Toucan-Data` `Subscription` that was actioned over the socket.
+/// For example, `Data` uses this identifier to associate received data structures from the
+/// execution with the original `Data` `Subscription` that was actioned over the socket.
 ///
 /// Note: Each execution will require the use of different `String` identifiers depending on the
 /// data structures they send.

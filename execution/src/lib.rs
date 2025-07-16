@@ -11,14 +11,14 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Toucan-Execution
+//! # Execution
 //! Stream private account data from financial venues, and execute (live or mock) orders. Also provides
 //! a feature rich MockExchange and MockExecutionClient to assist with backtesting and paper-trading.
 //!
 //! **It is:**
 //! * **Easy**: ExecutionClient trait provides a unified and simple language for interacting with exchanges.
 //! * **Normalised**: Allow your strategy to communicate with every real or MockExchange using the same interface.
-//! * **Extensible**: Toucan-Execution is highly extensible, making it easy to contribute by adding new exchange integrations!
+//! * **Extensible**: Execution is highly extensible, making it easy to contribute by adding new exchange integrations!
 //!
 //! See `README.md` for more information and examples.
 

@@ -11,13 +11,13 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Toucan-Data
+//! # Data
 //! A high-performance WebSocket integration library for streaming public market data from leading cryptocurrency
 //! exchanges - batteries included. It is:
-//! * **Easy**: Toucan-Data's simple [`StreamBuilder`](streams::builder::StreamBuilder) and [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) interface allows for easy & quick setup (see example below and /examples!).
-//! * **Normalised**: Toucan-Data's unified interface for consuming public WebSocket data means every Exchange returns a normalised data model.
-//! * **Real-Time**: Toucan-Data utilises real-time WebSocket integrations enabling the consumption of normalised tick-by-tick data.
-//! * **Extensible**: Toucan-Data is highly extensible, and therefore easy to contribute to with coding new integrations!
+//! * **Easy**: Data's simple [`StreamBuilder`](streams::builder::StreamBuilder) and [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) interface allows for easy & quick setup (see example below and /examples!).
+//! * **Normalised**: Data's unified interface for consuming public WebSocket data means every Exchange returns a normalised data model.
+//! * **Real-Time**: Data utilises real-time WebSocket integrations enabling the consumption of normalised tick-by-tick data.
+//! * **Extensible**: Data is highly extensible, and therefore easy to contribute to with coding new integrations!
 //!
 //! ## User API
 //! - [`StreamBuilder`](streams::builder::StreamBuilder) for initialising [`MarketStream`]s of specific data kinds.
@@ -114,7 +114,7 @@ use std::{collections::VecDeque, future::Future};
 use tokio::sync::mpsc;
 use tracing::{debug, error, warn};
 
-/// All [`Error`](std::error::Error)s generated in Toucan-Data.
+/// All [`Error`](std::error::Error)s generated in Data.
 pub mod error;
 
 /// Defines the generic [`MarketEvent<T>`](MarketEvent) used in every [`MarketStream`].

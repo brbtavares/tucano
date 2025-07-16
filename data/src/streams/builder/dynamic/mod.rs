@@ -70,7 +70,7 @@ impl<InstrumentKey> DynamicStreams<InstrumentKey> {
     /// [`SubKind`], it will be further split under the hood for compile-time reasons.
     ///
     /// ## Examples
-    /// Please see toucan-data/examples/dynamic_multi_stream_multi_exchange.rs for a
+    /// Please see data/examples/dynamic_multi_stream_multi_exchange.rs for a
     /// comprehensive example of how to use this market data stream initialiser.
     pub async fn init<SubBatchIter, SubIter, Sub, Instrument>(
         subscription_batches: SubBatchIter,
