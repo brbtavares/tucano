@@ -24,9 +24,9 @@ use std::{
     sync::Arc,
 };
 
-const CONFIG_PATH: &str = "examples/config/backtest_config.json";
+const CONFIG_PATH: &str = "config/backtest_config.json";
 const FILE_PATH_MARKET_DATA_INDEXED: &str =
-    "examples/data/binance_spot_trades_l1_btcusdt_ethusdt_solusdt.json";
+    "data/binance_spot_trades_l1_btcusdt_ethusdt_solusdt.json";
 const NUM_BACKTESTS: usize = 10000;
 
 #[derive(Deserialize)]
