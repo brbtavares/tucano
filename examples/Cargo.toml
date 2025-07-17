@@ -30,7 +30,7 @@ tokio-stream = "0.1"
 rust_decimal = "1.0"
 rust_decimal_macros = "1.0"
 derive_more = "0.99"
-smol_str = "0.1"
+smol_str = { workspace = true }
 itertools = "0.10"
 reqwest = { version = "0.11", features = ["json"] }
 thiserror = "1.0"
