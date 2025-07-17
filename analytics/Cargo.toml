@@ -17,3 +17,4 @@ prettytable = "0.10"
 execution = { workspace = true }
 markets = { workspace = true }
 integration = { workspace = true }
+rust_decimal_macros.workspace = true
