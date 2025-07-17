@@ -41,63 +41,58 @@ tokio-tungstenite = { version = "0.20", features = ["native-tls"] }
 # Core examples
 [[bin]]
 name = "engine_async_with_historic_market_data_and_mock_execution"
-path = "core/engine_async_with_historic_market_data_and_mock_execution.rs"
+path = "engine_async_with_historic_market_data_and_mock_execution.rs"
 
 [[bin]]
 name = "engine_sync_with_audit_replica_engine_state"
-path = "core/engine_sync_with_audit_replica_engine_state.rs"
+path = "engine_sync_with_audit_replica_engine_state.rs"
 
 [[bin]]
 name = "engine_sync_with_live_market_data_and_mock_execution_and_audit"
-path = "core/engine_sync_with_live_market_data_and_mock_execution_and_audit.rs"
+path = "engine_sync_with_live_market_data_and_mock_execution_and_audit.rs"
 
 [[bin]]
 name = "engine_sync_with_risk_manager_open_order_checks"
-path = "core/engine_sync_with_risk_manager_open_order_checks.rs"
+path = "engine_sync_with_risk_manager_open_order_checks.rs"
 
 # Data examples
 [[bin]]
 name = "dynamic_multi_stream_multi_exchange"
-path = "data/dynamic_multi_stream_multi_exchange.rs"
+path = "dynamic_multi_stream_multi_exchange.rs"
 
 [[bin]]
 name = "indexed_market_stream"
-path = "data/indexed_market_stream.rs"
+path = "indexed_market_stream.rs"
 
 [[bin]]
 name = "multi_stream_multi_exchange"
-path = "data/multi_stream_multi_exchange.rs"
+path = "multi_stream_multi_exchange.rs"
 
 [[bin]]
 name = "order_books_l1_streams"
-path = "data/order_books_l1_streams.rs"
+path = "order_books_l1_streams.rs"
 
 [[bin]]
 name = "order_books_l1_streams_multi_exchange"
-path = "data/order_books_l1_streams_multi_exchange.rs"
+path = "order_books_l1_streams_multi_exchange.rs"
 
 [[bin]]
 name = "order_books_l2_manager"
-path = "data/order_books_l2_manager.rs"
+path = "order_books_l2_manager.rs"
 
 [[bin]]
 name = "order_books_l2_streams"
-path = "data/order_books_l2_streams.rs"
+path = "order_books_l2_streams.rs"
 
 [[bin]]
 name = "public_trades_streams"
-path = "data/public_trades_streams.rs"
+path = "public_trades_streams.rs"
 
 [[bin]]
 name = "public_trades_streams_multi_exchange"
-path = "data/public_trades_streams_multi_exchange.rs"
+path = "public_trades_streams_multi_exchange.rs"
 
 # Execution examples
 [[bin]]
 name = "binance_client_example"
-path = "execution/binance_client_example.rs"
-
-# Complete examples
-# [[bin]]
-# name = "complete_example"
-# path = "complete/complete_example.rs"
+path = "binance_client_example.rs"
