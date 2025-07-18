@@ -1,11 +1,11 @@
 /*!
- * Exemplo completo: Streaming de dados de mercado BTCUSDT da Binance
+ * Complete example: Binance BTCUSDT market data streaming
  * 
- * Este exemplo demonstra como usar o ecossistema Toucan para:
- * - Conectar com dados de mercado em tempo real
- * - Processar eventos de trade
- * - Implementar logging estruturado
- * - Manter estatísticas simples
+ * This example demonstrates how to use the Toucan ecosystem to:
+ * - Connect with real-time market data
+ * - Process trade events
+ * - Implement structured logging
+ * - Maintain simple statistics
  */
 
 use tokio::time::{sleep, Duration};
@@ -27,16 +27,16 @@ use markets::{
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Configurar logging
+    // Configure logging
     tracing_subscriber::fmt()
         .with_env_filter("info")
         .init();
 
-    info!("🚀 Iniciando stream de dados BTCUSDT da Binance");
+    info!("🚀 Starting Binance BTCUSDT data stream");
 
-    info!("📊 Configurando stream para BTC/USDT");
+    info!("📊 Setting up stream for BTC/USDT");
 
-    // Configurar stream de dados usando o padrão correto
+    // Configure data stream using the correct pattern
     let streams = Streams::<PublicTrades>::builder()
         .subscribe([
             (BinanceSpot::default(), "btc", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
@@ -44,19 +44,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init()
         .await?;
 
-    // Criar stream unificado
+    // Create unified stream
     let mut stream = streams
         .select_all()
-        .with_error_handler(|error| warn!(?error, "MarketStream gerou erro"));
+        .with_error_handler(|error| warn!(?error, "MarketStream generated error"));
 
-    info!("📡 Conectado ao stream de dados da Binance");
-    info!("⏰ Executando por 30 segundos...");
+    info!("📡 Connected to Binance data stream");
+    info!("⏰ Running for 30 seconds...");
 
-    // Estatísticas simples
+    // Simple statistics
     let mut stats = TradingStats::new();
     let start_time = Utc::now();
 
-    // Processar eventos por 30 segundos
+    // Process events for 30 seconds
     tokio::select! {
         _ = async {
             while let Some(event) = stream.next().await {
@@ -64,46 +64,46 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Event::Item(market_event) => {
                         stats.process_event(&market_event);
                         
-                        // Log a cada 100 trades
+                        // Log every 100 trades
                         if stats.trade_count % 100 == 0 {
-                            info!("📈 Trades: {} | Último preço: ${:.2} | Volume: {:.4} BTC", 
+                            info!("📈 Trades: {} | Last price: ${:.2} | Volume: {:.4} BTC", 
                                   stats.trade_count, 
                                   stats.last_price.unwrap_or(0.0),
                                   stats.volume_btc);
                         }
                     }
                     Event::Reconnecting(exchange_id) => {
-                        warn!("🔄 Reconectando exchange: {:?}", exchange_id);
+                        warn!("🔄 Reconnecting exchange: {:?}", exchange_id);
                     }
                 }
             }
         } => {}
         _ = sleep(Duration::from_secs(30)) => {
-            info!("⏱️ Tempo limite de 30 segundos atingido");
+            info!("⏱️ 30-second time limit reached");
         }
     }
 
-    // Relatório final
+    // Final report
     let end_time = Utc::now();
     let duration = end_time.signed_duration_since(start_time);
     
-    info!("📊 === RELATÓRIO FINAL ===");
-    info!("⏰ Duração: {} segundos", duration.num_seconds());
-    info!("📈 Total de trades: {}", stats.trade_count);
-    info!("💰 Preço mínimo: ${:.2}", stats.min_price.unwrap_or(0.0));
-    info!("💰 Preço máximo: ${:.2}", stats.max_price.unwrap_or(0.0));
-    info!("💰 Último preço: ${:.2}", stats.last_price.unwrap_or(0.0));
-    info!("📊 Volume total: {:.4} BTC", stats.volume_btc);
-    info!("📊 Volume compras: {:.4} BTC", stats.buy_volume_btc);
-    info!("📊 Volume vendas: {:.4} BTC", stats.sell_volume_btc);
-    info!("📊 Trades de compra: {}", stats.buy_trades);
-    info!("📊 Trades de venda: {}", stats.sell_trades);
-    info!("🏁 Streaming finalizado com sucesso!");
+    info!("📊 === FINAL REPORT ===");
+    info!("⏰ Duration: {} seconds", duration.num_seconds());
+    info!("📈 Total trades: {}", stats.trade_count);
+    info!("💰 Minimum price: ${:.2}", stats.min_price.unwrap_or(0.0));
+    info!("💰 Maximum price: ${:.2}", stats.max_price.unwrap_or(0.0));
+    info!("💰 Last price: ${:.2}", stats.last_price.unwrap_or(0.0));
+    info!("📊 Total volume: {:.4} BTC", stats.volume_btc);
+    info!("📊 Buy volume: {:.4} BTC", stats.buy_volume_btc);
+    info!("📊 Sell volume: {:.4} BTC", stats.sell_volume_btc);
+    info!("📊 Buy trades: {}", stats.buy_trades);
+    info!("📊 Sell trades: {}", stats.sell_trades);
+    info!("🏁 Streaming completed successfully!");
 
     Ok(())
 }
 
-/// Estrutura para manter estatísticas de trading
+/// Structure to maintain trading statistics
 #[derive(Debug, Clone)]
 struct TradingStats {
     trade_count: u64,
@@ -138,7 +138,7 @@ impl TradingStats {
         self.last_price = Some(trade.price);
         self.volume_btc += trade.amount;
 
-        // Atualizar min/max preços
+        // Update min/max prices
         match self.min_price {
             None => self.min_price = Some(trade.price),
             Some(min) if trade.price < min => self.min_price = Some(trade.price),
@@ -151,7 +151,7 @@ impl TradingStats {
             _ => {}
         }
 
-        // Separar por side
+        // Separate by side
         match trade.side {
             Side::Buy => {
                 self.buy_trades += 1;
