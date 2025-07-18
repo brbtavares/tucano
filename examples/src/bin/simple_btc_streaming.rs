@@ -8,20 +8,19 @@
  * - Manter estatísticas simples
  */
 
-use std::collections::HashMap;
 use tokio::time::{sleep, Duration};
 use tracing::{info, warn};
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use futures::StreamExt;
 
 // Toucan ecosystem
 use data::{
-    event::{MarketEvent, DataKind},
-    subscription::trade::PublicTrades,
-    streams::builder::StreamBuilder,
+    exchange::binance::spot::BinanceSpot,
+    streams::{Streams, reconnect::{stream::ReconnectingStream, Event}},
+    subscription::trade::{PublicTrades, PublicTrade},
+    event::MarketEvent,
 };
 use markets::{
-    exchange::ExchangeId,
     instrument::market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
     Side,
 };
@@ -35,20 +34,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     info!("🚀 Iniciando stream de dados BTCUSDT da Binance");
 
-    // Criar instrumento
-    let btc_usdt = MarketDataInstrument {
-        base: "BTC".to_string(),
-        quote: "USDT".to_string(),
-    };
+    info!("📊 Configurando stream para BTC/USDT");
 
-    info!("📊 Instrumento configurado: {}/{}", btc_usdt.base, btc_usdt.quote);
-
-    // Configurar stream de dados
-    let mut stream = StreamBuilder::<MarketDataInstrument, DataKind>::new()
+    // Configurar stream de dados usando o padrão correto
+    let streams = Streams::<PublicTrades>::builder()
         .subscribe([
-            PublicTrades { instrument: btc_usdt.clone() }
+            (BinanceSpot::default(), "btc", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
         ])
+        .init()
         .await?;
+
+    // Criar stream unificado
+    let mut stream = streams
+        .select_all()
+        .with_error_handler(|error| warn!(?error, "MarketStream gerou erro"));
 
     info!("📡 Conectado ao stream de dados da Binance");
     info!("⏰ Executando por 30 segundos...");
@@ -62,7 +61,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         _ = async {
             while let Some(event) = stream.next().await {
                 match event {
-                    Ok(market_event) => {
+                    Event::Item(market_event) => {
                         stats.process_event(&market_event);
                         
                         // Log a cada 100 trades
@@ -73,8 +72,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                                   stats.volume_btc);
                         }
                     }
-                    Err(e) => {
-                        warn!("⚠️ Erro no stream: {}", e);
+                    Event::Reconnecting(exchange_id) => {
+                        warn!("🔄 Reconectando exchange: {:?}", exchange_id);
                     }
                 }
             }
@@ -133,35 +132,34 @@ impl TradingStats {
         }
     }
 
-    fn process_event(&mut self, event: &MarketEvent<MarketDataInstrument>) {
-        if let DataKind::Trade(trade) = &event.kind {
-            self.trade_count += 1;
-            self.last_price = Some(trade.price);
-            self.volume_btc += trade.amount;
+    fn process_event(&mut self, event: &MarketEvent<MarketDataInstrument, PublicTrade>) {
+        let trade = &event.kind;
+        self.trade_count += 1;
+        self.last_price = Some(trade.price);
+        self.volume_btc += trade.amount;
 
-            // Atualizar min/max preços
-            match self.min_price {
-                None => self.min_price = Some(trade.price),
-                Some(min) if trade.price < min => self.min_price = Some(trade.price),
-                _ => {}
+        // Atualizar min/max preços
+        match self.min_price {
+            None => self.min_price = Some(trade.price),
+            Some(min) if trade.price < min => self.min_price = Some(trade.price),
+            _ => {}
+        }
+
+        match self.max_price {
+            None => self.max_price = Some(trade.price),
+            Some(max) if trade.price > max => self.max_price = Some(trade.price),
+            _ => {}
+        }
+
+        // Separar por side
+        match trade.side {
+            Side::Buy => {
+                self.buy_trades += 1;
+                self.buy_volume_btc += trade.amount;
             }
-
-            match self.max_price {
-                None => self.max_price = Some(trade.price),
-                Some(max) if trade.price > max => self.max_price = Some(trade.price),
-                _ => {}
-            }
-
-            // Separar por side
-            match trade.side {
-                Side::Buy => {
-                    self.buy_trades += 1;
-                    self.buy_volume_btc += trade.amount;
-                }
-                Side::Sell => {
-                    self.sell_trades += 1;
-                    self.sell_volume_btc += trade.amount;
-                }
+            Side::Sell => {
+                self.sell_trades += 1;
+                self.sell_volume_btc += trade.amount;
             }
         }
     }
