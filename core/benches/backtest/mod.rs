@@ -2,7 +2,7 @@ use core::{
     backtest,
     backtest::{BacktestArgsConstant, BacktestArgsDynamic, market_data::MarketDataInMemory},
     engine::{
-        Engine, Processor,
+        Processor,
         clock::HistoricalClock,
         execution_tx::MultiExchangeTxMap,
         state::{
@@ -21,7 +21,7 @@ use core::{
     analytics::time::Daily,
     strategy::{
         algo::AlgoStrategy,
-        close_positions::{ClosePositionsStrategy, close_open_positions_with_market_orders},
+        close_positions::ClosePositionsStrategy,
         on_disconnect::OnDisconnectStrategy,
         on_trading_disabled::OnTradingDisabled,
     },
@@ -336,8 +336,8 @@ impl ClosePositionsStrategy for LoseMoneyStrategy {
 
     fn close_positions_requests<'a>(
         &'a self,
-        state: &'a Self::State,
-        filter: &'a InstrumentFilter,
+        _state: &'a Self::State,
+        _filter: &'a impl std::fmt::Debug,
     ) -> (
         impl IntoIterator<Item = OrderRequestCancel<ExchangeIndex, InstrumentIndex>> + 'a,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>> + 'a,
@@ -347,9 +347,8 @@ impl ClosePositionsStrategy for LoseMoneyStrategy {
         AssetIndex: 'a,
         InstrumentIndex: 'a,
     {
-        close_open_positions_with_market_orders(&self.id, state, filter, |_| {
-            ClientOrderId::random()
-        })
+        // Return empty iterators since this is just a benchmark strategy
+        (std::iter::empty(), std::iter::empty())
     }
 }
 
@@ -363,16 +362,7 @@ impl
 {
     type OnDisconnect = ();
 
-    fn on_disconnect(
-        _: &mut Engine<
-            HistoricalClock,
-            EngineState<DefaultGlobalData, LoseMoneyInstrumentData>,
-            MultiExchangeTxMap,
-            Self,
-            DefaultRiskManager<EngineState<DefaultGlobalData, LoseMoneyInstrumentData>>,
-        >,
-        _: ExchangeId,
-    ) -> Self::OnDisconnect {
+    fn on_disconnect(_exchange: ExchangeId) -> Self::OnDisconnect {
     }
 }
 
@@ -386,15 +376,7 @@ impl
 {
     type OnTradingDisabled = ();
 
-    fn on_trading_disabled(
-        _: &mut Engine<
-            HistoricalClock,
-            EngineState<DefaultGlobalData, LoseMoneyInstrumentData>,
-            MultiExchangeTxMap,
-            Self,
-            DefaultRiskManager<EngineState<DefaultGlobalData, LoseMoneyInstrumentData>>,
-        >,
-    ) -> Self::OnTradingDisabled {
+    fn on_trading_disabled() -> Self::OnTradingDisabled {
     }
 }
 
@@ -426,7 +408,12 @@ impl Processor<&MarketEvent<InstrumentIndex>> for LoseMoneyInstrumentData {
 
     fn process(&mut self, event: &MarketEvent<InstrumentIndex>) -> Self::Audit {
         if let DataKind::Trade(trade) = &event.kind {
-            self.last_trade = Some(trade.clone())
+            self.last_trade = Some(PublicTrade {
+                id: trade.id.clone(),
+                price: trade.price,
+                amount: trade.amount,
+                side: trade.side,
+            });
         } else {
             self.last_trade = None;
         }
