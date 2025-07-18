@@ -113,7 +113,7 @@ mod tests {
 
         let base_time = DateTime::<Utc>::MIN_UTC;
 
-        let mut generator = TearSheetAssetGenerator::init(&Timed::new(
+        let mut generator = TearSheetAssetGenerator::init(&balance(
             Balance::new(dec!(1.0), dec!(1.0)),
             base_time,
         ));
@@ -127,10 +127,10 @@ mod tests {
                 ),
                 expected: TearSheetAssetGenerator {
                     balance_now: Some(Balance::new(dec!(2.0), dec!(2.0))),
-                    drawdown: DrawdownGenerator::init(Timed::new(
+                    drawdown: DrawdownGenerator::init(
                         dec!(2.0),
                         time_plus_days(base_time, 1),
-                    )),
+                    ),
                     drawdown_mean: MeanDrawdownGenerator::default(),
                     drawdown_max: MaxDrawdownGenerator::default(),
                 },
@@ -179,10 +179,10 @@ mod tests {
                 ),
                 expected: TearSheetAssetGenerator {
                     balance_now: Some(Balance::new(dec!(2.5), dec!(2.5))),
-                    drawdown: DrawdownGenerator::init(Timed::new(
+                    drawdown: DrawdownGenerator::init(
                         dec!(2.5),
                         time_plus_days(base_time, 4),
-                    )),
+                    ),
                     drawdown_mean: MeanDrawdownGenerator {
                         count: 1,
                         mean_drawdown: Some(MeanDrawdown {
@@ -309,10 +309,10 @@ mod tests {
                 ),
                 expected: TearSheetAssetGenerator {
                     balance_now: Some(Balance::new(dec!(3.0), dec!(3.0))),
-                    drawdown: DrawdownGenerator::init(Timed::new(
+                    drawdown: DrawdownGenerator::init(
                         dec!(3.0),
                         time_plus_days(base_time, 8),
-                    )),
+                    ),
                     drawdown_mean: MeanDrawdownGenerator {
                         count: 2,
                         mean_drawdown: Some(MeanDrawdown {
@@ -338,7 +338,7 @@ mod tests {
         ];
 
         for (index, test) in cases.into_iter().enumerate() {
-            generator.update_from_balance(Snapshot(&test.input));
+            generator.update_from_balance(LocalSnapshot(&test.input));
             assert_eq!(generator, test.expected, "TC{index} failed");
         }
     }

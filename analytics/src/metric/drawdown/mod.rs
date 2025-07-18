@@ -107,7 +107,7 @@ impl DrawdownGenerator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::time_plus_days;
+    use crate::{test_utils::time_plus_days, TimedValue};
     use rust_decimal::Decimal;
     use rust_decimal_macros::dec;
     use std::str::FromStr;
@@ -115,7 +115,7 @@ mod tests {
     #[test]
     fn test_drawdown_generate_update() {
         struct TestCase {
-            input: Timed<Decimal>,
+            input: TimedValue<Decimal>,
             expected_state: DrawdownGenerator,
             expected_output: Option<Drawdown>,
         }
@@ -127,7 +127,7 @@ mod tests {
         let cases = vec![
             // TC0: first ever balance update
             TestCase {
-                input: Timed::new(dec!(100.0), time_base),
+                input: TimedValue::new(dec!(100.0), time_base),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(100.0)),
                     drawdown_max: dec!(0.0),
@@ -138,7 +138,7 @@ mod tests {
             },
             // TC1: peak increases from initial value w/ no drawdown
             TestCase {
-                input: Timed::new(dec!(110.0), time_plus_days(time_base, 1)),
+                input: TimedValue::new(dec!(110.0), time_plus_days(time_base, 1)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(110.0)),
                     drawdown_max: dec!(0.0),
@@ -149,7 +149,7 @@ mod tests {
             },
             // TC2: first drawdown occurs
             TestCase {
-                input: Timed::new(dec!(99.0), time_plus_days(time_base, 2)),
+                input: TimedValue::new(dec!(99.0), time_plus_days(time_base, 2)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(110.0)),
                     drawdown_max: dec!(0.1), // (110-99)/110
@@ -160,7 +160,7 @@ mod tests {
             },
             // TC3: drawdown increases
             TestCase {
-                input: Timed::new(dec!(88.0), time_plus_days(time_base, 3)),
+                input: TimedValue::new(dec!(88.0), time_plus_days(time_base, 3)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(110.0)),
                     drawdown_max: dec!(0.2), // (110-88)/110
@@ -171,7 +171,7 @@ mod tests {
             },
             // TC4: partial recovery (still in drawdown)
             TestCase {
-                input: Timed::new(dec!(95.0), time_plus_days(time_base, 4)),
+                input: TimedValue::new(dec!(95.0), time_plus_days(time_base, 4)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(110.0)),
                     drawdown_max: dec!(0.2), // max drawdown unchanged
@@ -182,7 +182,7 @@ mod tests {
             },
             // TC5: full recovery above previous peak - should emit drawdown
             TestCase {
-                input: Timed::new(dec!(115.0), time_plus_days(time_base, 5)),
+                input: TimedValue::new(dec!(115.0), time_plus_days(time_base, 5)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(115.0)),
                     drawdown_max: dec!(0.0), // reset for new period
@@ -197,7 +197,7 @@ mod tests {
             },
             // TC6: equal to previous peak (shouldn't trigger new period)
             TestCase {
-                input: Timed::new(dec!(115.0), time_plus_days(time_base, 6)),
+                input: TimedValue::new(dec!(115.0), time_plus_days(time_base, 6)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(115.0)),
                     drawdown_max: dec!(0.0),
@@ -208,7 +208,7 @@ mod tests {
             },
             // TC7: tiny drawdown (testing decimal precision)
             TestCase {
-                input: Timed::new(
+                input: TimedValue::new(
                     Decimal::from_str("114.99999").unwrap(),
                     time_plus_days(time_base, 7),
                 ),
@@ -222,7 +222,7 @@ mod tests {
             },
             // TC8: large peak jump after drawdown
             TestCase {
-                input: Timed::new(dec!(200.0), time_plus_days(time_base, 8)),
+                input: TimedValue::new(dec!(200.0), time_plus_days(time_base, 8)),
                 expected_state: DrawdownGenerator {
                     peak: Some(dec!(200.0)),
                     drawdown_max: dec!(0.0),
@@ -238,7 +238,7 @@ mod tests {
         ];
 
         for (index, test) in cases.into_iter().enumerate() {
-            let output = generator.update(test.input);
+            let output = generator.update(test.input.value, test.input.timestamp);
             assert_eq!(generator, test.expected_state, "TC{index} failed");
             assert_eq!(output, test.expected_output, "TC{index} failed");
         }
