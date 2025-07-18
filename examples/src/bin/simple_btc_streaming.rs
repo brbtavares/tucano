@@ -64,8 +64,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Event::Item(market_event) => {
                         stats.process_event(&market_event);
                         
-                        // Log every 100 trades
-                        if stats.trade_count % 100 == 0 {
+                        // Log every 10 trades
+                        if stats.trade_count % 10 == 0 {
                             info!("📈 Trades: {} | Last price: ${:.2} | Volume: {:.4} BTC", 
                                   stats.trade_count, 
                                   stats.last_price.unwrap_or(0.0),
