@@ -6,7 +6,6 @@ edition = "2021"
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
-rust_decimal_macros = "1"
 derive_more = { version = "1", features = ["constructor", "display", "from"] }
 chrono = { version = "0.4", features = ["serde"] }
 thiserror = "1"
@@ -18,4 +17,4 @@ prettytable = "0.10"
 execution = { workspace = true }
 markets = { workspace = true }
 integration = { workspace = true }
-rust_decimal_macros.workspace = true
+rust_decimal_macros= { version = "1", workspace = true }
