@@ -52,15 +52,50 @@ impl From<reqwest::Error> for ExampleError {
     }
 }
 
-/// Binance API signature implementation
+/// Binance API signature implementation with time synchronization
 pub struct BinanceSigner {
     api_key: String,
     secret_key: String,
+    time_offset: std::sync::Arc<std::sync::Mutex<i64>>, // Server time offset in milliseconds
 }
 
 impl BinanceSigner {
     pub fn new(api_key: String, secret_key: String) -> Self {
-        Self { api_key, secret_key }
+        Self { 
+            api_key, 
+            secret_key,
+            time_offset: std::sync::Arc::new(std::sync::Mutex::new(0)),
+        }
+    }
+
+    /// Synchronize with Binance server time
+    pub async fn sync_time(&self, client: &reqwest::Client) -> Result<(), ExampleError> {
+        println!("⏰ Synchronizing with Binance server time...");
+        
+        let response = client
+            .get("https://api.binance.com/api/v3/time")
+            .send()
+            .await?;
+        
+        if response.status().is_success() {
+            let time_response: serde_json::Value = response.json().await?;
+            
+            if let Some(server_time) = time_response.get("serverTime").and_then(|t| t.as_u64()) {
+                let local_time = std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_millis() as u64;
+                
+                let offset = server_time as i64 - local_time as i64;
+                
+                if let Ok(mut time_offset) = self.time_offset.lock() {
+                    *time_offset = offset;
+                    println!("✅ Time synchronized (offset: {}ms)", offset);
+                }
+            }
+        }
+        
+        Ok(())
     }
 
     fn create_signature(&self, query_string: &str) -> String {
@@ -76,12 +111,17 @@ impl BinanceSigner {
     }
 
     pub fn sign_request(&self, query_params: &[(&str, &str)]) -> (String, String) {
-        let timestamp = std::time::SystemTime::now()
+        let mut timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
-            .as_millis();
+            .as_millis() as u64;
         
-        // Build query string with timestamp
+        // Apply server time offset
+        if let Ok(offset) = self.time_offset.lock() {
+            timestamp = (timestamp as i64 + *offset) as u64;
+        }
+        
+        // Build query string with synchronized timestamp
         let mut params = query_params.to_vec();
         let timestamp_str = timestamp.to_string();
         params.push(("timestamp", &timestamp_str));
@@ -147,6 +187,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     
     // Create HTTP client
     let client = reqwest::Client::new();
+    
+    // Synchronize time with Binance server before making requests
+    signer.sync_time(&client).await?;
     
     // Define the API endpoint and parameters
     let base_url = "https://api.binance.com";
