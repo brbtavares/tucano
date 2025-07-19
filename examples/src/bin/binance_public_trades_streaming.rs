@@ -1,3 +1,31 @@
+/*!
+ * Binance Public Trades Streaming Example
+ * 
+ * This example demonstrates how to stream real-time public trade data from Binance
+ * futures using Toucan's high-level streaming capabilities for multiple trading pairs.
+ * 
+ * Key Features:
+ * - Multiple cryptocurrency pair streaming (BTC, ETH, SOL vs USDT)
+ * - High-volume data handling with separate WebSocket connections
+ * - Automatic reconnection and error recovery
+ * - Real-time trade event processing
+ * - Structured logging for monitoring
+ * 
+ * Technical Components:
+ * - BinanceFuturesUsd exchange integration
+ * - PublicTrades subscription type
+ * - ReconnectingStream for fault tolerance
+ * - Concurrent stream processing
+ * 
+ * Use Case:
+ * Perfect for building market monitoring systems, price alerts, arbitrage
+ * detection, or general market data analysis across multiple trading pairs.
+ * 
+ * Setup:
+ * No API keys required - uses public market data only.
+ * Run: cargo run --bin binance_public_trades_streaming
+ */
+
 use data::{
     exchange::binance::futures::BinanceFuturesUsd,
     streams::{Streams, reconnect::stream::ReconnectingStream},

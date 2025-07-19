@@ -1,3 +1,32 @@
+/*!
+ * Binance WebSocket Basic Integration Example
+ * 
+ * This example demonstrates the fundamental concepts of using Toucan's low-level
+ * WebSocket integration components to connect to Binance futures WebSocket API.
+ * 
+ * Key Learning Objectives:
+ * - Manual WebSocket connection establishment
+ * - Custom message parsing with Serde
+ * - Implementing the Transformer trait for data processing
+ * - Basic stateful data aggregation (volume accumulation)
+ * - Error handling in real-time data streams
+ * 
+ * Technical Components Used:
+ * - tokio-tungstenite for WebSocket connectivity
+ * - Toucan's ExchangeStream for data flow management
+ * - Custom BinanceMessage enum for message parsing
+ * - StatefulTransformer for volume accumulation
+ * 
+ * Use Case:
+ * This is an educational example showing how to build custom integrations
+ * when you need fine-grained control over WebSocket handling. For production
+ * use cases, consider using the higher-level Data module instead.
+ * 
+ * Setup:
+ * No API keys required - uses public market data only.
+ * Run: cargo run --bin binance_websocket_basic_integration
+ */
+
 use integration::{
     Transformer,
     error::SocketError,
@@ -11,25 +40,35 @@ use std::{collections::VecDeque, str::FromStr};
 use tokio_tungstenite::connect_async;
 use tracing::debug;
 
-// Convenient type alias for an `ExchangeStream` utilising a tungstenite `WebSocket`
+// Type aliases for better code readability
 type ExchangeWsStream<Exchange> = ExchangeStream<WebSocketParser, WebSocket, Exchange>;
-
-// Communicative type alias for what the VolumeSum the Transformer is generating
 type VolumeSum = f64;
 
+/// Binance WebSocket message types
+/// 
+/// This enum handles two types of messages from Binance:
+/// 1. SubResponse: Confirmation of subscription requests
+/// 2. Trade: Individual trade data containing quantity and other trade information
 #[derive(Deserialize)]
 #[serde(untagged, rename_all = "camelCase")]
 enum BinanceMessage {
+    /// Subscription confirmation response
     SubResponse {
         result: Option<Vec<String>>,
         id: u32,
     },
+    /// Individual trade event
     Trade {
         #[serde(rename = "q", deserialize_with = "de_str")]
         quantity: f64,
     },
 }
 
+/// Stateful transformer that accumulates trading volume
+/// 
+/// This demonstrates how to implement the Transformer trait to maintain
+/// internal state across multiple incoming messages. In this case, we're
+/// accumulating the total volume of all trades received.
 struct StatefulTransformer {
     sum_of_volume: VolumeSum,
 }
