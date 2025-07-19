@@ -1,43 +1,25 @@
-/*!
- * Exemplo completo: Paper Trading simples com BTCUSDT na Binance
- * 
- * Este exemplo demonstra como usar o ecossistema Toucan para:
- * - Conectar com dados de mercado em tempo real
- * - Implementar uma estratégia simples
- * - Usar gerenciamento de risco
- * - Executar paper trading
- * - Gerar relatórios de performance
- */
+/// Paper trading simulation example
+/// Demonstrates strategy testing with real market data and risk management
 
-use std::collections::HashMap;
-use tokio::time::{sleep, Duration};
+use std::time::Duration;
+use tokio::time::sleep;
 use tracing::{info, warn};
-use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
+use futures::StreamExt;
 
 // Toucan ecosystem
 use data::{
-    event::{MarketEvent, DataKind},
     exchange::binance::spot::BinanceSpot,
+    streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::trade::PublicTrades,
-    streams::builder::StreamBuilder,
 };
 use markets::{
-    exchange::ExchangeId,
-    instrument::market_data::MarketDataInstrument,
-    Side,
+    instrument::market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
+    asset::name::AssetNameInternal,
 };
-use strategy::{
-    AlgoStrategy, StrategyEvent, StrategyEventType,
-    close_positions::ClosePositionsStrategy,
-};
-use risk::{RiskManager, RiskApproved, RiskRefused, NoRiskManager};
-use execution::order::request::{OrderRequestOpen, OrderRequestCancel};
-use analytics::summary::trading::TradingSummary;
 
-/// Estratégia de exemplo: Trading baseado em preço
-/// Compra quando o preço está abaixo de $60,000 e vende quando está acima de $70,000
+/// Simple BTC trading strategy
 #[derive(Debug, Clone)]
 struct SimpleBtcStrategy {
     buy_threshold: Decimal,
@@ -45,6 +27,9 @@ struct SimpleBtcStrategy {
     position_size: Decimal,
     last_price: Option<Decimal>,
     in_position: bool,
+    total_trades: u32,
+    total_profit: Decimal,
+    entry_price: Option<Decimal>,
 }
 
 impl SimpleBtcStrategy {
@@ -55,282 +40,186 @@ impl SimpleBtcStrategy {
             position_size: dec!(0.001), // 0.001 BTC
             last_price: None,
             in_position: false,
+            total_trades: 0,
+            total_profit: dec!(0),
+            entry_price: None,
         }
     }
-}
 
-impl AlgoStrategy for SimpleBtcStrategy {
-    type State = ();
-    type Event = MarketEvent<MarketDataInstrument>;
+    fn process_trade(&mut self, price: Decimal) -> Option<&'static str> {
+        self.last_price = Some(price);
 
-    fn id(&self) -> &'static str {
-        "simple_btc_strategy"
-    }
-
-    fn on_market_event(
-        &mut self,
-        _state: &Self::State,
-        event: Self::Event,
-    ) -> Vec<StrategyEvent> {
-        let mut events = Vec::new();
-
-        if let DataKind::Trade(trade) = event.kind {
-            let price = Decimal::from_f64_retain(trade.price).unwrap_or_default();
-            self.last_price = Some(price);
-
-            // Lógica de trading simples
-            if !self.in_position && price < self.buy_threshold {
-                // Sinal de compra
-                info!("🟢 Sinal de COMPRA: Preço ${} < ${}", price, self.buy_threshold);
-                
-                let order_request = OrderRequestOpen {
-                    exchange: event.exchange.into(),
-                    instrument: event.instrument.into(),
-                    side: Side::Buy,
-                    quantity: self.position_size,
-                    order_type: execution::order::OrderType::Market,
-                    time_in_force: execution::order::TimeInForce::GoodTillCancel,
-                    client_order_id: execution::order::ClientOrderId::random(),
-                    reduce_only: false,
-                };
-
-                events.push(StrategyEvent {
-                    timestamp: Utc::now(),
-                    event_type: StrategyEventType::OrderRequest(order_request),
-                });
-                
-                self.in_position = true;
-                
-            } else if self.in_position && price > self.sell_threshold {
-                // Sinal de venda
-                info!("🔴 Sinal de VENDA: Preço ${} > ${}", price, self.sell_threshold);
-                
-                let order_request = OrderRequestOpen {
-                    exchange: event.exchange.into(),
-                    instrument: event.instrument.into(),
-                    side: Side::Sell,
-                    quantity: self.position_size,
-                    order_type: execution::order::OrderType::Market,
-                    time_in_force: execution::order::TimeInForce::GoodTillCancel,
-                    client_order_id: execution::order::ClientOrderId::random(),
-                    reduce_only: false,
-                };
-
-                events.push(StrategyEvent {
-                    timestamp: Utc::now(),
-                    event_type: StrategyEventType::OrderRequest(order_request),
-                });
-                
-                self.in_position = false;
+        // Simple trading logic
+        if !self.in_position && price < self.buy_threshold {
+            // Buy signal
+            info!("🟢 BUY Signal: Price ${} < ${}", price, self.buy_threshold);
+            self.in_position = true;
+            self.entry_price = Some(price);
+            self.total_trades += 1;
+            return Some("BUY");
+            
+        } else if self.in_position && price > self.sell_threshold {
+            // Sell signal
+            info!("🔴 SELL Signal: Price ${} > ${}", price, self.sell_threshold);
+            
+            if let Some(entry) = self.entry_price {
+                let profit = (price - entry) * self.position_size;
+                self.total_profit += profit;
+                info!("💰 Trade Profit: ${:.2} (Entry: ${}, Exit: ${})", 
+                      profit, entry, price);
             }
+            
+            self.in_position = false;
+            self.entry_price = None;
+            self.total_trades += 1;
+            return Some("SELL");
         }
+        
+        None
+    }
 
-        events
+    fn get_summary(&self) -> String {
+        format!(
+            "Trades: {}, Profit: ${:.2}, Position: {}, Last Price: ${:.2}",
+            self.total_trades,
+            self.total_profit,
+            if self.in_position { "LONG" } else { "NONE" },
+            self.last_price.unwrap_or_default()
+        )
     }
 }
 
-impl ClosePositionsStrategy for SimpleBtcStrategy {
-    type Filter = ();
-
-    fn close_positions_requests<T>(
-        &self,
-        _state: &Self::State,
-        _filter: &Self::Filter,
-    ) -> impl IntoIterator<Item = OrderRequestCancel<T, T>> {
-        // Implementação simples - sem posições para fechar
-        std::iter::empty()
-    }
-}
-
-/// Risk Manager customizado para BTC
-#[derive(Debug, Clone)]
-struct BtcRiskManager {
+/// Simple risk manager
+#[derive(Debug)]
+struct SimpleRiskManager {
     max_position_size: Decimal,
-    max_orders_per_minute: u32,
-    order_count: u32,
-    last_reset: DateTime<Utc>,
+    max_trades_per_hour: u32,
+    trade_count: u32,
 }
 
-impl BtcRiskManager {
+impl SimpleRiskManager {
     fn new() -> Self {
         Self {
-            max_position_size: dec!(0.01), // Máximo 0.01 BTC
-            max_orders_per_minute: 10,
-            order_count: 0,
-            last_reset: Utc::now(),
+            max_position_size: dec!(0.01), // Max 0.01 BTC
+            max_trades_per_hour: 20,
+            trade_count: 0,
         }
     }
 
-    fn reset_counter_if_needed(&mut self) {
-        let now = Utc::now();
-        if now.signed_duration_since(self.last_reset).num_minutes() >= 1 {
-            self.order_count = 0;
-            self.last_reset = now;
-        }
-    }
-}
-
-impl RiskManager for BtcRiskManager {
-    type State = ();
-
-    fn check(
-        &self,
-        _state: &Self::State,
-        cancels: impl IntoIterator<Item = OrderRequestCancel<markets::exchange::ExchangeIndex, markets::instrument::InstrumentIndex>>,
-        opens: impl IntoIterator<Item = OrderRequestOpen<markets::exchange::ExchangeIndex, markets::instrument::InstrumentIndex>>,
-    ) -> (
-        impl IntoIterator<Item = RiskApproved<OrderRequestCancel<markets::exchange::ExchangeIndex, markets::instrument::InstrumentIndex>>>,
-        impl IntoIterator<Item = RiskApproved<OrderRequestOpen<markets::exchange::ExchangeIndex, markets::instrument::InstrumentIndex>>>,
-        impl IntoIterator<Item = RiskRefused<OrderRequestCancel<markets::exchange::ExchangeIndex, markets::instrument::InstrumentIndex>>>,
-        impl IntoIterator<Item = RiskRefused<OrderRequestOpen<markets::exchange::ExchangeIndex, markets::instrument::InstrumentIndex>>>,
-    ) {
-        let mut approved_cancels = Vec::new();
-        let mut approved_opens = Vec::new();
-        let mut refused_cancels = Vec::new();
-        let mut refused_opens = Vec::new();
-
-        // Aprovar todos os cancelamentos
-        for cancel in cancels {
-            approved_cancels.push(RiskApproved::new(cancel));
+    fn check_trade(&mut self, position_size: Decimal) -> Result<(), String> {
+        if position_size > self.max_position_size {
+            return Err(format!(
+                "Position size {} exceeds max {}", 
+                position_size, 
+                self.max_position_size
+            ));
         }
 
-        // Verificar ordens abertas
-        for open in opens {
-            // Verificar tamanho da posição
-            if open.quantity > self.max_position_size {
-                refused_opens.push(RiskRefused::new(
-                    open,
-                    format!("Tamanho da posição {} excede o máximo {}", open.quantity, self.max_position_size)
-                ));
-                continue;
-            }
-
-            // Verificar limite de ordens por minuto
-            if self.order_count >= self.max_orders_per_minute {
-                refused_opens.push(RiskRefused::new(
-                    open,
-                    format!("Limite de {} ordens por minuto excedido", self.max_orders_per_minute)
-                ));
-                continue;
-            }
-
-            approved_opens.push(RiskApproved::new(open));
+        if self.trade_count >= self.max_trades_per_hour {
+            return Err(format!(
+                "Trade limit {} exceeded", 
+                self.max_trades_per_hour
+            ));
         }
 
-        (approved_cancels, approved_opens, refused_cancels, refused_opens)
+        self.trade_count += 1;
+        Ok(())
     }
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Configurar logging
+    // Initialize logging
     tracing_subscriber::fmt()
         .with_env_filter("info")
         .init();
 
-    info!("🚀 Iniciando Paper Trading BTCUSDT na Binance");
+    info!("🚀 Starting Simple Paper Trading Simulation");
 
-    // Criar instrumentos
+    // Create BTC/USDT instrument
     let btc_usdt = MarketDataInstrument {
-        exchange: ExchangeId::BinanceSpot,
-        symbol: "BTCUSDT".to_string(),
-        kind: markets::instrument::market_data::kind::MarketDataInstrumentKind::Spot,
+        base: AssetNameInternal::new("btc"),
+        quote: AssetNameInternal::new("usdt"),
+        kind: MarketDataInstrumentKind::Spot,
     };
 
-    // Configurar estratégia
+    // Initialize strategy and risk manager
     let mut strategy = SimpleBtcStrategy::new();
-    info!("📊 Estratégia configurada: Compra < ${}, Venda > ${}", 
+    let mut risk_manager = SimpleRiskManager::new();
+    
+    info!("📊 Strategy configured: Buy < ${}, Sell > ${}", 
           strategy.buy_threshold, strategy.sell_threshold);
+    info!("🛡️ Risk Manager: Max position = {}", risk_manager.max_position_size);
 
-    // Configurar risk manager
-    let risk_manager = BtcRiskManager::new();
-    info!("🛡️ Risk Manager configurado: Max posição = {}", risk_manager.max_position_size);
-
-    // Configurar stream de dados
-    let mut stream = StreamBuilder::<MarketEvent<MarketDataInstrument>>::new()
+    // Create market data stream
+    let mut streams = Streams::<PublicTrades>::builder()
         .subscribe([
-            PublicTrades::new(btc_usdt.clone())
+            (BinanceSpot::default(), "btc", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
         ])
+        .init()
         .await?;
 
-    info!("📡 Conectado ao stream de dados da Binance");
-    info!("⏰ Executando por 30 segundos...");
+    // Create joined stream
+    let mut joined_stream = streams
+        .select_all()
+        .with_error_handler(|error| warn!(?error, "MarketStream generated error"));
 
-    // Simular trading por 30 segundos
-    let start_time = Utc::now();
+    info!("📡 Connected to Binance market data");
+    info!("⏰ Running simulation for 30 seconds...");
+
+    // Run simulation
     let mut trade_count = 0;
-    let mut last_price = None;
+    let start_time = std::time::Instant::now();
 
     tokio::select! {
         _ = async {
-            while let Some(event) = stream.next().await {
+            while let Some(event) = joined_stream.next().await {
                 match event {
-                    Ok(market_event) => {
-                        // Processar evento de mercado
-                        let strategy_events = strategy.on_market_event(&(), market_event.clone());
+                    data::streams::reconnect::Event::Item(market_event) => {
+                        // market_event.kind is already PublicTrade
+                        let trade_data = &market_event.kind;
+                        trade_count += 1;
                         
-                        // Contar trades
-                        if let DataKind::Trade(trade) = &market_event.kind {
-                            trade_count += 1;
-                            last_price = Some(trade.price);
-                            
-                            // Log a cada 100 trades
-                            if trade_count % 100 == 0 {
-                                info!("📈 Processados {} trades, último preço: ${:.2}", trade_count, trade.price);
+                        let price = Decimal::from_f64_retain(trade_data.price).unwrap_or_default();
+                        
+                        // Process trade with strategy
+                        if let Some(signal) = strategy.process_trade(price) {
+                            // Check risk management
+                            match risk_manager.check_trade(strategy.position_size) {
+                                Ok(()) => {
+                                    info!("✅ {} order approved by risk manager", signal);
+                                }
+                                Err(reason) => {
+                                    warn!("❌ {} order rejected: {}", signal, reason);
+                                }
                             }
                         }
-
-                        // Processar eventos de estratégia
-                        for strategy_event in strategy_events {
-                            match strategy_event.event_type {
-                                StrategyEventType::OrderRequest(order) => {
-                                    // Simular verificação de risco
-                                    let (_, approved_opens, _, refused_opens) = risk_manager.check(
-                                        &(), 
-                                        std::iter::empty(), 
-                                        std::iter::once(order.clone())
-                                    );
-                                    
-                                    let approved: Vec<_> = approved_opens.into_iter().collect();
-                                    let refused: Vec<_> = refused_opens.into_iter().collect();
-                                    
-                                    if !approved.is_empty() {
-                                        info!("✅ Ordem aprovada: {} {} de {}", 
-                                              order.side, order.quantity, order.instrument);
-                                    }
-                                    
-                                    for refused_order in refused {
-                                        warn!("❌ Ordem rejeitada: {}", refused_order.reason);
-                                    }
-                                }
-                                _ => {}
-                            }
+                        
+                        // Log progress every 1000 trades
+                        if trade_count % 1000 == 0 {
+                            info!("📈 Processed {} trades - {}", trade_count, strategy.get_summary());
                         }
                     }
-                    Err(e) => {
-                        warn!("⚠️ Erro no stream: {}", e);
+                    data::streams::reconnect::Event::Reconnecting(_) => {
+                        info!("🔄 Reconnecting to data stream...");
                     }
                 }
             }
         } => {}
         _ = sleep(Duration::from_secs(30)) => {
-            info!("⏱️ Tempo limite de 30 segundos atingido");
+            info!("⏱️ 30-second simulation completed");
         }
     }
 
-    // Relatório final
-    let end_time = Utc::now();
-    let duration = end_time.signed_duration_since(start_time);
+    // Final report
+    let duration = start_time.elapsed();
     
-    info!("📊 === RELATÓRIO FINAL ===");
-    info!("⏰ Duração: {} segundos", duration.num_seconds());
-    info!("📈 Trades processados: {}", trade_count);
-    if let Some(price) = last_price {
-        info!("💰 Último preço: ${:.2}", price);
-    }
-    info!("🎯 Estratégia: {} ({})", strategy.id(), 
-          if strategy.in_position { "EM POSIÇÃO" } else { "SEM POSIÇÃO" });
-    info!("🏁 Paper Trading finalizado com sucesso!");
+    info!("📊 === FINAL REPORT ===");
+    info!("⏰ Duration: {:.1} seconds", duration.as_secs_f64());
+    info!("📈 Market trades processed: {}", trade_count);
+    info!("� Strategy summary: {}", strategy.get_summary());
+    info!("🛡️ Risk checks performed: {}", risk_manager.trade_count);
+    info!("🏁 Paper trading simulation completed successfully!");
 
     Ok(())
 }

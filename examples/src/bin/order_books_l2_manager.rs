@@ -1,3 +1,6 @@
+/// Level 2 order book manager example
+/// Demonstrates advanced order book state management and updates
+
 use data::{
     books::{manager::init_multi_order_book_l2_manager, map::OrderBookMap},
     exchange::binance::spot::BinanceSpot,

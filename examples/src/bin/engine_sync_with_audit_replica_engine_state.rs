@@ -1,3 +1,6 @@
+/// Engine state replication with audit example
+/// Demonstrates enterprise-grade state synchronization and disaster recovery
+
 use core::{
     EngineEvent,
     engine::{

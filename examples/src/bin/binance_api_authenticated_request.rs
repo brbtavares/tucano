@@ -1,40 +1,5 @@
-/*!
- * Binance API Authenticated Request Example
- * 
- * This example demonstrates how to make authenticated requests to the Binance REST API
- * using proper cryptographic signatures and secure credential management.
- * 
- * Key Features:
- * - Secure API key management via environment variables
- * - HMAC-SHA256 request signing implementation
- * - Server time synchronization to prevent timestamp errors
- * - Account information retrieval and display
- * - Comprehensive error handling for API responses
- * - Balance filtering to show only non-zero holdings
- * 
- * Technical Components:
- * - Environment-based credential loading (.env file)
- * - HMAC-SHA256 cryptographic signing
- * - Binance server time synchronization
- * - Structured JSON response parsing
- * - Custom error types for different failure modes
- * 
- * Security Features:
- * - No hardcoded API keys
- * - Automatic time drift compensation
- * - Proper signature generation for request authentication
- * 
- * Use Case:
- * This is a foundation for building trading applications that need to
- * interact with authenticated Binance API endpoints. It can be extended
- * for order placement, balance monitoring, and account management.
- * 
- * Setup:
- * 1. Copy .env.example to .env
- * 2. Add your Binance API credentials to .env
- * 3. Ensure API keys have account read permissions
- * Run: cargo run --bin binance_api_authenticated_request
- */
+/// Binance API authenticated request example
+/// Demonstrates secure REST API requests with HMAC-SHA256 signatures
 
 use examples::credentials::ExchangeCredentials;
 use serde::Deserialize;

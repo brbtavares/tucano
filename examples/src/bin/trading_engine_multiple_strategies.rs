@@ -1,3 +1,6 @@
+/// Multiple strategies trading engine example
+/// Demonstrates running multiple trading strategies simultaneously
+
 use core::{
     EngineEvent,
     engine::{

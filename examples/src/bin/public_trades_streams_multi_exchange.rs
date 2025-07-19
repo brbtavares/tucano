@@ -1,3 +1,6 @@
+/// Multi-exchange public trades streaming example
+/// Demonstrates trade data collection across multiple cryptocurrency exchanges
+
 use data::{
     exchange::{
         binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},

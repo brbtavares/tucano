@@ -1,3 +1,6 @@
+/// Multi-exchange synchronized streaming example
+/// Demonstrates coordinated data streaming across multiple exchanges
+
 use data::{
     event::DataKind,
     exchange::{

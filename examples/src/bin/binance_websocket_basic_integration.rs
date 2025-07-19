@@ -1,31 +1,5 @@
-/*!
- * Binance WebSocket Basic Integration Example
- * 
- * This example demonstrates the fundamental concepts of using Toucan's low-level
- * WebSocket integration components to connect to Binance futures WebSocket API.
- * 
- * Key Learning Objectives:
- * - Manual WebSocket connection establishment
- * - Custom message parsing with Serde
- * - Implementing the Transformer trait for data processing
- * - Basic stateful data aggregation (volume accumulation)
- * - Error handling in real-time data streams
- * 
- * Technical Components Used:
- * - tokio-tungstenite for WebSocket connectivity
- * - Toucan's ExchangeStream for data flow management
- * - Custom BinanceMessage enum for message parsing
- * - StatefulTransformer for volume accumulation
- * 
- * Use Case:
- * This is an educational example showing how to build custom integrations
- * when you need fine-grained control over WebSocket handling. For production
- * use cases, consider using the higher-level Data module instead.
- * 
- * Setup:
- * No API keys required - uses public market data only.
- * Run: cargo run --bin binance_websocket_basic_integration
- */
+/// Binance WebSocket basic integration example
+/// Demonstrates low-level WebSocket connection and custom message parsing
 
 use integration::{
     Transformer,

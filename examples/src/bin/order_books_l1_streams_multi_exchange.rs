@@ -1,3 +1,6 @@
+/// Multi-exchange Level 1 order books example
+/// Demonstrates cross-exchange best bid/ask data streaming
+
 use data::{
     exchange::binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},
     streams::{Streams, reconnect::stream::ReconnectingStream},

@@ -1,3 +1,6 @@
+/// Concurrent strategy backtesting example
+/// Demonstrates parallel testing of multiple trading strategies for performance comparison
+
 use core::{
     backtest::{
         BacktestArgsConstant, BacktestArgsDynamic,

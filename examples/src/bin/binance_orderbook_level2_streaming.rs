@@ -1,3 +1,6 @@
+/// Level 2 order book streaming example
+/// Demonstrates full order book depth streaming from Binance
+
 use data::{
     exchange::binance::spot::BinanceSpot,
     streams::{Streams, reconnect::stream::ReconnectingStream},

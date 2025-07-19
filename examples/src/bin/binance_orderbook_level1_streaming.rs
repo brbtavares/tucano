@@ -1,3 +1,6 @@
+/// Level 1 order book streaming example
+/// Demonstrates best bid/ask data streaming from Binance
+
 use data::{
     exchange::binance::spot::BinanceSpot,
     streams::{Streams, reconnect::stream::ReconnectingStream},

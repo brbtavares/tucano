@@ -1,3 +1,6 @@
+/// Dynamic multi-stream multi-exchange example
+/// Demonstrates runtime stream configuration and dynamic subscription management
+
 use data::{
     event::DataKind,
     streams::{

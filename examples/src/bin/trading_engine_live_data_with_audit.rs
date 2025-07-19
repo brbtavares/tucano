@@ -1,3 +1,6 @@
+/// Live trading engine with audit logging example
+/// Demonstrates production trading setup with comprehensive audit trails
+
 use core::{
     engine::{
         clock::LiveClock,

@@ -1,3 +1,6 @@
+/// Indexed market stream example
+/// Demonstrates efficient indexed market data access for high-frequency operations
+
 use data::{
     streams::builder::dynamic::indexed::init_indexed_multi_exchange_market_stream,
     subscription::SubKind,

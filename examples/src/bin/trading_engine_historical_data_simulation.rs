@@ -1,3 +1,6 @@
+/// Historical data simulation trading engine example
+/// Demonstrates backtesting with historical market data and mock execution
+
 use core::{
     EngineEvent,
     engine::{

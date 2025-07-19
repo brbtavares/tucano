@@ -1,3 +1,6 @@
+/// Trading engine with risk management example
+/// Demonstrates integrated risk controls and position limits
+
 use core::{
     EngineEvent,
     engine::{

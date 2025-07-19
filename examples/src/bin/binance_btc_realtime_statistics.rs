@@ -1,39 +1,5 @@
-/*!
- * Binance BTC Real-time Trading Statistics Example
- * 
- * This example demonstrates a production-ready approach to collecting and analyzing
- * real-time Bitcoin trading data from Binance using Toucan's high-level Data module.
- * 
- * Key Features:
- * - Real-time BTC/USDT trade stream processing
- * - Comprehensive trading statistics calculation
- * - Automatic reconnection handling
- * - Structured logging with tracing
- * - Separate buy/sell volume tracking
- * - Price range monitoring (min/max)
- * - Configurable time-based execution (30 seconds)
- * 
- * Technical Components Used:
- * - Toucan Data module for market data streams
- * - BinanceSpot exchange integration
- * - PublicTrades subscription
- * - ReconnectingStream for fault tolerance
- * - Structured logging with custom statistics
- * 
- * Use Case:
- * This example shows how to build real-world trading analytics systems
- * that can monitor market activity, generate reports, and maintain statistics
- * for trading decision making or market analysis.
- * 
- * Output:
- * - Live trade count updates every 10 trades
- * - Final comprehensive report with volume and price statistics
- * - Buy vs Sell breakdown
- * 
- * Setup:
- * No API keys required - uses public market data only.
- * Run: cargo run --bin binance_btc_realtime_statistics
- */
+/// Binance BTC real-time statistics example
+/// Demonstrates production-ready real-time analytics and trade monitoring
 
 use tokio::time::{sleep, Duration};
 use tracing::{info, warn};
