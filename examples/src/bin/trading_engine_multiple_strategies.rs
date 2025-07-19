@@ -126,7 +126,6 @@ impl ClosePositionsStrategy for MultiStrategy {
         filter: &'a InstrumentFilter,
     ) -> (
         impl IntoIterator<Item = OrderRequestCancel> + 'a,
-        impl IntoIterator<Item = OrderRequestOpen> + 'a,
     )
     where
         ExchangeIndex: 'a,
@@ -155,7 +154,7 @@ impl ClosePositionsStrategy for MultiStrategy {
                             build_ioc_market_order_to_close_position(
                                 state.instrument.exchange,
                                 position_a,
-                                StrategyA::ID,
+                                StrategyA::id(),
                                 price,
                                 || ClientOrderId::random(),
                             )
@@ -172,7 +171,7 @@ impl ClosePositionsStrategy for MultiStrategy {
                             build_ioc_market_order_to_close_position(
                                 state.instrument.exchange,
                                 position_b,
-                                StrategyB::ID,
+                                StrategyB::id(),
                                 price,
                                 || ClientOrderId::random(),
                             )
@@ -215,7 +214,9 @@ impl<Clock, State, ExecutionTxs, Risk> OnTradingDisabled<Clock, State, Execution
 struct StrategyA;
 
 impl StrategyA {
-    const ID: StrategyId = StrategyId(SmolStr::new("strategy_a"));
+    fn id() -> StrategyId {
+        StrategyId::new("strategy_a")
+    }
 }
 
 impl AlgoStrategy for StrategyA {
@@ -235,7 +236,9 @@ impl AlgoStrategy for StrategyA {
 struct StrategyB;
 
 impl StrategyB {
-    const ID: StrategyId = StrategyId(SmolStr::new("strategy_b"));
+    fn id() -> StrategyId {
+        StrategyId::new("strategy_b")
+    }
 }
 
 impl AlgoStrategy for StrategyB {
@@ -278,14 +281,14 @@ impl Processor<&AccountEvent> for MultiStrategyCustomInstrumentData {
             return;
         };
 
-        if trade.strategy == StrategyA::ID {
+        if trade.strategy == StrategyA::id() {
             self.strategy_a
                 .position
                 .update_from_trade(trade)
                 .inspect(|closed| self.strategy_a.tear.update_from_position(closed));
         }
 
-        if trade.strategy == StrategyB::ID {
+        if trade.strategy == StrategyB::id() {
             self.strategy_b
                 .position
                 .update_from_trade(trade)
