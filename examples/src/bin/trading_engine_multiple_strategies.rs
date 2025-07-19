@@ -1,7 +1,7 @@
 use core::{
     EngineEvent,
     engine::{
-        Engine, Processor,
+        Processor,
         clock::LiveClock,
         state::{
             EngineState,
@@ -53,7 +53,6 @@ use chrono::{DateTime, Utc};
 use futures::StreamExt;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
-use smol_str::SmolStr;
 use std::{fs::File, io::BufReader, time::Duration};
 use tracing::debug;
 
@@ -123,9 +122,10 @@ impl ClosePositionsStrategy for MultiStrategy {
     fn close_positions_requests<'a>(
         &'a self,
         state: &'a Self::State,
-        filter: &'a InstrumentFilter,
+        filter: &'a impl std::fmt::Debug,
     ) -> (
-        impl IntoIterator<Item = OrderRequestCancel> + 'a,
+        impl IntoIterator<Item = OrderRequestCancel<ExchangeIndex, InstrumentIndex>> + 'a,
+        impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>> + 'a,
     )
     where
         ExchangeIndex: 'a,
@@ -136,7 +136,7 @@ impl ClosePositionsStrategy for MultiStrategy {
         let open_requests =
             state
                 .instruments
-                .instruments(filter)
+                .instruments(&InstrumentFilter::None)
                 .flat_map(move |state| {
                     // Only generate orders if we have a market price
                     let Some(price) = state.data.price() else {
@@ -153,8 +153,10 @@ impl ClosePositionsStrategy for MultiStrategy {
                         .map(|position_a| {
                             build_ioc_market_order_to_close_position(
                                 state.instrument.exchange,
-                                position_a,
+                                state.key,
                                 StrategyA::id(),
+                                position_a.side,
+                                position_a.quantity_abs,
                                 price,
                                 || ClientOrderId::random(),
                             )
@@ -170,8 +172,10 @@ impl ClosePositionsStrategy for MultiStrategy {
                         .map(|position_b| {
                             build_ioc_market_order_to_close_position(
                                 state.instrument.exchange,
-                                position_b,
+                                state.key,
                                 StrategyB::id(),
+                                position_b.side,
+                                position_b.quantity_abs,
                                 price,
                                 || ClientOrderId::random(),
                             )
@@ -194,7 +198,6 @@ impl<Clock, State, ExecutionTxs, Risk> OnDisconnectStrategy<Clock, State, Execut
     type OnDisconnect = ();
 
     fn on_disconnect(
-        _: &mut Engine<Clock, State, ExecutionTxs, Self, Risk>,
         _: ExchangeId,
     ) -> Self::OnDisconnect {
     }
@@ -205,9 +208,7 @@ impl<Clock, State, ExecutionTxs, Risk> OnTradingDisabled<Clock, State, Execution
 {
     type OnTradingDisabled = ();
 
-    fn on_trading_disabled(
-        _: &mut Engine<Clock, State, ExecutionTxs, Self, Risk>,
-    ) -> Self::OnTradingDisabled {
+    fn on_trading_disabled() -> Self::OnTradingDisabled {
     }
 }
 
@@ -284,15 +285,15 @@ impl Processor<&AccountEvent> for MultiStrategyCustomInstrumentData {
         if trade.strategy == StrategyA::id() {
             self.strategy_a
                 .position
-                .update_from_trade(trade)
-                .inspect(|closed| self.strategy_a.tear.update_from_position(closed));
+                .update_from_trade(trade);
+                // .inspect(|closed| self.strategy_a.tear.update_from_position(closed));
         }
 
         if trade.strategy == StrategyB::id() {
             self.strategy_b
                 .position
-                .update_from_trade(trade)
-                .inspect(|closed| self.strategy_b.tear.update_from_position(closed));
+                .update_from_trade(trade);
+                // .inspect(|closed| self.strategy_b.tear.update_from_position(closed));
         }
     }
 }
