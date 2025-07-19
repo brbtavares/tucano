@@ -7,3 +7,6 @@ fix_markdown.py
 
 # Context file
 repo_context.md
+
+# .env files
+.env
