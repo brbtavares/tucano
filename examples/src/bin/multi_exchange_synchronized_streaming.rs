@@ -13,7 +13,7 @@ use data::{
 use markets::instrument::market_data::{
     MarketDataInstrument, kind::MarketDataInstrumentKind,
 };
-use tokio_stream::StreamExt;
+use futures_util::StreamExt;
 use tracing::{info, warn};
 
 #[rustfmt::skip]

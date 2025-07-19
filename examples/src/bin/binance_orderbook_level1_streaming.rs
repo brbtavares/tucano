@@ -6,7 +6,7 @@ use data::{
 use markets::{
     exchange::ExchangeId, instrument::market_data::kind::MarketDataInstrumentKind,
 };
-use tokio_stream::StreamExt;
+use futures_util::StreamExt;
 use tracing::{info, warn};
 
 #[rustfmt::skip]
