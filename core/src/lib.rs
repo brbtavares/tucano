@@ -11,31 +11,10 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Core
-//! Core is a Rust framework for building high-performance live-trading, paper-trading and back-testing systems.
-//! * **Fast**: Written in native Rust. Minimal allocations. Data-oriented state management system with direct index lookups.
-//! * **Robust**: Strongly typed. Thread safe. Extensive test coverage.
-//! * **Customisable**: Plug and play Strategy and RiskManager components that facilitates most trading strategies (MarketMaking, StatArb, HFT, etc.).
-//! * **Scalable**: Multithreaded architecture with modular design. Leverages Tokio for I/O. Memory efficient data structures.
-//!
-//! ## Overview
-//! Core is a Rust framework for building professional grade live-trading, paper-trading and back-testing systems. The
-//! central Engine facilitates executing on many exchanges simultaneously, and offers the flexibility to run most types of
-//! trading strategies.  It allows turning algorithmic order generation on/off and can action Commands issued from external
-//! processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.)
-//!
-//! At a high-level, it provides a few major components:
-//! * `Engine` with plug and play `Strategy` and `RiskManager` components.
-//! * Centralised cache friendly `EngineState` management with O(1) constant lookups using indexed data structures.
-//! * Strategy interfaces available in the `strategy` crate for customising Engine behavior.
-//! * `RiskManager` interface for defining custom risk logic which checking generated algorithmic orders.
-//! * Event-driven system that allows for Commands to be issued from external processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.),
-//!   as well as turning algorithmic trading on/off.
-//! * Comprehensive statistics package that provides a summary of key performance metrics (PnL, Sharpe, Sortino, Drawdown, etc.).
-//!
-//! ## Getting Started Via Engine Examples
-//! [See Engine Examples](https://github.com/brbtavares/toucan/tree/master/examples)
-
+/// Core is a Rust framework for building professional grade live-trading, paper-trading and back-testing systems. The
+/// central Engine facilitates executing on many exchanges simultaneously, and offers the flexibility to run most types of
+/// trading strategies.  It allows turning algorithmic order generation on/off and can action Commands issued from external
+/// processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.)
 use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
