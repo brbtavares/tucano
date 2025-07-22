@@ -6,6 +6,7 @@ members = [
     "data",
     "execution",
     "examples",
+    "examples/binance-data-stream",
     "integration",
     "macros", 
     "markets",
