@@ -6,7 +6,7 @@ use crate::{
     },
 };
 use analytics::summary::instrument::TearSheetGenerator;
-use ::data::event::{MarketEvent, DataKind};
+use ::data::event::MarketEvent;
 use execution::{
     InstrumentAccountSnapshot,
     order::{

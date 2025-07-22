@@ -15,7 +15,7 @@ use crate::{
     summary::pnl::PnLReturns,
     time::TimeInterval,
 };
-use chrono::{DateTime, TimeDelta, Utc};
+use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
