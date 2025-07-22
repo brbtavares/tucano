@@ -5,7 +5,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::data::OrderBookData;
+use crate::types::OrderBookData;
 
 pub struct OrderBookWidget<'a> {
     orderbook: Option<&'a OrderBookData>,

@@ -5,7 +5,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::data::TradesHistory;
+use crate::types::TradesHistory;
 
 pub struct TradesWidget<'a> {
     trades_history: &'a TradesHistory,

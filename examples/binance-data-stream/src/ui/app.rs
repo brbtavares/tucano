@@ -7,7 +7,7 @@ use ratatui::{
 };
 use tokio::sync::mpsc;
 
-use crate::data::{OrderBookData, TradeData, TradesHistory};
+use crate::types::{OrderBookData, TradeData, TradesHistory};
 use super::{orderbook::OrderBookWidget, trades::TradesWidget};
 
 pub struct App {

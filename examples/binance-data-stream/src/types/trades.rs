@@ -29,20 +29,6 @@ impl TradeData {
         }
     }
 
-    pub fn mock_data() -> Self {
-        use std::sync::atomic::{AtomicU64, Ordering};
-        static TRADE_ID: AtomicU64 = AtomicU64::new(1);
-        
-        let trade_id = TRADE_ID.fetch_add(1, Ordering::SeqCst);
-        let base_price = 45005.0;
-        let price_variation = (rand::random::<f64>() - 0.5) * 100.0; // ±50 price variation
-        let price = base_price + price_variation;
-        let quantity = 0.001 + rand::random::<f64>() * 0.999; // 0.001 to 1.0 BTC
-        let is_buyer_maker = rand::random::<f64>() > 0.5;
-
-        Self::new("BTCUSDT".to_string(), trade_id, price, quantity, is_buyer_maker)
-    }
-
     pub fn side_str(&self) -> &'static str {
         if self.is_buyer_maker {
             "SELL" // buyer is maker means it was a sell order filled
@@ -121,27 +107,5 @@ impl TradesHistory {
         } else {
             None
         }
-    }
-}
-
-// Simple random number generator for mock data
-mod rand {
-    use std::sync::atomic::{AtomicU64, Ordering};
-
-    static SEED: AtomicU64 = AtomicU64::new(1);
-
-    pub fn random<T>() -> T
-    where
-        T: From<f64>,
-    {
-        let seed = SEED.fetch_add(1, Ordering::SeqCst);
-        let a = 1664525_u64;
-        let c = 1013904223_u64;
-        let m = 2_u64.pow(32);
-        
-        let next = (a.wrapping_mul(seed).wrapping_add(c)) % m;
-        SEED.store(next, Ordering::SeqCst);
-        
-        T::from(next as f64 / m as f64)
     }
 }

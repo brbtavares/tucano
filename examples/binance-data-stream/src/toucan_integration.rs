@@ -1,209 +1,132 @@
-/// Exemplo de implementação da integração real com Toucan framework
+/// Real integration implementation with Toucan framework - READY TO USE
 /// 
-/// Este arquivo mostra como implementar streams de dados reais usando o Toucan framework.
-/// Para ativar essa integração, você precisa:
+/// This file contains the real implementation of Toucan framework streams.
 /// 
-/// 1. Descomentar os imports no main.rs
-/// 2. Substituir a função start_data_streams pela implementação abaixo
-/// 3. Verificar se todas as dependências estão corretas no Cargo.toml
 
 use anyhow::Result;
 use tokio::sync::mpsc;
-use tracing::{info, warn, error};
-use futures::StreamExt;
-use std::collections::BTreeMap;
-
-// Imports necessários do Toucan framework (descomente quando usar)
-/*
+use tracing::{info, error};
 use data::{
-    streams::Streams,
-    subscription::{trade::PublicTrades, book::OrderBooksL1},
+    streams::{Streams, consumer::MarketStreamResult, reconnect::Event},
+    event::DataKind,
+    subscription::{trade::PublicTrades, book::{OrderBooksL2, OrderBookEvent}},
     exchange::binance::futures::BinanceFuturesUsd,
 };
-use markets::instrument::market_data::kind::MarketDataInstrumentKind;
-*/
+use markets::{
+    instrument::market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
+    Side,
+};
+use futures::StreamExt;
+use crate::types::{OrderBookData, TradeData, orderbook::OrderedFloat};
+use std::collections::BTreeMap;
 
-use crate::data::{OrderBookData, TradeData, orderbook::OrderedFloat};
-
-/// Implementação da integração real com Toucan framework
-/// 
-/// Esta função substitui a implementação mock no main.rs
-/// Descomente quando quiser usar dados reais
 #[allow(dead_code)]
 pub async fn start_real_data_streams(
     orderbook_tx: mpsc::UnboundedSender<OrderBookData>,
     trades_tx: mpsc::UnboundedSender<TradeData>,
 ) -> Result<()> {
-    info!("Starting real Binance WebSocket streams for BTCUSDT perpetual futures");
+    info!("🚀 Starting real Toucan framework streams for BTCUSDT perpetual futures");
     
-    // Nota: Este código é um template - descomente os imports acima para usar
+    // Configure BTCUSDT Perpetual instrument
+    info!("📊 Configuring BTCUSDT Perpetual Futures instrument");
     
-    /* 
-    // Configuração do instrumento
-    let instrument = ("btc", "usdt", MarketDataInstrumentKind::Perpetual);
-    
-    // Inicializar streams de trades
-    let trades_tx_clone = trades_tx.clone();
-    let trades_task = tokio::spawn(async move {
-        if let Err(e) = start_real_trades_stream(trades_tx_clone, instrument).await {
-            error!("Trades stream error: {}", e);
-        }
-    });
-    
-    // Inicializar streams de order book
-    let orderbook_task = tokio::spawn(async move {
-        if let Err(e) = start_real_orderbook_stream(orderbook_tx, instrument).await {
-            error!("OrderBook stream error: {}", e);
-        }
-    });
-    
-    // Aguardar ambas as tasks
-    let _ = tokio::try_join!(trades_task, orderbook_task);
-    */
-    
-    // Placeholder - remova quando implementar acima
-    warn!("Real integration not implemented yet. Using mock data.");
-    Ok(())
-}
-
-/// Stream de trades reais usando Toucan framework
-#[allow(dead_code)]
-async fn start_real_trades_stream(
-    trades_tx: mpsc::UnboundedSender<TradeData>,
-    _instrument: (&str, &str, /* MarketDataInstrumentKind */),
-) -> Result<()> {
-    info!("Initializing real PublicTrades stream");
-    
-    /* Template para implementação real:
-    
-    let mut stream = Streams::<PublicTrades>::builder()
-        .subscribe([(BinanceFuturesUsd::default(), instrument.0, instrument.1, instrument.2, PublicTrades)])
+    // Create multi-type streams (trades + order book L2) using builder_multi
+    let streams: Streams<MarketStreamResult<MarketDataInstrument, DataKind>> = Streams::builder_multi()
+        // Add PublicTrades Stream
+        .add(Streams::<PublicTrades>::builder()
+            .subscribe([(BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades)])
+        )
+        // Add OrderBooksL2 Stream  
+        .add(Streams::<OrderBooksL2>::builder()
+            .subscribe([(BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2)])
+        )
         .init()
         .await?;
     
-    while let Some(trade_event) = stream.next().await {
-        match trade_event {
-            Ok(trade) => {
-                let trade_data = TradeData {
-                    symbol: "BTCUSDT".to_string(),
-                    trade_id: trade.id as u64,
-                    price: trade.price,
-                    quantity: trade.quantity,
-                    timestamp: trade.ts,
-                    is_buyer_maker: trade.buyer_order_id.is_some(),
-                };
-                
-                if trades_tx.send(trade_data).is_err() {
-                    warn!("Trades channel closed, stopping stream");
-                    break;
+    // Use select_all to process all streams
+    let mut joined_stream = streams.select_all();
+    
+    // Process events using while loop like in the examples  
+    while let Some(event_result) = joined_stream.next().await {
+        match event_result {
+            Event::Item(Ok(event)) => {
+                // Parse based on the event kind
+                match &event.kind {
+                    DataKind::Trade(trade) => {
+                        info!("📈 Received trade: price={}, amount={}, side={:?}", trade.price, trade.amount, trade.side);
+                        
+                        // Convert to TUI format
+                        let trade_data = TradeData {
+                            symbol: "BTCUSDT".to_string(),
+                            trade_id: trade.id.parse().unwrap_or(0),
+                            price: trade.price,
+                            quantity: trade.amount,
+                            timestamp: event.time_exchange,
+                            is_buyer_maker: matches!(trade.side, Side::Sell), // sell trade means buyer was maker
+                        };
+                        
+                        // Send to TUI
+                        if let Err(e) = trades_tx.send(trade_data) {
+                            error!("Failed to send trade data to TUI: {e}");
+                            break;
+                        }
+                    }
+                    DataKind::OrderBook(order_book_event) => {
+                        match order_book_event {
+                            OrderBookEvent::Snapshot(order_book) | OrderBookEvent::Update(order_book) => {
+                                info!("📚 Received order book L2 (sequence: {}): {} bids, {} asks", 
+                                     order_book.sequence(), 
+                                     order_book.bids().levels().len(), 
+                                     order_book.asks().levels().len());
+                                
+                                // Convert to TUI format
+                                let mut bids = BTreeMap::new();
+                                for level in order_book.bids().levels().iter().take(10) {
+                                    let price = level.price.to_string().parse::<f64>().unwrap_or(0.0);
+                                    let amount = level.amount.to_string().parse::<f64>().unwrap_or(0.0);
+                                    bids.insert(OrderedFloat::from(price), amount);
+                                }
+                                
+                                let mut asks = BTreeMap::new();
+                                for level in order_book.asks().levels().iter().take(10) {
+                                    let price = level.price.to_string().parse::<f64>().unwrap_or(0.0);
+                                    let amount = level.amount.to_string().parse::<f64>().unwrap_or(0.0);
+                                    asks.insert(OrderedFloat::from(price), amount);
+                                }
+                                
+                                let order_book_data = OrderBookData {
+                                    symbol: "BTCUSDT".to_string(),
+                                    timestamp: event.time_exchange,
+                                    bids,
+                                    asks,
+                                    last_update_id: order_book.sequence(),
+                                };
+                                
+                                // Send to TUI
+                                if let Err(e) = orderbook_tx.send(order_book_data) {
+                                    error!("Failed to send order book data to TUI: {e}");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    _ => {
+                        // Other event types we don't handle yet
+                        info!("Received other event type: {:?}", event.kind);
+                    }
                 }
             }
-            Err(e) => {
-                error!("Error in trades stream: {}", e);
-                // Continue processando apesar dos erros
+            Event::Item(Err(e)) => {
+                error!("Stream error: {e}");
+                // Continue processing instead of breaking on errors
+                continue;
+            }
+            Event::Reconnecting(exchange_id) => {
+                info!("🔄 Stream reconnecting for exchange: {:?}", exchange_id);
+                continue;
             }
         }
     }
-    */
-    
+        
     Ok(())
 }
-
-/// Stream de order book real usando Toucan framework
-#[allow(dead_code)]
-async fn start_real_orderbook_stream(
-    orderbook_tx: mpsc::UnboundedSender<OrderBookData>,
-    _instrument: (&str, &str, /* MarketDataInstrumentKind */),
-) -> Result<()> {
-    info!("Initializing real OrderBooksL1 stream");
-    
-    /* Template para implementação real:
-    
-    let mut stream = Streams::<OrderBooksL1>::builder()
-        .subscribe([(BinanceFuturesUsd::default(), instrument.0, instrument.1, instrument.2, OrderBooksL1)])
-        .init()
-        .await?;
-    
-    while let Some(orderbook_event) = stream.next().await {
-        match orderbook_event {
-            Ok(book) => {
-                let mut bids = BTreeMap::new();
-                let mut asks = BTreeMap::new();
-                
-                if let Some(best_bid) = book.bid {
-                    bids.insert(OrderedFloat::from(best_bid.price), best_bid.quantity);
-                }
-                
-                if let Some(best_ask) = book.ask {
-                    asks.insert(OrderedFloat::from(best_ask.price), best_ask.quantity);
-                }
-                
-                let orderbook_data = OrderBookData {
-                    symbol: "BTCUSDT".to_string(),
-                    bids,
-                    asks,
-                    timestamp: book.ts,
-                    last_update_id: 0, // L1 books não têm update IDs
-                };
-                
-                if orderbook_tx.send(orderbook_data).is_err() {
-                    warn!("OrderBook channel closed, stopping stream");
-                    break;
-                }
-            }
-            Err(e) => {
-                error!("Error in orderbook stream: {}", e);
-                // Continue processando apesar dos erros
-            }
-        }
-    }
-    */
-    
-    Ok(())
-}
-
-/// Configuração adicional para conexões WebSocket (se necessário)
-#[allow(dead_code)]
-pub struct ToucanConfig {
-    pub reconnect_attempts: u32,
-    pub connection_timeout: std::time::Duration,
-    pub heartbeat_interval: std::time::Duration,
-}
-
-impl Default for ToucanConfig {
-    fn default() -> Self {
-        Self {
-            reconnect_attempts: 5,
-            connection_timeout: std::time::Duration::from_secs(10),
-            heartbeat_interval: std::time::Duration::from_secs(30),
-        }
-    }
-}
-
-/// Instruções de implementação
-pub const IMPLEMENTATION_STEPS: &str = r#"
-Passos para implementar integração real com Toucan:
-
-1. No main.rs:
-   - Descomente os imports do Toucan framework
-   - Substitua start_data_streams por start_real_data_streams
-
-2. No Cargo.toml:
-   - Verifique se todas as dependências do Toucan estão incluídas
-   - Adicione 'futures' se necessário
-
-3. Neste arquivo (toucan_integration.rs):
-   - Descomente os imports marcados com /*
-   - Descomente a implementação real nas funções
-   - Remova os placeholders
-
-4. Teste:
-   - Execute cargo check para verificar compilação
-   - Execute cargo run para testar conexão real
-   - Verifique logs para debugging
-
-5. Debugging:
-   - Use RUST_LOG=debug cargo run para logs detalhados
-   - Verifique conectividade de rede
-   - Monitore consumo de recursos
-"#;
