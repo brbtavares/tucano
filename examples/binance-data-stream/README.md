@@ -1,180 +1,118 @@
 # Binance Data Stream TUI
 
-Uma aplicação TUI (Terminal User Interface) para visualização em tempo real de dados de mercado da Binance usando o framework Toucan.
+Uma aplicação de terminal (TUI) para visualizar dados de mercado da Binance em tempo real usando o framework Toucan.
 
-## 🎯 Funcionalidades
+## Recursos
 
-- **Order Book em Tempo Real**: Visualização de livro de ofertas (bids/asks) para futuros perpétuos de BTC
-- **Stream de Trades**: Histórico de negociações recentes com estatísticas
-- **Interface Intuitiva**: TUI responsiva usando ratatui-rs
-- **Integração Toucan**: Utiliza as crates do framework Toucan para dados de mercado
+- 📊 Visualização do order book BTCUSDT em tempo real
+- 📈 Stream de trades com estatísticas
+- 🖥️ Interface de terminal responsiva com ratatui
+- 🔄 Integração com o framework Toucan (em progresso)
+- ⚡ Dados simulados para demonstração
 
-## 🚀 Como Executar
+## Como usar
 
-
-### Pré-requisitos
-
-
-- Rust 1.70+ instalado
-- Terminal com suporte a cores
-
-
-### Execução
-
+### Executar a aplicação
 
 ```bash
-# Na raiz do projeto Toucan
 cargo run --bin binance-data-stream
-
-# Ou diretamente na subcrate
-cd examples/binance-data-stream
-cargo run
 ```
-
 
 ### Controles
 
+- `q` - Sair da aplicação
+- `r` - Reset das estatísticas
 
-- **`q`**: Sair da aplicação
-- **`r`**: Resetar dados
-- **`Ctrl+C`**: Forçar saída
+## Status da implementação
 
-## 📊 Interface
+### ✅ Completo
 
-A interface é dividida em quatro seções principais:
+- Interface TUI básica com ratatui
+- Widgets para order book e trades
+- Estruturas de dados mock
+- Sistema de canais para comunicação entre threads
+- Layout responsivo
 
+### 🔄 Em progresso - Integração Real com Toucan
 
-### 1. Header
+- Streams de dados reais usando Toucan framework
+- WebSocket conexões com Binance
 
-- Nome do símbolo (BTCUSDT)
-- Timestamp da última atualização
+### Abordagem de integração (Planejada)
 
+A integração real com o framework Toucan será implementada da seguinte forma:
 
-### 2. Estatísticas de Mercado
+```rust
+// Exemplo de integração real (planejada)
+use data::{
+    streams::Streams,
+    subscription::{trade::PublicTrades, book::OrderBooksL1},
+    exchange::binance::futures::BinanceFuturesUsd,
+};
 
-- Best Bid/Ask
-- Spread atual
-- Preço médio
+// Streams de trades reais
+let mut trades_stream = Streams::<PublicTrades>::builder()
+    .subscribe([(BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades)])
+    .init()
+    .await?;
 
-
-### 3. Order Book
-
-- **Lado Esquerdo**: Asks (ordens de venda) em vermelho
-- **Lado Direito**: Bids (ordens de compra) em verde
-- Colunas: Preço, Quantidade, Total
-
-
-### 4. Trades Recentes
-
-- Histórico das últimas negociações
-- Volume e preço médio em 1 minuto
-- Cores: Verde (compra), Vermelho (venda)
-
-## 🏗️ Arquitetura
-
+// Streams de order book reais
+let mut book_stream = Streams::<OrderBooksL1>::builder()
+    .subscribe([(BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL1)])
+    .init()
+    .await?;
 ```
+
+## Arquitetura
+
+```text
 src/
-├── main.rs              # Aplicação principal e setup do terminal
-├── config.rs            # Configurações da aplicação
-├── data/                # Estruturas de dados
-│   ├── mod.rs
-│   ├── orderbook.rs     # Estruturas do order book
-│   └── trades.rs        # Estruturas de trades e histórico
-└── ui/                  # Interface do usuário
-    ├── mod.rs
-    ├── app.rs           # Estado da aplicação
-    ├── orderbook.rs     # Widget do order book
-    └── trades.rs        # Widget de trades
+├── main.rs          # Aplicação principal e setup do terminal
+├── ui/              # Widgets e interface
+│   ├── app.rs       # Estado da aplicação
+│   ├── orderbook.rs # Widget do order book
+│   └── trades.rs    # Widget de trades
+├── data/            # Estruturas de dados
+│   ├── orderbook.rs # Dados do order book
+│   └── trades.rs    # Dados de trades
+└── config.rs        # Configuração
 ```
 
-## 🔧 Próximos Passos
+## Dependências
 
+- **ratatui**: Framework TUI para interfaces de terminal
+- **crossterm**: Controle de terminal multiplataforma
+- **tokio**: Runtime assíncrono
+- **data**: Crate do framework Toucan para market data
+- **integration**: Crate do framework Toucan para protocolos
+- **markets**: Crate do framework Toucan para instrumentos
 
-### Fase 1: Dados Reais (TODO)
+## Desenvolvimento
 
-- [ ] Integrar com WebSocket da Binance usando toucan-data
-- [ ] Implementar reconexão automática
-- [ ] Processar mensagens reais do order book
+### Adicionando novos widgets
 
+1. Crie um novo arquivo em `src/ui/`
+2. Implemente o widget usando ratatui
+3. Adicione ao `src/ui/app.rs`
+4. Atualize o layout principal
 
-### Fase 2: Funcionalidades Avançadas
+### Integrando dados reais
 
-- [ ] Suporte a múltiplos símbolos
-- [ ] Gráficos de preço em tempo real
-- [ ] Alertas de preço/volume
-- [ ] Exportação de dados
+Para ativar a integração real com Toucan:
 
+1. Descomente os imports do Toucan framework
+2. Substitua as funções mock por streams reais
+3. Configure credenciais se necessário
+4. Teste a conexão WebSocket
 
-### Fase 3: Configuração
+## Contribuindo
 
-- [ ] Arquivo de configuração JSON
-- [ ] Personalização de cores/layout
-- [ ] Configuração de símbolos via CLI
+1. Fork o projeto
+2. Crie uma branch para sua feature
+3. Commit suas mudanças
+4. Push para a branch
+5. Abra um Pull Request
 
-## 📦 Dependências
+## Licença
 
-
-### Toucan Framework
-
-- `data`: Streams de dados de mercado
-- `integration`: Tipos e traits comuns
-- `markets`: Abstrações de exchange
-
-
-### TUI & Async
-
-- `ratatui`: Framework para interface terminal
-- `crossterm`: Controle de terminal multiplataforma
-- `tokio`: Runtime assíncrono
-
-
-### Utilitários
-
-- `serde`: Serialização de dados
-- `chrono`: Manipulação de tempo
-- `anyhow`: Tratamento de erros
-
-## 🎨 Exemplo Visual
-
-```
-┌─ Binance Data Stream - BTCUSDT | Last Update: 14:30:25.123 ───────┐
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-┌─ Market Data ──────────────────────────────────────────────────────┐
-│        Best Bid: $45000.00 | Best Ask: $45010.00 | Spread: $10.00 │
-└────────────────────────────────────────────────────────────────────┘
-┌─ Asks (SELL) ──────────────┐┌─ Bids (BUY) ───────────────┐
-│ Price    │ Quantity │ Total ││ Price    │ Quantity │ Total │
-│ 45020.00 │ 0.150    │ 6753  ││ 45000.00 │ 0.150    │ 6750  │
-│ 45015.00 │ 0.125    │ 5627  ││ 44995.00 │ 0.125    │ 5624  │
-└────────────────────────────┘└────────────────────────────┘
-┌─ Recent Trades ────────────────────────────────────────────────────┐
-│ Time     │ Side │ Price    │ Quantity │ Total │
-│ 14:30:25 │ BUY  │ 45005.00 │ 0.0250   │ 1125  │
-│ 14:30:24 │ SELL │ 45003.00 │ 0.0100   │ 450   │
-└────────────────────────────────────────────────────────────────────┘
-┌─ Quit: q | Reset: r ───────────────────────────────────────────────┐
-└────────────────────────────────────────────────────────────────────┘
-```
-
-## 🤝 Contribuição
-
-Este é um exemplo educacional que demonstra:
-
-1. **Integração com Toucan**: Como usar as crates do framework
-2. **TUI com Ratatui**: Desenvolvimento de interfaces terminais
-3. **Async Rust**: Programação assíncrona para streams de dados
-4. **Arquitetura Modular**: Separação de responsabilidades
-
-Melhorias e extensões são bem-vindas!
-
-## 📝 Notas
-
-- **Dados Mock**: Atualmente usa dados simulados para demonstração
-- **Educational Purpose**: Focado em aprendizado e demonstração
-- **Performance**: Otimizado para responsividade da interface
-- **Extensibilidade**: Preparado para integração com dados reais
-
----
-
-*Desenvolvido com ❤️ usando Toucan Framework e Ratatui*
+Este projeto faz parte do framework Toucan.

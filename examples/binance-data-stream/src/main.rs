@@ -15,6 +15,7 @@ use tracing::{info, warn};
 mod ui;
 mod data;
 mod config;
+mod toucan_integration;
 
 use ui::App;
 use data::{OrderBookData, TradeData};
@@ -92,10 +93,77 @@ async fn start_data_streams(
     trades_tx: mpsc::UnboundedSender<TradeData>,
 ) -> Result<()> {
     info!("Starting Binance WebSocket streams for BTCUSDT perpetual futures");
+    info!("Note: Using mock data for demonstration. Real integration coming soon!");
     
-    // TODO: Implementar streams reais usando Toucan data crate
-    // Por enquanto, vamos simular dados para demonstração
+    /* TODO: Implementar integração real com Toucan framework
     
+    Para implementar streams reais, descomente e use este código:
+    
+    use data::{
+        streams::Streams,
+        subscription::{trade::PublicTrades, book::OrderBooksL1},
+        exchange::binance::futures::BinanceFuturesUsd,
+    };
+    use markets::instrument::market_data::kind::MarketDataInstrumentKind;
+    
+    // Criar streams de trades reais
+    let mut trades_stream = Streams::<PublicTrades>::builder()
+        .subscribe([(BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades)])
+        .init()
+        .await?;
+    
+    // Criar streams de order book reais  
+    let mut book_stream = Streams::<OrderBooksL1>::builder()
+        .subscribe([(BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL1)])
+        .init()
+        .await?;
+    
+    // Processar events em paralelo
+    let trades_task = tokio::spawn(async move {
+        while let Some(trade_event) = trades_stream.next().await {
+            if let Ok(trade) = trade_event {
+                let trade_data = TradeData {
+                    symbol: "BTCUSDT".to_string(),
+                    trade_id: trade.id as u64,
+                    price: trade.price,
+                    quantity: trade.quantity,
+                    timestamp: trade.ts,
+                    is_buyer_maker: trade.buyer_order_id.is_some(),
+                };
+                let _ = trades_tx.send(trade_data);
+            }
+        }
+    });
+    
+    let orderbook_task = tokio::spawn(async move {
+        while let Some(book_event) = book_stream.next().await {
+            if let Ok(book) = book_event {
+                let mut bids = BTreeMap::new();
+                let mut asks = BTreeMap::new();
+                
+                if let Some(best_bid) = book.bid {
+                    bids.insert(best_bid.price.into(), best_bid.quantity);
+                }
+                if let Some(best_ask) = book.ask {
+                    asks.insert(best_ask.price.into(), best_ask.quantity);
+                }
+                
+                let orderbook_data = OrderBookData {
+                    symbol: "BTCUSDT".to_string(),
+                    bids,
+                    asks,
+                    timestamp: book.ts,
+                    last_update_id: 0,
+                };
+                let _ = orderbook_tx.send(orderbook_data);
+            }
+        }
+    });
+    
+    let _ = tokio::try_join!(trades_task, orderbook_task);
+    */
+    
+    // Implementação mock atual
     let mut interval = tokio::time::interval(Duration::from_millis(500));
     
     loop {
@@ -104,12 +172,14 @@ async fn start_data_streams(
         // Simulate orderbook data
         let orderbook = OrderBookData::mock_data();
         if orderbook_tx.send(orderbook).is_err() {
+            warn!("OrderBook channel closed, stopping stream");
             break;
         }
         
         // Simulate trade data
         let trade = TradeData::mock_data();
         if trades_tx.send(trade).is_err() {
+            warn!("Trades channel closed, stopping stream");
             break;
         }
     }
