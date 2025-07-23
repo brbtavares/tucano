@@ -2,7 +2,7 @@
 /// Demonstrates full order book depth streaming from Binance
 
 use data::{
-    exchange::binance::spot::BinanceSpot,
+    exchange::binance::futures::BinanceFuturesUsd,
     streams::{Streams, reconnect::stream::ReconnectingStream},
     subscription::book::OrderBooksL2,
 };
@@ -24,29 +24,29 @@ async fn main() {
 
         // Separate WebSocket connection for BTC_USDT stream since it's very high volume
         .subscribe([
-            (BinanceSpot::default(), "btc", "usdt", MarketDataInstrumentKind::Spot, OrderBooksL2),
+            (BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2),
         ])
 
         // Separate WebSocket connection for ETH_USDT stream since it's very high volume
-        .subscribe([
-            (BinanceSpot::default(), "eth", "usdt", MarketDataInstrumentKind::Spot, OrderBooksL2),
-        ])
+        //.subscribe([
+        //    (BinanceFuturesUsd::default(), "eth", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2),
+        //])
 
         // Lower volume Instruments can share a WebSocket connection
-        .subscribe([
-            (BinanceSpot::default(), "xrp", "usdt", MarketDataInstrumentKind::Spot, OrderBooksL2),
-            (BinanceSpot::default(), "sol", "usdt", MarketDataInstrumentKind::Spot, OrderBooksL2),
-            (BinanceSpot::default(), "avax", "usdt", MarketDataInstrumentKind::Spot, OrderBooksL2),
-            (BinanceSpot::default(), "ltc", "usdt", MarketDataInstrumentKind::Spot, OrderBooksL2),
-        ])
+        //.subscribe([
+        //    (BinanceFuturesUsd::default(), "xrp", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2),
+        //    (BinanceFuturesUsd::default(), "sol", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2),
+        //    (BinanceFuturesUsd::default(), "avax", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2),
+        //    (BinanceFuturesUsd::default(), "ltc", "usdt", MarketDataInstrumentKind::Perpetual, OrderBooksL2),
+        //])
         .init()
         .await
         .unwrap();
 
-    // Select the ExchangeId::BinanceSpot stream
+    // Select the ExchangeId::BinanceFuturesUsd stream
     // Note: use `Streams.select(ExchangeId)` to interact with individual exchange streams!
     let mut l2_stream = streams
-        .select(ExchangeId::BinanceSpot)
+        .select(ExchangeId::BinanceFuturesUsd)
         .unwrap()
         .with_error_handler(|error| warn!(?error, "MarketStream generated error"));
 
