@@ -1,3 +1,4 @@
+use tracing::{info, warn};
 use anyhow::Result;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -8,9 +9,12 @@ use ratatui::{
     backend::CrosstermBackend,
     Terminal,
 };
+use tracing_subscriber::{fmt, layer::SubscriberExt, Registry, filter::EnvFilter, Layer};
+use tracing::Subscriber;
+
 use std::{io, time::Duration};
 use tokio::sync::mpsc;
-use tracing::{info, warn};
+
 
 mod ui;
 mod config;
@@ -18,13 +22,29 @@ mod types;
 mod toucan_integration;
 
 use ui::App;
-use types::{OrderBookData, TradeData};
+use types::{OrderBookData, TradeData, LogBuffer};
+//use types::LogBuffer;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Initialize tracing
-    tracing_subscriber::fmt::init();
-    
+    // Initialize tracing with environment filter and colors
+    // Create log buffer for TUI
+    let log_buffer = LogBuffer::new(10000);
+
+    // Custom layer to push logs to buffer
+    let tui_log_layer = TuiLogLayer { buffer: log_buffer.clone() };
+
+    // Compose subscriber
+    let env_filter = match std::env::var("RUST_LOG") {
+        Ok(_) => EnvFilter::from_default_env(),
+        Err(_) => EnvFilter::new("info"),
+    };
+    let subscriber = Registry::default()
+        .with(fmt::Layer::default().with_ansi(true))
+        .with(env_filter)
+        .with(tui_log_layer);
+    tracing::subscriber::set_global_default(subscriber).expect("setting tracing default failed");
+
     info!("Starting Binance Data Stream TUI");
 
     // Setup terminal
@@ -39,7 +59,39 @@ async fn main() -> Result<()> {
     let (trades_tx, trades_rx) = mpsc::unbounded_channel::<TradeData>();
 
     // Create and run app
-    let app = App::new(orderbook_rx, trades_rx);
+    let app = App::new(orderbook_rx, trades_rx, log_buffer);
+// Layer to send logs to TUI log buffer
+struct TuiLogLayer {
+    buffer: LogBuffer,
+}
+
+impl<S> Layer<S> for TuiLogLayer
+where
+    S: Subscriber,
+{
+    fn on_event(&self, event: &tracing::Event<'_>, _ctx: tracing_subscriber::layer::Context<'_, S>) {
+        use std::fmt::Write;
+        struct MsgVisitor<'a> {
+            out: &'a mut String,
+            first: bool,
+        }
+        impl<'a> tracing::field::Visit for MsgVisitor<'a> {
+            fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
+                if self.first {
+                    let _ = write!(self.out, ": {} = {:?}", field.name(), value);
+                    self.first = false;
+                } else {
+                    let _ = write!(self.out, ", {} = {:?}", field.name(), value);
+                }
+            }
+        }
+        let mut msg = String::new();
+        let meta = event.metadata();
+        let _ = write!(msg, "[{}] {}", meta.level(), meta.target());
+        event.record(&mut MsgVisitor { out: &mut msg, first: true });
+        self.buffer.push(msg);
+    }
+}
     let res = run_app(&mut terminal, app, orderbook_tx, trades_tx).await;
 
     // Restore terminal

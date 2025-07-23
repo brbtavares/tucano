@@ -7,28 +7,31 @@ use ratatui::{
 };
 use tokio::sync::mpsc;
 
-use crate::types::{OrderBookData, TradeData, TradesHistory};
-use super::{orderbook::OrderBookWidget, trades::TradesWidget};
+use crate::types::{OrderBookData, TradeData, TradesHistory, LogBuffer};
+use super::{orderbook::OrderBookWidget, trades::TradesWidget, log_buffer::LogBufferWidget};
 
 pub struct App {
-    pub should_quit: bool,
+    //pub should_quit: bool,
     pub orderbook_data: Option<OrderBookData>,
     pub trades_history: TradesHistory,
     orderbook_rx: mpsc::UnboundedReceiver<OrderBookData>,
     trades_rx: mpsc::UnboundedReceiver<TradeData>,
+    pub log_buffer: LogBuffer,
 }
 
 impl App {
     pub fn new(
         orderbook_rx: mpsc::UnboundedReceiver<OrderBookData>,
         trades_rx: mpsc::UnboundedReceiver<TradeData>,
+        log_buffer: LogBuffer,
     ) -> Self {
         Self {
-            should_quit: false,
+            //should_quit: false,
             orderbook_data: None,
             trades_history: TradesHistory::new(1000), // Keep last 1000 trades
             orderbook_rx,
             trades_rx,
+            log_buffer,
         }
     }
 
@@ -52,12 +55,13 @@ impl App {
     pub fn render(&mut self, f: &mut Frame) {
         let size = f.size();
 
-        // Create main layout
+        // Main layout: header, content, log, footer
         let main_layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
                 Constraint::Length(3),  // Header
                 Constraint::Min(10),    // Main content
+                Constraint::Length(10),  // Log window (debug: mostra últimos 10 logs)
                 Constraint::Length(3),  // Footer
             ])
             .split(size);
@@ -80,8 +84,16 @@ impl App {
         // Render trades
         self.render_trades(f, content_layout[1]);
 
+        // Render log window
+        self.render_log_window(f, main_layout[2]);
+
         // Render footer
-        self.render_footer(f, main_layout[2]);
+        self.render_footer(f, main_layout[3]);
+    }
+
+    fn render_log_window(&self, f: &mut Frame, area: Rect) {
+        let log_widget = LogBufferWidget::new(&self.log_buffer);
+        log_widget.render(f, area);
     }
 
     fn render_header(&self, f: &mut Frame, area: Rect) {

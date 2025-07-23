@@ -27,9 +27,6 @@ pub async fn start_real_data_streams(
 ) -> Result<()> {
     info!("🚀 Starting real Toucan framework streams for BTCUSDT perpetual futures");
     
-    // Configure BTCUSDT Perpetual instrument
-    info!("📊 Configuring BTCUSDT Perpetual Futures instrument");
-    
     // Create multi-type streams (trades + order book L2) using builder_multi
     let streams: Streams<MarketStreamResult<MarketDataInstrument, DataKind>> = Streams::builder_multi()
         // Add PublicTrades Stream
@@ -53,7 +50,6 @@ pub async fn start_real_data_streams(
                 // Parse based on the event kind
                 match &event.kind {
                     DataKind::Trade(trade) => {
-                        info!("📈 Received trade: price={}, amount={}, side={:?}", trade.price, trade.amount, trade.side);
                         
                         // Convert to TUI format
                         let trade_data = TradeData {
@@ -73,12 +69,7 @@ pub async fn start_real_data_streams(
                     }
                     DataKind::OrderBook(order_book_event) => {
                         match order_book_event {
-                            OrderBookEvent::Snapshot(order_book) | OrderBookEvent::Update(order_book) => {
-                                info!("📚 Received order book L2 (sequence: {}): {} bids, {} asks", 
-                                     order_book.sequence(), 
-                                     order_book.bids().levels().len(), 
-                                     order_book.asks().levels().len());
-                                
+                            OrderBookEvent::Snapshot(order_book) | OrderBookEvent::Update(order_book) => {                                
                                 // Convert to TUI format
                                 let mut bids = BTreeMap::new();
                                 for level in order_book.bids().levels().iter().take(10) {
