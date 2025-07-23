@@ -36,6 +36,7 @@ impl std::fmt::Display for OrderedFloat {
 }
 
 impl OrderBookData {
+    #[allow(dead_code)]
     pub fn new(symbol: String) -> Self {
         Self {
             symbol,
@@ -44,27 +45,6 @@ impl OrderBookData {
             asks: BTreeMap::new(),
             last_update_id: 0,
         }
-    }
-
-    pub fn mock_data() -> Self {
-        let mut orderbook = Self::new("BTCUSDT".to_string());
-        
-        // Mock bids (descending order - highest first)
-        for i in 0..10 {
-            let price = 45000.0 - (i as f64 * 10.0);
-            let quantity = 0.1 + (i as f64 * 0.05);
-            orderbook.bids.insert(OrderedFloat(price), quantity);
-        }
-        
-        // Mock asks (ascending order - lowest first) 
-        for i in 0..10 {
-            let price = 45010.0 + (i as f64 * 10.0);
-            let quantity = 0.1 + (i as f64 * 0.05);
-            orderbook.asks.insert(OrderedFloat(price), quantity);
-        }
-        
-        orderbook.last_update_id = chrono::Utc::now().timestamp_millis() as u64;
-        orderbook
     }
 
     pub fn get_best_bid(&self) -> Option<(OrderedFloat, f64)> {
