@@ -45,12 +45,12 @@ async fn main() {
 
     // Select the ExchangeId::BinanceSpot stream
     // Note: use `Streams.select(ExchangeId)` to interact with individual exchange streams!
-    let mut l1_stream = streams
+    let mut l2_stream = streams
         .select(ExchangeId::BinanceSpot)
         .unwrap()
         .with_error_handler(|error| warn!(?error, "MarketStream generated error"));
 
-    while let Some(event) = l1_stream.next().await {
+    while let Some(event) = l2_stream.next().await {
         info!("{event:?}");
     }
 }
