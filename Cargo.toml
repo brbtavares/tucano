@@ -28,7 +28,7 @@ strategy = { path = "./strategy", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }
-tracing-subscriber = { version = "0.3.19" }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 # Async
 tokio = { version = "1.42", default-features = false, features = ["macros", "net", "rt-multi-thread", "signal", "time"] }
