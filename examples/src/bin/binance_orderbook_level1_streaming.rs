@@ -1,15 +1,12 @@
 /// Level 1 order book streaming example
 /// Demonstrates best bid/ask data streaming from Binance
-
 use data::{
     exchange::binance::spot::BinanceSpot,
-    streams::{Streams, reconnect::stream::ReconnectingStream},
+    streams::{reconnect::stream::ReconnectingStream, Streams},
     subscription::book::OrderBooksL1,
 };
-use markets::{
-    exchange::ExchangeId, instrument::market_data::kind::MarketDataInstrumentKind,
-};
 use futures_util::StreamExt;
+use markets::{exchange::ExchangeId, instrument::market_data::kind::MarketDataInstrumentKind};
 use tracing::{info, warn};
 
 #[rustfmt::skip]

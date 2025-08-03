@@ -6,7 +6,6 @@ members = [
     "data",
     "execution",
     "examples",
-    "examples/ratatui-data-stream",
     "integration",
     "macros", 
     "markets",

@@ -1,13 +1,12 @@
 /// Binance public trades streaming example
 /// Demonstrates multi-pair trade data streaming with automatic reconnection
-
 use data::{
     exchange::binance::futures::BinanceFuturesUsd,
-    streams::{Streams, reconnect::stream::ReconnectingStream},
+    streams::{reconnect::stream::ReconnectingStream, Streams},
     subscription::trade::PublicTrades,
 };
-use markets::instrument::market_data::kind::MarketDataInstrumentKind;
 use futures_util::StreamExt;
+use markets::instrument::market_data::kind::MarketDataInstrumentKind;
 use tracing::{info, warn};
 
 #[rustfmt::skip]
@@ -26,17 +25,17 @@ async fn main() {
         ])
 
         // Separate WebSocket connection for ETH_USDT stream since it's very high volume
-        .subscribe([
-            (BinanceFuturesUsd::default(), "eth", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-        ])
+        //.subscribe([
+        //    (BinanceFuturesUsd::default(), "eth", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
+        //])
 
         // Lower volume Instruments can share a WebSocket connection
-        .subscribe([
-            (BinanceFuturesUsd::default(), "xrp", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-            (BinanceFuturesUsd::default(), "sol", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-            (BinanceFuturesUsd::default(), "avax", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-            (BinanceFuturesUsd::default(), "ltc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-        ])
+        //.subscribe([
+        //    (BinanceFuturesUsd::default(), "xrp", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
+        //    (BinanceFuturesUsd::default(), "sol", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
+        //    (BinanceFuturesUsd::default(), "avax", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
+        //    (BinanceFuturesUsd::default(), "ltc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
+        //])
         .init()
         .await
         .unwrap();
