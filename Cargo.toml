@@ -9,6 +9,7 @@ members = [
     "integration",
     "macros", 
     "markets",
+    "profit-dll",
     "risk",
     "strategy"
 ]
@@ -22,6 +23,7 @@ markets = { path = "./markets", version = "0.3.1" }
 data = { path = "./data", version = "0.10.1" }
 execution = { path = "./execution", version = "0.5.3" }
 macros = { path = "./macros", version = "0.2.0" }
+profit-dll = { path = "./profit-dll", version = "0.1.0" }
 risk = { path = "./risk", version = "0.1.0" }
 strategy = { path = "./strategy", version = "0.1.0" }
 
@@ -59,6 +61,7 @@ rust_decimal = { version = "1.36.0", features = ["maths"] }
 smol_str = { version = "0.3.2" }
 fnv = { version = "1.0.7" }
 indexmap = { version = "2.6.0" }
+once_cell = { version = "1.19" }
 
 # Crytographic Signatures
 hmac = { version = "0.12.1" }
