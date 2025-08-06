@@ -14,6 +14,7 @@ categories = ["accessibility", "simulation"]
 # Toucan Ecosystem
 integration = { workspace = true }
 markets = { workspace = true }
+profit-dll = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

@@ -18,6 +18,7 @@ use chrono::{DateTime, Utc};
 use futures::Stream;
 use std::future::Future;
 
+pub mod b3;
 pub mod binance;
 pub mod mock;
 

@@ -53,6 +53,9 @@ pub enum ProfitError {
     #[error("Not in hard logout state")]
     NotHardLogout,
     
+    #[error("Connection failure: {0}")]
+    ConnectionFailure(String),
+    
     #[error("Serie has no history")]
     SerieNoHistory,
     
