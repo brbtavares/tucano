@@ -7,11 +7,11 @@
 
 use profit_dll::{
     ProfitConnector, CallbackEvent, AssetIdentifier, AccountIdentifier, 
-    OrderSide, SendOrder, exchanges
+    OrderSide, SendOrder
 };
 use std::collections::HashMap;
-use tokio::time::{sleep, Duration};
-use tracing::{info, warn, error};
+use tokio::time::Duration;
+use tracing::{info, error};
 use rust_decimal::Decimal;
 
 /// Estratégia simples de trading
@@ -74,21 +74,19 @@ impl SimpleStrategy {
         Ok(receiver)
     }
     
-    pub async fn process_trade(&mut self, trade: &profit_dll::Trade) -> Result<(), Box<dyn std::error::Error>> {
-        let ticker = trade.asset_id.ticker().to_string();
-        
+    pub async fn process_trade(&mut self, ticker: &str, price: Decimal) -> Result<(), Box<dyn std::error::Error>> {
         // Atualizar último preço
-        self.last_prices.insert(ticker.clone(), trade.price);
+        self.last_prices.insert(ticker.to_string(), price);
         
         // Verificar se é um dos nossos ativos alvo
         if !self.target_assets.iter().any(|a| a.ticker() == ticker) {
             return Ok(());
         }
         
-        info!("Processando trade: {} @ {}", ticker, trade.price);
+        info!("Processando trade: {} @ {}", ticker, price);
         
         // Estratégia simples: comprar na baixa, vender na alta
-        self.evaluate_trading_opportunity(&ticker, trade.price).await?;
+        self.evaluate_trading_opportunity(ticker, price).await?;
         
         Ok(())
     }
@@ -254,22 +252,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         info!("Conexão: {:?} -> {}", connection_type, result);
                     }
                     
-                    CallbackEvent::NewTrade(trade) => {
+                    CallbackEvent::NewTrade { 
+                        ticker, price, .. 
+                    } => {
                         // Processar trade através da estratégia
-                        if let Err(e) = strategy.process_trade(&trade).await {
+                        if let Err(e) = strategy.process_trade(&ticker, price).await {
                             error!("Erro ao processar trade: {}", e);
                         }
                     }
                     
-                    CallbackEvent::OrderChanged(order) => {
-                        info!("Ordem atualizada: {} - status: {}", 
-                              order.order_id.cl_order_id, order.order_status);
-                    }
+                    // CallbackEvent::OrderChanged não existe na implementação atual
+                    // Este seria um evento futuro para mudanças de ordem
                     
-                    CallbackEvent::PriceBookUpdate { asset_id, .. } => {
+                    CallbackEvent::PriceBookOffer { ticker, .. } | 
+                    CallbackEvent::OfferBookBid { ticker, .. } => {
                         // Poderia usar para melhor timing de entrada/saída
                         if event_count % 50 == 0 { // Log ocasional
-                            info!("Book update: {}", asset_id.ticker());
+                            info!("Book update: {}", ticker);
                         }
                     }
                     
