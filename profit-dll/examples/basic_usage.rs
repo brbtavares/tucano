@@ -7,11 +7,12 @@
 //! - Processar eventos assíncronos
 
 use profit_dll::{
-    ProfitConnector, CallbackEvent, AssetIdentifier, AccountIdentifier, 
-    OrderSide, SendOrder, exchanges
+    ProfitConnector, CallbackEvent, exchanges
+    // Tipos comentados pois estão usados apenas no código comentado:
+    // AssetIdentifier, AccountIdentifier, OrderSide, SendOrder, 
 };
 use tokio::time::{sleep, Duration};
-use tracing::{info, warn, error};
+use tracing::{info, warn};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -123,7 +124,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("Processando eventos... (Ctrl+C para parar)");
     
     let mut trade_count = 0;
-    let mut max_trades = 50; // Limitar para exemplo
+    let max_trades = 50; // Limitar para exemplo
     
     // Timeout para exemplo
     let timeout = sleep(Duration::from_secs(60));
@@ -139,12 +140,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                               connection_type, result);
                     }
                     
-                    CallbackEvent::NewTrade(trade) => {
-                        info!("Novo trade: {} @ {} - vol: {} ({})", 
-                              trade.asset_id.ticker(),
-                              trade.price,
-                              trade.volume,
-                              trade.trade_date.format("%H:%M:%S"));
+                    CallbackEvent::NewTrade { 
+                        ticker, exchange, price, volume, timestamp, .. 
+                    } => {
+                        info!("Novo trade: {}@{} @ {} - vol: {} ({})", 
+                              ticker, exchange, price, volume,
+                              timestamp.format("%H:%M:%S"));
                         
                         trade_count += 1;
                         if trade_count >= max_trades {
@@ -153,43 +154,47 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         }
                     }
                     
-                    CallbackEvent::DailyData(daily) => {
+                    CallbackEvent::DailySummary { 
+                        ticker, open, high, low, close, volume, .. 
+                    } => {
                         info!("Dados diários {}: O:{} H:{} L:{} C:{} V:{}", 
-                              daily.asset_id.ticker(),
-                              daily.open, daily.high, daily.low, daily.close, daily.volume);
+                              ticker, open, high, low, close, volume);
                     }
                     
-                    CallbackEvent::PriceBookUpdate { asset_id, action, position, side, entry } => {
-                        if let Some(entry) = entry {
-                            info!("Book atualizado {}: {:?} pos:{} side:{} -> {} x {}", 
-                                  asset_id.ticker(), action, position, side, 
-                                  entry.price, entry.quantity);
-                        }
+                    CallbackEvent::PriceBookOffer { 
+                        ticker, action, price, position, .. 
+                    } => {
+                        info!("Book Offer atualizado {}: {:?} pos:{} -> {}", 
+                              ticker, action, position, price);
                     }
                     
-                    CallbackEvent::OrderChanged(order) => {
-                        info!("Ordem modificada: {} - status: {} - qty: {}/{}", 
-                              order.order_id.cl_order_id,
-                              order.order_status,
-                              order.traded_quantity,
-                              order.quantity);
+                    CallbackEvent::OfferBookBid { 
+                        ticker, action, price, position, .. 
+                    } => {
+                        info!("Book Bid atualizado {}: {:?} pos:{} -> {}", 
+                              ticker, action, position, price);
                     }
                     
-                    CallbackEvent::AccountInfo { broker_id, broker_name, account_id, account_holder } => {
+                    // CallbackEvent::OrderChanged não existe na implementação atual
+                    // Este seria um evento futuro para mudanças de ordem
+                    
+                    CallbackEvent::AccountChanged { 
+                        account_id, broker_id, account_holder, broker_name 
+                    } => {
                         info!("Conta: {} ({}) - {} [{}]", 
                               account_id, broker_id, account_holder, broker_name);
                     }
                     
-                    CallbackEvent::Progress { asset_id, progress } => {
-                        info!("Progresso {}: {}%", asset_id.ticker(), progress);
+                    CallbackEvent::ProgressChanged { 
+                        ticker, progress, .. 
+                    } => {
+                        info!("Progresso {}: {}%", ticker, progress);
                     }
                     
-                    CallbackEvent::InvalidTicker(asset_id) => {
-                        warn!("Ticker inválido: {}@{}", asset_id.ticker(), asset_id.exchange());
-                    }
-                    
-                    _ => {
-                        // Outros eventos...
+                    CallbackEvent::InvalidTicker { 
+                        ticker, exchange, .. 
+                    } => {
+                        warn!("Ticker inválido: {}@{}", ticker, exchange);
                     }
                 }
             }
