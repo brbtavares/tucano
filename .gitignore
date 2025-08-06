@@ -2,6 +2,16 @@
 Cargo.lock
 /target
 
+# Native libraries (DLLs, SOs, etc.)
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+profit-dll/lib/*.dll
+profit-dll/lib/*.so
+profit-dll/lib/*.dylib
+
 # utils
 fix_markdown.py
 

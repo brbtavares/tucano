@@ -72,7 +72,7 @@ pub struct EngineState<GlobalData, InstrumentData> {
     /// State of every asset (eg/ "btc", "usdt", etc.) being tracked by the `Engine`.
     pub assets: AssetStates,
 
-    /// State of every instrument (eg/ "okx_spot_btc_usdt", "bybit_perpetual_btc_usdt", etc.)
+    /// State of every instrument (eg/ "b3_spot_petr4_brl", "binance_spot_btc_usdt", etc.)
     /// being tracked by the `Engine`.
     pub instruments: InstrumentStates<InstrumentData, ExchangeIndex, AssetIndex, InstrumentIndex>,
 }

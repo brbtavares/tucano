@@ -40,19 +40,53 @@ pub struct DllLoader {
 
 #[cfg(windows)]
 impl DllLoader {
-    /// Carrega a DLL do caminho especificado ou padrão
+    /// Carrega a DLL do caminho especificado ou procura automaticamente
     pub fn new(dll_path: Option<&str>) -> Result<Self> {
-        let path = dll_path.unwrap_or("ProfitDLL.dll");
-        let wide_path = to_wide_string(path);
+        let path = if let Some(custom_path) = dll_path {
+            custom_path.to_string()
+        } else {
+            // Procurar automaticamente em locais padrão
+            Self::find_dll_path()?
+        };
+        
+        let wide_path = to_wide_string(&path);
         
         unsafe {
             let handle = LoadLibraryW(PCWSTR(wide_path.as_ptr()))?;
             if handle.0 == 0 {
-                return Err(ProfitError::LibraryNotFound(path.to_string()));
+                return Err(ProfitError::LibraryNotFound(path));
             }
             
+            tracing::debug!("ProfitDLL loaded successfully from: {}", path);
             Ok(Self { handle })
         }
+    }
+
+    /// Encontra automaticamente o caminho da DLL
+    fn find_dll_path() -> Result<String> {
+        let possible_paths = vec![
+            // 1. Diretório lib/ relativo ao projeto
+            "./lib/ProfitDLL.dll",
+            "../lib/ProfitDLL.dll", 
+            "../../lib/ProfitDLL.dll",
+            
+            // 2. Diretório de trabalho atual
+            "./ProfitDLL.dll",
+            
+            // 3. PATH do sistema (Windows procura automaticamente)
+            "ProfitDLL.dll",
+        ];
+
+        for path in possible_paths {
+            if std::path::Path::new(path).exists() {
+                tracing::debug!("Found ProfitDLL at: {}", path);
+                return Ok(path.to_string());
+            }
+        }
+
+        // Se não encontrar, usa o nome padrão e deixa o Windows procurar no PATH
+        tracing::warn!("ProfitDLL not found in standard locations, trying system PATH");
+        Ok("ProfitDLL.dll".to_string())
     }
 
     /// Obtém ponteiro para função da DLL

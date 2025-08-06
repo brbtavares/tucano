@@ -34,46 +34,14 @@ pub enum ExchangeId {
     Other,
     Simulated,
     Mock,
+    // Brazilian Stock Exchange (B3)
+    B3,
+    // Binance (kept as model for crypto)
     BinanceFuturesCoin,
     BinanceFuturesUsd,
     BinanceOptions,
     BinancePortfolioMargin,
     BinanceSpot,
-    BinanceUs,
-    Bitazza,
-    Bitfinex,
-    Bitflyer,
-    Bitget,
-    Bitmart,
-    BitmartFuturesUsd,
-    Bitmex,
-    Bitso,
-    Bitstamp,
-    Bitvavo,
-    Bithumb,
-    BybitPerpetualsUsd,
-    BybitSpot,
-    Cexio,
-    Coinbase,
-    CoinbaseInternational,
-    Cryptocom,
-    Deribit,
-    GateioFuturesBtc,
-    GateioFuturesUsd,
-    GateioOptions,
-    GateioPerpetualsBtc,
-    GateioPerpetualsUsd,
-    GateioSpot,
-    Gemini,
-    Hitbtc,
-    #[serde(alias = "huobi")]
-    Htx,
-    Kraken,
-    Kucoin,
-    Liquid,
-    Mexc,
-    Okx,
-    Poloniex,
 }
 
 impl ExchangeId {
@@ -83,62 +51,12 @@ impl ExchangeId {
             ExchangeId::Other => "other",
             ExchangeId::Simulated => "simulated",
             ExchangeId::Mock => "mock",
+            ExchangeId::B3 => "b3",
             ExchangeId::BinanceFuturesCoin => "binance_futures_coin",
             ExchangeId::BinanceFuturesUsd => "binance_futures_usd",
             ExchangeId::BinanceOptions => "binance_options",
             ExchangeId::BinancePortfolioMargin => "binance_portfolio_margin",
             ExchangeId::BinanceSpot => "binance_spot",
-            ExchangeId::BinanceUs => "binance_us",
-            ExchangeId::Bitazza => "bitazza",
-            ExchangeId::Bitfinex => "bitfinex",
-            ExchangeId::Bitflyer => "bitflyer",
-            ExchangeId::Bitget => "bitget",
-            ExchangeId::Bitmart => "bitmart",
-            ExchangeId::BitmartFuturesUsd => "bitmart_futures_usd",
-            ExchangeId::Bitmex => "bitmex",
-            ExchangeId::Bitso => "bitso",
-            ExchangeId::Bitstamp => "bitstamp",
-            ExchangeId::Bitvavo => "bitvavo",
-            ExchangeId::Bithumb => "bithumb",
-            ExchangeId::BybitPerpetualsUsd => "bybit_perpetuals_usd",
-            ExchangeId::BybitSpot => "bybit_spot",
-            ExchangeId::Cexio => "cexio",
-            ExchangeId::Coinbase => "coinbase",
-            ExchangeId::CoinbaseInternational => "coinbase_international",
-            ExchangeId::Cryptocom => "cryptocom",
-            ExchangeId::Deribit => "deribit",
-            ExchangeId::GateioFuturesBtc => "gateio_futures_btc",
-            ExchangeId::GateioFuturesUsd => "gateio_futures_usd",
-            ExchangeId::GateioOptions => "gateio_options",
-            ExchangeId::GateioPerpetualsBtc => "gateio_perpetuals_btc",
-            ExchangeId::GateioPerpetualsUsd => "gateio_perpetuals_usd",
-            ExchangeId::GateioSpot => "gateio_spot",
-            ExchangeId::Gemini => "gemini",
-            ExchangeId::Hitbtc => "hitbtc",
-            ExchangeId::Htx => "htx", // huobi alias
-            ExchangeId::Kraken => "kraken",
-            ExchangeId::Kucoin => "kucoin",
-            ExchangeId::Liquid => "liquid",
-            ExchangeId::Mexc => "mexc",
-            ExchangeId::Okx => "okx",
-            ExchangeId::Poloniex => "poloniex",
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_de_exchange_id() {
-        assert_eq!(
-            serde_json::from_str::<ExchangeId>(r#""htx""#).unwrap(),
-            ExchangeId::Htx
-        );
-        assert_eq!(
-            serde_json::from_str::<ExchangeId>(r#""huobi""#).unwrap(),
-            ExchangeId::Htx
-        );
     }
 }

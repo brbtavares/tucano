@@ -197,7 +197,7 @@ mod tests {
         // Add instruments from different exchanges
         let indexed = IndexedInstrumentsBuilder::default()
             .add_instrument(instrument(ExchangeId::BinanceSpot, "BTC", "USDT"))
-            .add_instrument(instrument(ExchangeId::Coinbase, "BTC", "USD"))
+            .add_instrument(instrument(ExchangeId::B3, "PETR4", "BRL"))
             .build();
 
         // Should maintain separate indices for same asset on different exchanges
@@ -250,12 +250,12 @@ mod tests {
         // Add instruments in any order
         let indexed = IndexedInstrumentsBuilder::default()
             .add_instrument(instrument(ExchangeId::BinanceSpot, "BTC", "USDT"))
-            .add_instrument(instrument(ExchangeId::Coinbase, "ETH", "USD"))
+            .add_instrument(instrument(ExchangeId::B3, "VALE3", "BRL"))
             .build();
 
         // Verify exchanges are ordered by input sequence
         assert_eq!(indexed.exchanges()[0].value, ExchangeId::BinanceSpot);
-        assert_eq!(indexed.exchanges()[1].value, ExchangeId::Coinbase);
+        assert_eq!(indexed.exchanges()[1].value, ExchangeId::B3);
 
         // Verify exchanges are ordered by input sequence
         assert_eq!(
@@ -268,11 +268,11 @@ mod tests {
         );
         assert_eq!(
             indexed.assets()[2].value,
-            exchange_asset(ExchangeId::Coinbase, "ETH")
+            exchange_asset(ExchangeId::B3, "VALE3")
         );
         assert_eq!(
             indexed.assets()[3].value,
-            exchange_asset(ExchangeId::Coinbase, "USD")
+            exchange_asset(ExchangeId::B3, "BRL")
         );
 
         // Verify instruments are ordered by input sequence
@@ -295,9 +295,9 @@ mod tests {
         assert_eq!(
             indexed.instruments()[1].value,
             Instrument {
-                exchange: Keyed::new(ExchangeIndex(1), ExchangeId::Coinbase),
+                exchange: Keyed::new(ExchangeIndex(1), ExchangeId::B3),
                 name_exchange: InstrumentNameExchange::new("ETH_USD"),
-                name_internal: InstrumentNameInternal::new("coinbase-eth_usd"),
+                name_internal: InstrumentNameInternal::new("b3-vale3_brl"),
                 underlying: Underlying {
                     base: AssetIndex(2),
                     quote: AssetIndex(3),

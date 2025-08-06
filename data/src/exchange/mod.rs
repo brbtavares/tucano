@@ -11,30 +11,11 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{fmt::Debug, time::Duration};
 use url::Url;
 
+/// `B3` [`Connector`] and [`StreamSelector`] implementations for Brazilian stock exchange.
+pub mod b3;
+
 /// `BinanceSpot` & `BinanceFuturesUsd` [`Connector`] and [`StreamSelector`] implementations.
 pub mod binance;
-
-/// `Bitfinex` [`Connector`] and [`StreamSelector`] implementations.
-pub mod bitfinex;
-
-/// `Bitmex [`Connector`] and [`StreamSelector`] implementations.
-pub mod bitmex;
-
-/// `Bybit` ['Connector'] and ['StreamSelector'] implementation
-pub mod bybit;
-
-/// `Coinbase` [`Connector`] and [`StreamSelector`] implementations.
-pub mod coinbase;
-
-/// `GateioSpot`, `GateioFuturesUsd` & `GateioFuturesBtc` [`Connector`] and [`StreamSelector`]
-/// implementations.
-pub mod gateio;
-
-/// `Kraken` [`Connector`] and [`StreamSelector`] implementations.
-pub mod kraken;
-
-/// `Okx` [`Connector`] and [`StreamSelector`] implementations.
-pub mod okx;
 
 /// Defines the generic [`ExchangeSub`] containing a market and channel combination used by an
 /// exchange [`Connector`] to build [`WsMessage`] subscription payloads.
@@ -77,7 +58,7 @@ where
     ///
     /// ### Examples
     /// - [`BinanceChannel("@depth@100ms")`](binance::channel::BinanceChannel)
-    /// - [`KrakenChannel("trade")`](kraken::channel::KrakenChannel)
+    /// - [`BinanceChannel("trade")`](binance::channel::BinanceChannel)
     type Channel: AsRef<str>;
 
     /// Type that defines how to translate a Toucan
@@ -86,7 +67,7 @@ where
     ///
     /// ### Examples
     /// - [`BinanceMarket("btcusdt")`](binance::market::BinanceMarket)
-    /// - [`KrakenMarket("BTC/USDT")`](kraken::market::KrakenMarket)
+    /// - [`BinanceMarket("BTCUSDT")`](binance::market::BinanceMarket)
     type Market: AsRef<str>;
 
     /// [`Subscriber`] type that establishes a connection with the exchange server, and actions

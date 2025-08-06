@@ -100,7 +100,7 @@ where
             None => return table,
         };
 
-        // Header row (eg/ Metric | bybit_btc_usdt | okx_eth_usdt | ... )
+        // Header row (eg/ Metric | binance_btc_usdt | b3_petr4_brl | ... )
         let mut header_row = Row::new(vec![Cell::new("").style_spec("bcB")]);
         for instrument in self.instruments.keys() {
             header_row.add_cell(Cell::new(instrument.name().as_str()).style_spec("bcB"));

@@ -27,18 +27,27 @@ pub struct ProfitConnector {
 impl ProfitConnector {
     /// Cria uma nova instância do conector
     /// 
+    /// A DLL será procurada automaticamente em:
+    /// 1. Caminho especificado (se fornecido)
+    /// 2. `./lib/ProfitDLL.dll` (diretório lib/ do projeto)
+    /// 3. `./ProfitDLL.dll` (diretório atual)
+    /// 4. PATH do sistema
+    /// 
     /// # Argumentos
-    /// * `dll_path` - Caminho opcional para a DLL (usa "ProfitDLL.dll" se None)
+    /// * `dll_path` - Caminho opcional para a DLL
     /// 
     /// # Exemplo
     /// ```rust,no_run
     /// use profit_dll::ProfitConnector;
     /// 
-    /// // Usa DLL no PATH do sistema
+    /// // Procura automaticamente (recomendado)
     /// let connector = ProfitConnector::new(None)?;
     /// 
     /// // Usa DLL em caminho específico
     /// let connector = ProfitConnector::new(Some("C:\\MyApp\\ProfitDLL.dll"))?;
+    /// 
+    /// // Usa DLL na pasta lib/ do projeto
+    /// let connector = ProfitConnector::new(Some("./lib/ProfitDLL.dll"))?;
     /// # Ok::<(), profit_dll::ProfitError>(())
     /// ```
     pub fn new(dll_path: Option<&str>) -> Result<Self> {

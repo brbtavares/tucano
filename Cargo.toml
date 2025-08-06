@@ -5,7 +5,6 @@ members = [
     "core",
     "data",
     "execution",
-    "examples",
     "integration",
     "macros", 
     "markets",

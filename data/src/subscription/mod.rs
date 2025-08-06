@@ -193,27 +193,17 @@ pub fn exchange_supports_instrument_kind(
 
     match (exchange, instrument_kind) {
         // Spot
-        (
-            BinanceFuturesUsd | Bitmex | BybitPerpetualsUsd | GateioPerpetualsUsd
-            | GateioPerpetualsBtc,
-            Spot,
-        ) => false,
+        (BinanceFuturesUsd, Spot) => false,
         (_, Spot) => true,
 
-        // Future
-        (GateioFuturesUsd | GateioFuturesBtc | Okx, Future { .. }) => true,
+        // Future - futures markets only
         (_, Future { .. }) => false,
 
-        // Perpetual
-        (
-            BinanceFuturesUsd | Bitmex | Okx | BybitPerpetualsUsd | GateioPerpetualsUsd
-            | GateioPerpetualsBtc,
-            Perpetual,
-        ) => true,
+        // Perpetual - only futures exchanges
+        (BinanceFuturesUsd, Perpetual) => true,
         (_, Perpetual) => false,
 
-        // Option
-        (GateioOptions | Okx, Option { .. }) => true,
+        // Option - no supported options exchanges currently
         (_, Option { .. }) => false,
     }
 }
@@ -260,19 +250,7 @@ pub fn exchange_supports_instrument_kind_sub_kind(
             Perpetual,
             PublicTrades | OrderBooksL1 | OrderBooksL2 | Liquidations,
         ) => true,
-        (Bitfinex, Spot, PublicTrades) => true,
-        (Bitmex, Perpetual, PublicTrades) => true,
-        (BybitSpot, Spot, PublicTrades | OrderBooksL1 | OrderBooksL2) => true,
-        (BybitPerpetualsUsd, Perpetual, PublicTrades | OrderBooksL1 | OrderBooksL2) => true,
-        (Coinbase, Spot, PublicTrades) => true,
-        (GateioSpot, Spot, PublicTrades) => true,
-        (GateioFuturesUsd, Future { .. }, PublicTrades) => true,
-        (GateioFuturesBtc, Future { .. }, PublicTrades) => true,
-        (GateioPerpetualsUsd, Perpetual, PublicTrades) => true,
-        (GateioPerpetualsBtc, Perpetual, PublicTrades) => true,
-        (GateioOptions, Option { .. }, PublicTrades) => true,
-        (Kraken, Spot, PublicTrades | OrderBooksL1) => true,
-        (Okx, Spot | Future { .. } | Perpetual | Option { .. }, PublicTrades) => true,
+        (B3, Spot, PublicTrades | OrderBooksL1) => true,
 
         (_, _, _) => false,
     }
@@ -336,7 +314,6 @@ mod tests {
     mod subscription {
         use super::*;
         use crate::{
-            exchange::{coinbase::Coinbase, okx::Okx},
             subscription::trade::PublicTrades,
         };
         use markets::instrument::market_data::MarketDataInstrument;
@@ -346,30 +323,10 @@ mod tests {
             use crate::{
                 exchange::{
                     binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},
-                    gateio::perpetual::GateioPerpetualsUsd,
-                    okx::Okx,
                 },
                 subscription::{book::OrderBooksL2, trade::PublicTrades},
             };
             use markets::instrument::market_data::MarketDataInstrument;
-
-            #[test]
-            fn test_subscription_okx_spot_public_trades() {
-                let input = r#"
-                {
-                    "exchange": "okx",
-                    "base": "btc",
-                    "quote": "usdt",
-                    "instrument_kind": "spot",
-                    "kind": "public_trades"
-                }
-                "#;
-
-                serde_json::from_str::<Subscription<Okx, MarketDataInstrument, PublicTrades>>(
-                    input,
-                )
-                .unwrap();
-            }
 
             #[test]
             fn test_subscription_binance_spot_public_trades() {
@@ -403,149 +360,6 @@ mod tests {
                     Subscription<BinanceFuturesUsd, MarketDataInstrument, OrderBooksL2>,
                 >(input)
                 .unwrap();
-            }
-
-            #[test]
-            fn subscription_gateio_futures_usd_public_trades() {
-                let input = r#"
-                {
-                    "exchange": "gateio_perpetuals_usd",
-                    "base": "btc",
-                    "quote": "usdt",
-                    "instrument_kind": "perpetual",
-                    "kind": "public_trades"
-                }
-                "#;
-
-                serde_json::from_str::<
-                    Subscription<GateioPerpetualsUsd, MarketDataInstrument, PublicTrades>,
-                >(input)
-                .unwrap();
-            }
-        }
-
-        #[test]
-        fn test_validate_bitfinex_public_trades() {
-            struct TestCase {
-                input: Subscription<Coinbase, MarketDataInstrument, PublicTrades>,
-                expected:
-                    Result<Subscription<Coinbase, MarketDataInstrument, PublicTrades>, SocketError>,
-            }
-
-            let tests = vec![
-                TestCase {
-                    // TC0: Valid Coinbase Spot PublicTrades subscription
-                    input: Subscription::from((
-                        Coinbase,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Spot,
-                        PublicTrades,
-                    )),
-                    expected: Ok(Subscription::from((
-                        Coinbase,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Spot,
-                        PublicTrades,
-                    ))),
-                },
-                TestCase {
-                    // TC1: Invalid Coinbase FuturePerpetual PublicTrades subscription
-                    input: Subscription::from((
-                        Coinbase,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Perpetual,
-                        PublicTrades,
-                    )),
-                    expected: Err(SocketError::Unsupported {
-                        entity: "".to_string(),
-                        item: "".to_string(),
-                    }),
-                },
-            ];
-
-            for (index, test) in tests.into_iter().enumerate() {
-                let actual = test.input.validate();
-                match (actual, test.expected) {
-                    (Ok(actual), Ok(expected)) => {
-                        assert_eq!(actual, expected, "TC{} failed", index)
-                    }
-                    (Err(_), Err(_)) => {
-                        // Test passed
-                    }
-                    (actual, expected) => {
-                        // Test failed
-                        panic!(
-                            "TC{index} failed because actual != expected. \nActual: {actual:?}\nExpected: {expected:?}\n"
-                        );
-                    }
-                }
-            }
-        }
-
-        #[test]
-        fn test_validate_okx_public_trades() {
-            struct TestCase {
-                input: Subscription<Okx, MarketDataInstrument, PublicTrades>,
-                expected:
-                    Result<Subscription<Okx, MarketDataInstrument, PublicTrades>, SocketError>,
-            }
-
-            let tests = vec![
-                TestCase {
-                    // TC0: Valid Okx Spot PublicTrades subscription
-                    input: Subscription::from((
-                        Okx,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Spot,
-                        PublicTrades,
-                    )),
-                    expected: Ok(Subscription::from((
-                        Okx,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Spot,
-                        PublicTrades,
-                    ))),
-                },
-                TestCase {
-                    // TC1: Valid Okx FuturePerpetual PublicTrades subscription
-                    input: Subscription::from((
-                        Okx,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Perpetual,
-                        PublicTrades,
-                    )),
-                    expected: Ok(Subscription::from((
-                        Okx,
-                        "base",
-                        "quote",
-                        MarketDataInstrumentKind::Perpetual,
-                        PublicTrades,
-                    ))),
-                },
-            ];
-
-            for (index, test) in tests.into_iter().enumerate() {
-                let actual = test.input.validate();
-                match (actual, test.expected) {
-                    (Ok(actual), Ok(expected)) => {
-                        assert_eq!(actual, expected, "TC{} failed", index)
-                    }
-                    (Err(_), Err(_)) => {
-                        // Test passed
-                    }
-                    (actual, expected) => {
-                        // Test failed
-                        panic!(
-                            "TC{index} failed because actual != expected. \nActual: {actual:?}\nExpected: {expected:?}\n"
-                        );
-                    }
-                }
             }
         }
     }

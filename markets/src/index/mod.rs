@@ -277,7 +277,6 @@ mod tests {
         let instruments = vec![
             instrument(ExchangeId::BinanceSpot, "BTC", "USDT"),
             instrument(ExchangeId::BinanceSpot, "ETH", "USDT"),
-            instrument(ExchangeId::Coinbase, "BTC", "USD"),
         ];
 
         let indexed = IndexedInstruments::new(instruments);
@@ -290,31 +289,24 @@ mod tests {
         // Verify exchanges
         let exchanges: Vec<_> = indexed.exchanges().iter().map(|e| e.value).collect();
         assert!(exchanges.contains(&ExchangeId::BinanceSpot));
-        assert!(exchanges.contains(&ExchangeId::Coinbase));
     }
 
     #[test]
     fn test_find_exchange_index() {
         let instruments = vec![
             instrument(ExchangeId::BinanceSpot, "BTC", "USDT"),
-            instrument(ExchangeId::Coinbase, "ETH", "USD"),
         ];
         let indexed = IndexedInstruments::new(instruments);
 
         // Test finding existing exchanges
         assert!(indexed.find_exchange_index(ExchangeId::BinanceSpot).is_ok());
-        assert!(indexed.find_exchange_index(ExchangeId::Coinbase).is_ok());
 
-        // Test finding non-existent exchange
-        let err = indexed.find_exchange_index(ExchangeId::Kraken).unwrap_err();
-        assert!(matches!(err, IndexError::ExchangeIndex(_)));
     }
 
     #[test]
     fn test_find_asset_index() {
         let instruments = vec![
             instrument(ExchangeId::BinanceSpot, "BTC", "USDT"),
-            instrument(ExchangeId::Coinbase, "ETH", "USD"),
         ];
         let indexed = IndexedInstruments::new(instruments);
 
@@ -329,17 +321,6 @@ mod tests {
                 .find_asset_index(ExchangeId::BinanceSpot, &AssetNameInternal::from("usdt"))
                 .is_ok()
         );
-        assert!(
-            indexed
-                .find_asset_index(ExchangeId::Coinbase, &AssetNameInternal::from("eth"))
-                .is_ok()
-        );
-
-        // Test finding asset with wrong exchange
-        let err = indexed
-            .find_asset_index(ExchangeId::Kraken, &AssetNameInternal::from("btc"))
-            .unwrap_err();
-        assert!(matches!(err, IndexError::AssetIndex(_)));
 
         // Test finding non-existent asset
         let err = indexed
@@ -355,7 +336,6 @@ mod tests {
     fn test_find_instrument_index() {
         let instruments = vec![
             instrument(ExchangeId::BinanceSpot, "btc", "usdt"),
-            instrument(ExchangeId::Coinbase, "eth", "usd"),
         ];
 
         let indexed = IndexedInstruments::new(instruments);
@@ -367,12 +347,6 @@ mod tests {
                 .find_instrument_index(ExchangeId::BinanceSpot, &btc_usdt)
                 .is_ok()
         );
-
-        // Test finding instrument with wrong exchange
-        let err = indexed
-            .find_instrument_index(ExchangeId::Kraken, &btc_usdt)
-            .unwrap_err();
-        assert!(matches!(err, IndexError::AssetIndex(_)));
 
         // Test finding non-existent instrument
         let nonexistent = InstrumentNameInternal::from("nonexistent");
@@ -389,19 +363,11 @@ mod tests {
                 key: ExchangeIndex(0),
                 value: ExchangeId::BinanceSpot,
             },
-            Keyed {
-                key: ExchangeIndex(1),
-                value: ExchangeId::Coinbase,
-            },
         ];
 
         // Test finding existing exchange
         let result = find_exchange_by_exchange_id(&exchanges, &ExchangeId::BinanceSpot);
         assert_eq!(result.unwrap(), ExchangeIndex(0));
-
-        // Test finding non-existent exchange
-        let err = find_exchange_by_exchange_id(&exchanges, &ExchangeId::Kraken).unwrap_err();
-        assert!(matches!(err, IndexError::ExchangeIndex(_)));
     }
 
     #[test]
@@ -431,15 +397,6 @@ mod tests {
         );
         assert_eq!(result.unwrap(), AssetIndex(0));
 
-        // Test finding asset with wrong exchange
-        let err = find_asset_by_exchange_and_name_internal(
-            &assets,
-            ExchangeId::Kraken,
-            &AssetNameInternal::from("btc"),
-        )
-        .unwrap_err();
-        assert!(matches!(err, IndexError::AssetIndex(_)));
-
         // Test finding non-existent asset
         let err = find_asset_by_exchange_and_name_internal(
             &assets,
@@ -467,7 +424,6 @@ mod tests {
         // Test with same asset on different exchanges
         let instruments = vec![
             instrument(ExchangeId::BinanceSpot, "btc", "usdt"),
-            instrument(ExchangeId::Coinbase, "btc", "usdt"),
         ];
         let indexed = IndexedInstruments::new(instruments);
 

@@ -71,7 +71,7 @@ pub struct TradingSummary<Interval> {
     /// Instrument [`TearSheet`]s.
     ///
     /// Note that an Instrument is unique to an exchange, so, for example, Binance btc_usdt_spot
-    /// and Okx btc_usdt_spot will be summarised by distinct [`TearSheet`]s.
+    /// and B3 petr4_brl_spot will be summarised by distinct [`TearSheet`]s.
     pub instruments: FnvIndexMap<InstrumentNameInternal, TearSheet<Interval>>,
 
     /// [`ExchangeAsset`] [`TearSheet`]s.
@@ -104,7 +104,7 @@ pub struct TradingSummaryGenerator {
     /// Instrument [`TearSheetGenerator`]s.
     ///
     /// Note that an Instrument is unique to an exchange, so, for example, Binance btc_usdt_spot
-    /// and Okx btc_usdt_spot will be summarised by distinct [`TearSheet`]s.
+    /// and B3 petr4_brl_spot will be summarised by distinct [`TearSheet`]s.
     pub instruments: FnvIndexMap<InstrumentNameInternal, TearSheetGenerator>,
 
     /// [`ExchangeAsset`] [`TearSheetAssetGenerator`]s.

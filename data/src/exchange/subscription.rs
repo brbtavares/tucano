@@ -15,11 +15,11 @@ use serde::Deserialize;
 ///     market: BinanceMarket("btcusdt"),
 /// }
 /// ```
-/// #### Kraken PublicTrades
-/// ```json
+/// #### B3 Trades
+/// ```rust,ignore
 /// ExchangeSub {
-///     channel: KrakenChannel("trade"),
-///     market: KrakenChannel("BTC/USDT")
+///     channel: B3SubKind::Trades,
+///     market: "PETR4@BOVESPA"
 /// }
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Deserialize)]
@@ -29,7 +29,7 @@ pub struct ExchangeSub<Channel, Market> {
     ///
     /// ### Examples
     /// - [`BinanceChannel("@depth@100ms")`](super::binance::channel::BinanceChannel)
-    /// - [`KrakenChannel("trade")`](super::kraken::channel::KrakenChannel)
+    /// - [`BinanceChannel("trade")`](super::binance::channel::BinanceChannel)
     pub channel: Channel,
 
     /// Type that defines how to translate a Toucan [`Subscription`] into an exchange specific
@@ -37,7 +37,7 @@ pub struct ExchangeSub<Channel, Market> {
     ///
     /// ### Examples
     /// - [`BinanceMarket("btcusdt")`](super::binance::market::BinanceMarket)
-    /// - [`KrakenMarket("BTC/USDT")`](super::kraken::market::KrakenMarket)
+    /// - [`BinanceMarket("BTCUSDT")`](super::binance::market::BinanceMarket)
     pub market: Market,
 }
 

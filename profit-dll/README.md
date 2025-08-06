@@ -1,6 +1,6 @@
 # ProfitDLL Rust Wrapper
 
-Um wrapper Rust completo para a biblioteca ProfitDLL, sistema brasileiro de integração com trading.
+Um wrapper Rust completo para a biblioteca ProfitDLL, sistema de integração da Nelógica com a B3.
 
 ## 🚀 Funcionalidades
 
@@ -14,12 +14,38 @@ Um wrapper Rust completo para a biblioteca ProfitDLL, sistema brasileiro de inte
 
 ## 📦 Instalação
 
+### 1. Dependência Rust
+
 Adicione ao seu `Cargo.toml`:
 
 ```toml
 [dependencies]
 profit-dll = { path = "../profit-dll", features = ["async"] }
 tokio = { version = "1.0", features = ["full"] }
+```
+
+### 2. Biblioteca Nativa (ProfitDLL.dll)
+
+**📥 Obter a DLL:**
+1. Baixe a ProfitDLL oficial do seu provedor (Nelógica/corretora)
+2. Copie `ProfitDLL.dll` para a pasta `lib/` do projeto:
+   ```bash
+   cp /caminho/para/ProfitDLL.dll profit-dll/lib/
+   ```
+
+**🔍 Localização Automática:**
+O wrapper procura a DLL automaticamente em:
+1. `./lib/ProfitDLL.dll` (recomendado)
+2. `./ProfitDLL.dll` 
+3. PATH do sistema
+
+**⚙️ Configuração Alternativa:**
+```rust
+// Caminho específico
+let connector = ProfitConnector::new(Some("C:\\MyDLLs\\ProfitDLL.dll"))?;
+
+// Busca automática (recomendado)
+let connector = ProfitConnector::new(None)?;
 ```
 
 ## 🔧 Uso Básico
