@@ -1,9 +1,5 @@
-use execution::trade::{AssetFees, Trade, TradeId};
-use markets::{
-    Side,
-    asset::{AssetIndex, QuoteAsset},
-    instrument::InstrumentIndex,
-};
+use execution::{trade::{AssetFees, Trade, TradeId}, AssetIndex, InstrumentIndex, QuoteAsset};
+use markets::Side;
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use rust_decimal::Decimal;

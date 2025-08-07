@@ -1,6 +1,4 @@
-use crate::execution::error::ExecutionError;
-use data::error::DataError;
-use markets::index::error::IndexError;
+use crate::{engine::error::IndexError, execution::error::ExecutionError};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

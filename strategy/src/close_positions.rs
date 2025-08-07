@@ -1,11 +1,14 @@
-use execution::order::{
-    OrderKey, OrderKind, TimeInForce,
-    id::{ClientOrderId, StrategyId},
-    request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
+use execution::{
+    order::{
+        OrderKey, OrderKind, TimeInForce,
+        id::{ClientOrderId, StrategyId},
+        request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
+    },
+    AssetIndex,
+    ExchangeIndex,
+    InstrumentIndex,
 };
-use markets::{
-    Side, asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex,
-};
+use markets::Side;
 use rust_decimal::Decimal;
 
 /// Strategy interface for generating open and cancel order requests that close open positions.

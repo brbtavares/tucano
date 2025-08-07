@@ -20,18 +20,19 @@ use execution::{
         },
         state::{Open, OrderState},
     },
+    engine::error::IndexError,
 };
-use markets::{
-    asset::{AssetIndex, name::AssetNameExchange},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::error::IndexError,
-    instrument::{InstrumentIndex, name::InstrumentNameExchange},
-};
+use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use markets::exchange::ExchangeId;
 use integration::{
     channel::{Tx, UnboundedTx, mpsc_unbounded},
     snapshot::Snapshot,
     stream::merge::merge,
 };
+
+/// Placeholder types for name compatibility
+pub type AssetNameExchange = String;
+pub type InstrumentNameExchange = String;
 use derive_more::Constructor;
 use futures::{Stream, StreamExt, future::Either, stream::FuturesUnordered};
 use std::sync::Arc;

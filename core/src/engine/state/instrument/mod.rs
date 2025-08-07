@@ -9,6 +9,7 @@ use analytics::summary::instrument::TearSheetGenerator;
 use ::data::event::MarketEvent;
 use execution::{
     InstrumentAccountSnapshot,
+    AssetIndex, ExchangeIndex, InstrumentIndex, QuoteAsset,
     order::{
         Order, OrderKey,
         request::OrderResponseCancel,
@@ -18,20 +19,23 @@ use execution::{
 };
 use markets::{
     Keyed,
-    asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::IndexedInstruments,
-    instrument::{
-        Instrument, InstrumentIndex,
-        name::{InstrumentNameExchange, InstrumentNameInternal},
-    },
+    exchange::ExchangeId,
+    instrument::Instrument,
 };
 use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
-use itertools::Either;
+use itertools::{Either, Itertools};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+
+/// Placeholder types
+pub type AssetNameExchange = String;
+pub type InstrumentNameExchange = String;
+pub type InstrumentNameInternal = String;
+
+/// Placeholder for IndexedInstruments - reused from parent module
+use super::IndexedInstruments;
 
 /// Defines the state interface [`InstrumentDataState`] that can be implemented for custom
 /// instrument level data state.

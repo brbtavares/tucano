@@ -8,10 +8,12 @@ use crate::{
     },
     risk::{RiskApproved, RiskManager, RiskRefused},
 };
-use execution::order::request::{
-    OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen,
+use execution::{
+    order::request::{
+        OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen,
+    },
+    ExchangeIndex, InstrumentIndex,
 };
-use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use strategy::AlgoStrategy;
 use integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
 use serde::{Deserialize, Serialize};

@@ -1,6 +1,5 @@
-use markets::{
-    Underlying, asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex,
-};
+use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use markets::Underlying;
 use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 

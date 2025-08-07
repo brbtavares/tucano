@@ -8,8 +8,7 @@ use crate::{
     execution::AccountStreamEvent,
 };
 use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use execution::AccountEvent;
-use markets::instrument::InstrumentIndex;
+use execution::{AccountEvent, InstrumentIndex};
 use integration::Terminal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

@@ -1,10 +1,11 @@
-use markets::{
-    exchange::{ExchangeId, ExchangeIndex},
-    index::IndexedInstruments,
-};
+use execution::ExchangeIndex;
+use markets::exchange::ExchangeId;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
+
+/// Placeholder for IndexedInstruments - reused from parent module
+use super::IndexedInstruments;
 
 /// Maintains a global connection [`Health`], as well as the connection status of market data
 /// and account connections for each exchange.

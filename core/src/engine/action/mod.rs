@@ -5,8 +5,7 @@ use crate::engine::{
     },
     error::UnrecoverableEngineError,
 };
-use execution::order::request::{RequestCancel, RequestOpen};
-use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
+use execution::{order::request::{RequestCancel, RequestOpen}, ExchangeIndex, InstrumentIndex};
 use integration::collection::one_or_many::OneOrMany;
 use derive_more::From;
 use serde::{Deserialize, Serialize};

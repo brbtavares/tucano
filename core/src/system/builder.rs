@@ -16,19 +16,33 @@ use crate::{
     system::{System, SystemAuxillaryHandles, config::ExecutionConfig},
 };
 use data::streams::reconnect::stream::ReconnectingStream;
-use execution::balance::Balance;
+use execution::{balance::Balance, AssetIndex, ExchangeIndex, InstrumentIndex};
 use markets::{
     Keyed,
-    asset::{AssetIndex, ExchangeAsset, name::AssetNameInternal},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::IndexedInstruments,
-    instrument::{Instrument, InstrumentIndex},
+    exchange::ExchangeId,
+    instrument::Instrument,
 };
 use integration::{
     FeedEnded, Terminal,
     channel::{Channel, ChannelTxDroppable, mpsc_unbounded},
     snapshot::SnapUpdates,
 };
+
+/// Placeholder types
+pub type AssetNameInternal = String;
+pub type IndexedInstruments = Vec<()>; // Simplified placeholder
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct ExchangeAsset<T> {
+    pub exchange_id: String,
+    pub asset: T,
+}
+
+impl<T> ExchangeAsset<T> {
+    pub fn new(exchange_id: String, asset: T) -> Self {
+        Self { exchange_id, asset }
+    }
+}
 use derive_more::Constructor;
 use fnv::FnvHashMap;
 use futures::Stream;

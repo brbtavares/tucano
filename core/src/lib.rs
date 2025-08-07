@@ -23,12 +23,8 @@ use data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use ::execution::AccountEvent;
-use markets::{
-    asset::{Asset, AssetIndex},
-    exchange::ExchangeIndex,
-    instrument::InstrumentIndex,
-};
+use ::execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
+use markets::{Asset, Side};
 use integration::Terminal;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
@@ -171,18 +167,19 @@ pub mod test_utils {
     use crate::{
         Timed, engine::state::asset::AssetState,
     };
-    use analytics::summary::asset::TearSheetAssetGenerator;
     use execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
+        AssetIndex,
+        QuoteAsset,
+        InstrumentIndex,
     };
-    use markets::{
-        Side,
-        asset::{Asset, AssetIndex, QuoteAsset},
-        instrument::name::InstrumentNameInternal,
-        test_utils::asset,
-    };
+    use markets::{Side, Asset};
+    use analytics::summary::asset::TearSheetAssetGenerator;
+    
+    // Placeholder type for integration
+    type InstrumentNameInternal = String;
     use chrono::{DateTime, Days, TimeDelta, Utc};
     use rust_decimal::Decimal;
 
@@ -230,7 +227,7 @@ pub mod test_utils {
         Trade {
             id: TradeId::new("trade_id"),
             order_id: OrderId::new("order_id"),
-            instrument: InstrumentNameInternal::new("instrument"),
+            instrument: "instrument".to_string(), // InstrumentNameInternal is String
             strategy: StrategyId::new("strategy"),
             time_exchange,
             side,
@@ -259,13 +256,13 @@ pub mod test_utils {
 
         // Create AssetBalance for the analytics
         let asset_balance = AssetBalance {
-            asset: AssetIndex(0), // Placeholder asset index
+            asset: "asset".to_string(), // AssetIndex is String
             balance: balance.value,
             time_exchange: balance.time,
         };
 
         AssetState {
-            asset: Asset::new_from_exchange(symbol),
+            asset: symbol.to_string(), // Simplified Asset representation
             balance: Some(balance),
             statistics: TearSheetAssetGenerator::init(&asset_balance),
         }

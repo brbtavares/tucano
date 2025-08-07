@@ -15,19 +15,21 @@ use crate::engine::{
 use data::event::MarketEvent;
 use execution::{
     AccountEvent, AccountEventKind, UnindexedAccountSnapshot, balance::AssetBalance,
+    AssetIndex, ExchangeIndex, InstrumentIndex, QuoteAsset,
 };
 use markets::{
     Keyed,
-    asset::{AssetIndex, QuoteAsset},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::IndexedInstruments,
-    instrument::{Instrument, InstrumentIndex},
+    exchange::ExchangeId,
+    instrument::Instrument,
 };
 use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
 use derive_more::Constructor;
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+
+/// Placeholder for IndexedInstruments
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, Instrument<Keyed<ExchangeIndex, ExchangeId>, AssetIndex>>>;
 
 /// Asset-centric state and associated state management logic.
 pub mod asset;

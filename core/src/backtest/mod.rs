@@ -27,12 +27,14 @@ use data::event::MarketEvent;
 use strategy::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
-use execution::AccountEvent;
-use markets::{index::IndexedInstruments, instrument::InstrumentIndex};
+use execution::{AccountEvent, InstrumentIndex};
 use futures::future::try_join_all;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{fmt::Debug, sync::Arc};
+
+/// Placeholder for IndexedInstruments
+pub type IndexedInstruments = Vec<()>;
 
 /// Defines the interface and implementations for different types of market data sources
 /// that can be used in backtests.

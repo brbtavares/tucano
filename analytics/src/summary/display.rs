@@ -103,7 +103,7 @@ where
         // Header row (eg/ Metric | binance_btc_usdt | b3_petr4_brl | ... )
         let mut header_row = Row::new(vec![Cell::new("").style_spec("bcB")]);
         for instrument in self.instruments.keys() {
-            header_row.add_cell(Cell::new(instrument.name().as_str()).style_spec("bcB"));
+            header_row.add_cell(Cell::new(instrument.name()).style_spec("bcB"));
         }
         table.add_row(header_row);
 
@@ -207,7 +207,7 @@ where
         let mut header_row = Row::new(vec![Cell::new("").style_spec("bcB")]);
         for asset in self.assets.keys() {
             header_row.add_cell(
-                Cell::new(&format!("{}_{}", asset.exchange.as_str(), asset.asset))
+                Cell::new(&format!("{}_{}", asset.exchange, asset.asset))
                     .style_spec("bcB"),
             );
         }

@@ -1,13 +1,15 @@
 use crate::engine::state::order::{
     in_flight_recorder::InFlightRequestRecorder, manager::OrderManager,
 };
-use execution::order::{
-    Order,
-    id::ClientOrderId,
-    request::{OrderRequestCancel, OrderRequestOpen, OrderResponseCancel},
-    state::{ActiveOrderState, CancelInFlight, OrderState},
+use execution::{
+    order::{
+        Order,
+        id::ClientOrderId,
+        request::{OrderRequestCancel, OrderRequestOpen, OrderResponseCancel},
+        state::{ActiveOrderState, CancelInFlight, OrderState},
+    },
+    ExchangeIndex, InstrumentIndex,
 };
-use markets::{exchange::ExchangeIndex, instrument::InstrumentIndex};
 use integration::snapshot::Snapshot;
 use derive_more::Constructor;
 use fnv::FnvHashMap;

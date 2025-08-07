@@ -5,19 +5,63 @@
 use execution::client::mock::MockExecutionConfig;
 use markets::{
     Underlying,
-    asset::{Asset, name::AssetNameExchange},
+    asset::Asset,
     exchange::ExchangeId,
-    instrument::{
-        Instrument,
-        kind::{
-            InstrumentKind, future::FutureContract, option::OptionContract,
-            perpetual::PerpetualContract,
-        },
-        name::{InstrumentNameExchange, InstrumentNameInternal},
-        quote::InstrumentQuoteAsset,
-        spec::{InstrumentSpec, InstrumentSpecQuantity, OrderQuantityUnits},
-    },
+    instrument::Instrument,
 };
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+
+/// Placeholder types for configuration
+pub type AssetNameExchange = String;
+pub type InstrumentNameExchange = String;
+pub type InstrumentNameInternal = String;
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub enum InstrumentKind {
+    Spot,
+    Future(FutureContract),
+    Option(OptionContract),
+    Perpetual(PerpetualContract),
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct FutureContract {
+    pub expiry: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct OptionContract {
+    pub strike: f64,
+    pub expiry: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct PerpetualContract {
+    pub funding_rate: f64,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct InstrumentQuoteAsset {
+    pub asset: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct InstrumentSpec {
+    pub quantity: InstrumentSpecQuantity,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct InstrumentSpecQuantity {
+    pub units: OrderQuantityUnits,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub enum OrderQuantityUnits {
+    Asset(String),
+    Contract,
+    Quote,
+}
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 

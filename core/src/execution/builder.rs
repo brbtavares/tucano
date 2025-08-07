@@ -20,17 +20,11 @@ use execution::{
     indexer::AccountEventIndexer,
     map::generate_execution_instrument_map,
 };
+use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use markets::{
     Keyed, Underlying,
-    asset::{AssetIndex, name::AssetNameExchange},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::IndexedInstruments,
-    instrument::{
-        Instrument, InstrumentIndex,
-        kind::InstrumentKind,
-        name::InstrumentNameExchange,
-        spec::{InstrumentSpec, InstrumentSpecQuantity, OrderQuantityUnits},
-    },
+    exchange::ExchangeId,
+    instrument::Instrument,
 };
 use integration::channel::{Channel, UnboundedTx, mpsc_unbounded};
 use fnv::FnvHashMap;
@@ -40,6 +34,38 @@ use tokio::{
     sync::{broadcast, mpsc},
     task::{JoinError, JoinHandle},
 };
+
+/// Placeholder types
+pub type AssetNameExchange = String;
+pub type InstrumentNameExchange = String;
+pub type IndexedInstruments = Vec<()>; // Simplified placeholder
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum InstrumentKind {
+    Spot,
+}
+
+#[derive(Debug, Clone)]
+pub struct InstrumentSpec {
+    pub quantity: InstrumentSpecQuantity,
+    pub price: Option<f64>,
+    pub notional: Option<f64>,
+}
+
+#[derive(Debug, Clone)]
+pub struct InstrumentSpecQuantity {
+    pub units: OrderQuantityUnits,
+    pub unit: String,
+    pub min: f64,
+    pub increment: f64,
+}
+
+#[derive(Debug, Clone)]
+pub enum OrderQuantityUnits {
+    Asset(String),
+    Contract,
+    Quote,
+}
 
 type ExecutionInitFuture =
     Pin<Box<dyn Future<Output = Result<(RunFuture, RunFuture), ExecutionError>> + Send>>;

@@ -9,8 +9,8 @@ use data::{
 use execution::{
     AccountEvent,
     order::request::{OrderRequestCancel, OrderRequestOpen},
+    AssetIndex, ExchangeIndex, InstrumentIndex,
 };
-use markets::{asset::AssetIndex, exchange::ExchangeIndex, instrument::InstrumentIndex};
 use derive_more::Constructor;
 use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};

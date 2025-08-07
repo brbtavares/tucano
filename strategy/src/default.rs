@@ -4,15 +4,16 @@ use crate::{
     on_disconnect::OnDisconnectStrategy,
     on_trading_disabled::OnTradingDisabled,
 };
-use execution::order::{
-    id::StrategyId,
-    request::{OrderRequestCancel, OrderRequestOpen},
+use execution::{
+    order::{
+        id::StrategyId,
+        request::{OrderRequestCancel, OrderRequestOpen},
+    },
+    AssetIndex,
+    ExchangeIndex,
+    InstrumentIndex,
 };
-use markets::{
-    asset::AssetIndex,
-    exchange::{ExchangeId, ExchangeIndex},
-    instrument::InstrumentIndex,
-};
+use markets::exchange::ExchangeId;
 use std::marker::PhantomData;
 
 /// Naive implementation of all strategy interfaces.

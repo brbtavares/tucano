@@ -2,13 +2,9 @@ use crate::{
     Timed, engine::state::asset::filter::AssetFilter,
 };
 use analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
-use execution::balance::{AssetBalance, Balance};
+use execution::{balance::{AssetBalance, Balance}, AssetIndex};
 use markets::{
-    asset::{
-        Asset, AssetIndex, ExchangeAsset,
-        name::{AssetNameExchange, AssetNameInternal},
-    },
-    index::IndexedInstruments,
+    asset::Asset,
 };
 use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use chrono::Utc;
@@ -16,6 +12,26 @@ use derive_more::Constructor;
 use itertools::Either;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+
+/// Placeholder for ExchangeAsset
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
+pub struct ExchangeAsset<T> {
+    pub exchange_id: String,
+    pub asset: T,
+}
+
+impl<T> ExchangeAsset<T> {
+    pub fn new(exchange_id: String, asset: T) -> Self {
+        Self { exchange_id, asset }
+    }
+}
+
+/// Placeholder types for asset names
+pub type AssetNameExchange = String;
+pub type AssetNameInternal = String;
+
+/// Placeholder for IndexedInstruments - reused from parent module
+use super::IndexedInstruments;
 
 /// Defines an `AssetFilter`, used to filter asset-centric data structures.
 pub mod filter;
@@ -185,8 +201,8 @@ mod tests {
     fn test_update_from_balance_with_first_ever_snapshot() {
         let mut state = AssetState {
             asset: Asset {
-                name_internal: AssetNameInternal::new("btc"),
-                name_exchange: AssetNameExchange::new("btc"),
+                name_internal: "btc".to_string(),
+                name_exchange: "btc".to_string(),
             },
             statistics: Default::default(),
             balance: None,
@@ -194,8 +210,8 @@ mod tests {
 
         let snapshot = Snapshot(AssetBalance {
             asset: Asset {
-                name_internal: AssetNameInternal::new("btc"),
-                name_exchange: AssetNameExchange::new("btc"),
+                name_internal: "btc".to_string(),
+                name_exchange: "btc".to_string(),
             },
             balance: Balance {
                 total: dec!(1100.0),
@@ -217,8 +233,8 @@ mod tests {
 
         let snapshot = Snapshot(AssetBalance {
             asset: Asset {
-                name_internal: AssetNameInternal::new("btc"),
-                name_exchange: AssetNameExchange::new("xbt"),
+                name_internal: "btc".to_string(),
+                name_exchange: "xbt".to_string(),
             },
             balance: Balance {
                 total: dec!(1100.0),
@@ -243,8 +259,8 @@ mod tests {
 
         let snapshot = Snapshot(AssetBalance {
             asset: Asset {
-                name_internal: AssetNameInternal::new("btc"),
-                name_exchange: AssetNameExchange::new("xbt"),
+                name_internal: "btc".to_string(),
+                name_exchange: "xbt".to_string(),
             },
             balance: Balance {
                 total: dec!(1000.0),
@@ -266,8 +282,8 @@ mod tests {
 
         let snapshot = Snapshot(AssetBalance {
             asset: Asset {
-                name_internal: AssetNameInternal::new("btc"),
-                name_exchange: AssetNameExchange::new("xbt"),
+                name_internal: "btc".to_string(),
+                name_exchange: "xbt".to_string(),
             },
             balance: Balance {
                 total: dec!(1000.0),

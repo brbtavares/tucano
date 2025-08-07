@@ -4,18 +4,20 @@ use crate::engine::state::{
     instrument::generate_indexed_instrument_states, order::Orders, position::PositionManager,
     trading::TradingState,
 };
-use execution::balance::{AssetBalance, Balance};
+use execution::{balance::{AssetBalance, Balance}, AssetIndex, ExchangeIndex, InstrumentIndex};
 use markets::{
     Keyed,
-    asset::{AssetIndex, ExchangeAsset, name::AssetNameInternal},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::IndexedInstruments,
-    instrument::{Instrument, InstrumentIndex},
+    exchange::ExchangeId,
+    instrument::Instrument,
 };
 use integration::snapshot::Snapshot;
 use chrono::{DateTime, Utc};
 use fnv::FnvHashMap;
 use tracing::debug;
+
+/// Placeholder types
+use super::asset::{AssetNameInternal, ExchangeAsset};
+use super::IndexedInstruments;
 
 /// Builder utility for an [`EngineState`] instance.
 #[derive(Debug, Clone)]

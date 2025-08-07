@@ -1,4 +1,4 @@
-use markets::{Asset, Exchange, Instrument, AssetType, ExchangeId, Side};
+use markets::{Asset, Exchange, Instrument, AssetType, ExchangeId};
 
 // Implementações B3 do híbrido
 #[derive(Debug, Clone)]
@@ -13,7 +13,7 @@ impl Asset for B3Asset {
     }
     
     fn asset_type(&self) -> AssetType {
-        self.asset_type
+        self.asset_type.clone()
     }
 }
 
@@ -46,6 +46,10 @@ impl Instrument for B3Instrument {
     fn symbol(&self) -> &Self::Symbol {
         &self.symbol
     }
+    
+    fn market(&self) -> &str {
+        &self.market
+    }
 }
 
 fn main() {
@@ -56,7 +60,7 @@ fn main() {
         symbol: "PETR4".to_string(),
         asset_type: AssetType::Stock,
     };
-    println!("✅ B3Asset: {} ({})", asset.symbol(), asset.asset_type());
+    println!("✅ B3Asset: {} ({:?})", asset.symbol(), asset.asset_type());
     
     // Testando B3Exchange  
     let exchange = B3Exchange {

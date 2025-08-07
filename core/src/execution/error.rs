@@ -1,5 +1,5 @@
+use crate::engine::error::IndexError;
 use execution::error::ClientError;
-use markets::index::error::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

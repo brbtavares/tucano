@@ -88,13 +88,13 @@ impl TearSheetAssetGenerator {
 mod tests {
     use super::*;
     use crate::test_utils::time_plus_days;
-    use markets::asset::AssetIndex;
+    use execution::AssetIndex;
     use chrono::{DateTime, Utc};
     use rust_decimal_macros::dec;
 
     fn balance(balance: Balance, time: DateTime<Utc>) -> AssetBalance<AssetIndex> {
         AssetBalance {
-            asset: AssetIndex(0),
+            asset: "test_asset".to_string(), // AssetIndex is String type alias
             balance,
             time_exchange: time,
         }

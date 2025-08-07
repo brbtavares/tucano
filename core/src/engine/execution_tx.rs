@@ -1,9 +1,9 @@
-use crate::{engine::error::UnrecoverableEngineError, execution::request::ExecutionRequest};
-use markets::{
-    exchange::{ExchangeId, ExchangeIndex},
-    index::error::IndexError,
-    instrument::InstrumentIndex,
+use crate::{
+    engine::error::{IndexError, UnrecoverableEngineError}, 
+    execution::request::ExecutionRequest,
 };
+use execution::{ExchangeIndex, InstrumentIndex};
+use markets::exchange::ExchangeId;
 use integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
