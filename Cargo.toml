@@ -10,7 +10,9 @@ members = [
     "markets",
     "profit-dll",
     "risk",
-    "strategy"
+    "strategy",
+    "test_b3_hybrid",
+    "examples"
 ]
 
 [workspace.dependencies]

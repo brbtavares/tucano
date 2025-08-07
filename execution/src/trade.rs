@@ -1,5 +1,5 @@
-use crate::order::id::{OrderId, StrategyId};
-use markets::{Side, asset::QuoteAsset};
+use crate::{order::id::{OrderId, StrategyId}, QuoteAsset};
+use markets::{Side};
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use rust_decimal::Decimal;
@@ -62,7 +62,7 @@ pub struct AssetFees<AssetKey> {
 impl AssetFees<QuoteAsset> {
     pub fn quote_fees(fees: Decimal) -> Self {
         Self {
-            asset: QuoteAsset,
+            asset: "QUOTE".to_string(), // QuoteAsset agora é String
             fees,
         }
     }
@@ -71,7 +71,7 @@ impl AssetFees<QuoteAsset> {
 impl Default for AssetFees<QuoteAsset> {
     fn default() -> Self {
         Self {
-            asset: QuoteAsset,
+            asset: "QUOTE".to_string(), // QuoteAsset agora é String
             fees: Decimal::ZERO,
         }
     }

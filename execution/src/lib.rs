@@ -27,16 +27,15 @@ use crate::{
     order::{Order, OrderSnapshot, request::OrderResponseCancel},
     trade::Trade,
 };
-use markets::{
-    asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
-    exchange::{ExchangeId, ExchangeIndex},
-    instrument::{InstrumentIndex, name::InstrumentNameExchange},
-};
 use integration::snapshot::Snapshot;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use order::state::OrderState;
 use serde::{Deserialize, Serialize};
+
+// Módulo de compatibilidade para migração
+pub mod compat;
+pub use compat::*;
 
 pub mod balance;
 pub mod client;

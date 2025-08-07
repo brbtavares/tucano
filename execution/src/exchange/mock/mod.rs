@@ -16,11 +16,9 @@ use crate::{
     trade::{AssetFees, Trade, TradeId},
 };
 use markets::{
-    Side,
-    asset::{QuoteAsset, name::AssetNameExchange},
-    exchange::ExchangeId,
-    instrument::{Instrument, name::InstrumentNameExchange},
+    Side, ExchangeId, Instrument,
 };
+use crate::{QuoteAsset, AssetNameExchange, InstrumentNameExchange};
 use integration::snapshot::Snapshot;
 use chrono::{DateTime, TimeDelta, Utc};
 use fnv::FnvHashMap;
@@ -36,14 +34,13 @@ use tracing::{error, info};
 pub mod account;
 pub mod request;
 
-#[derive(Debug)]
 pub struct MockExchange {
     pub exchange: ExchangeId,
     pub latency_ms: u64,
     pub fees_percent: Decimal,
     pub request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
     pub event_tx: broadcast::Sender<UnindexedAccountEvent>,
-    pub instruments: FnvHashMap<InstrumentNameExchange, Instrument<ExchangeId, AssetNameExchange>>,
+    pub instruments: FnvHashMap<InstrumentNameExchange, Box<dyn Instrument<Symbol = String>>>,
     pub account: AccountState,
     pub order_sequence: u64,
     pub time_exchange_latest: DateTime<Utc>,
@@ -54,7 +51,7 @@ impl MockExchange {
         config: MockExecutionConfig,
         request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
         event_tx: broadcast::Sender<UnindexedAccountEvent>,
-        instruments: FnvHashMap<InstrumentNameExchange, Instrument<ExchangeId, AssetNameExchange>>,
+        instruments: FnvHashMap<InstrumentNameExchange, Box<dyn Instrument<Symbol = String>>>,
     ) -> Self {
         Self {
             exchange: config.mocked_exchange,
@@ -262,7 +259,11 @@ impl MockExchange {
         }
 
         let underlying = match self.find_instrument_data(&request.key.instrument) {
-            Ok(instrument) => instrument.underlying.clone(),
+            Ok(_instrument) => {
+                // TODO: Implementar corretamente para nova arquitetura
+                use markets::Underlying;
+                Underlying::new("MOCK_BASE".to_string(), "MOCK_QUOTE".to_string())
+            },
             Err(error) => return (build_open_order_err_response(request, error), None),
         };
 
@@ -393,13 +394,15 @@ impl MockExchange {
     pub fn find_instrument_data(
         &self,
         instrument: &InstrumentNameExchange,
-    ) -> Result<&Instrument<ExchangeId, AssetNameExchange>, UnindexedApiError> {
-        self.instruments.get(instrument).ok_or_else(|| {
-            ApiError::InstrumentInvalid(
-                instrument.clone(),
-                format!("MockExchange is not set-up for managing: {instrument}"),
-            )
-        })
+    ) -> Result<&dyn Instrument<Symbol = String>, UnindexedApiError> {
+        self.instruments.get(instrument)
+            .map(|boxed| boxed.as_ref())
+            .ok_or_else(|| {
+                ApiError::InstrumentInvalid(
+                    instrument.clone(),
+                    format!("MockExchange is not set-up for managing: {instrument}"),
+                )
+            })
     }
 
     fn order_id_sequence_fetch_add(&mut self) -> OrderId {

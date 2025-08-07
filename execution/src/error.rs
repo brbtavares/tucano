@@ -1,11 +1,15 @@
 use markets::{
-    asset::{AssetIndex, name::AssetNameExchange},
-    exchange::ExchangeId,
-    instrument::{InstrumentIndex, name::InstrumentNameExchange},
+    ExchangeId,
 };
 use integration::error::SocketError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+
+// Tipos temporários para compatibilidade durante migração
+pub type AssetIndex = String;
+pub type InstrumentIndex = String;
+pub type AssetNameExchange = String;
+pub type InstrumentNameExchange = String;
 
 /// Type alias for a [`ClientError`] that is keyed on [`AssetNameExchange`] and
 /// [`InstrumentNameExchange`] (yet to be indexed).

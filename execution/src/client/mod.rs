@@ -10,16 +10,19 @@ use crate::{
     trade::Trade,
 };
 use markets::{
-    asset::{QuoteAsset, name::AssetNameExchange},
-    exchange::ExchangeId,
-    instrument::name::InstrumentNameExchange,
+    ExchangeId,
 };
 use chrono::{DateTime, Utc};
 use futures::Stream;
 use std::future::Future;
 
+// Tipos temporários para compatibilidade
+pub type AssetNameExchange = String;
+pub type InstrumentNameExchange = String;
+pub type QuoteAsset = String;
+
 pub mod b3;
-pub mod binance;
+// pub mod binance; // Removido conforme solicitado
 pub mod mock;
 
 pub trait ExecutionClient

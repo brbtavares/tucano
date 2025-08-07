@@ -18,12 +18,10 @@ use crate::{
     },
     balance::AssetBalance,
     trade::Trade,
+    AssetNameExchange, InstrumentNameExchange, QuoteAsset,
 };
 use markets::{
-    Side, Exchange, Instrument as InstrumentTrait, Asset,
-    asset::name::AssetNameExchange,
-    exchange::ExchangeId,
-    instrument::name::InstrumentNameExchange,
+    Side, ExchangeId,
 };
 use profit_dll::{ProfitConnector, SendOrder, OrderSide, ProfitError};
 use std::sync::Arc;

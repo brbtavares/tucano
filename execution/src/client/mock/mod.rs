@@ -2,6 +2,7 @@ use crate::{
     UnindexedAccountEvent, UnindexedAccountSnapshot,
     balance::AssetBalance,
     client::ExecutionClient,
+    compat::*,
     error::{ConnectivityError, UnindexedClientError, UnindexedOrderError},
     exchange::mock::request::MockExchangeRequest,
     order::{
@@ -10,11 +11,6 @@ use crate::{
         state::Open,
     },
     trade::Trade,
-};
-use markets::{
-    asset::{QuoteAsset, name::AssetNameExchange},
-    exchange::ExchangeId,
-    instrument::name::InstrumentNameExchange,
 };
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;

@@ -1,19 +1,17 @@
-use markets::{Asset, Exchange, Instrument, AssetType, ExchangeId};
+use markets::{Asset, Exchange, Instrument};
 
 // B3 Asset implementation  
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct B3Asset {
     pub symbol: String,
-    pub asset_type: AssetType,
+    pub asset_type: String,
 }
 
 impl Asset for B3Asset {
-    fn symbol(&self) -> &str {
-        &self.symbol
-    }
+    type Symbol = String;
     
-    fn asset_type(&self) -> AssetType {
-        self.asset_type.clone()
+    fn symbol(&self) -> &Self::Symbol {
+        &self.symbol
     }
 }
 
@@ -22,14 +20,10 @@ impl Asset for B3Asset {
 pub struct B3Exchange;
 
 impl Exchange for B3Exchange {
-    type ExchangeId = ExchangeId;
+    type Id = String;
     
-    fn id(&self) -> Self::ExchangeId {
-        ExchangeId::B3
-    }
-    
-    fn name(&self) -> &'static str {
-        "B3 (Brasil Bolsa Balcao)"
+    fn id(&self) -> Self::Id {
+        "B3".to_string()
     }
 }
 
@@ -47,17 +41,13 @@ impl Instrument for B3Instrument {
     fn symbol(&self) -> &Self::Symbol {
         &self.symbol
     }
-    
-    fn market(&self) -> &str {
-        "B3"
-    }
 }
 
 fn main() {
     // Criar asset
     let asset = B3Asset {
         symbol: "PETR4".to_string(),
-        asset_type: AssetType::Stock,
+        asset_type: "Stock".to_string(),
     };
     
     // Criar exchange
@@ -71,11 +61,8 @@ fn main() {
     };
     
     println!("Asset symbol: {}", asset.symbol());
-    println!("Asset type: {:?}", asset.asset_type());
-    println!("Exchange ID: {:?}", exchange.id());
-    println!("Exchange name: {}", exchange.name());
+    println!("Exchange ID: {}", exchange.id());
     println!("Instrument symbol: {}", instrument.symbol());
-    println!("Instrument market: {}", instrument.market());
     
     println!("✅ B3 hybrid architecture working!");
 }

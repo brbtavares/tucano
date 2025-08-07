@@ -83,17 +83,5 @@ where
     }
 }
 
-impl<ExchangeKey, AssetKey, InstrumentKey>
-    From<&Keyed<InstrumentKey, dyn markets::Instrument<Symbol = String>>>
-    for MarketInstrumentData<InstrumentKey>
-where
-    InstrumentKey: Clone,
-{
-    fn from(value: &Keyed<InstrumentKey, dyn markets::Instrument<Symbol = String>>) -> Self {
-        Self {
-            key: value.key.clone(),
-            name_exchange: value.value.name_exchange.clone(),
-            kind: MarketDataInstrumentKind::from(&value.value.kind),
-        }
-    }
-}
+// Implementação From removida temporariamente - incompatível com nova arquitetura híbrida
+// TODO: Reimplementar usando traits markets ao invés de campos específicos

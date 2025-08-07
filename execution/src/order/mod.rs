@@ -3,12 +3,7 @@ use crate::order::{
     request::{OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen},
     state::UnindexedOrderState,
 };
-use markets::{
-    Side,
-    asset::{AssetIndex, name::AssetNameExchange},
-    exchange::{ExchangeId, ExchangeIndex},
-    instrument::{InstrumentIndex, name::InstrumentNameExchange},
-};
+use crate::compat::*;
 use derive_more::{Constructor, Display};
 use id::ClientOrderId;
 use rust_decimal::Decimal;

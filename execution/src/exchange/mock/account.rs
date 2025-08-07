@@ -9,10 +9,9 @@ use crate::{
     trade::Trade,
 };
 use markets::{
-    asset::{QuoteAsset, name::AssetNameExchange},
-    exchange::ExchangeId,
-    instrument::name::InstrumentNameExchange,
+    ExchangeId,
 };
+use crate::{QuoteAsset, AssetNameExchange, InstrumentNameExchange};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use fnv::FnvHashMap;

@@ -13,12 +13,7 @@ use crate::{
         state::{InactiveOrderState, OrderState, UnindexedOrderState},
     },
     trade::Trade,
-};
-use markets::{
-    asset::{AssetIndex, QuoteAsset, name::AssetNameExchange},
-    exchange::{ExchangeId, ExchangeIndex},
-    index::error::IndexError,
-    instrument::{InstrumentIndex, name::InstrumentNameExchange},
+    compat::*,
 };
 use integration::{
     snapshot::Snapshot,
@@ -38,8 +33,8 @@ impl Indexer for AccountEventIndexer {
     type Unindexed = UnindexedAccountEvent;
     type Indexed = AccountEvent;
 
-    fn index(&self, item: Self::Unindexed) -> Result<Self::Indexed, IndexError> {
-        self.account_event(item)
+    fn index(&self, item: Self::Unindexed) -> Result<Self::Indexed, String> {
+        self.account_event(item).map_err(|e| e.to_string())
     }
 }
 
@@ -237,8 +232,8 @@ impl AccountEventIndexer {
             state,
         } = order;
 
-        let exchange = self.map.find_exchange_id(*exchange)?;
-        let instrument = self.map.find_instrument_name_exchange(*instrument)?;
+        let exchange = self.map.find_exchange_id(exchange.clone())?;
+        let instrument = self.map.find_instrument_name_exchange(instrument.clone())?;
 
         Ok(OrderEvent {
             key: OrderKey {

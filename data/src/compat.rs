@@ -10,23 +10,14 @@ pub struct MarketDataInstrument {
     pub kind: MarketDataInstrumentKind,
 }
 
-impl From<(String, String, MarketDataInstrumentKind)> for MarketDataInstrument {
-    fn from((base, _quote, kind): (String, String, MarketDataInstrumentKind)) -> Self {
-        Self {
-            symbol: base,
-            kind,
-        }
-    }
-}
-
-// For AssetNameInternal which is essentially String
+// Implementação única que funciona com strings e AssetNameInternal
 impl<S> From<(S, S, MarketDataInstrumentKind)> for MarketDataInstrument 
 where 
-    S: Into<AssetNameInternal>
+    S: Into<String> + Into<AssetNameInternal>
 {
     fn from((base, _quote, kind): (S, S, MarketDataInstrumentKind)) -> Self {
         Self {
-            symbol: base.into().0, // AssetNameInternal wraps a String
+            symbol: base.into(),
             kind,
         }
     }
@@ -39,6 +30,24 @@ pub struct AssetNameInternal(pub String);
 impl AsRef<str> for AssetNameInternal {
     fn as_ref(&self) -> &str {
         &self.0
+    }
+}
+
+impl From<String> for AssetNameInternal {
+    fn from(s: String) -> Self {
+        Self(s)
+    }
+}
+
+impl From<&str> for AssetNameInternal {
+    fn from(s: &str) -> Self {
+        Self(s.to_string())
+    }
+}
+
+impl From<&String> for AssetNameInternal {
+    fn from(s: &String) -> Self {
+        Self(s.clone())
     }
 }
 

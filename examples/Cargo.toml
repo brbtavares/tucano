@@ -1,0 +1,11 @@
+[package]
+name = "validate_b3_execution"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+markets = { path = "../markets" }
+
+[[bin]]
+name = "validate_b3_execution"
+path = "validate_b3_execution.rs"

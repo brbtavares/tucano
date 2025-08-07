@@ -1,0 +1,11 @@
+[package]
+name = "toucan-b3-test"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "test_simple_b3"
+path = "test_simple_b3.rs"
+
+[dependencies]
+markets = { path = "../markets", version = "0.3.1" }

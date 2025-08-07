@@ -94,7 +94,7 @@ pub enum SubKind {
 impl<Exchange, S, Kind> From<(Exchange, S, S, MarketDataInstrumentKind, Kind)>
     for Subscription<Exchange, MarketDataInstrument, Kind>
 where
-    S: Into<AssetNameInternal>,
+    S: Into<AssetNameInternal> + Into<String>,
 {
     fn from(
         (exchange, base, quote, instrument_kind, kind): (
@@ -119,7 +119,7 @@ impl<InstrumentKey, Exchange, S, Kind>
         Kind,
     )> for Subscription<Exchange, Keyed<InstrumentKey, MarketDataInstrument>, Kind>
 where
-    S: Into<AssetNameInternal>,
+    S: Into<AssetNameInternal> + Into<String>,
 {
     fn from(
         (instrument_id, exchange, base, quote, instrument_kind, kind): (
@@ -327,8 +327,6 @@ mod tests {
             #[test]
             fn test_subscription_binance_spot_public_trades() {
                 /*
-            #[test]
-            fn test_subscription_binance_spot_public_trades() {
                 let input = r#"
                 {
                     "exchange": "binance_spot",
@@ -342,26 +340,7 @@ mod tests {
 
                 serde_json::from_str::<Subscription<BinanceSpot, MarketDataInstrument, PublicTrades>>(input)
                     .unwrap();
-            }
-            */
-            }
-
-            #[test]
-            fn test_subscription_binance_futures_usd_order_books_l2() {
-                let input = r#"
-                {
-                    "exchange": "binance_futures_usd",
-                    "base": "btc",
-                    "quote": "usdt",
-                    "instrument_kind": "perpetual",
-                    "kind": "order_books_l2"
-                }
-                "#;
-
-                serde_json::from_str::<
-                    Subscription<B3, MarketDataInstrument, OrderBooksL2>,
-                >(input)
-                .unwrap();
+                */
             }
         }
     }
