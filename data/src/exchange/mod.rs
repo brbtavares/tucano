@@ -14,9 +14,6 @@ use url::Url;
 /// `B3` [`Connector`] and [`StreamSelector`] implementations for Brazilian stock exchange.
 pub mod b3;
 
-/// `BinanceSpot` & `BinanceFuturesUsd` [`Connector`] and [`StreamSelector`] implementations.
-pub mod binance;
-
 /// Defines the generic [`ExchangeSub`] containing a market and channel combination used by an
 /// exchange [`Connector`] to build [`WsMessage`] subscription payloads.
 pub mod subscription;

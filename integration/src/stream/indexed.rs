@@ -1,4 +1,4 @@
-use markets::index::error::IndexError;
+// use markets::index::error::IndexError;
 use derive_more::Constructor;
 use futures::Stream;
 use pin_project::pin_project;
@@ -10,7 +10,7 @@ use std::{
 pub trait Indexer {
     type Unindexed;
     type Indexed;
-    fn index(&self, item: Self::Unindexed) -> Result<Self::Indexed, IndexError>;
+    fn index(&self, item: Self::Unindexed) -> Result<Self::Indexed, String>;
 }
 
 #[derive(Debug, Constructor)]
@@ -26,7 +26,7 @@ where
     Index: Indexer<Unindexed = St::Item>,
     St: Stream,
 {
-    type Item = Result<Index::Indexed, IndexError>;
+    type Item = Result<Index::Indexed, String>;
 
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let this = self.project();

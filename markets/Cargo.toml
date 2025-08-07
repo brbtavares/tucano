@@ -17,11 +17,5 @@ serde_json = { workspace = true }
 # SerDe
 serde = { workspace = true, features = ["derive"] }
 
-# Data Structures
-smol_str = { workspace = true, features = ["serde"]}
-rust_decimal = { workspace = true }
-
 # Misc
-chrono = { workspace = true, features = ["serde"] }
 derive_more = { workspace = true, features = ["display"] }
-thiserror = { workspace = true }

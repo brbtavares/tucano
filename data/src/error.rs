@@ -1,5 +1,8 @@
 use crate::subscription::SubKind;
-use markets::{exchange::ExchangeId, index::error::IndexError};
+use markets::{
+    exchange::ExchangeId, 
+    // index::error::IndexError,
+};
 use integration::{error::SocketError, subscription::SubscriptionId};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -7,8 +10,8 @@ use thiserror::Error;
 /// All errors generated in `data`.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]
 pub enum DataError {
-    #[error("failed to index market data Subscriptions: {0}")]
-    Index(#[from] IndexError),
+    // #[error("failed to index market data Subscriptions: {0}")]
+    // Index(#[from] IndexError),
 
     #[error("failed to initialise reconnecting MarketStream due to empty subscriptions")]
     SubscriptionsEmpty,

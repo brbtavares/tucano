@@ -20,9 +20,9 @@ use crate::{
     trade::Trade,
 };
 use markets::{
-    Side, asset::QuoteAsset,
-    exchange::ExchangeId,
+    Side, Exchange, Instrument as InstrumentTrait, Asset,
     asset::name::AssetNameExchange,
+    exchange::ExchangeId,
     instrument::name::InstrumentNameExchange,
 };
 use profit_dll::{ProfitConnector, SendOrder, OrderSide, ProfitError};

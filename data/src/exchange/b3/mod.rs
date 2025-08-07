@@ -2,20 +2,35 @@
 //!
 //! This module provides integration with the Brazilian stock exchange B3
 //! through the ProfitDLL library from Nelógica.
+//!
+//! ## Architecture
+//! 
+//! - **Hybrid Design**: Uses markets abstractions with B3-specific implementations
+//! - **Multiple Connectors**: ProfitDLL is one of the possible connectivity providers
+//! - **Future-Ready**: Easy to add other B3 APIs (official REST/WebSocket, etc.)
 
 pub mod instrument;
+pub mod types;
+pub mod exchange;
 
-use serde::{Deserialize, Serialize};
+pub use types::*;
+pub use exchange::B3Exchange;
 use profit_dll::{ProfitConnector, CallbackEvent};
 use tokio::sync::mpsc;
 
 /// B3 exchange connector using ProfitDLL
-pub struct B3Connector {
+/// 
+/// This is one of the possible connectivity providers for B3.
+/// Future implementations could include:
+/// - B3 Official REST API
+/// - B3 WebSocket feeds
+/// - Other third-party providers
+pub struct B3ProfitConnector {
     profit_connector: Option<ProfitConnector>,
     event_receiver: Option<mpsc::UnboundedReceiver<CallbackEvent>>,
 }
 
-impl B3Connector {
+impl B3ProfitConnector {
     pub fn new() -> Self {
         Self {
             profit_connector: None,
@@ -39,10 +54,10 @@ impl B3Connector {
         Ok(())
     }
 
-    /// Subscribe to market data for a specific ticker
-    pub fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), Box<dyn std::error::Error>> {
+    /// Subscribe to market data for a specific B3 instrument
+    pub fn subscribe_instrument(&self, instrument: &B3Instrument) -> Result<(), Box<dyn std::error::Error>> {
         if let Some(connector) = &self.profit_connector {
-            connector.subscribe_ticker(ticker, exchange)?;
+            connector.subscribe_ticker(&instrument.symbol, &instrument.market)?;
         }
         Ok(())
     }
@@ -58,7 +73,7 @@ impl B3Connector {
     }
 }
 
-/// Market events from B3
+/// Market events from B3 via ProfitDLL
 #[derive(Debug, Clone)]
 pub enum B3MarketEvent {
     StateChanged {
@@ -66,44 +81,27 @@ pub enum B3MarketEvent {
         result: i32,
     },
     NewTrade {
-        ticker: String,
-        exchange: String,
-        price: rust_decimal::Decimal,
-        volume: rust_decimal::Decimal,
-        timestamp: chrono::DateTime<chrono::Utc>,
+        trade: B3Trade,
     },
     DailySummary {
-        ticker: String,
-        exchange: String,
+        instrument: B3Instrument,
         open: rust_decimal::Decimal,
         high: rust_decimal::Decimal,
         low: rust_decimal::Decimal,
         close: rust_decimal::Decimal,
         volume: rust_decimal::Decimal,
     },
-    PriceBookUpdate {
-        ticker: String,
-        exchange: String,
-        side: BookSide,
-        price: rust_decimal::Decimal,
-        position: i32,
+    OrderBookUpdate {
+        instrument: B3Instrument,
+        side: B3BookSide,
+        level: B3BookLevel,
     },
     AccountChanged {
-        account_id: String,
-        account_holder: String,
-        broker_name: String,
-        broker_id: i32,
+        account: B3Account,
     },
-    InvalidTicker {
-        ticker: String,
-        exchange: String,
+    InvalidInstrument {
+        instrument: B3Instrument,
     },
-}
-
-#[derive(Debug, Clone)]
-pub enum BookSide {
-    Offer,
-    Bid,
 }
 
 impl B3MarketEvent {
@@ -116,22 +114,27 @@ impl B3MarketEvent {
                 }
             }
             CallbackEvent::NewTrade { 
-                ticker, exchange, price, volume, timestamp, .. 
+                ticker, exchange, price, volume, timestamp, buy_agent, sell_agent, trade_id, .. 
             } => {
-                B3MarketEvent::NewTrade {
-                    ticker,
-                    exchange,
+                let instrument = B3Instrument::new(ticker, exchange);
+                let trade = B3Trade {
+                    id: trade_id.to_string().into(),
+                    instrument: instrument.clone(),
+                    side: B3Side::Buy, // ProfitDLL doesn't specify side in trade events
+                    quantity: volume,
                     price,
-                    volume,
                     timestamp,
-                }
+                    buyer_agent: Some(buy_agent.into()),
+                    seller_agent: Some(sell_agent.into()),
+                };
+                
+                B3MarketEvent::NewTrade { trade }
             }
             CallbackEvent::DailySummary { 
                 ticker, exchange, open, high, low, close, volume, .. 
             } => {
                 B3MarketEvent::DailySummary {
-                    ticker,
-                    exchange,
+                    instrument: B3Instrument::new(ticker, exchange),
                     open,
                     high,
                     low,
@@ -140,39 +143,45 @@ impl B3MarketEvent {
                 }
             }
             CallbackEvent::PriceBookOffer { ticker, exchange, price, position, .. } => {
-                B3MarketEvent::PriceBookUpdate {
-                    ticker,
-                    exchange,
-                    side: BookSide::Offer,
-                    price,
-                    position,
+                B3MarketEvent::OrderBookUpdate {
+                    instrument: B3Instrument::new(ticker, exchange),
+                    side: B3BookSide::Ask,
+                    level: B3BookLevel {
+                        price,
+                        quantity: rust_decimal::Decimal::ZERO, // ProfitDLL doesn't provide quantity
+                        position,
+                    },
                 }
             }
             CallbackEvent::OfferBookBid { ticker, exchange, price, position, .. } => {
-                B3MarketEvent::PriceBookUpdate {
-                    ticker,
-                    exchange,
-                    side: BookSide::Bid,
-                    price,
-                    position,
+                B3MarketEvent::OrderBookUpdate {
+                    instrument: B3Instrument::new(ticker, exchange),
+                    side: B3BookSide::Bid,
+                    level: B3BookLevel {
+                        price,
+                        quantity: rust_decimal::Decimal::ZERO, // ProfitDLL doesn't provide quantity
+                        position,
+                    },
                 }
             }
             CallbackEvent::AccountChanged { account_id, account_holder, broker_name, broker_id } => {
-                B3MarketEvent::AccountChanged {
-                    account_id,
-                    account_holder,
-                    broker_name,
+                let account = B3Account {
+                    account_id: account_id.into(),
+                    account_holder: account_holder.into(),
+                    broker_name: broker_name.into(),
                     broker_id,
-                }
+                    balances: Vec::new(), // Would be populated separately
+                };
+                
+                B3MarketEvent::AccountChanged { account }
             }
             CallbackEvent::InvalidTicker { ticker, exchange, .. } => {
-                B3MarketEvent::InvalidTicker {
-                    ticker,
-                    exchange,
+                B3MarketEvent::InvalidInstrument {
+                    instrument: B3Instrument::new(ticker, exchange),
                 }
             }
             _ => {
-                // Handle other events as needed
+                // Handle other events as generic state change
                 B3MarketEvent::StateChanged {
                     connection_type: "unknown".to_string(),
                     result: 0,
@@ -182,32 +191,41 @@ impl B3MarketEvent {
     }
 }
 
-/// B3 subscription types
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum B3SubKind {
+/// B3 subscription types for different data feeds
+#[derive(Debug, Clone)]
+pub enum B3SubscriptionType {
     /// Tick-by-tick trades
     Trades,
     /// Order book depth
     OrderBook,
     /// Daily summary/candle data
     DailySummary,
+    /// All data types
+    All,
 }
 
-/// Default implementation for B3 stream selection
-pub struct B3StreamSelector;
-
-impl B3StreamSelector {
-    pub fn new() -> Self {
-        Self
-    }
+/// Future connector trait for B3 connectivity providers
+/// 
+/// This trait can be implemented by:
+/// - B3ProfitConnector (current implementation)
+/// - B3RestConnector (future official API)
+/// - B3WebSocketConnector (future real-time feed)
+/// - MockB3Connector (for testing)
+pub trait B3Connector {
+    type Error: std::error::Error + Send + Sync + 'static;
+    
+    /// Initialize the connection
+    async fn connect(&mut self) -> Result<(), Self::Error>;
+    
+    /// Subscribe to instrument data
+    async fn subscribe(&self, instrument: &B3Instrument, sub_type: B3SubscriptionType) -> Result<(), Self::Error>;
+    
+    /// Get next market event
+    async fn next_event(&mut self) -> Option<B3MarketEvent>;
+    
+    /// Disconnect
+    async fn disconnect(&mut self) -> Result<(), Self::Error>;
 }
 
-impl Default for B3StreamSelector {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-// Note: Additional trait implementations would be needed here
-// to fully integrate with the Toucan framework, but this provides
-// the basic structure for B3 integration via ProfitDLL
+// Re-exports for convenience
+pub use types::*;

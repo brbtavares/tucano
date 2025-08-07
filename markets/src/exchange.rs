@@ -18,14 +18,15 @@ impl std::fmt::Display for ExchangeIndex {
     }
 }
 
-/// Unique identifier for an execution server.
-///
-/// ### Notes
-/// An execution may have a distinct server for different
-/// [`InstrumentKinds`](super::instrument::kind::InstrumentKind).
-///
-/// For example, BinanceSpot and BinanceFuturesUsd have distinct APIs, and are therefore
-/// represented as unique variants.
+/// Core trait for exchanges - simplified abstraction
+pub trait Exchange {
+    type ExchangeId: Copy + Eq + std::hash::Hash + std::fmt::Debug;
+    
+    fn id(&self) -> Self::ExchangeId;
+    fn name(&self) -> &'static str;
+}
+
+/// Simplified exchange ID enum - focused on essential exchanges
 #[derive(
     Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Display,
 )]
@@ -34,14 +35,8 @@ pub enum ExchangeId {
     Other,
     Simulated,
     Mock,
-    // Brazilian Stock Exchange (B3)
+    /// Brazilian Stock Exchange (B3)
     B3,
-    // Binance (kept as model for crypto)
-    BinanceFuturesCoin,
-    BinanceFuturesUsd,
-    BinanceOptions,
-    BinancePortfolioMargin,
-    BinanceSpot,
 }
 
 impl ExchangeId {
@@ -49,14 +44,9 @@ impl ExchangeId {
     pub fn as_str(&self) -> &'static str {
         match self {
             ExchangeId::Other => "other",
-            ExchangeId::Simulated => "simulated",
+            ExchangeId::Simulated => "simulated", 
             ExchangeId::Mock => "mock",
             ExchangeId::B3 => "b3",
-            ExchangeId::BinanceFuturesCoin => "binance_futures_coin",
-            ExchangeId::BinanceFuturesUsd => "binance_futures_usd",
-            ExchangeId::BinanceOptions => "binance_options",
-            ExchangeId::BinancePortfolioMargin => "binance_portfolio_margin",
-            ExchangeId::BinanceSpot => "binance_spot",
         }
     }
 }

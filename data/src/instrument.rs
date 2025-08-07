@@ -1,11 +1,7 @@
 use markets::{
     Keyed,
-    instrument::{
-        Instrument,
-        market_data::{MarketDataInstrument, kind::MarketDataInstrumentKind},
-        name::InstrumentNameExchange,
-    },
 };
+use crate::compat::{MarketDataInstrument, MarketDataInstrumentKind, InstrumentNameExchange};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -88,12 +84,12 @@ where
 }
 
 impl<ExchangeKey, AssetKey, InstrumentKey>
-    From<&Keyed<InstrumentKey, Instrument<ExchangeKey, AssetKey>>>
+    From<&Keyed<InstrumentKey, dyn markets::Instrument<Symbol = String>>>
     for MarketInstrumentData<InstrumentKey>
 where
     InstrumentKey: Clone,
 {
-    fn from(value: &Keyed<InstrumentKey, Instrument<ExchangeKey, AssetKey>>) -> Self {
+    fn from(value: &Keyed<InstrumentKey, dyn markets::Instrument<Symbol = String>>) -> Self {
         Self {
             key: value.key.clone(),
             name_exchange: value.value.name_exchange.clone(),

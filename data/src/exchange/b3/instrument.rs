@@ -1,9 +1,8 @@
 //! B3 instrument definitions and utilities
 
-use crate::instrument::InstrumentData;
+use crate::{instrument::InstrumentData, compat::MarketDataInstrumentKind};
 use markets::{
-    exchange::ExchangeId, 
-    instrument::market_data::kind::MarketDataInstrumentKind
+    Instrument, // Import trait from simplified markets
 };
 use serde::{Deserialize, Serialize};
 use rust_decimal::Decimal;
@@ -100,6 +99,16 @@ impl B3Instrument {
         }
     }
 
+    /// Create a BOVESPA stock instrument
+    pub fn bovespa(ticker: impl Into<String>) -> Self {
+        Self::new(ticker.into(), "BOVESPA".to_string(), B3SecurityType::Stock)
+    }
+
+    /// Create a BMF futures instrument  
+    pub fn bmf(ticker: impl Into<String>) -> Self {
+        Self::new(ticker.into(), "BMF".to_string(), B3SecurityType::Future)
+    }
+
     /// Get the full symbol including exchange
     pub fn symbol(&self) -> String {
         format!("{}@{}", self.ticker, self.exchange)
@@ -124,6 +133,19 @@ impl B3Instrument {
             self.security_type,
             B3SecurityType::Bond | B3SecurityType::Debenture
         )
+    }
+}
+
+/// Implement markets::Instrument trait for B3Instrument
+impl Instrument for B3Instrument {
+    type Symbol = String;
+    
+    fn symbol(&self) -> &Self::Symbol {
+        &self.ticker
+    }
+    
+    fn market(&self) -> &str {
+        &self.exchange
     }
 }
 

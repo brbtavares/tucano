@@ -439,7 +439,7 @@ fn test_engine_process_engine_event_with_audit() {
     );
 
     // Simulate exchange disconnection
-    let event = EngineEvent::Market(MarketStreamEvent::Reconnecting(ExchangeId::BinanceSpot));
+    let event = EngineEvent::Market(MarketStreamEvent::Reconnecting(ExchangeId::B3));
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(20));
     assert_eq!(

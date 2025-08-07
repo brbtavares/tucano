@@ -389,7 +389,7 @@ pub mod test_utils {
         MarketEvent {
             time_exchange,
             time_received,
-            exchange: ExchangeId::BinanceSpot,
+            exchange: ExchangeId::B3,
             instrument,
             kind: DataKind::Trade(PublicTrade {
                 id: "trade_id".to_string(),
@@ -400,3 +400,8 @@ pub mod test_utils {
         }
     }
 }
+
+pub mod compat;
+
+#[cfg(test)]
+mod b3_hybrid_test;
