@@ -48,8 +48,7 @@ impl AssetStates {
     /// Panics if the `AssetState` associated with the `AssetIndex` does not exist.
     pub fn asset_index(&self, key: &AssetIndex) -> &AssetState {
         self.0
-            .get_index(key.index())
-            .map(|(_key, state)| state)
+            .get(key)
             .unwrap_or_else(|| panic!("AssetStates does not contain: {key}"))
     }
 
@@ -58,8 +57,7 @@ impl AssetStates {
     /// Panics if the `AssetState` associated with the `AssetIndex` does not exist.
     pub fn asset_index_mut(&mut self, key: &AssetIndex) -> &mut AssetState {
         self.0
-            .get_index_mut(key.index())
-            .map(|(_key, state)| state)
+            .get_mut(key)
             .unwrap_or_else(|| panic!("AssetStates does not contain: {key}"))
     }
 
@@ -90,7 +88,7 @@ impl AssetStates {
         match filter {
             None => Either::Left(self.assets()),
             Exchanges(exchanges) => Either::Right(self.0.iter().filter_map(|(asset, state)| {
-                if exchanges.contains(&asset.exchange) {
+                if exchanges.contains(&asset.exchange_id) {
                     Some(state)
                 } else {
                     Option::<&AssetState>::None
@@ -114,7 +112,7 @@ impl AssetStates {
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Constructor)]
 pub struct AssetState {
     /// `Asset` name data that details the internal and exchange names.
-    pub asset: Asset,
+    pub asset: String, // Using String as concrete asset type
 
     /// TearSheet generator for summarising trading session changes the asset.
     pub statistics: TearSheetAssetGenerator,

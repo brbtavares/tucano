@@ -20,9 +20,8 @@ use execution::{
         },
         state::{Open, OrderState},
     },
-    engine::error::IndexError,
 };
-use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use execution::{AssetIndex, ExchangeIndex, InstrumentIndex, IndexError};
 use markets::exchange::ExchangeId;
 use integration::{
     channel::{Tx, UnboundedTx, mpsc_unbounded},
@@ -182,7 +181,7 @@ where
             Ok(snapshot) => {
                 let indexed_snapshot = indexer.snapshot(snapshot)?;
                 Ok(AccountEvent {
-                    exchange: indexer.map.exchange.key,
+                    exchange: indexer.map.exchange.key.clone(),
                     kind: AccountEventKind::Snapshot(indexed_snapshot),
                 })
             }
@@ -355,7 +354,7 @@ where
         let order = self.indexer.order_response_cancel(order)?;
 
         Ok(AccountStreamEvent::Item(AccountEvent {
-            exchange: order.key.exchange,
+            exchange: order.key.exchange.clone(),
             kind: AccountEventKind::OrderCancelled(order),
         }))
     }
@@ -366,7 +365,7 @@ where
         let OrderRequestCancel { key, state: _ } = order;
 
         AccountStreamEvent::Item(AccountEvent {
-            exchange: key.exchange,
+            exchange: key.exchange.clone(),
             kind: AccountEventKind::OrderCancelled(OrderResponseCancel {
                 key,
                 state: Err(OrderError::Connectivity(ConnectivityError::Timeout)),
@@ -397,7 +396,7 @@ where
         };
 
         Ok(AccountStreamEvent::Item(AccountEvent {
-            exchange: key.exchange,
+            exchange: key.exchange.clone(),
             kind: AccountEventKind::OrderSnapshot(Snapshot(Order {
                 key,
                 side,
@@ -416,7 +415,7 @@ where
         let OrderRequestOpen { key, state } = order;
 
         AccountStreamEvent::Item(AccountEvent {
-            exchange: key.exchange,
+            exchange: key.exchange.clone(),
             kind: AccountEventKind::OrderSnapshot(Snapshot(Order {
                 key,
                 side: state.side,

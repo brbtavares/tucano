@@ -80,8 +80,8 @@ where
         exchange: &ExchangeIndex,
     ) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
         self.0
-            .get_index(exchange.index())
-            .and_then(|(_exchange, tx)| tx.as_ref())
+            .get(exchange)
+            .and_then(|tx| tx.as_ref())
             .ok_or_else(|| {
                 UnrecoverableEngineError::IndexError(IndexError::ExchangeIndex(format!(
                     "failed to find ExecutionTx for ExchangeIndex: {exchange}. Available: {self:?}"

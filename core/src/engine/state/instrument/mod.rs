@@ -29,6 +29,28 @@ use itertools::{Either, Itertools};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
+/// Concrete instrument implementation
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ConcreteInstrument {
+    pub symbol: String,
+    pub market: String,
+    pub exchange: String,
+    pub underlying: Option<String>, // Simplified underlying representation
+    pub name_exchange: String,      // Exchange-specific name
+}
+
+impl Instrument for ConcreteInstrument {
+    type Symbol = String;
+    
+    fn symbol(&self) -> &Self::Symbol {
+        &self.symbol
+    }
+    
+    fn market(&self) -> &str {
+        &self.market
+    }
+}
+
 /// Placeholder types
 pub type AssetNameExchange = String;
 pub type InstrumentNameExchange = String;
@@ -67,8 +89,7 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
     /// Panics if `InstrumentState` associated with the `InstrumentIndex` does not exist.
     pub fn instrument_index(&self, key: &InstrumentIndex) -> &InstrumentState<InstrumentData> {
         self.0
-            .get_index(key.index())
-            .map(|(_key, state)| state)
+            .get(key)
             .unwrap_or_else(|| panic!("InstrumentStates does not contain: {key}"))
     }
 
@@ -80,8 +101,7 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
         key: &InstrumentIndex,
     ) -> &mut InstrumentState<InstrumentData> {
         self.0
-            .get_index_mut(key.index())
-            .map(|(_key, state)| state)
+            .get_mut(key)
             .unwrap_or_else(|| panic!("InstrumentStates does not contain: {key}"))
     }
 
@@ -258,7 +278,7 @@ pub struct InstrumentState<
     pub key: InstrumentKey,
 
     /// Complete instrument definition.
-    pub instrument: Instrument<ExchangeKey, AssetKey>,
+    pub instrument: ConcreteInstrument, // Using concrete instrument type
 
     /// TearSheet generator for summarising the trading performance associated with an Instrument.
     pub tear_sheet: TearSheetGenerator,
@@ -340,7 +360,7 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
                     timestamp: closed.time_exit,
                     pnl_realised: closed.pnl_realised,
                     time_exit: closed.time_exit,
-                    instrument: InstrumentIndex(0), // Placeholder conversion
+                    instrument: "0".to_string(), // Placeholder conversion
                     price_entry_average: closed.price_entry_average,
                     quantity_abs_max: closed.quantity_abs_max,
                 };

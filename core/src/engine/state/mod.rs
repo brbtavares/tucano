@@ -29,7 +29,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
 /// Placeholder for IndexedInstruments
-pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, Instrument<Keyed<ExchangeIndex, ExchangeId>, AssetIndex>>>;
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, crate::engine::state::instrument::ConcreteInstrument>>;
 
 /// Asset-centric state and associated state management logic.
 pub mod asset;
@@ -221,9 +221,7 @@ impl<GlobalData, InstrumentData> From<&EngineState<GlobalData, InstrumentData>>
                         .map(AssetBalance::from)
                         .collect(),
                     instruments: instruments
-                        .instruments(&InstrumentFilter::Exchanges(OneOrMany::One(ExchangeIndex(
-                            index,
-                        ))))
+                        .instruments(&InstrumentFilter::Exchanges(OneOrMany::One(index.to_string())))
                         .map(|snapshot| {
                             generate_unindexed_instrument_account_snapshot(*exchange, snapshot)
                         })

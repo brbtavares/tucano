@@ -1,5 +1,5 @@
 use crate::{
-    engine::{clock::EngineClock, execution_tx::MultiExchangeTxMap},
+    engine::{clock::EngineClock, execution_tx::MultiExchangeTxMap, state::instrument::ConcreteInstrument},
     error::ToucanError,
     execution::{
         AccountStreamEvent, Execution, error::ExecutionError, manager::ExecutionManager,
@@ -415,7 +415,7 @@ impl IntoIterator for ExecutionHandles {
 fn generate_mock_exchange_instruments(
     instruments: &IndexedInstruments,
     exchange: ExchangeId,
-) -> FnvHashMap<InstrumentNameExchange, Instrument<ExchangeId, AssetNameExchange>> {
+) -> FnvHashMap<InstrumentNameExchange, ConcreteInstrument> {
     instruments
         .instruments()
         .iter()
@@ -428,91 +428,14 @@ fn generate_mock_exchange_instruments(
                     return None;
                 }
 
-                let Instrument {
-                    exchange,
-                    name_internal,
-                    name_exchange,
-                    underlying,
-                    quote,
-                    kind,
-                    spec,
-                } = instrument;
+                // Access fields from ConcreteInstrument
+                let exchange = &instrument.exchange;
+                let name_internal = &instrument.symbol;
+                let name_exchange = &instrument.name_exchange;
+                let underlying = &instrument.underlying;
 
-                let kind = match kind {
-                    InstrumentKind::Spot => InstrumentKind::Spot,
-                    unsupported => {
-                        panic!("MockExchange does not support: {unsupported:?}")
-                    }
-                };
-
-                let spec = match spec {
-                    Some(spec) => {
-                        let InstrumentSpec {
-                            price,
-                            quantity:
-                                InstrumentSpecQuantity {
-                                    unit,
-                                    min,
-                                    increment,
-                                },
-                            notional,
-                        } = spec;
-
-                        let unit = match unit {
-                            OrderQuantityUnits::Asset(asset) => {
-                                let quantity_asset = instruments
-                                    .find_asset(*asset)
-                                    .unwrap()
-                                    .asset
-                                    .name_exchange
-                                    .clone();
-                                OrderQuantityUnits::Asset(quantity_asset)
-                            }
-                            OrderQuantityUnits::Contract => OrderQuantityUnits::Contract,
-                            OrderQuantityUnits::Quote => OrderQuantityUnits::Quote,
-                        };
-
-                        Some(InstrumentSpec {
-                            price: *price,
-                            quantity: InstrumentSpecQuantity {
-                                unit,
-                                min: *min,
-                                increment: *increment,
-                            },
-                            notional: *notional,
-                        })
-                    }
-                    None => None,
-                };
-
-                let underlying_base = instruments
-                    .find_asset(underlying.base)
-                    .unwrap()
-                    .asset
-                    .name_exchange
-                    .clone();
-
-                let underlying_quote = instruments
-                    .find_asset(underlying.quote)
-                    .unwrap()
-                    .asset
-                    .name_exchange
-                    .clone();
-
-                let instrument = Instrument {
-                    exchange: exchange.value,
-                    name_internal: name_internal.clone(),
-                    name_exchange: name_exchange.clone(),
-                    underlying: Underlying {
-                        base: underlying_base,
-                        quote: underlying_quote,
-                    },
-                    quote: *quote,
-                    kind,
-                    spec,
-                };
-
-                Some((instrument.name_exchange.clone(), instrument))
+                // Return the concrete instrument directly
+                Some((instrument.name_exchange.clone(), instrument.clone()))
             },
         )
         .collect()

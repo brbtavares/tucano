@@ -21,7 +21,7 @@ use crate::order::OrderKey;
 pub type UnindexedOrderKey = OrderKey<String>;
 
 // Para compatibilidade com código antigo que esperava IndexError
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, thiserror::Error, serde::Serialize, serde::Deserialize)]
 pub enum IndexError {
     #[error("Asset index error: {0}")]
     AssetIndex(String),

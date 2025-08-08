@@ -2,6 +2,7 @@
 ///
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
+use crate::engine::state::instrument::ConcreteInstrument;
 use execution::client::mock::MockExecutionConfig;
 use markets::{
     Underlying,
@@ -28,20 +29,28 @@ pub enum InstrumentKind {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct FutureContract {
     pub expiry: String,
+    pub contract_size: f64,
+    pub settlement_asset: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct OptionContract {
     pub strike: f64,
     pub expiry: String,
+    pub contract_size: f64,
+    pub settlement_asset: String,
+    pub kind: String,
+    pub exercise: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct PerpetualContract {
     pub funding_rate: f64,
+    pub contract_size: f64,
+    pub settlement_asset: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
 pub struct InstrumentQuoteAsset {
     pub asset: String,
 }
@@ -49,26 +58,30 @@ pub struct InstrumentQuoteAsset {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct InstrumentSpec {
     pub quantity: InstrumentSpecQuantity,
+    pub price: Option<f64>,
+    pub notional: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct InstrumentSpecQuantity {
-    pub units: OrderQuantityUnits,
+    pub unit: OrderQuantityUnits,
+    pub min: f64,
+    pub increment: f64,
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
 pub enum OrderQuantityUnits {
     Asset(String),
     Contract,
     Quote,
 }
+
 use derive_more::From;
-use serde::{Deserialize, Serialize};
 
 /// Top-level configuration for a full trading system.
 ///
 /// Contains configuration for all instruments and execution components.
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct SystemConfig {
     /// Configurations for all instruments the system will track.
     pub instruments: Vec<InstrumentConfig>,
@@ -78,7 +91,7 @@ pub struct SystemConfig {
 }
 
 /// Convenient minimal instrument configuration, used to generate an [`Instrument`] on startup.
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct InstrumentConfig {
     /// Exchange identifier where the instrument is traded.
     pub exchange: ExchangeId,
@@ -93,10 +106,10 @@ pub struct InstrumentConfig {
     pub quote: InstrumentQuoteAsset,
 
     /// Type of the instrument (spot, perpetual, future, option).
-    pub kind: InstrumentKind<AssetNameExchange>,
+    pub kind: InstrumentKind,
 
     /// Optional additional specifications for the instrument.
-    pub spec: Option<InstrumentSpec<AssetNameExchange>>,
+    pub spec: Option<InstrumentSpec>,
 }
 
 /// Configuration for an execution link.
@@ -110,58 +123,14 @@ pub enum ExecutionConfig {
     Mock(MockExecutionConfig),
 }
 
-impl From<InstrumentConfig> for Instrument<ExchangeId, Asset> {
+impl From<InstrumentConfig> for ConcreteInstrument {
     fn from(value: InstrumentConfig) -> Self {
         Self {
-            exchange: value.exchange,
-            name_internal: InstrumentNameInternal::new_from_exchange_underlying(
-                value.exchange,
-                &value.underlying.base,
-                &value.underlying.quote,
-            ),
+            symbol: value.underlying.base.clone(),
+            market: "default_market".to_string(),
+            exchange: format!("{:?}", value.exchange),
+            underlying: Some(format!("{}_{}", value.underlying.base, value.underlying.quote)),
             name_exchange: value.name_exchange,
-            underlying: Underlying {
-                base: Asset::new_from_exchange(value.underlying.base),
-                quote: Asset::new_from_exchange(value.underlying.quote),
-            },
-            quote: value.quote,
-            kind: match value.kind {
-                InstrumentKind::Spot => InstrumentKind::Spot,
-                InstrumentKind::Perpetual(contract) => {
-                    InstrumentKind::Perpetual(PerpetualContract {
-                        contract_size: contract.contract_size,
-                        settlement_asset: Asset::new_from_exchange(contract.settlement_asset),
-                    })
-                }
-                InstrumentKind::Future(contract) => InstrumentKind::Future(FutureContract {
-                    contract_size: contract.contract_size,
-                    settlement_asset: Asset::new_from_exchange(contract.settlement_asset),
-                    expiry: contract.expiry,
-                }),
-                InstrumentKind::Option(contract) => InstrumentKind::Option(OptionContract {
-                    contract_size: contract.contract_size,
-                    settlement_asset: Asset::new_from_exchange(contract.settlement_asset),
-                    kind: contract.kind,
-                    exercise: contract.exercise,
-                    expiry: contract.expiry,
-                    strike: contract.strike,
-                }),
-            },
-            spec: value.spec.map(|spec| InstrumentSpec {
-                price: spec.price,
-                quantity: InstrumentSpecQuantity {
-                    unit: match spec.quantity.unit {
-                        OrderQuantityUnits::Asset(asset) => {
-                            OrderQuantityUnits::Asset(Asset::new_from_exchange(asset))
-                        }
-                        OrderQuantityUnits::Contract => OrderQuantityUnits::Contract,
-                        OrderQuantityUnits::Quote => OrderQuantityUnits::Quote,
-                    },
-                    min: spec.quantity.min,
-                    increment: spec.quantity.increment,
-                },
-                notional: spec.notional,
-            }),
         }
     }
 }

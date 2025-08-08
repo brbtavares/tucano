@@ -102,8 +102,7 @@ impl ConnectivityStates {
     /// Panics if the `ConnectivityState` associated with the `ExchangeIndex` is not found.
     pub fn connectivity_index(&self, key: &ExchangeIndex) -> &ConnectivityState {
         self.exchanges
-            .get_index(key.index())
-            .map(|(_key, state)| state)
+            .get(key)
             .unwrap_or_else(|| panic!("ConnectivityStates does not contain: {key}"))
     }
 
@@ -113,8 +112,7 @@ impl ConnectivityStates {
     /// Panics if the `ConnectivityState` associated with the `ExchangeIndex` is not found.
     pub fn connectivity_index_mut(&mut self, key: &ExchangeIndex) -> &mut ConnectivityState {
         self.exchanges
-            .get_index_mut(key.index())
-            .map(|(_key, state)| state)
+            .get_mut(key)
             .unwrap_or_else(|| panic!("ConnectivityStates does not contain: {key}"))
     }
 

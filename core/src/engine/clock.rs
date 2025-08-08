@@ -175,7 +175,7 @@ mod tests {
         EngineEvent::Market(MarketStreamEvent::Item(MarketEvent {
             time_exchange,
             time_received: Default::default(),
-            exchange: ExchangeId::BinanceSpot,
+            exchange: ExchangeId::Mock,
             instrument: InstrumentIndex::new(0),
             kind: (),
         }))
@@ -256,7 +256,7 @@ mod tests {
                 name: "event with no timestamp",
                 time_initial: plus_ms(1000),
                 input_events: vec![EngineEvent::Market(MarketStreamEvent::Reconnecting(
-                    ExchangeId::BinanceSpot,
+                    ExchangeId::Mock,
                 ))],
                 expected_time_exchange_last: plus_ms(1000), // Should not update
                 delay_ms: None,
@@ -267,7 +267,7 @@ mod tests {
                 time_initial: time_base,
                 input_events: vec![
                     market_event(plus_ms(1000)),
-                    EngineEvent::Market(MarketStreamEvent::Reconnecting(ExchangeId::BinanceSpot)),
+                    EngineEvent::Market(MarketStreamEvent::Reconnecting(ExchangeId::Mock)),
                     market_event(plus_ms(2000)),
                 ],
                 expected_time_exchange_last: plus_ms(2000),

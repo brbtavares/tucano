@@ -1,5 +1,4 @@
-use crate::engine::error::IndexError;
-use execution::error::ClientError;
+use execution::{error::ClientError, IndexError};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

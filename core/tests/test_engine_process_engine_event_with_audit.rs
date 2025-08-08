@@ -451,7 +451,7 @@ fn test_engine_process_engine_event_with_audit() {
         engine
             .state
             .connectivity
-            .connectivity(&ExchangeId::BinanceSpot)
+            .connectivity(&ExchangeId::Mock)
             .market_data,
         Health::Reconnecting
     );
@@ -459,7 +459,7 @@ fn test_engine_process_engine_event_with_audit() {
         engine
             .state
             .connectivity
-            .connectivity(&ExchangeId::BinanceSpot)
+            .connectivity(&ExchangeId::Mock)
             .account,
         Health::Healthy
     );
@@ -831,8 +831,8 @@ fn build_engine(
 > {
     let instruments = IndexedInstruments::builder()
         .add_instrument(Instrument::spot(
-            ExchangeId::BinanceSpot,
-            "binance_spot_btc_usdt",
+            ExchangeId::Mock,
+            "mock_btc_usdt",
             "BTCUSDT",
             Underlying::new("btc", "usdt"),
             Some(InstrumentSpec::new(
@@ -846,8 +846,8 @@ fn build_engine(
             )),
         ))
         .add_instrument(Instrument::spot(
-            ExchangeId::BinanceSpot,
-            "binance_spot_eth_btc",
+            ExchangeId::Mock,
+            "mock_eth_btc",
             "ETHBTC",
             Underlying::new("eth", "btc"),
             Some(InstrumentSpec::new(
@@ -866,9 +866,9 @@ fn build_engine(
     .time_engine_start(STARTING_TIMESTAMP)
     .trading_state(trading_state)
     .balances([
-        (ExchangeId::BinanceSpot, "usdt", STARTING_BALANCE_USDT),
-        (ExchangeId::BinanceSpot, "btc", STARTING_BALANCE_BTC),
-        (ExchangeId::BinanceSpot, "eth", STARTING_BALANCE_ETH),
+        (ExchangeId::Mock, "usdt", STARTING_BALANCE_USDT),
+        (ExchangeId::Mock, "btc", STARTING_BALANCE_BTC),
+        (ExchangeId::Mock, "eth", STARTING_BALANCE_ETH),
     ])
     .build();
 
@@ -876,7 +876,7 @@ fn build_engine(
     assert_eq!(initial_account.len(), 1);
 
     let execution_txs =
-        MultiExchangeTxMap::from_iter([(ExchangeId::BinanceSpot, Some(execution_tx))]);
+        MultiExchangeTxMap::from_iter([(ExchangeId::Mock, Some(execution_tx))]);
 
     Engine::new(
         clock,
@@ -911,7 +911,7 @@ fn market_event_trade(time_plus: u64, instrument: usize, price: f64) -> EngineEv
     EngineEvent::Market(MarketStreamEvent::Item(MarketEvent {
         time_exchange: time_plus_days(STARTING_TIMESTAMP, time_plus),
         time_received: time_plus_days(STARTING_TIMESTAMP, time_plus),
-        exchange: ExchangeId::BinanceSpot,
+        exchange: ExchangeId::Mock,
         instrument: InstrumentIndex(instrument),
         kind: DataKind::Trade(PublicTrade {
             id: time_plus.to_string(),

@@ -24,12 +24,14 @@ use data::{
     streams::consumer::MarketStreamEvent,
 };
 use ::execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
-use markets::{Asset, Side};
 use integration::Terminal;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use serde::{Deserialize, Serialize};
 use shutdown::Shutdown;
+
+// Suppress unused extern crate warnings
+use prettytable as _;
 
 /// Algorithmic trading `Engine`, and entry points for processing input `Events`.
 ///
@@ -171,11 +173,8 @@ pub mod test_utils {
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
-        AssetIndex,
-        QuoteAsset,
-        InstrumentIndex,
     };
-    use markets::{Side, Asset};
+    use markets::Side;
     use analytics::summary::asset::TearSheetAssetGenerator;
     
     // Placeholder type for integration
@@ -223,7 +222,7 @@ pub mod test_utils {
         price: f64,
         quantity: f64,
         fees: f64,
-    ) -> Trade<QuoteAsset, InstrumentNameInternal> {
+    ) -> Trade<String, InstrumentNameInternal> {
         Trade {
             id: TradeId::new("trade_id"),
             order_id: OrderId::new("order_id"),
@@ -234,7 +233,7 @@ pub mod test_utils {
             price: price.try_into().unwrap(),
             quantity: quantity.try_into().unwrap(),
             fees: AssetFees {
-                asset: QuoteAsset,
+                asset: "quote_asset".to_string(), // QuoteAsset is String
                 fees: fees.try_into().unwrap(),
             },
         }

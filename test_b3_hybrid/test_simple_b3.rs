@@ -8,9 +8,11 @@ pub struct B3Asset {
 }
 
 impl Asset for B3Asset {
-    type Symbol = String;
+    fn asset_type(&self) -> markets::AssetType {
+        markets::AssetType::Stock // ou o tipo apropriado para o B3
+    }
     
-    fn symbol(&self) -> &Self::Symbol {
+    fn symbol(&self) -> &str {
         &self.symbol
     }
 }
@@ -20,10 +22,14 @@ impl Asset for B3Asset {
 pub struct B3Exchange;
 
 impl Exchange for B3Exchange {
-    type Id = String;
+    type ExchangeId = markets::ExchangeId;
     
-    fn id(&self) -> Self::Id {
-        "B3".to_string()
+    fn id(&self) -> Self::ExchangeId {
+        markets::ExchangeId::B3
+    }
+    
+    fn name(&self) -> &'static str {
+        "B3 - Brasil Bolsa Balcão"
     }
 }
 
@@ -40,6 +46,10 @@ impl Instrument for B3Instrument {
     
     fn symbol(&self) -> &Self::Symbol {
         &self.symbol
+    }
+    
+    fn market(&self) -> &str {
+        "B3"
     }
 }
 
@@ -61,8 +71,10 @@ fn main() {
     };
     
     println!("Asset symbol: {}", asset.symbol());
-    println!("Exchange ID: {}", exchange.id());
+    println!("Exchange ID: {:?}", exchange.id());
+    println!("Exchange name: {}", exchange.name());
     println!("Instrument symbol: {}", instrument.symbol());
+    println!("Instrument market: {}", instrument.market());
     
     println!("✅ B3 hybrid architecture working!");
 }
