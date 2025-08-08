@@ -1,3 +1,64 @@
+//! # Execution Management
+//!
+//! This module provides high-level execution request routing and account management for the Toucan trading framework.
+//! It orchestrates order execution across multiple exchanges while maintaining centralized account state and balance tracking.
+//!
+//! ## Key Components
+//!
+//! ### ExecutionManager
+//! - Routes execution requests to appropriate exchanges
+//! - Manages per-exchange execution links
+//! - Handles account event processing and state updates
+//! - Provides unified interface for multi-exchange trading
+//!
+//! ### ExecutionBuilder
+//! - Ergonomic configuration for multi-exchange execution setup
+//! - Supports both live and mock exchange connections
+//! - Handles initialization of execution links and communication channels
+//!
+//! ### Request Routing
+//! - Centralized request distribution based on exchange and instrument
+//! - Order lifecycle management across different exchange protocols
+//! - Error handling and retry logic for execution failures
+//!
+//! ## Architecture
+//!
+//! ```text
+//! ┌─────────────────────────────────────────────────────────────┐
+//! │                    EXECUTION LAYER                          │
+//! ├─────────────────┬─────────────────┬─────────────────────────┤
+//! │ ExecutionManager│ Request Router  │   Account Manager       │
+//! │                 │                 │                         │
+//! │ • Multi-Exchange│ • Order Routing │ • Balance Tracking      │
+//! │   Coordination  │ • Request Queue │ • Event Processing      │
+//! │ • State Sync    │ • Error Handling│ • State Replication     │
+//! └─────────────────┴─────────────────┴─────────────────────────┘
+//!                              │
+//! ┌─────────────────────────────┼─────────────────────────────┐
+//! │            EXCHANGE CONNECTIONS                          │
+//! ├─────────────────────────────┼─────────────────────────────┤
+//! │   Binance ←→ WebSocket      │     Kraken ←→ REST API      │
+//! │   Coinbase ←→ FIX           │     Custom ←→ Native        │
+//! └─────────────────────────────┴─────────────────────────────┘
+//! ```
+//!
+//! ## Usage Example
+//!
+//! ```rust
+//! use core::execution::{builder::ExecutionBuilder, request::ExecutionRequest};
+//!
+//! // Build multi-exchange execution system
+//! let execution = ExecutionBuilder::new()
+//!     .add_exchange("binance", binance_config)
+//!     .add_exchange("kraken", kraken_config)
+//!     .build()
+//!     .await?;
+//!
+//! // Process execution requests
+//! let request = ExecutionRequest::OpenOrder(order_request);
+//! execution.send(request).await?;
+//! ```
+
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
 use data::streams::reconnect;
 use execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};

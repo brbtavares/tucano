@@ -1,3 +1,72 @@
+//! # Backtesting Framework
+//!
+//! This module provides a comprehensive backtesting framework for algorithmic trading strategies.
+//! It enables historical simulation of trading strategies using market data and provides detailed
+//! performance analysis and reporting capabilities.
+//!
+//! ## Key Features
+//!
+//! ### Historical Simulation
+//! - **Market Data Replay**: Process historical market data chronologically
+//! - **Strategy Execution**: Run trading strategies against historical data
+//! - **Order Simulation**: Simulate order execution without real market impact
+//! - **Multi-timeframe Support**: Backtest across different time intervals
+//!
+//! ### Performance Analysis
+//! - **Comprehensive Metrics**: Calculate Sharpe ratio, Sortino ratio, max drawdown, etc.
+//! - **Risk Analytics**: Analyze risk-adjusted returns and portfolio volatility
+//! - **Trade Analysis**: Detailed breakdown of individual trade performance
+//! - **Timeline Analysis**: Performance evolution over time
+//!
+//! ### Multi-Strategy Testing
+//! - **Parallel Execution**: Run multiple strategy variations simultaneously
+//! - **Comparative Analysis**: Compare performance across different strategies
+//! - **Parameter Optimization**: Test strategy parameter combinations
+//! - **Portfolio Simulation**: Multi-asset and multi-strategy portfolios
+//!
+//! ## Architecture
+//!
+//! ```text
+//! ┌─────────────────────────────────────────────────────────┐
+//! │                 BACKTEST FRAMEWORK                      │
+//! ├─────────────────┬─────────────────┬───────────────────────┤
+//! │ Historical Data │ Strategy Engine │ Performance Analytics│
+//! │                 │                 │                       │
+//! │ • Market Replay │ • Order Sim     │ • Metrics Calculation │
+//! │ • Time Control  │ • Risk Mgmt     │ • Reporting           │
+//! │ • Data Loading  │ • State Track   │ • Visualization       │
+//! └─────────────────┴─────────────────┴───────────────────────┘
+//!                              │
+//! ┌─────────────────────────────┼─────────────────────────────┐
+//! │                   DATA SOURCES                          │
+//! ├─────────────────────────────┼─────────────────────────────┤
+//! │ Historical Candles          │    Trade & Quote Data       │
+//! │ Order Book Snapshots        │    Corporate Actions        │
+//! └─────────────────────────────┴─────────────────────────────┘
+//! ```
+//!
+//! ## Usage Example
+//!
+//! ```rust
+//! use core::backtest::{BacktestSummary, market_data::BacktestMarketData};
+//! use analytics::time::TimeInterval;
+//!
+//! // Setup backtest configuration
+//! let market_data = BacktestMarketData::load_from_csv("historical_data.csv").await?;
+//! let strategy = MyTradingStrategy::new();
+//!
+//! // Run backtest
+//! let summary = run_backtest(
+//!     strategy,
+//!     market_data,
+//!     TimeInterval::days(365), // 1 year backtest
+//! ).await?;
+//!
+//! // Analyze results
+//! println!("Sharpe Ratio: {:.2}", summary.sharpe_ratio());
+//! println!("Max Drawdown: {:.2}%", summary.max_drawdown() * 100.0);
+//! println!("Total Return: {:.2}%", summary.total_return() * 100.0);
+//! ```
 /// Backtesting utilities for algorithmic trading strategies.
 ///
 /// This module provides tools for running historical simulations of trading strategies

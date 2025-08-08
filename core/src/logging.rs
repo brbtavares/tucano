@@ -1,3 +1,46 @@
+//! # Logging Configuration
+//!
+//! This module provides standardized logging configuration for the Toucan trading framework.
+//! It sets up structured logging with proper filtering to avoid noise from internal audit operations.
+//!
+//! ## Features
+//!
+//! - **Configurable Output**: Supports both human-readable and JSON log formats
+//! - **Environment-based Filtering**: Uses `RUST_LOG` environment variable for log level control
+//! - **Audit Noise Filtering**: Automatically filters out verbose audit replica state updates
+//! - **Default INFO Level**: Provides sensible defaults while allowing customization
+//!
+//! ## Usage
+//!
+//! ### Standard Logging (Human-readable)
+//! ```rust
+//! use core::logging::init_logging;
+//!
+//! fn main() {
+//!     init_logging();
+//!     tracing::info!("Trading system started");
+//! }
+//! ```
+//!
+//! ### JSON Logging (For log aggregation systems)
+//! ```rust
+//! use core::logging::init_json_logging;
+//!
+//! fn main() {
+//!     init_json_logging();
+//!     tracing::info!("Trading system started");
+//! }
+//! ```
+//!
+//! ### Environment Configuration
+//! ```bash
+//! # Set log level to debug for all modules
+//! export RUST_LOG=debug
+//!
+//! # Set specific log levels per module
+//! export RUST_LOG=core=info,execution=debug,data=warn
+//! ```
+
 use crate::engine::audit::state_replica::AUDIT_REPLICA_STATE_UPDATE_SPAN_NAME;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
