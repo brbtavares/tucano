@@ -1,5 +1,4 @@
 use crate::{
-    compat::MarketDataInstrument,
     error::DataError,
     streams::consumer::MarketStreamResult,
     subscription::{
@@ -9,7 +8,7 @@ use crate::{
         trade::PublicTrade,
     },
 };
-use markets::{exchange::ExchangeId};
+use markets::{exchange::ExchangeId, MarketDataInstrument};
 use chrono::{DateTime, Utc};
 use derive_more::From;
 use serde::{Deserialize, Serialize};

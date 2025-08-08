@@ -1,7 +1,6 @@
 use markets::{
-    Keyed,
+    Keyed, MarketDataInstrument, InstrumentKind,
 };
-use crate::compat::{MarketDataInstrument, MarketDataInstrumentKind, InstrumentNameExchange};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -10,13 +9,11 @@ use std::fmt::Debug;
 /// Verbose `InstrumentData` is often used to subscribe to market data feeds, but it's unique `Id`
 /// can then be used to key consumed [MarketEvents](crate::event::MarketEvent), significantly reducing
 /// duplication in the case of complex instruments (eg/ options).
-pub trait InstrumentData
-where
-    Self: Clone + Debug + Send + Sync,
+pub trait InstrumentData: Debug + Clone + Eq + Send + Sync
 {
     type Key: Debug + Clone + Eq + Send + Sync;
     fn key(&self) -> &Self::Key;
-    fn kind(&self) -> &MarketDataInstrumentKind;
+    fn kind(&self) -> &InstrumentKind;
 }
 
 impl<InstrumentKey> InstrumentData for Keyed<InstrumentKey, MarketDataInstrument>
@@ -29,7 +26,7 @@ where
         &self.key
     }
 
-    fn kind(&self) -> &MarketDataInstrumentKind {
+    fn kind(&self) -> &InstrumentKind {
         &self.value.kind
     }
 }
@@ -41,7 +38,7 @@ impl InstrumentData for MarketDataInstrument {
         self
     }
 
-    fn kind(&self) -> &MarketDataInstrumentKind {
+    fn kind(&self) -> &InstrumentKind {
         &self.kind
     }
 }
@@ -49,8 +46,8 @@ impl InstrumentData for MarketDataInstrument {
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
 pub struct MarketInstrumentData<InstrumentKey> {
     pub key: InstrumentKey,
-    pub name_exchange: InstrumentNameExchange,
-    pub kind: MarketDataInstrumentKind,
+    pub name_exchange: String,
+    pub kind: InstrumentKind,
 }
 
 impl<InstrumentKey> InstrumentData for MarketInstrumentData<InstrumentKey>
@@ -63,7 +60,7 @@ where
         &self.key
     }
 
-    fn kind(&self) -> &MarketDataInstrumentKind {
+    fn kind(&self) -> &InstrumentKind {
         &self.kind
     }
 }
@@ -77,7 +74,7 @@ where
             f,
             "{}_{}_{}",
             self.key,
-            self.name_exchange.as_ref(),
+            self.name_exchange.as_str(),
             self.kind
         )
     }

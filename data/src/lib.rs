@@ -401,7 +401,5 @@ pub mod test_utils {
     }
 }
 
-pub mod compat;
-
 #[cfg(test)]
 mod b3_hybrid_test;

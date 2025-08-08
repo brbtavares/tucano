@@ -1,8 +1,8 @@
 //! B3 instrument definitions and utilities
 
-use crate::{instrument::InstrumentData, compat::MarketDataInstrumentKind};
+use crate::instrument::InstrumentData;
 use markets::{
-    Instrument, // Import trait from simplified markets
+    Instrument, InstrumentKind, // Import trait from simplified markets
 };
 use serde::{Deserialize, Serialize};
 use rust_decimal::Decimal;
@@ -61,22 +61,22 @@ impl From<&str> for B3SecurityType {
     }
 }
 
-impl From<B3SecurityType> for MarketDataInstrumentKind {
+impl From<B3SecurityType> for InstrumentKind {
     fn from(b3_type: B3SecurityType) -> Self {
         match b3_type {
             B3SecurityType::Stock | B3SecurityType::Etf | B3SecurityType::Reit | B3SecurityType::Bdr => {
-                MarketDataInstrumentKind::Spot
+                InstrumentKind::Spot
             }
             B3SecurityType::Option => {
                 // For now, return Spot since we don't have option contract details
-                MarketDataInstrumentKind::Spot
+                InstrumentKind::Spot
             }
             B3SecurityType::Future | B3SecurityType::Forward => {
                 // For now, return Perpetual since we don't have expiry details
-                MarketDataInstrumentKind::Perpetual
+                InstrumentKind::Perpetual
             }
-            B3SecurityType::Bond | B3SecurityType::Debenture => MarketDataInstrumentKind::Spot,
-            B3SecurityType::Other => MarketDataInstrumentKind::Spot,
+            B3SecurityType::Bond | B3SecurityType::Debenture => InstrumentKind::Spot,
+            B3SecurityType::Other => InstrumentKind::Spot,
         }
     }
 }
@@ -156,14 +156,14 @@ impl InstrumentData for B3Instrument {
         &self.ticker
     }
     
-    fn kind(&self) -> &MarketDataInstrumentKind {
+    fn kind(&self) -> &InstrumentKind {
         // For now, we'll store the kind in the instrument
         // This is a simplified implementation
         match self.security_type {
             B3SecurityType::Stock | B3SecurityType::Etf | B3SecurityType::Reit | B3SecurityType::Bdr => {
-                &MarketDataInstrumentKind::Spot
+                &InstrumentKind::Spot
             }
-            _ => &MarketDataInstrumentKind::Spot
+            _ => &InstrumentKind::Spot
         }
     }
 }

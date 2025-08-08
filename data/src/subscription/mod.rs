@@ -1,10 +1,9 @@
 use crate::{
     exchange::Connector, 
     instrument::InstrumentData,
-    compat::{AssetNameInternal, MarketDataInstrument, MarketDataInstrumentKind},
 };
 use markets::{
-    Keyed,
+    Keyed, MarketDataInstrument, InstrumentKind,
     exchange::ExchangeId,
 };
 use integration::{
@@ -91,17 +90,17 @@ pub enum SubKind {
     Candles,
 }
 
-impl<Exchange, S, Kind> From<(Exchange, S, S, MarketDataInstrumentKind, Kind)>
+impl<Exchange, S, Kind> From<(Exchange, S, S, InstrumentKind, Kind)>
     for Subscription<Exchange, MarketDataInstrument, Kind>
 where
-    S: Into<AssetNameInternal> + Into<String>,
+    S: Into<String>,
 {
     fn from(
         (exchange, base, quote, instrument_kind, kind): (
             Exchange,
             S,
             S,
-            MarketDataInstrumentKind,
+            InstrumentKind,
             Kind,
         ),
     ) -> Self {
@@ -115,11 +114,11 @@ impl<InstrumentKey, Exchange, S, Kind>
         Exchange,
         S,
         S,
-        MarketDataInstrumentKind,
+        InstrumentKind,
         Kind,
     )> for Subscription<Exchange, Keyed<InstrumentKey, MarketDataInstrument>, Kind>
 where
-    S: Into<AssetNameInternal> + Into<String>,
+    S: Into<String>,
 {
     fn from(
         (instrument_id, exchange, base, quote, instrument_kind, kind): (
@@ -127,7 +126,7 @@ where
             Exchange,
             S,
             S,
-            MarketDataInstrumentKind,
+            InstrumentKind,
             Kind,
         ),
     ) -> Self {
@@ -183,26 +182,26 @@ where
 }
 
 /// Determines whether the [`Connector`] associated with this [`ExchangeId`] supports the
-/// ingestion of market data for the provided [`MarketDataInstrumentKind`].
+/// ingestion of market data for the provided [`InstrumentKind`].
 #[allow(clippy::match_like_matches_macro)]
 pub fn exchange_supports_instrument_kind(
     exchange: ExchangeId,
-    instrument_kind: &MarketDataInstrumentKind,
+    instrument_kind: &InstrumentKind,
 ) -> bool {
-    use crate::compat::MarketDataInstrumentKind::*;
+    use InstrumentKind::*;
 
     match (exchange, instrument_kind) {
         // Spot
         (_, Spot) => true,
 
         // Future - futures markets only
-        (_, Future { .. }) => false,
+        (_, Future) => false,
 
         // Perpetual - only futures exchanges
         (_, Perpetual) => false,
 
         // Option - no supported options exchanges currently
-        (_, Option { .. }) => false,
+        (_, Option) => false,
     }
 }
 
@@ -231,14 +230,14 @@ where
 }
 
 /// Determines whether the [`Connector`] associated with this [`ExchangeId`] supports the
-/// ingestion of market data for the provided [`MarketDataInstrumentKind`] and [`SubKind`] combination.
+/// ingestion of market data for the provided [`InstrumentKind`] and [`SubKind`] combination.
 pub fn exchange_supports_instrument_kind_sub_kind(
     exchange_id: &ExchangeId,
-    instrument_kind: &MarketDataInstrumentKind,
+    instrument_kind: &InstrumentKind,
     sub_kind: SubKind,
 ) -> bool {
     use ExchangeId::*;
-    use MarketDataInstrumentKind::*;
+    use InstrumentKind::*;
     use SubKind::*;
 
     match (exchange_id, instrument_kind, sub_kind) {
@@ -314,7 +313,7 @@ mod tests {
         use crate::{
             subscription::trade::PublicTrades,
         };
-        use crate::compat::MarketDataInstrument;
+        use markets::MarketDataInstrument;
 
         mod de {
             use super::*;
@@ -322,7 +321,7 @@ mod tests {
                 exchange::b3::B3Exchange,
                 subscription::{book::OrderBooksL2, trade::PublicTrades},
             };
-            use crate::compat::MarketDataInstrument;
+            use markets::MarketDataInstrument;
 
             #[test]
             fn test_subscription_binance_spot_public_trades() {
@@ -347,14 +346,14 @@ mod tests {
 
     mod instrument_map {
         use super::*;
-        use crate::compat::MarketDataInstrument;
+        use markets::MarketDataInstrument;
 
         #[test]
         fn test_find_instrument() {
             // Initialise SubscriptionId-InstrumentKey HashMap
             let ids = Map(FnvHashMap::from_iter([(
                 SubscriptionId::from("present"),
-                MarketDataInstrument::from(("base", "quote", MarketDataInstrumentKind::Spot)),
+                MarketDataInstrument::from(("base", "quote", InstrumentKind::Spot)),
             )]));
 
             struct TestCase {
@@ -369,7 +368,7 @@ mod tests {
                     expected: Ok(MarketDataInstrument::from((
                         "base",
                         "quote",
-                        MarketDataInstrumentKind::Spot,
+                        InstrumentKind::Spot,
                     ))),
                 },
                 TestCase {

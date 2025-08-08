@@ -39,7 +39,7 @@ pub mod side;
 /// Re-export key traits for convenience
 pub use exchange::{Exchange, ExchangeId};
 pub use asset::{Asset, AssetType};
-pub use instrument::Instrument;
+pub use instrument::{Instrument, InstrumentKind, MarketDataInstrument};
 pub use side::Side;
 
 /// A keyed value utility
