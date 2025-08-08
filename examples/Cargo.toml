@@ -5,10 +5,12 @@ edition = "2021"
 
 [dependencies]
 markets = { path = "../markets" }
-tokio = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tokio-stream = { workspace = true }
 rust_decimal = { workspace = true }
 rust_decimal_macros = { workspace = true }
 rand = { workspace = true }
+chrono = { workspace = true }
 
 [[bin]]
 name = "validate_b3_execution"
@@ -17,6 +19,10 @@ path = "validate_b3_execution.rs"
 [[bin]]
 name = "profit_dll_b3_integration"
 path = "profit_dll_b3_integration.rs"
+
+[[bin]]
+name = "profit_dll_windows_config"
+path = "profit_dll_windows_config.rs"
 
 # [[bin]]
 # name = "simple_trading_strategy"

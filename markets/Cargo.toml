@@ -9,6 +9,14 @@ description = "Core Toucan Exchange, Instrument and Asset data structures and as
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["accessibility", "simulation"]
 
+[features]
+default = []
+real_dll = []  # Feature para usar DLL real em Windows
+
+[target.'cfg(windows)'.dependencies]
+# Windows-specific dependencies for ProfitDLL integration
+winapi = { version = "0.3", features = ["libloaderapi", "processthreadsapi"] }
+
 [dev-dependencies]
 rust_decimal_macros = { workspace = true }
 serde_json = { workspace = true }

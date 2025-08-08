@@ -19,10 +19,17 @@
 //! ## Modules
 //! - `broker`: Broker abstraction layer with ProfitDLL integration
 //! - `b3`: Brazilian Stock Exchange (B3) asset definitions
+//! - `profit_dll`: ProfitDLL integration (real DLL on Windows, mock elsewhere)
 
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
+
+/// Re-export key traits for convenience
+pub use asset::{Asset, AssetType};
+pub use instrument::{Instrument, InstrumentKind, MarketDataInstrument};
+pub use side::Side;
+pub use exchange::{Exchange, ExchangeId};
 
 /// Defines exchange abstractions
 pub mod exchange;
@@ -35,12 +42,6 @@ pub mod instrument;
 
 /// Defines side enum
 pub mod side;
-
-/// Re-export key traits for convenience
-pub use exchange::{Exchange, ExchangeId};
-pub use asset::{Asset, AssetType};
-pub use instrument::{Instrument, InstrumentKind, MarketDataInstrument};
-pub use side::Side;
 
 /// A keyed value utility
 #[derive(
@@ -89,6 +90,14 @@ impl<AssetKey> Underlying<AssetKey> {
 // Module declarations
 pub mod broker;
 pub mod b3;
+
+// ProfitDLL integration - conditional compilation
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
+pub mod profit_dll_complete;
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
+pub use profit_dll_complete as profit_dll;
+
+#[cfg(not(all(target_os = "windows", feature = "real_dll")))]
 pub mod profit_dll;
 
 // Re-exports
@@ -106,6 +115,3 @@ pub use profit_dll::{
     NL_OK, NL_INTERNAL_ERROR, NL_NOT_INITIALIZED, NL_INVALID_ARGS,
     NL_WAITING_SERVER, NL_NO_LOGIN, NL_NO_LICENSE,
 };
-
-#[cfg(test)]
-mod hybrid_tests;
