@@ -8,10 +8,8 @@ members = [
     "integration",
     "macros", 
     "markets",
-    "profit-dll",
     "risk",
     "strategy",
-    "test_b3_hybrid",
     "examples"
 ]
 
@@ -24,7 +22,6 @@ markets = { path = "./markets", version = "0.3.1" }
 data = { path = "./data", version = "0.10.1" }
 execution = { path = "./execution", version = "0.5.3" }
 macros = { path = "./macros", version = "0.2.0" }
-profit-dll = { path = "./profit-dll", version = "0.1.0" }
 risk = { path = "./risk", version = "0.1.0" }
 strategy = { path = "./strategy", version = "0.1.0" }
 

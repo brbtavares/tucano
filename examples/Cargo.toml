@@ -1,11 +1,27 @@
 [package]
-name = "validate_b3_execution"
+name = "toucan-examples"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 markets = { path = "../markets" }
+tokio = { workspace = true }
+rust_decimal = { workspace = true }
+rust_decimal_macros = { workspace = true }
+rand = { workspace = true }
 
 [[bin]]
 name = "validate_b3_execution"
 path = "validate_b3_execution.rs"
+
+[[bin]]
+name = "profit_dll_b3_integration"
+path = "profit_dll_b3_integration.rs"
+
+# [[bin]]
+# name = "simple_trading_strategy"
+# path = "simple_trading_strategy.rs"
+
+[[bin]]
+name = "basic_b3_usage"
+path = "basic_b3_usage.rs"

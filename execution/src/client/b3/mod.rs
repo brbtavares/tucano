@@ -9,7 +9,7 @@ pub mod adapter;
 use crate::{
     UnindexedAccountEvent, UnindexedAccountSnapshot, InstrumentAccountSnapshot,
     client::ExecutionClient,
-    error::{UnindexedClientError, UnindexedOrderError},
+    error::{UnindexedClientError, UnindexedOrderError, AssetNameExchange, InstrumentNameExchange},
     order::{
         request::{OrderRequestCancel, OrderRequestOpen, UnindexedOrderResponseCancel},
         state::Open,
@@ -18,12 +18,13 @@ use crate::{
     },
     balance::AssetBalance,
     trade::Trade,
-    AssetNameExchange, InstrumentNameExchange, QuoteAsset,
+    compat::{QuoteAsset},
 };
 use markets::{
     Side, ExchangeId,
+    ProfitError, ProfitConnector, SendOrder, AssetIdentifier, AccountIdentifier,
+    profit_dll::OrderSide,
 };
-use profit_dll::{ProfitConnector, SendOrder, OrderSide, ProfitError};
 use std::sync::Arc;
 use tokio::sync::{Mutex, mpsc};
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -280,7 +281,7 @@ impl B3ExecutionClient {
     ) -> Result<Order<ExchangeId, InstrumentNameExchange, Result<Open, UnindexedOrderError>>, ProfitError> {
         let connector_guard = self.connector.lock().await;
         let _connector = connector_guard.as_ref().ok_or_else(|| {
-            ProfitError::ConnectionFailure("No active connection to B3".to_string())
+            ProfitError::ConnectionFailed("No active connection to B3".to_string())
         })?;
 
         // Convert Toucan order request to ProfitDLL order
@@ -322,19 +323,18 @@ impl B3ExecutionClient {
         // This is a simplified conversion
         // Real implementation would need proper account/asset mapping
         
-        use profit_dll::{AssetIdentifier, AccountIdentifier};
+        // Types are already imported above
+        // AssetIdentifier and AccountIdentifier from markets::profit_dll
 
         let account = AccountIdentifier::new(
-            1, // placeholder broker_id
-            "default".to_string(), // placeholder account_id
-            "".to_string(), // sub_account_id
+            "default".to_string(), // account_id
+            "ProfitDLL".to_string(), // broker
         );
 
         let instrument_str = format!("{:?}", request.key.instrument);
         let asset = AssetIdentifier::new(
-            &instrument_str, // ticker
-            "BOVESPA", // exchange (B3)
-            0, // feed_type
+            instrument_str, // ticker
+            "BOVESPA".to_string(), // exchange (B3)
         );
 
         let order_side = match request.state.side {
@@ -345,21 +345,19 @@ impl B3ExecutionClient {
         let order = match request.state.kind {
             OrderKind::Market => {
                 SendOrder::new_market_order(
-                    account,
                     asset,
-                    "".to_string(), // password - should come from config
+                    account,
                     order_side,
-                    request.state.quantity.to_string().parse().unwrap_or(0.0) as i64,
+                    request.state.quantity,
                 )
             }
             OrderKind::Limit => {
                 SendOrder::new_limit_order(
-                    account,
                     asset,
-                    "".to_string(), // password
+                    account,
                     order_side,
-                    request.state.quantity.to_string().parse().unwrap_or(0.0) as f64,
-                    request.state.price.to_string().parse().unwrap_or(0.0) as i64,
+                    request.state.quantity,
+                    request.state.price,
                 )
             }
         };

@@ -12,9 +12,9 @@ categories = ["accessibility", "simulation"]
 
 [dependencies]
 # Toucan Ecosystem
+data = { workspace = true }
 integration = { workspace = true }
 markets = { workspace = true }
-profit-dll = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

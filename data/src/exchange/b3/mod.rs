@@ -8,6 +8,7 @@
 //! - **Hybrid Design**: Uses markets abstractions with B3-specific implementations
 //! - **Multiple Connectors**: ProfitDLL is one of the possible connectivity providers
 //! - **Future-Ready**: Easy to add other B3 APIs (official REST/WebSocket, etc.)
+//! - **Asset Integration**: Works with markets::b3 asset types for proper categorization
 
 pub mod instrument;
 pub mod types;
@@ -15,8 +16,9 @@ pub mod exchange;
 
 pub use types::*;
 pub use exchange::B3Exchange;
-use profit_dll::{ProfitConnector, CallbackEvent};
+use markets::profit_dll::{ProfitConnector, CallbackEvent};
 use tokio::sync::mpsc;
+use markets::b3::{B3AssetFactory, B3AssetCategory};
 
 /// B3 exchange connector using ProfitDLL
 /// 
@@ -25,6 +27,8 @@ use tokio::sync::mpsc;
 /// - B3 Official REST API
 /// - B3 WebSocket feeds
 /// - Other third-party providers
+/// 
+/// Now integrated with markets::b3 asset types for proper categorization.
 pub struct B3ProfitConnector {
     profit_connector: Option<ProfitConnector>,
     event_receiver: Option<mpsc::UnboundedReceiver<CallbackEvent>>,
@@ -60,6 +64,43 @@ impl B3ProfitConnector {
             connector.subscribe_ticker(&instrument.symbol, &instrument.market)?;
         }
         Ok(())
+    }
+    
+    /// Subscribe to market data using asset symbol
+    /// Automatically detects asset type and category
+    pub fn subscribe_asset(&self, symbol: &str) -> Result<(), Box<dyn std::error::Error>> {
+        if let Some(connector) = &self.profit_connector {
+            // Create asset from symbol to determine proper market
+            let asset = B3AssetFactory::from_symbol(symbol)?;
+            
+            // Subscribe with appropriate market designation
+            // Most B3 assets use "B" market, but this could be extended
+            connector.subscribe_ticker(symbol, "B")?;
+        }
+        Ok(())
+    }
+    
+    /// Get asset category from symbol
+    pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
+        let asset = B3AssetFactory::from_symbol(symbol)?;
+        
+        // This requires implementing a method to get category from the trait object
+        // For now, we'll use pattern matching on the symbol
+        if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
+            Ok(B3AssetCategory::ETF)
+        } else if symbol.ends_with("11B") {
+            Ok(B3AssetCategory::REIT)
+        } else if symbol.len() >= 5 && symbol.len() <= 6 {
+            let (letters, numbers) = symbol.split_at(4);
+            if letters.chars().all(|c| c.is_alphabetic()) && 
+               numbers.chars().all(|c| c.is_numeric()) {
+                Ok(B3AssetCategory::Stock)
+            } else {
+                Ok(B3AssetCategory::Stock) // Default
+            }
+        } else {
+            Ok(B3AssetCategory::Stock) // Default
+        }
     }
 
     /// Process incoming events from ProfitDLL

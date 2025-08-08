@@ -595,7 +595,7 @@ fn test_engine_process_engine_event_with_audit() {
             .is_empty()
     );
 
-    // Simulate Trade update for Sequence(21) LIMIT eth_btc_sell_order (fees 10% -> 0.05btc)
+    // Simulate Trade update for Sequence(21) LIMIT eth_btc_sell_order
     let event = account_event_trade(1, 5, Side::Sell, 0.05, 1.0);
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(25));
@@ -609,8 +609,8 @@ fn test_engine_process_engine_event_with_audit() {
                 price_entry_average: dec!(0.1),
                 quantity_abs_max: dec!(1.0),
                 pnl_realised: dec!(-0.065), // 0.05 - 0.01 - 0.01 entry fees - 0.005 exit fees
-                fees_enter: AssetFees::quote_fees(dec!(0.01)), // 0.01 btc
-                fees_exit: AssetFees::quote_fees(dec!(0.005)), // 0.005 btc
+                fees_enter: AssetFees::quote_fees(dec!(0.01)), // 0.01
+                fees_exit: AssetFees::quote_fees(dec!(0.005)), // 0.005
                 time_enter: time_plus_days(STARTING_TIMESTAMP, 2),
                 time_exit: time_plus_days(STARTING_TIMESTAMP, 5),
                 trades: vec![gen_trade_id(1), gen_trade_id(1)],
@@ -618,7 +618,7 @@ fn test_engine_process_engine_event_with_audit() {
         )
     );
 
-    // Simulate Balance update for Sequence(21) eth_btc_sell_order Trade, AssetIndex(1)/eth total decrease
+    // Simulate Balance update
     let event = account_event_balance(1, 5, 10.0, 10.0);
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(26));

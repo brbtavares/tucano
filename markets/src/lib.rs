@@ -15,6 +15,10 @@
 //! 
 //! Core traits and types for exchanges, instruments, and assets.
 //! Focused on essential abstractions without specific implementations.
+//! 
+//! ## Modules
+//! - `broker`: Broker abstraction layer with ProfitDLL integration
+//! - `b3`: Brazilian Stock Exchange (B3) asset definitions
 
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
@@ -81,6 +85,27 @@ impl<AssetKey> Underlying<AssetKey> {
         }
     }
 }
+
+// Module declarations
+pub mod broker;
+pub mod b3;
+pub mod profit_dll;
+
+// Re-exports
+pub use broker::*;
+pub use b3::*;
+// Re-export profit_dll types selectively to avoid conflicts
+pub use profit_dll::{
+    CallbackEvent, ConnectionState, BookAction, NResult, ProfitConnector,
+    AssetIdentifier, AccountIdentifier, SendOrder, OrderValidity, ProfitError,
+    // Note: OrderSide is already re-exported from broker
+};
+
+// Constants
+pub use profit_dll::{
+    NL_OK, NL_INTERNAL_ERROR, NL_NOT_INITIALIZED, NL_INVALID_ARGS,
+    NL_WAITING_SERVER, NL_NO_LOGIN, NL_NO_LICENSE,
+};
 
 #[cfg(test)]
 mod hybrid_tests;

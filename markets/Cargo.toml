@@ -17,5 +17,16 @@ serde_json = { workspace = true }
 # SerDe
 serde = { workspace = true, features = ["derive"] }
 
+# Async
+async-trait = { workspace = true }
+tokio = { workspace = true, features = ["sync"] }
+
+# Error handling
+thiserror = { workspace = true }
+
+# Data types
+rust_decimal = { workspace = true }
+chrono = { workspace = true }
+
 # Misc
 derive_more = { workspace = true, features = ["display"] }

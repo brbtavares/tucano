@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use rust_decimal::Decimal;
 use chrono::{DateTime, Utc};
 use std::fmt::{self, Display};
+use markets::profit_dll::OrderSide;
 use smol_str::SmolStr;
 use markets::{Asset, AssetType};
 
@@ -227,20 +228,20 @@ impl Asset for B3Asset {
 }
 
 /// Conversion utilities from ProfitDLL types
-impl From<profit_dll::OrderSide> for B3Side {
-    fn from(side: profit_dll::OrderSide) -> Self {
+impl From<OrderSide> for B3Side {
+    fn from(side: OrderSide) -> Self {
         match side {
-            profit_dll::OrderSide::Buy => B3Side::Buy,
-            profit_dll::OrderSide::Sell => B3Side::Sell,
+            OrderSide::Buy => B3Side::Buy,
+            OrderSide::Sell => B3Side::Sell,
         }
     }
 }
 
-impl From<B3Side> for profit_dll::OrderSide {
+impl From<B3Side> for OrderSide {
     fn from(side: B3Side) -> Self {
         match side {
-            B3Side::Buy => profit_dll::OrderSide::Buy,
-            B3Side::Sell => profit_dll::OrderSide::Sell,
+            B3Side::Buy => OrderSide::Buy,
+            B3Side::Sell => OrderSide::Sell,
         }
     }
 }
