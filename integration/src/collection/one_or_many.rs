@@ -1,3 +1,39 @@
+//! # OneOrMany<T>
+//!
+//! A type that represents exactly one item or multiple items (never empty).
+//! 
+//! ## Purpose in Integration Crate
+//!
+//! This type is essential for modeling trading data where we guarantee at least one item:
+//! - **Order fills**: Every order execution produces at least one fill
+//! - **Market data updates**: Price updates always contain at least one data point  
+//! - **Subscription confirmations**: Successful subscriptions return at least one instrument
+//! - **Event batches**: Event processing guarantees at least one event per batch
+//!
+//! ## Key Characteristics
+//!
+//! - **Never Empty**: Unlike `Vec<T>`, this type guarantees at least one element
+//! - **Memory Efficient**: Single items avoid Vec allocation overhead
+//! - **Type Safety**: Compile-time guarantee of non-empty collections
+//! - **Serde Support**: Seamless serialization/deserialization for API integration
+//!
+//! ## Trading Examples
+//!
+//! ```rust
+//! use integration::collection::OneOrMany;
+//!
+//! // Single instrument subscription
+//! let single_sub: OneOrMany<String> = OneOrMany::One("PETR4".to_string());
+//!
+//! // Multiple instrument subscription  
+//! let multi_sub: OneOrMany<String> = OneOrMany::Many(vec!["PETR4".to_string(), "VALE3".to_string()]);
+//!
+//! // Both can be processed uniformly
+//! for instrument in &single_sub {
+//!     println!("Subscribed to: {}", instrument);
+//! }
+//! ```
+
 use crate::collection::none_one_or_many::NoneOneOrMany;
 use itertools::Either;
 use serde::{Deserialize, Serialize};

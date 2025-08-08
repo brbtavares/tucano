@@ -1,3 +1,52 @@
+//! # NoneOneOrMany<T>
+//!
+//! A type that represents zero, one, or multiple items - the most flexible collection variant.
+//!
+//! ## Purpose in Integration Crate
+//!
+//! This type handles optional or variable cardinality data common in trading integrations:
+//! - **Market data filters**: May have no filters, one filter, or multiple filters
+//! - **Order modifications**: May change no fields, one field, or multiple fields  
+//! - **Risk constraints**: May have no limits, one limit, or multiple risk limits
+//! - **API responses**: May return no results, one result, or multiple results
+//! - **Configuration options**: Optional settings that can be single or multiple values
+//!
+//! ## Key Characteristics
+//!
+//! - **Complete Flexibility**: Handles all cardinalities (0, 1, many)
+//! - **Memory Efficient**: Avoids allocation for empty and single-item cases
+//! - **Option Integration**: Seamlessly converts to/from `Option<OneOrMany<T>>`
+//! - **Default Behavior**: Defaults to `None` state for clean initialization
+//! - **Serde Support**: JSON serialization handles all variants naturally
+//!
+//! ## Trading Examples
+//!
+//! ```rust
+//! use integration::collection::NoneOneOrMany;
+//!
+//! // No market data filters (subscribe to all)
+//! let no_filters: NoneOneOrMany<String> = NoneOneOrMany::None;
+//!
+//! // Single instrument filter
+//! let single_filter: NoneOneOrMany<String> = NoneOneOrMany::One("PETR4".to_string());
+//!
+//! // Multiple instrument filters
+//! let multi_filters: NoneOneOrMany<String> = NoneOneOrMany::Many(vec![
+//!     "PETR4".to_string(), 
+//!     "VALE3".to_string()
+//! ]);
+//!
+//! // Process all variants uniformly
+//! for instrument in &multi_filters {
+//!     println!("Filtering for: {}", instrument);
+//! }
+//!
+//! // Check if filters are applied
+//! if no_filters.is_empty() {
+//!     println!("No filters - subscribing to all instruments");
+//! }
+//! ```
+
 use crate::collection::one_or_many::OneOrMany;
 use itertools::Either;
 use serde::{Deserialize, Serialize};
