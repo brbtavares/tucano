@@ -359,8 +359,6 @@ warn!("Limite de risco próximo: {}", exposure);
 - Análise técnica integrada
 - Configurações de sessão
 
-> 📋 **Análise Detalhada**: Veja [`PROFIT_DLL_IMPLEMENTATION_ANALYSIS.md`](./PROFIT_DLL_IMPLEMENTATION_ANALYSIS.md) para análise técnica completa função por função.
-
 ### Prioridades de Desenvolvimento
 
 1. **🔥 Alta Prioridade**
