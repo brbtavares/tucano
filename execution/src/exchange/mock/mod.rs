@@ -1,5 +1,4 @@
 use crate::{
-    AccountEventKind, InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
     balance::AssetBalance,
     client::mock::MockExecutionConfig,
     error::{ApiError, UnindexedApiError, UnindexedOrderError},
@@ -8,27 +7,26 @@ use crate::{
         request::{MockExchangeRequest, MockExchangeRequestKind},
     },
     order::{
-        Order, OrderKind, UnindexedOrder,
         id::OrderId,
         request::{OrderRequestCancel, OrderRequestOpen},
         state::{Cancelled, Open},
+        Order, OrderKind, UnindexedOrder,
     },
     trade::{AssetFees, Trade, TradeId},
+    AccountEventKind, InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
-use markets::{
-    Side, ExchangeId, Instrument,
-};
-use crate::{QuoteAsset, AssetNameExchange, InstrumentNameExchange};
-use integration::snapshot::Snapshot;
+use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, TimeDelta, Utc};
 use fnv::FnvHashMap;
 use futures::stream::BoxStream;
+use integration::snapshot::Snapshot;
 use itertools::Itertools;
+use markets::{ExchangeId, Instrument, Side};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;
 use tokio::sync::{broadcast, mpsc, oneshot};
-use tokio_stream::{StreamExt, wrappers::BroadcastStream};
+use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::{error, info};
 
 pub mod account;
@@ -263,7 +261,7 @@ impl MockExchange {
                 // TODO: Implementar corretamente para nova arquitetura
                 use markets::Underlying;
                 Underlying::new("MOCK_BASE".to_string(), "MOCK_QUOTE".to_string())
-            },
+            }
             Err(error) => return (build_open_order_err_response(request, error), None),
         };
 
@@ -395,7 +393,8 @@ impl MockExchange {
         &self,
         instrument: &InstrumentNameExchange,
     ) -> Result<&dyn Instrument<Symbol = String>, UnindexedApiError> {
-        self.instruments.get(instrument)
+        self.instruments
+            .get(instrument)
             .map(|boxed| boxed.as_ref())
             .ok_or_else(|| {
                 ApiError::InstrumentInvalid(

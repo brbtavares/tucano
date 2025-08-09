@@ -6,10 +6,10 @@
 /// trading strategies.
 use crate::{
     engine::{
-        Processor,
-        audit::{AuditTick, Auditor, context::EngineContext},
+        audit::{context::EngineContext, AuditTick, Auditor},
         command::Command,
         state::{instrument::filter::InstrumentFilter, trading::TradingState},
+        Processor,
     },
     execution::builder::ExecutionHandles,
     shutdown::{AsyncShutdown, Shutdown},

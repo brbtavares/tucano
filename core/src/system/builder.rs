@@ -1,32 +1,28 @@
 use crate::{
     engine::{
-        Engine, Processor,
-        audit::{Auditor, context::EngineContext},
+        audit::{context::EngineContext, Auditor},
         clock::EngineClock,
         execution_tx::MultiExchangeTxMap,
         run::{async_run, async_run_with_audit, sync_run, sync_run_with_audit},
-        state::{EngineState, builder::EngineStateBuilder, trading::TradingState},
+        state::{builder::EngineStateBuilder, trading::TradingState, EngineState},
+        Engine, Processor,
     },
     error::ToucanError,
     execution::{
-        AccountStreamEvent,
         builder::{ExecutionBuildFutures, ExecutionBuilder},
+        AccountStreamEvent,
     },
     shutdown::SyncShutdown,
-    system::{System, SystemAuxillaryHandles, config::ExecutionConfig},
+    system::{config::ExecutionConfig, System, SystemAuxillaryHandles},
 };
 use data::streams::reconnect::stream::ReconnectingStream;
 use execution::{balance::Balance, AssetIndex, ExchangeIndex, InstrumentIndex};
-use markets::{
-    Keyed,
-    exchange::ExchangeId,
-    instrument::Instrument,
-};
 use integration::{
-    FeedEnded, Terminal,
-    channel::{Channel, ChannelTxDroppable, mpsc_unbounded},
+    channel::{mpsc_unbounded, Channel, ChannelTxDroppable},
     snapshot::SnapUpdates,
+    FeedEnded, Terminal,
 };
+use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
 
 /// Placeholder types
 pub type AssetNameInternal = String;

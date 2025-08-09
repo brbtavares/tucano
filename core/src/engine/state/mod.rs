@@ -1,35 +1,32 @@
 use crate::engine::{
-    Processor,
     state::{
-        asset::{AssetStates, filter::AssetFilter},
+        asset::{filter::AssetFilter, AssetStates},
         builder::EngineStateBuilder,
         connectivity::ConnectivityStates,
         instrument::{
-            InstrumentStates, data::InstrumentDataState, filter::InstrumentFilter,
-            generate_unindexed_instrument_account_snapshot,
+            data::InstrumentDataState, filter::InstrumentFilter,
+            generate_unindexed_instrument_account_snapshot, InstrumentStates,
         },
         position::PositionExited,
         trading::TradingState,
     },
+    Processor,
 };
 use data::event::MarketEvent;
-use execution::{
-    AccountEvent, AccountEventKind, UnindexedAccountSnapshot, balance::AssetBalance,
-    AssetIndex, ExchangeIndex, InstrumentIndex, QuoteAsset,
-};
-use markets::{
-    Keyed,
-    exchange::ExchangeId,
-    instrument::Instrument,
-};
-use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
 use derive_more::Constructor;
+use execution::{
+    balance::AssetBalance, AccountEvent, AccountEventKind, AssetIndex, ExchangeIndex,
+    InstrumentIndex, QuoteAsset, UnindexedAccountSnapshot,
+};
 use fnv::FnvHashMap;
+use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
+use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
 /// Placeholder for IndexedInstruments
-pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, crate::engine::state::instrument::ConcreteInstrument>>;
+pub type IndexedInstruments =
+    Vec<Keyed<InstrumentIndex, crate::engine::state::instrument::ConcreteInstrument>>;
 
 /// Asset-centric state and associated state management logic.
 pub mod asset;
@@ -221,7 +218,9 @@ impl<GlobalData, InstrumentData> From<&EngineState<GlobalData, InstrumentData>>
                         .map(AssetBalance::from)
                         .collect(),
                     instruments: instruments
-                        .instruments(&InstrumentFilter::Exchanges(OneOrMany::One(index.to_string())))
+                        .instruments(&InstrumentFilter::Exchanges(OneOrMany::One(
+                            index.to_string(),
+                        )))
                         .map(|snapshot| {
                             generate_unindexed_instrument_account_snapshot(*exchange, snapshot)
                         })

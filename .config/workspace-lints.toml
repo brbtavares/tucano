@@ -1,0 +1,47 @@
+# Cargo.toml workspace-level configuration that could be moved to .config
+# This shows which configurations could be centralized
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unused_import_braces = "warn"
+unused_qualifications = "warn"
+
+[workspace.lints.clippy]
+# Pedantic lints
+pedantic = "warn"
+nursery = "warn"
+
+# Restriction lints
+clone_on_ref_ptr = "warn"
+create_dir = "warn"
+dbg_macro = "warn"
+decimal_literal_representation = "warn"
+empty_structs_with_brackets = "warn"
+exit = "warn"
+float_cmp_const = "warn"
+get_unwrap = "warn"
+integer_division = "warn"
+lossy_float_literal = "warn"
+mixed_read_write_in_expression = "warn"
+multiple_inherent_impl = "warn"
+panic = "warn"
+print_stderr = "warn"
+print_stdout = "warn"
+rest_pat_in_fully_bound_structs = "warn"
+str_to_string = "warn"
+string_to_string = "warn"
+todo = "warn"
+unimplemented = "warn"
+unneeded_field_pattern = "warn"
+unreachable = "warn"
+unwrap_used = "warn"
+use_debug = "warn"
+verbose_file_reads = "warn"
+
+# Allow some pedantic lints that might be too strict
+cast_precision_loss = "allow"
+cast_possible_truncation = "allow"
+cast_sign_loss = "allow"
+module_name_repetitions = "allow"
+similar_names = "allow"

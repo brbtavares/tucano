@@ -1,7 +1,7 @@
 //! # OneOrMany<T>
 //!
 //! A type that represents exactly one item or multiple items (never empty).
-//! 
+//!
 //! ## Purpose in Integration Crate
 //!
 //! This type is essential for modeling trading data where we guarantee at least one item:

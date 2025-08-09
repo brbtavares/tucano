@@ -5,12 +5,8 @@ use crate::{
     },
     time::TimeInterval,
 };
-use execution::{
-    balance::AssetBalance,
-    AssetIndex,
-    InstrumentIndex,
-};
-use integration::{collection::FnvIndexMap};
+use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
+use integration::collection::FnvIndexMap;
 
 // Placeholder name types for integration - these will be properly defined during full integration
 #[derive(Debug, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
@@ -23,7 +19,7 @@ impl AssetNameInternal {
     pub fn new(name: String) -> Self {
         Self(name)
     }
-    
+
     pub fn as_str(&self) -> &str {
         &self.0
     }
@@ -39,11 +35,11 @@ impl InstrumentNameInternal {
     pub fn new(name: String) -> Self {
         Self(name)
     }
-    
+
     pub fn as_str(&self) -> &str {
         &self.0
     }
-    
+
     pub fn name(&self) -> &str {
         &self.0
     }
@@ -86,7 +82,7 @@ impl<T> LocalSnapshot<T> {
     pub fn new(value: T) -> Self {
         Self(value)
     }
-    
+
     pub fn value(&self) -> &T {
         &self.0
     }
@@ -182,7 +178,7 @@ impl TradingSummaryGenerator {
             time_engine_start,
             time_engine_now,
             instruments: FnvIndexMap::default(), // Simplified placeholder
-            assets: FnvIndexMap::default(), // Simplified placeholder
+            assets: FnvIndexMap::default(),      // Simplified placeholder
         }
     }
 
@@ -192,10 +188,8 @@ impl TradingSummaryGenerator {
     }
 
     /// Update the [`TradingSummaryGenerator`] from the next [`PositionExited`].
-    pub fn update_from_position<AssetKey, InstrumentKey>(
-        &mut self,
-        position: &PositionExited,
-    ) where
+    pub fn update_from_position<AssetKey, InstrumentKey>(&mut self, position: &PositionExited)
+    where
         Self: InstrumentTearSheetManager<InstrumentIndex>,
     {
         if self.time_engine_now < position.time_exit {
@@ -230,12 +224,7 @@ impl TradingSummaryGenerator {
         let instruments = self
             .instruments
             .iter_mut()
-            .map(|(instrument, tear_sheet)| {
-                (
-                    instrument.clone(),
-                    tear_sheet.generate(interval),
-                )
-            })
+            .map(|(instrument, tear_sheet)| (instrument.clone(), tear_sheet.generate(interval)))
             .collect();
 
         let assets = self
@@ -284,7 +273,7 @@ impl InstrumentTearSheetManager<InstrumentIndex> for TradingSummaryGenerator {
     }
 
     fn instrument_mut(&mut self, _key: &InstrumentIndex) -> &mut TearSheetGenerator {
-        // For simplicity in integration mode, return a default value  
+        // For simplicity in integration mode, return a default value
         // This will be properly implemented when integrating with real instrument management
         self.instruments
             .iter_mut()
@@ -312,7 +301,7 @@ impl AssetTearSheetManager<AssetIndex> for TradingSummaryGenerator {
 
     fn asset_mut(&mut self, _key: &AssetIndex) -> &mut TearSheetAssetGenerator {
         // For simplicity in integration mode, return a default value
-        // This will be properly implemented when integrating with real asset management  
+        // This will be properly implemented when integrating with real asset management
         self.assets
             .iter_mut()
             .next()

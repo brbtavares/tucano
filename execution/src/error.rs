@@ -1,7 +1,5 @@
-use markets::{
-    ExchangeId,
-};
 use integration::error::SocketError;
+use markets::ExchangeId;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

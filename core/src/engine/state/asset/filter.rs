@@ -1,5 +1,5 @@
-use markets::exchange::ExchangeId;
 use integration::collection::one_or_many::OneOrMany;
+use markets::exchange::ExchangeId;
 use serde::{Deserialize, Serialize};
 
 /// Asset filter.

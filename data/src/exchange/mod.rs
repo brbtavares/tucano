@@ -1,13 +1,13 @@
 use self::subscription::ExchangeSub;
 use crate::{
-    MarketStream, SnapshotFetcher,
     instrument::InstrumentData,
-    subscriber::{Subscriber, validator::SubscriptionValidator},
+    subscriber::{validator::SubscriptionValidator, Subscriber},
     subscription::{Map, SubscriptionKind},
+    MarketStream, SnapshotFetcher,
 };
+use integration::{error::SocketError, protocol::websocket::WsMessage, Validator};
 use markets::exchange::ExchangeId;
-use integration::{Validator, error::SocketError, protocol::websocket::WsMessage};
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{fmt::Debug, time::Duration};
 use url::Url;
 

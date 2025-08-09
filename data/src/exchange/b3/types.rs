@@ -1,16 +1,16 @@
 //! B3-specific types and structures
-//! 
+//!
 //! This module contains all B3-specific data types that implement
 //! the markets abstractions, making them compatible with the framework
 //! while maintaining Brazilian market terminology.
 
-use serde::{Deserialize, Serialize};
-use rust_decimal::Decimal;
 use chrono::{DateTime, Utc};
-use std::fmt::{self, Display};
 use markets::profit_dll::OrderSide;
-use smol_str::SmolStr;
 use markets::{Asset, AssetType};
+use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
+use std::fmt::{self, Display};
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -38,11 +38,11 @@ impl B3Instrument {
             market: market.into(),
         }
     }
-    
+
     pub fn bovespa(symbol: impl Into<SmolStr>) -> Self {
         Self::new(symbol, "BOVESPA")
     }
-    
+
     pub fn bmf(symbol: impl Into<SmolStr>) -> Self {
         Self::new(symbol, "BMF")
     }
@@ -214,7 +214,7 @@ impl Asset for B3Asset {
             B3Asset::Other(s) => s.as_str(),
         }
     }
-    
+
     fn asset_type(&self) -> AssetType {
         match self {
             B3Asset::BRL => AssetType::Currency,

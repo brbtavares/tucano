@@ -1,2 +1,9 @@
 edition = "2021"
-imports_granularity = "crate"
+max_width = 100
+use_small_heuristics = "Default"
+newline_style = "Unix"
+hard_tabs = false
+tab_spaces = 4
+reorder_imports = true
+reorder_modules = true
+remove_nested_parens = true

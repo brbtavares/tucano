@@ -1,5 +1,8 @@
 use crate::engine::state::instrument::filter::InstrumentFilter;
-use execution::{order::request::{OrderRequestCancel, OrderRequestOpen}, AssetIndex, ExchangeIndex, InstrumentIndex};
+use execution::{
+    order::request::{OrderRequestCancel, OrderRequestOpen},
+    AssetIndex, ExchangeIndex, InstrumentIndex,
+};
 use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 

@@ -1,8 +1,8 @@
 use crate::streams::{consumer::StreamKey, reconnect::Event};
-use integration::channel::Tx;
 use derive_more::Constructor;
 use futures::Stream;
 use futures_util::StreamExt;
+use integration::channel::Tx;
 use serde::{Deserialize, Serialize};
 use std::{convert, fmt::Debug, future, future::Future};
 use tracing::{error, info, warn};

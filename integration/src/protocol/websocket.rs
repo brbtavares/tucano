@@ -1,16 +1,17 @@
 use crate::{error::SocketError, protocol::StreamParser};
 use bytes::Bytes;
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::fmt::Debug;
 use tokio::net::TcpStream;
 use tokio_tungstenite::{
-    MaybeTlsStream, connect_async,
+    connect_async,
     tungstenite::{
-        Utf8Bytes,
         client::IntoClientRequest,
         error::ProtocolError,
-        protocol::{CloseFrame, frame::Frame},
+        protocol::{frame::Frame, CloseFrame},
+        Utf8Bytes,
     },
+    MaybeTlsStream,
 };
 use tracing::debug;
 

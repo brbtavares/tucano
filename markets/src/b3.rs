@@ -60,7 +60,7 @@ impl Asset for B3Stock {
     fn symbol(&self) -> &str {
         &self.symbol
     }
-    
+
     fn asset_type(&self) -> AssetType {
         AssetType::Stock
     }
@@ -78,7 +78,7 @@ impl B3Stock {
             segment: None,
         }
     }
-    
+
     pub fn with_details(
         symbol: String,
         company_name: String,
@@ -98,7 +98,7 @@ impl B3Stock {
             segment: Some(segment),
         }
     }
-    
+
     pub fn category(&self) -> B3AssetCategory {
         B3AssetCategory::Stock
     }
@@ -131,7 +131,7 @@ impl Asset for B3Option {
     fn symbol(&self) -> &str {
         &self.symbol
     }
-    
+
     fn asset_type(&self) -> AssetType {
         AssetType::Option
     }
@@ -154,24 +154,24 @@ impl B3Option {
             exercise_style: ExerciseStyle::European, // Default for B3
         }
     }
-    
+
     pub fn category(&self) -> B3AssetCategory {
         B3AssetCategory::Option
     }
-    
+
     pub fn is_call(&self) -> bool {
         matches!(self.option_type, OptionType::Call)
     }
-    
+
     pub fn is_put(&self) -> bool {
         matches!(self.option_type, OptionType::Put)
     }
-    
+
     pub fn days_to_expiry(&self) -> i64 {
         let today = chrono::Utc::now().date_naive();
         (self.expiry_date - today).num_days()
     }
-    
+
     pub fn is_expired(&self) -> bool {
         let today = chrono::Utc::now().date_naive();
         self.expiry_date <= today
@@ -199,7 +199,7 @@ impl Asset for B3Future {
     fn symbol(&self) -> &str {
         &self.symbol
     }
-    
+
     fn asset_type(&self) -> AssetType {
         AssetType::Future
     }
@@ -222,16 +222,16 @@ impl B3Future {
             settlement_type: SettlementType::Cash, // Default for most B3 futures
         }
     }
-    
+
     pub fn category(&self) -> B3AssetCategory {
         B3AssetCategory::Future
     }
-    
+
     pub fn days_to_expiry(&self) -> i64 {
         let today = chrono::Utc::now().date_naive();
         (self.contract_month - today).num_days()
     }
-    
+
     pub fn is_expired(&self) -> bool {
         let today = chrono::Utc::now().date_naive();
         self.contract_month <= today
@@ -252,7 +252,7 @@ impl Asset for B3ETF {
     fn symbol(&self) -> &str {
         &self.symbol
     }
-    
+
     fn asset_type(&self) -> AssetType {
         AssetType::ETF
     }
@@ -268,7 +268,7 @@ impl B3ETF {
             management_fee: None,
         }
     }
-    
+
     pub fn category(&self) -> B3AssetCategory {
         B3AssetCategory::ETF
     }
@@ -289,7 +289,7 @@ impl Asset for B3REIT {
     fn symbol(&self) -> &str {
         &self.symbol
     }
-    
+
     fn asset_type(&self) -> AssetType {
         AssetType::REIT
     }
@@ -306,7 +306,7 @@ impl B3REIT {
             dividend_yield: None,
         }
     }
-    
+
     pub fn category(&self) -> B3AssetCategory {
         B3AssetCategory::REIT
     }
@@ -318,7 +318,7 @@ pub struct B3AssetFactory;
 
 impl B3AssetFactory {
     /// Create a B3 asset from a symbol
-    /// 
+    ///
     /// B3 symbol conventions:
     /// - Stocks: 4 letters + 1-2 digits (e.g., PETR4, VALE3)
     /// - Options: Complex format with underlying + strike + expiry
@@ -327,7 +327,7 @@ impl B3AssetFactory {
     /// - REITs: Usually end with 11B (e.g., HGLG11)
     pub fn from_symbol(symbol: &str) -> Result<Box<dyn Asset>, String> {
         let symbol = symbol.to_uppercase();
-        
+
         // ETF detection (ends with 11)
         if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
             return Ok(Box::new(B3ETF::new(
@@ -335,7 +335,7 @@ impl B3AssetFactory {
                 format!("ETF {}", symbol),
             )));
         }
-        
+
         // REIT detection (ends with 11B or just 11 with B pattern)
         if symbol.ends_with("11B") || (symbol.len() >= 6 && symbol.ends_with("11")) {
             return Ok(Box::new(B3REIT::new(
@@ -343,26 +343,26 @@ impl B3AssetFactory {
                 format!("REIT {}", symbol),
             )));
         }
-        
+
         // Stock detection (4 letters + 1-2 digits)
         if symbol.len() >= 5 && symbol.len() <= 6 {
             let (letters, numbers) = symbol.split_at(4);
-            if letters.chars().all(|c| c.is_alphabetic()) && 
-               numbers.chars().all(|c| c.is_numeric()) {
+            if letters.chars().all(|c| c.is_alphabetic()) && numbers.chars().all(|c| c.is_numeric())
+            {
                 return Ok(Box::new(B3Stock::new(
                     symbol.clone(),
                     format!("Company {}", letters),
                 )));
             }
         }
-        
+
         // Default to stock if pattern doesn't match
         Ok(Box::new(B3Stock::new(
             symbol.clone(),
             format!("Asset {}", symbol),
         )))
     }
-    
+
     /// Create a B3 option from symbol and details
     pub fn create_option(
         symbol: String,
@@ -371,9 +371,15 @@ impl B3AssetFactory {
         strike_price: rust_decimal::Decimal,
         expiry_date: chrono::NaiveDate,
     ) -> B3Option {
-        B3Option::new(symbol, underlying_symbol, option_type, strike_price, expiry_date)
+        B3Option::new(
+            symbol,
+            underlying_symbol,
+            option_type,
+            strike_price,
+            expiry_date,
+        )
     }
-    
+
     /// Create a B3 future from symbol and details
     pub fn create_future(
         symbol: String,

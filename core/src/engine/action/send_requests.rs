@@ -1,20 +1,20 @@
 use crate::{
     engine::{
-        Engine,
         error::{EngineError, RecoverableEngineError, UnrecoverableEngineError},
         execution_tx::ExecutionTxMap,
+        Engine,
     },
     execution::request::ExecutionRequest,
 };
+use derive_more::Constructor;
 use execution::{
     order::{
-        OrderEvent,
         request::{RequestCancel, RequestOpen},
+        OrderEvent,
     },
     ExchangeIndex, InstrumentIndex,
 };
-use integration::{Unrecoverable, channel::Tx, collection::none_one_or_many::NoneOneOrMany};
-use derive_more::Constructor;
+use integration::{channel::Tx, collection::none_one_or_many::NoneOneOrMany, Unrecoverable};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

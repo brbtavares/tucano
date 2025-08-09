@@ -1,16 +1,14 @@
 use super::ExchangeTransformer;
 use crate::{
-    Identifier,
     error::DataError,
     event::{MarketEvent, MarketIter},
     exchange::Connector,
     subscription::{Map, SubscriptionKind},
+    Identifier,
 };
 use async_trait::async_trait;
+use integration::{protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer};
 use markets::exchange::ExchangeId;
-use integration::{
-    Transformer, protocol::websocket::WsMessage, subscription::SubscriptionId,
-};
 use serde::Deserialize;
 use std::marker::PhantomData;
 use tokio::sync::mpsc;

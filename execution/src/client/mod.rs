@@ -1,19 +1,17 @@
 use crate::{
-    UnindexedAccountEvent, UnindexedAccountSnapshot,
     balance::AssetBalance,
     error::{UnindexedClientError, UnindexedOrderError},
     order::{
-        Order,
         request::{OrderRequestCancel, OrderRequestOpen, UnindexedOrderResponseCancel},
         state::Open,
+        Order,
     },
     trade::Trade,
-};
-use markets::{
-    ExchangeId,
+    UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
 use futures::Stream;
+use markets::ExchangeId;
 use std::future::Future;
 
 // Tipos temporários para compatibilidade

@@ -5,8 +5,8 @@
 //! no markets para eliminar a dependência externa.
 
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
 
 /// Eventos que podem ser gerados pelos callbacks do ProfitDLL
 #[derive(Debug, Clone)]
@@ -103,7 +103,7 @@ pub const NL_NO_LOGIN: NResult = -2147483643;
 pub const NL_NO_LICENSE: NResult = -2147483642;
 
 /// Estrutura mock do ProfitConnector para desenvolvimento
-/// 
+///
 /// NOTA: Esta é uma versão simplificada para permitir compilação
 /// sem a DLL real. Em produção, seria substituída pela implementação
 /// real do ProfitDLL.
@@ -114,11 +114,9 @@ pub struct ProfitConnector {
 
 impl ProfitConnector {
     pub fn new(_dll_path: Option<&str>) -> Result<Self, String> {
-        Ok(Self {
-            connected: false,
-        })
+        Ok(Self { connected: false })
     }
-    
+
     pub async fn initialize_login(
         &self,
         _activation_key: &str,
@@ -129,14 +127,20 @@ impl ProfitConnector {
         println!("🔄 ProfitConnector: Simulando login (versão mock)");
         Ok(receiver)
     }
-    
+
     pub fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), String> {
-        println!("📊 ProfitConnector: Subscribing to {} on {}", ticker, exchange);
+        println!(
+            "📊 ProfitConnector: Subscribing to {} on {}",
+            ticker, exchange
+        );
         Ok(())
     }
-    
+
     pub fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), String> {
-        println!("📊 ProfitConnector: Unsubscribing from {} on {}", ticker, exchange);
+        println!(
+            "📊 ProfitConnector: Unsubscribing from {} on {}",
+            ticker, exchange
+        );
         Ok(())
     }
 }
@@ -152,18 +156,18 @@ impl AssetIdentifier {
     pub fn new(ticker: String, exchange: String) -> Self {
         Self { ticker, exchange }
     }
-    
+
     pub fn bovespa(ticker: &str) -> Self {
         Self {
             ticker: ticker.to_string(),
             exchange: "B".to_string(),
         }
     }
-    
+
     pub fn ticker(&self) -> &str {
         &self.ticker
     }
-    
+
     pub fn exchange(&self) -> &str {
         &self.exchange
     }
@@ -216,7 +220,7 @@ impl SendOrder {
             validity: OrderValidity::ImmediateOrCancel,
         }
     }
-    
+
     pub fn new_limit_order(
         asset: AssetIdentifier,
         account: AccountIdentifier,

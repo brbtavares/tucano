@@ -11,7 +11,7 @@ use std::path::Path;
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
-    
+
     // Configuração específica para Windows
     if cfg!(target_os = "windows") {
         configure_windows_dll();
@@ -22,7 +22,7 @@ fn main() {
 
 fn configure_windows_dll() {
     println!("🔧 Configurando ProfitDLL para Windows...");
-    
+
     // Diretórios padrão onde a ProfitDLL pode estar instalada
     let possible_paths = vec![
         "C:\\Program Files\\Nelogica\\ProfitDLL",
@@ -32,7 +32,7 @@ fn configure_windows_dll() {
         "./lib",
         "./dll",
     ];
-    
+
     // Tentar localizar ProfitDLL.dll
     let mut dll_found = false;
     for path in &possible_paths {
@@ -44,26 +44,29 @@ fn configure_windows_dll() {
             break;
         }
     }
-    
+
     if !dll_found {
         // Verificar variável de ambiente
         if let Ok(dll_path) = env::var("PROFITDLL_PATH") {
             let dll_file = Path::new(&dll_path).join("ProfitDLL.dll");
             if dll_file.exists() {
-                println!("✅ ProfitDLL.dll encontrada via PROFITDLL_PATH: {}", dll_path);
+                println!(
+                    "✅ ProfitDLL.dll encontrada via PROFITDLL_PATH: {}",
+                    dll_path
+                );
                 println!("cargo:rustc-link-search=native={}", dll_path);
                 dll_found = true;
             }
         }
     }
-    
+
     if dll_found {
         // Configurar linkagem
         println!("cargo:rustc-link-lib=dylib=ProfitDLL");
-        
+
         // Definir feature condicional
         println!("cargo:rustc-cfg=feature=\"real_dll\"");
-        
+
         println!("🚀 ProfitDLL configurada com sucesso!");
     } else {
         println!("⚠️  ProfitDLL.dll não encontrada. Para usar a DLL real:");
@@ -71,11 +74,11 @@ fn configure_windows_dll() {
         println!("   2. Ou defina PROFITDLL_PATH com o caminho da DLL");
         println!("   3. Ou coloque ProfitDLL.dll no diretório do projeto");
         println!("   Usando implementação mock.");
-        
+
         // Definir feature para mock
         println!("cargo:rustc-cfg=feature=\"mock_dll\"");
     }
-    
+
     // Configurações adicionais do Windows
     println!("cargo:rustc-link-lib=kernel32");
     println!("cargo:rustc-link-lib=user32");

@@ -2,9 +2,9 @@ use crate::{
     metric::{
         calmar::CalmarRatio,
         drawdown::{
-            Drawdown, DrawdownGenerator,
             max::{MaxDrawdown, MaxDrawdownGenerator},
             mean::{MeanDrawdown, MeanDrawdownGenerator},
+            Drawdown, DrawdownGenerator,
         },
         profit_factor::ProfitFactor,
         rate_of_return::RateOfReturn,
@@ -82,10 +82,7 @@ impl TearSheetGenerator {
     }
 
     /// Update the [`TearSheetGenerator`] from the next [`PositionExited`].
-    pub fn update_from_position<AssetKey, InstrumentKey>(
-        &mut self,
-        position: &PositionExited,
-    ) {
+    pub fn update_from_position<AssetKey, InstrumentKey>(&mut self, position: &PositionExited) {
         self.time_engine_now = position.time_exit;
         self.pnl_returns.update::<AssetKey, InstrumentKey>(position);
 
@@ -107,13 +104,10 @@ impl TearSheetGenerator {
         Interval: TimeInterval,
     {
         let risk_free_return = Decimal::ZERO; // Default risk-free return
-        
+
         TearSheet {
             pnl: self.pnl_returns.pnl_raw,
-            pnl_return: RateOfReturn::calculate(
-                self.pnl_returns.total.mean,
-                interval,
-            ),
+            pnl_return: RateOfReturn::calculate(self.pnl_returns.total.mean, interval),
             sharpe_ratio: SharpeRatio::calculate(
                 risk_free_return,
                 self.pnl_returns.total.mean,
@@ -129,22 +123,32 @@ impl TearSheetGenerator {
             calmar_ratio: CalmarRatio::calculate(
                 risk_free_return,
                 self.pnl_returns.total.mean,
-                self.pnl_drawdown_max.max.as_ref().map(|max| max.0.value).unwrap_or(Decimal::ZERO),
+                self.pnl_drawdown_max
+                    .max
+                    .as_ref()
+                    .map(|max| max.0.value)
+                    .unwrap_or(Decimal::ZERO),
                 interval,
             ),
             profit_factor: ProfitFactor::calculate(
                 self.pnl_returns.total.sum.max(Decimal::ZERO),
                 self.pnl_returns.losses.sum.abs(),
-            ).unwrap_or_default(),
+            )
+            .unwrap_or_default(),
             win_rate: WinRate::calculate(
                 (self.pnl_returns.total.count - self.pnl_returns.losses.count).into(),
                 self.pnl_returns.total.count.into(),
-            ).unwrap_or_default(),
-            drawdown: self.pnl_drawdown_mean.mean_drawdown.as_ref().map(|md| Drawdown {
-                value: md.mean_drawdown,
-                time_start: DateTime::<Utc>::MIN_UTC, // Placeholder
-                time_end: DateTime::<Utc>::MIN_UTC,   // Placeholder
-            }),
+            )
+            .unwrap_or_default(),
+            drawdown: self
+                .pnl_drawdown_mean
+                .mean_drawdown
+                .as_ref()
+                .map(|md| Drawdown {
+                    value: md.mean_drawdown,
+                    time_start: DateTime::<Utc>::MIN_UTC, // Placeholder
+                    time_end: DateTime::<Utc>::MIN_UTC,   // Placeholder
+                }),
             drawdown_mean: self.pnl_drawdown_mean.mean_drawdown.clone(),
             drawdown_max: self.pnl_drawdown_max.max.clone(),
         }

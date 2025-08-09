@@ -1,9 +1,9 @@
-use self::builder::{StreamBuilder, multi::MultiStreamBuilder};
+use self::builder::{multi::MultiStreamBuilder, StreamBuilder};
 use crate::subscription::SubscriptionKind;
-use markets::exchange::ExchangeId;
-use integration::channel::UnboundedRx;
 use fnv::FnvHashMap;
 use futures::Stream;
+use integration::channel::UnboundedRx;
+use markets::exchange::ExchangeId;
 
 /// Defines the [`StreamBuilder`] and [`MultiStreamBuilder`] APIs for ergonomically initialising
 /// [`MarketStream`](super::MarketStream) [`Streams`].

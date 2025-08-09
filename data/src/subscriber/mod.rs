@@ -3,17 +3,17 @@ use self::{
     validator::SubscriptionValidator,
 };
 use crate::{
-    Identifier,
     exchange::Connector,
     instrument::InstrumentData,
     subscription::{Map, Subscription, SubscriptionKind, SubscriptionMeta},
+    Identifier,
 };
 use async_trait::async_trait;
+use futures::SinkExt;
 use integration::{
     error::SocketError,
-    protocol::websocket::{WebSocket, WsMessage, connect},
+    protocol::websocket::{connect, WebSocket, WsMessage},
 };
-use futures::SinkExt;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::debug;

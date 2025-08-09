@@ -7,8 +7,8 @@
 //! 4. Handle incoming market events
 
 use markets::{
-    b3::{B3Stock, B3ETF, B3REIT, B3AssetFactory},
-    broker::{ProfitDLLBroker, Broker},
+    b3::{B3AssetFactory, B3Stock, B3ETF, B3REIT},
+    broker::{Broker, ProfitDLLBroker},
     Asset,
 };
 use tokio;
@@ -20,31 +20,48 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Create various B3 assets
     println!("\n📈 Creating B3 Assets:");
-    
+
     // Create stocks
     let petr4 = B3Stock::new("PETR4".to_string(), "Petrobras PN".to_string());
     let vale3 = B3Stock::new("VALE3".to_string(), "Vale ON".to_string());
-    
+
     // Create ETFs
     let bova11 = B3ETF::new("BOVA11".to_string(), "iShares BOVESPA".to_string());
-    
+
     // Create REITs
     let hglg11 = B3REIT::new("HGLG11".to_string(), "CSHG Logística".to_string());
-    
-    println!("  • Stock: {} ({})", petr4.symbol(), petr4.asset_type().to_string());
-    println!("  • Stock: {} ({})", vale3.symbol(), vale3.asset_type().to_string());
-    println!("  • ETF: {} ({})", bova11.symbol(), bova11.asset_type().to_string());
-    println!("  • REIT: {} ({})", hglg11.symbol(), hglg11.asset_type().to_string());
+
+    println!(
+        "  • Stock: {} ({})",
+        petr4.symbol(),
+        petr4.asset_type().to_string()
+    );
+    println!(
+        "  • Stock: {} ({})",
+        vale3.symbol(),
+        vale3.asset_type().to_string()
+    );
+    println!(
+        "  • ETF: {} ({})",
+        bova11.symbol(),
+        bova11.asset_type().to_string()
+    );
+    println!(
+        "  • REIT: {} ({})",
+        hglg11.symbol(),
+        hglg11.asset_type().to_string()
+    );
 
     // Test asset factory
     println!("\n🏭 Testing Asset Factory:");
-    
+
     let factory_assets = vec!["PETR4", "BOVA11", "HGLG11", "WINM23"];
     for symbol in factory_assets {
         match B3AssetFactory::from_symbol(symbol) {
             Ok(asset) => {
-                println!("  • {}: {} -> {}", 
-                    symbol, 
+                println!(
+                    "  • {}: {} -> {}",
+                    symbol,
                     asset.asset_type().to_string(),
                     asset.symbol()
                 );
@@ -57,11 +74,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Initialize ProfitDLL broker
     println!("\n🔌 Initializing ProfitDLL Broker:");
-    
+
     let mut broker = ProfitDLLBroker::new();
     println!("  • Broker ID: {:?}", broker.id());
     println!("  • Broker Name: {}", broker.name());
-    println!("  • Supported Exchanges: {:?}", broker.supported_exchanges());
+    println!(
+        "  • Supported Exchanges: {:?}",
+        broker.supported_exchanges()
+    );
 
     // Note: Real authentication would require valid credentials
     println!("\n⚠️  Note: Broker initialization requires valid ProfitDLL credentials");

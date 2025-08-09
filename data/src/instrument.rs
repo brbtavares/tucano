@@ -1,6 +1,4 @@
-use markets::{
-    Keyed, MarketDataInstrument, InstrumentKind,
-};
+use markets::{InstrumentKind, Keyed, MarketDataInstrument};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -9,8 +7,7 @@ use std::fmt::Debug;
 /// Verbose `InstrumentData` is often used to subscribe to market data feeds, but it's unique `Id`
 /// can then be used to key consumed [MarketEvents](crate::event::MarketEvent), significantly reducing
 /// duplication in the case of complex instruments (eg/ options).
-pub trait InstrumentData: Debug + Clone + Eq + Send + Sync
-{
+pub trait InstrumentData: Debug + Clone + Eq + Send + Sync {
     type Key: Debug + Clone + Eq + Send + Sync;
     fn key(&self) -> &Self::Key;
     fn kind(&self) -> &InstrumentKind;

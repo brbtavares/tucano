@@ -1,7 +1,10 @@
-use crate::{order::id::{OrderId, StrategyId}, QuoteAsset};
-use markets::{Side};
+use crate::{
+    order::id::{OrderId, StrategyId},
+    QuoteAsset,
+};
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
+use markets::Side;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;

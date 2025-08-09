@@ -56,17 +56,7 @@ where
 
 /// Error returned when a [`CheckHigherThan`] validation fails.
 #[derive(
-    Debug,
-    Clone,
-    Eq,
-    PartialEq,
-    Ord,
-    PartialOrd,
-    Hash,
-    Deserialize,
-    Serialize,
-    Error,
-    Constructor,
+    Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error, Constructor,
 )]
 #[error("CheckHigherThan failed: input {input:?} > limit {limit:?}")]
 pub struct CheckHigherThanError<T> {

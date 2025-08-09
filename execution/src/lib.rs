@@ -19,11 +19,11 @@
 //!
 //! ## 🎯 Características Principais
 //!
-//! * **🚀 Simplicidade**: Trait ExecutionClient fornece linguagem unificada 
+//! * **🚀 Simplicidade**: Trait ExecutionClient fornece linguagem unificada
 //!   e simples para interagir com exchanges
-//! * **🔄 Padronização**: Permite que sua estratégia se comunique com qualquer 
+//! * **🔄 Padronização**: Permite que sua estratégia se comunique com qualquer
 //!   exchange real ou Mock usando a mesma interface
-//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições 
+//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições
 //!   com novas integrações de exchanges
 //!
 //! ## 🏗️ Componentes Principais
@@ -32,7 +32,7 @@
 //! Interface unificada para execução de ordens em diferentes exchanges:
 //! ```rust,no_run
 //! use execution::client::ExecutionClient;
-//! 
+//!
 //! // Implementação para qualquer exchange
 //! impl ExecutionClient for MyExchange {
 //!     async fn submit_order(&mut self, order: Order) -> Result<OrderAck> {
@@ -68,7 +68,7 @@
 //!     order::{Order, OrderKind},
 //!     trade::Trade
 //! };
-//! 
+//!
 //! async fn execute_strategy(client: &mut impl ExecutionClient) {
 //!     // Criar ordem de compra
 //!     let order = Order::market_buy("PETR4", 100.0);
@@ -85,12 +85,12 @@
 
 use crate::{
     balance::AssetBalance,
-    order::{Order, OrderSnapshot, request::OrderResponseCancel},
+    order::{request::OrderResponseCancel, Order, OrderSnapshot},
     trade::Trade,
 };
-use integration::snapshot::Snapshot;
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
+use integration::snapshot::Snapshot;
 use order::state::OrderState;
 use serde::{Deserialize, Serialize};
 

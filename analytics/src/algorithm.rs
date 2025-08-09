@@ -246,7 +246,9 @@ mod tests {
             dec!(4.3044077091942148760330578512),
         ];
 
-        for (index, ((input_m, input_count), expected)) in inputs.iter().zip(expected.into_iter()).enumerate() {
+        for (index, ((input_m, input_count), expected)) in
+            inputs.iter().zip(expected.into_iter()).enumerate()
+        {
             let actual_variance =
                 welford_online::calculate_population_variance(*input_m, (*input_count).into());
             assert_eq!(actual_variance, expected, "TC{index} failed");

@@ -20,12 +20,12 @@
 //!
 //! ```rust
 //! use macros::{DeExchange, SerExchange};
-//! 
+//!
 //! #[derive(DeExchange, SerExchange)]
 //! struct B3Exchange {
 //!     // campos específicos
 //! }
-//! 
+//!
 //! impl B3Exchange {
 //!     const ID: &'static str = "b3";
 //! }
@@ -74,7 +74,7 @@ use syn::DeriveInput;
 /// ```rust,ignore
 /// #[derive(DeExchange)]
 /// struct B3Exchange;
-/// 
+///
 /// impl B3Exchange {
 ///     const ID: &'static str = "b3";
 /// }
@@ -82,8 +82,8 @@ use syn::DeriveInput;
 #[proc_macro_derive(DeExchange)]
 pub fn de_exchange_derive(input: TokenStream) -> TokenStream {
     // Parse da árvore sintática abstrata do Rust com Syn de TokenStream -> DeriveInput
-    let ast: DeriveInput =
-        syn::parse(input).expect("de_exchange_derive() falhou ao fazer parse do TokenStream de entrada");
+    let ast: DeriveInput = syn::parse(input)
+        .expect("de_exchange_derive() falhou ao fazer parse do TokenStream de entrada");
 
     // Determina o nome do exchange
     let exchange = &ast.ident;
@@ -125,7 +125,7 @@ pub fn de_exchange_derive(input: TokenStream) -> TokenStream {
 /// ```rust,ignore
 /// #[derive(SerExchange)]
 /// struct B3Exchange;
-/// 
+///
 /// impl B3Exchange {
 ///     const ID: &'static str = "b3";
 /// }
@@ -133,8 +133,8 @@ pub fn de_exchange_derive(input: TokenStream) -> TokenStream {
 #[proc_macro_derive(SerExchange)]
 pub fn ser_exchange_derive(input: TokenStream) -> TokenStream {
     // Parse da árvore sintática abstrata do Rust com Syn de TokenStream -> DeriveInput
-    let ast: DeriveInput =
-        syn::parse(input).expect("ser_exchange_derive() falhou ao fazer parse do TokenStream de entrada");
+    let ast: DeriveInput = syn::parse(input)
+        .expect("ser_exchange_derive() falhou ao fazer parse do TokenStream de entrada");
 
     // Determina o Exchange
     let exchange = &ast.ident;

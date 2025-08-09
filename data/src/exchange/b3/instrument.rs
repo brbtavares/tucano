@@ -2,10 +2,11 @@
 
 use crate::instrument::InstrumentData;
 use markets::{
-    Instrument, InstrumentKind, // Import trait from simplified markets
+    Instrument,
+    InstrumentKind, // Import trait from simplified markets
 };
-use serde::{Deserialize, Serialize};
 use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
 
 /// B3 instrument data structure
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -64,9 +65,10 @@ impl From<&str> for B3SecurityType {
 impl From<B3SecurityType> for InstrumentKind {
     fn from(b3_type: B3SecurityType) -> Self {
         match b3_type {
-            B3SecurityType::Stock | B3SecurityType::Etf | B3SecurityType::Reit | B3SecurityType::Bdr => {
-                InstrumentKind::Spot
-            }
+            B3SecurityType::Stock
+            | B3SecurityType::Etf
+            | B3SecurityType::Reit
+            | B3SecurityType::Bdr => InstrumentKind::Spot,
             B3SecurityType::Option => {
                 // For now, return Spot since we don't have option contract details
                 InstrumentKind::Spot
@@ -83,11 +85,7 @@ impl From<B3SecurityType> for InstrumentKind {
 
 impl B3Instrument {
     /// Create a new B3 instrument
-    pub fn new(
-        ticker: String,
-        exchange: String,
-        security_type: B3SecurityType,
-    ) -> Self {
+    pub fn new(ticker: String, exchange: String, security_type: B3SecurityType) -> Self {
         Self {
             ticker,
             exchange,
@@ -139,11 +137,11 @@ impl B3Instrument {
 /// Implement markets::Instrument trait for B3Instrument
 impl Instrument for B3Instrument {
     type Symbol = String;
-    
+
     fn symbol(&self) -> &Self::Symbol {
         &self.ticker
     }
-    
+
     fn market(&self) -> &str {
         &self.exchange
     }
@@ -151,19 +149,20 @@ impl Instrument for B3Instrument {
 
 impl InstrumentData for B3Instrument {
     type Key = String;
-    
+
     fn key(&self) -> &Self::Key {
         &self.ticker
     }
-    
+
     fn kind(&self) -> &InstrumentKind {
         // For now, we'll store the kind in the instrument
         // This is a simplified implementation
         match self.security_type {
-            B3SecurityType::Stock | B3SecurityType::Etf | B3SecurityType::Reit | B3SecurityType::Bdr => {
-                &InstrumentKind::Spot
-            }
-            _ => &InstrumentKind::Spot
+            B3SecurityType::Stock
+            | B3SecurityType::Etf
+            | B3SecurityType::Reit
+            | B3SecurityType::Bdr => &InstrumentKind::Spot,
+            _ => &InstrumentKind::Spot,
         }
     }
 }
@@ -178,13 +177,21 @@ pub mod utils {
         // For futures: WINV24 -> WIN
         if ticker.len() > 5 {
             // Check if it's an option (ends with call/put indicator)
-            if ticker.chars().nth_back(2).map_or(false, |c| c.is_alphabetic()) {
-                return Some(ticker[..ticker.len()-3].to_string());
+            if ticker
+                .chars()
+                .nth_back(2)
+                .map_or(false, |c| c.is_alphabetic())
+            {
+                return Some(ticker[..ticker.len() - 3].to_string());
             }
-            
+
             // Check if it's a future (month/year code)
-            if ticker.chars().nth_back(1).map_or(false, |c| c.is_numeric()) &&
-               ticker.chars().nth_back(2).map_or(false, |c| c.is_alphabetic()) {
+            if ticker.chars().nth_back(1).map_or(false, |c| c.is_numeric())
+                && ticker
+                    .chars()
+                    .nth_back(2)
+                    .map_or(false, |c| c.is_alphabetic())
+            {
                 // Find where the underlying ends and month code begins
                 let mut underlying_len = ticker.len() - 3;
                 for (i, c) in ticker.char_indices().rev() {
@@ -196,7 +203,7 @@ pub mod utils {
                 return Some(ticker[..underlying_len].to_string());
             }
         }
-        
+
         None
     }
 
@@ -238,12 +245,18 @@ mod tests {
     fn test_security_type_inference() {
         assert_eq!(utils::infer_security_type("PETR4"), B3SecurityType::Stock);
         assert_eq!(utils::infer_security_type("BBDC11"), B3SecurityType::Reit);
-        assert_eq!(utils::infer_security_type("PETR4P250"), B3SecurityType::Option);
+        assert_eq!(
+            utils::infer_security_type("PETR4P250"),
+            B3SecurityType::Option
+        );
     }
 
     #[test]
     fn test_underlying_parsing() {
-        assert_eq!(utils::parse_underlying("PETR4P250"), Some("PETR4".to_string()));
+        assert_eq!(
+            utils::parse_underlying("PETR4P250"),
+            Some("PETR4".to_string())
+        );
         assert_eq!(utils::parse_underlying("WINV24"), Some("WIN".to_string()));
         assert_eq!(utils::parse_underlying("PETR4"), None);
     }

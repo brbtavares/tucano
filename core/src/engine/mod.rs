@@ -114,40 +114,38 @@
 //! - **Risk management**: Validações de risco integradas no fluxo
 
 use crate::{
-    EngineEvent, Sequence,
     engine::{
         action::{
-            ActionOutput,
             cancel_orders::CancelOrders,
             close_positions::ClosePositions,
             generate_algo_orders::{GenerateAlgoOrders, GenerateAlgoOrdersOutput},
             send_requests::SendRequests,
+            ActionOutput,
         },
-        audit::{AuditTick, Auditor, EngineAudit, ProcessAudit, context::EngineContext},
+        audit::{context::EngineContext, AuditTick, Auditor, EngineAudit, ProcessAudit},
         clock::EngineClock,
         command::Command,
         execution_tx::ExecutionTxMap,
         state::{
-            EngineState, instrument::data::InstrumentDataState,
+            instrument::data::InstrumentDataState,
             order::in_flight_recorder::InFlightRequestRecorder, position::PositionExited,
-            trading::TradingState,
+            trading::TradingState, EngineState,
         },
     },
-    execution::{AccountStreamEvent, request::ExecutionRequest},
+    execution::{request::ExecutionRequest, AccountStreamEvent},
     risk::RiskManager,
     shutdown::SyncShutdown,
+    EngineEvent, Sequence,
 };
 use analytics::summary::TradingSummaryGenerator;
+use chrono::{DateTime, Utc};
 use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use strategy::{
-    AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
-};
 use execution::{AccountEvent, ExchangeIndex, InstrumentIndex, QuoteAsset};
 use integration::channel::Tx;
-use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+use strategy::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 use tracing::info;
 
 /// Defines how the [`Engine`] actions a [`Command`], and the associated outputs.
@@ -520,7 +518,12 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         InstrumentData: for<'a> Processor<&'a AccountEvent>,
         GlobalData: for<'a> Processor<&'a AccountEvent>,
-        Strategy: OnDisconnectStrategy<Clock, EngineState<GlobalData, InstrumentData>, ExecutionTxs, Risk>,
+        Strategy: OnDisconnectStrategy<
+            Clock,
+            EngineState<GlobalData, InstrumentData>,
+            ExecutionTxs,
+            Risk,
+        >,
     {
         match event {
             AccountStreamEvent::Reconnecting(exchange) => {
@@ -570,7 +573,12 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
         InstrumentData: InstrumentDataState,
         GlobalData:
             for<'a> Processor<&'a MarketEvent<InstrumentIndex, InstrumentData::MarketEventKind>>,
-        Strategy: OnDisconnectStrategy<Clock, EngineState<GlobalData, InstrumentData>, ExecutionTxs, Risk>,
+        Strategy: OnDisconnectStrategy<
+            Clock,
+            EngineState<GlobalData, InstrumentData>,
+            ExecutionTxs,
+            Risk,
+        >,
     {
         match event {
             MarketStreamEvent::Reconnecting(exchange) => {
@@ -614,13 +622,13 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-        use integration::collection::FnvIndexMap;
         use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
-        
+        use integration::collection::FnvIndexMap;
+
         // Create placeholder empty collections since analytics expects simplified types
         let instruments: FnvIndexMap<InstrumentIndex, ()> = FnvIndexMap::default();
         let assets: FnvIndexMap<AssetIndex, AssetBalance<AssetIndex>> = FnvIndexMap::default();
-        
+
         TradingSummaryGenerator::init::<(), AssetIndex>(
             risk_free_return,
             self.meta.time_start,

@@ -5,9 +5,12 @@ use crate::engine::{
     },
     error::UnrecoverableEngineError,
 };
-use execution::{order::request::{RequestCancel, RequestOpen}, ExchangeIndex, InstrumentIndex};
-use integration::collection::one_or_many::OneOrMany;
 use derive_more::From;
+use execution::{
+    order::request::{RequestCancel, RequestOpen},
+    ExchangeIndex, InstrumentIndex,
+};
+use integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 

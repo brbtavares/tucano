@@ -1,5 +1,4 @@
 use crate::{
-    Identifier, MarketStream,
     error::DataError,
     event::MarketEvent,
     exchange::StreamSelector,
@@ -7,14 +6,15 @@ use crate::{
     streams::{
         reconnect,
         reconnect::stream::{
-            ReconnectingStream, ReconnectionBackoffPolicy, init_reconnecting_stream,
+            init_reconnecting_stream, ReconnectingStream, ReconnectionBackoffPolicy,
         },
     },
-    subscription::{Subscription, SubscriptionKind, display_subscriptions_without_exchange},
+    subscription::{display_subscriptions_without_exchange, Subscription, SubscriptionKind},
+    Identifier, MarketStream,
 };
-use markets::exchange::ExchangeId;
 use derive_more::Constructor;
 use futures::Stream;
+use markets::exchange::ExchangeId;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use tracing::info;

@@ -1,6 +1,6 @@
 use execution::ExchangeIndex;
-use markets::exchange::ExchangeId;
 use indexmap::IndexMap;
+use markets::exchange::ExchangeId;
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 

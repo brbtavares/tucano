@@ -1,20 +1,18 @@
 use crate::{
-    UnindexedAccountSnapshot,
     balance::AssetBalance,
     order::{
-        Order,
         id::ClientOrderId,
         state::{ActiveOrderState, Cancelled, InactiveOrderState, Open, OrderState},
+        Order,
     },
     trade::Trade,
+    UnindexedAccountSnapshot,
 };
-use markets::{
-    ExchangeId,
-};
-use crate::{QuoteAsset, AssetNameExchange, InstrumentNameExchange};
+use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use fnv::FnvHashMap;
+use markets::ExchangeId;
 
 #[derive(Debug, Constructor)]
 pub struct AccountState {

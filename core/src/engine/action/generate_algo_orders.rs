@@ -1,23 +1,21 @@
 use crate::{
     engine::{
-        Engine,
         action::send_requests::{SendCancelsAndOpensOutput, SendRequests, SendRequestsOutput},
         error::UnrecoverableEngineError,
         execution_tx::ExecutionTxMap,
         state::order::in_flight_recorder::InFlightRequestRecorder,
+        Engine,
     },
     risk::{RiskApproved, RiskManager, RiskRefused},
 };
 use execution::{
-    order::request::{
-        OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen,
-    },
+    order::request::{OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen},
     ExchangeIndex, InstrumentIndex,
 };
-use strategy::AlgoStrategy;
 use integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+use strategy::AlgoStrategy;
 
 /// Trait that defines how the [`Engine`] generates and sends algorithmic order requests.
 ///

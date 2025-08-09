@@ -1,16 +1,15 @@
 use crate::{
     engine::{
-        Processor,
-        audit::{AuditTick, Auditor, context::EngineContext},
-        process_with_audit,
+        audit::{context::EngineContext, AuditTick, Auditor},
+        process_with_audit, Processor,
     },
     shutdown::SyncShutdown,
 };
-use integration::{
-    FeedEnded, Terminal,
-    channel::{ChannelTxDroppable, Tx},
-};
 use futures::{Stream, StreamExt};
+use integration::{
+    channel::{ChannelTxDroppable, Tx},
+    FeedEnded, Terminal,
+};
 use std::fmt::Debug;
 use tracing::info;
 

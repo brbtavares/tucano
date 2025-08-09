@@ -10,11 +10,11 @@ pub struct B3Exchange;
 /// Implement markets::Exchange trait for B3Exchange
 impl Exchange for B3Exchange {
     type ExchangeId = ExchangeId;
-    
+
     fn id(&self) -> Self::ExchangeId {
         ExchangeId::B3
     }
-    
+
     fn name(&self) -> &'static str {
         "B3"
     }

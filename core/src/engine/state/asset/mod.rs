@@ -1,15 +1,14 @@
-use crate::{
-    Timed, engine::state::asset::filter::AssetFilter,
-};
+use crate::{engine::state::asset::filter::AssetFilter, Timed};
 use analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
-use execution::{balance::{AssetBalance, Balance}, AssetIndex};
-use markets::{
-    asset::Asset,
-};
-use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use chrono::Utc;
 use derive_more::Constructor;
+use execution::{
+    balance::{AssetBalance, Balance},
+    AssetIndex,
+};
+use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use itertools::Either;
+use markets::asset::Asset;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -129,14 +128,16 @@ impl AssetState {
     pub fn update_from_balance<AssetKey>(&mut self, snapshot: Snapshot<&AssetBalance<AssetKey>>) {
         let Some(balance) = &mut self.balance else {
             self.balance = Some(Timed::new(snapshot.0.balance, snapshot.0.time_exchange));
-            self.statistics.update_from_balance(LocalSnapshot(snapshot.0));
+            self.statistics
+                .update_from_balance(LocalSnapshot(snapshot.0));
             return;
         };
 
         if balance.time <= snapshot.value().time_exchange {
             balance.time = snapshot.value().time_exchange;
             balance.value = snapshot.value().balance;
-            self.statistics.update_from_balance(LocalSnapshot(snapshot.0));
+            self.statistics
+                .update_from_balance(LocalSnapshot(snapshot.0));
         }
     }
 }
@@ -191,8 +192,8 @@ pub fn generate_empty_indexed_asset_states(instruments: &IndexedInstruments) -> 
 mod tests {
     use super::*;
     use crate::test_utils::asset_state;
-    use markets::asset::name::AssetNameExchange;
     use chrono::{DateTime, TimeZone, Utc};
+    use markets::asset::name::AssetNameExchange;
     use rust_decimal_macros::dec;
 
     #[test]

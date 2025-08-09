@@ -38,7 +38,7 @@
 //!     close_positions::ClosePositionsStrategy,
 //!     on_disconnect::OnDisconnectStrategy
 //! };
-//! 
+//!
 //! struct MyTradingStrategy {
 //!     algo: MyAlgoStrategy,
 //!     risk_management: RiskStrategy,
@@ -74,12 +74,12 @@
 //! ```rust,no_run
 //! use strategy::algo::AlgoStrategy;
 //! use core::engine::EngineState;
-//! 
+//!
 //! struct MovingAverageStrategy {
 //!     short_period: usize,
 //!     long_period: usize,
 //! }
-//! 
+//!
 //! impl AlgoStrategy for MovingAverageStrategy {
 //!     fn generate_orders(&mut self, state: &EngineState) -> Vec<Order> {
 //!         // Implementar lógica de médias móveis
@@ -132,6 +132,6 @@ pub mod default;
 // Re-export the main traits for convenience
 pub use algo::AlgoStrategy;
 pub use close_positions::ClosePositionsStrategy;
+pub use default::DefaultStrategy;
 pub use on_disconnect::OnDisconnectStrategy;
 pub use on_trading_disabled::OnTradingDisabled;
-pub use default::DefaultStrategy;

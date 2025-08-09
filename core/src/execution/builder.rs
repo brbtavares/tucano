@@ -1,34 +1,30 @@
 use crate::{
-    engine::{clock::EngineClock, execution_tx::MultiExchangeTxMap, state::instrument::ConcreteInstrument},
+    engine::{
+        clock::EngineClock, execution_tx::MultiExchangeTxMap, state::instrument::ConcreteInstrument,
+    },
     error::ToucanError,
     execution::{
-        AccountStreamEvent, Execution, error::ExecutionError, manager::ExecutionManager,
-        request::ExecutionRequest,
+        error::ExecutionError, manager::ExecutionManager, request::ExecutionRequest,
+        AccountStreamEvent, Execution,
     },
     shutdown::AsyncShutdown,
 };
-use data::streams::{
-    consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream,
-};
+use data::streams::{consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream};
 use execution::{
-    UnindexedAccountEvent,
     client::{
-        ExecutionClient,
         mock::{MockExecution, MockExecutionClientConfig, MockExecutionConfig},
+        ExecutionClient,
     },
-    exchange::mock::{MockExchange, request::MockExchangeRequest},
+    exchange::mock::{request::MockExchangeRequest, MockExchange},
     indexer::AccountEventIndexer,
     map::generate_execution_instrument_map,
+    UnindexedAccountEvent,
 };
 use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
-use markets::{
-    Keyed, Underlying,
-    exchange::ExchangeId,
-    instrument::Instrument,
-};
-use integration::channel::{Channel, UnboundedTx, mpsc_unbounded};
 use fnv::FnvHashMap;
-use futures::{FutureExt, future::try_join_all};
+use futures::{future::try_join_all, FutureExt};
+use integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
+use markets::{exchange::ExchangeId, instrument::Instrument, Keyed, Underlying};
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{
     sync::{broadcast, mpsc},

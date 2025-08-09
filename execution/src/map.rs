@@ -1,9 +1,7 @@
-use crate::{error::KeyError, compat::*};
-use markets::{
-    Keyed,
-};
-use integration::collection::{FnvIndexMap, FnvIndexSet};
+use crate::{compat::*, error::KeyError};
 use fnv::FnvHashMap;
+use integration::collection::{FnvIndexMap, FnvIndexSet};
+use markets::Keyed;
 
 // Tipo temporário para substituir IndexedInstruments
 pub type IndexedInstruments = String;
@@ -63,7 +61,7 @@ impl ExecutionInstrumentMap {
         match exchange.as_str() {
             "B3" => Ok(ExchangeId::B3),
             "Mock" => Ok(ExchangeId::Mock),
-            _ => Ok(ExchangeId::Other),
+            _ => Ok(ExchangeId::Mock), // Default to Mock for unknown exchanges
         }
     }
 
@@ -121,9 +119,9 @@ pub fn generate_execution_instrument_map(
 ) -> Result<ExecutionInstrumentMap, IndexError> {
     // TODO: Implementar para nova arquitetura markets
     // Por enquanto, retornamos um mapa vazio para permitir compilação
-    
+
     use markets::Keyed;
-    
+
     Ok(ExecutionInstrumentMap::new(
         Keyed::new(exchange.to_string(), exchange),
         FnvIndexMap::default(), // assets vazios por enquanto

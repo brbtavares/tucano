@@ -4,9 +4,9 @@ on:
   push:
     paths-ignore:
       - "**.md"
-    branches: ["develop"]
+    branches: ["main", "develop"]
   pull_request:
-    branches: ["develop"]
+    branches: ["main", "develop"]
     paths-ignore:
       - "**.md"
 
@@ -16,70 +16,64 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
+          components: rustfmt, clippy
 
       - uses: Swatinem/rust-cache@v2
 
       - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
+        run: cargo check --all-targets --all-features
 
   test:
     name: cargo test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+        uses: dtolnay/rust-toolchain@stable
 
       - uses: Swatinem/rust-cache@v2
 
       - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
+        run: cargo test --all-features
 
-  lints:
-    name: Lint
+  format:
+    name: Format Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
+          components: rustfmt
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
 
       - uses: Swatinem/rust-cache@v2
 
-      - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        continue-on-error: false
-        with:
-          command: fmt
-          args: --all -- --check
-
-      - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        continue-on-error: false
-        with:
-          command: clippy
-          args: -- -D warnings
+      - name: Run clippy
+        run: |
+          # Copy clippy config to root for discovery
+          cp .config/clippy.toml ./clippy.toml
+          cargo clippy --all-targets --all-features -- -D warnings

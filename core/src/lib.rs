@@ -76,14 +76,14 @@ use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
 };
+use ::execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
+use chrono::{DateTime, Utc};
 use data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use ::execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
-use integration::Terminal;
-use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
+use integration::Terminal;
 use serde::{Deserialize, Serialize};
 use shutdown::Shutdown;
 
@@ -117,7 +117,7 @@ pub use analytics;
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
-/// 
+///
 /// **Note**: Strategy interfaces have been moved to the `strategy` crate.
 /// Import them with: `use strategy::{AlgoStrategy, ClosePositionsStrategy, ...};`
 // Remove the strategy module as it's now a separate crate
@@ -223,17 +223,15 @@ impl Sequence {
 
 /// Core test utilities.
 pub mod test_utils {
-    use crate::{
-        Timed, engine::state::asset::AssetState,
-    };
+    use crate::{engine::state::asset::AssetState, Timed};
+    use analytics::summary::asset::TearSheetAssetGenerator;
     use execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
     use markets::Side;
-    use analytics::summary::asset::TearSheetAssetGenerator;
-    
+
     // Placeholder type for integration
     type InstrumentNameInternal = String;
     use chrono::{DateTime, Days, TimeDelta, Utc};

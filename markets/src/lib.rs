@@ -12,19 +12,19 @@
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
 //! # 🏛️ Markets - Abstrações Simplificadas de Mercado
-//! 
+//!
 //! Traits e tipos fundamentais para exchanges, instrumentos e ativos financeiros.
 //! Focado em abstrações essenciais sem implementações específicas.
-//! 
+//!
 //! ## 🎯 Filosofia de Design
-//! 
+//!
 //! Este módulo implementa uma arquitetura **híbrida** que combina:
 //! - **Abstrações Reutilizáveis**: Traits genéricos para máxima flexibilidade
 //! - **Implementações Específicas**: Tipos brasileiros com terminologia nativa
 //! - **Extensibilidade**: Fácil adição de novos exchanges e instrumentos
-//! 
+//!
 //! ## 🏗️ Módulos Principais
-//! 
+//!
 //! - `exchange`: Abstrações de exchange e identificadores
 //! - `asset`: Definições de ativos financeiros e tipos
 //! - `instrument`: Abstrações de instrumentos financeiros
@@ -32,14 +32,14 @@
 //! - `b3`: Definições específicas da Bolsa Brasileira (B3)
 //! - `profit_dll`: Integração com ProfitDLL (real no Windows, mock em outros)
 //! - `broker`: Camada de abstração de corretoras
-//! 
+//!
 //! ## 💡 Conceitos Fundamentais
-//! 
+//!
 //! ### Exchange
 //! Representa um mercado ou bolsa onde instrumentos são negociados:
 //! ```rust,no_run
 //! use markets::{Exchange, ExchangeId};
-//! 
+//!
 //! struct B3Exchange;
 //! impl Exchange for B3Exchange {
 //!     type ExchangeId = B3ExchangeId;
@@ -47,32 +47,32 @@
 //!     fn name(&self) -> &'static str { "B3" }
 //! }
 //! ```
-//! 
+//!
 //! ### Instrument
 //! Define instrumentos financeiros negociáveis:
 //! ```rust,no_run
 //! use markets::{Instrument, InstrumentKind};
-//! 
+//!
 //! struct Stock {
 //!     symbol: String,
 //!     kind: InstrumentKind,
 //! }
 //! ```
-//! 
+//!
 //! ### Asset
 //! Representa ativos financeiros subjacentes:
 //! ```rust,no_run
 //! use markets::{Asset, AssetType};
-//! 
+//!
 //! struct BrazilianReal;
 //! impl Asset for BrazilianReal {
 //!     fn symbol(&self) -> &str { "BRL" }
 //!     fn asset_type(&self) -> AssetType { AssetType::Currency }
 //! }
 //! ```
-//! 
+//!
 //! ## 🇧🇷 Suporte ao Mercado Brasileiro
-//! 
+//!
 //! - **B3 Integration**: Suporte nativo à Bolsa Brasileira
 //! - **ProfitDLL**: Conectividade através da Nelógica
 //! - **Terminologia Local**: Uso de termos específicos do mercado brasileiro
@@ -127,7 +127,7 @@ pub mod side;
 /// # Exemplo
 /// ```rust
 /// use markets::Keyed;
-/// 
+///
 /// let keyed_price = Keyed::new("PETR4", 25.50);
 /// assert_eq!(keyed_price.key, "PETR4");
 /// assert_eq!(keyed_price.value, 25.50);
@@ -176,8 +176,8 @@ impl<AssetKey> Underlying<AssetKey> {
 }
 
 // Module declarations
-pub mod broker;
 pub mod b3;
+pub mod broker;
 
 // ProfitDLL integration - conditional compilation
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
@@ -189,17 +189,25 @@ pub use profit_dll_complete as profit_dll;
 pub mod profit_dll;
 
 // Re-exports
-pub use broker::*;
 pub use b3::*;
+pub use broker::*;
 // Re-export profit_dll types selectively to avoid conflicts
 pub use profit_dll::{
-    CallbackEvent, ConnectionState, BookAction, NResult, ProfitConnector,
-    AssetIdentifier, AccountIdentifier, SendOrder, OrderValidity, ProfitError,
+    AccountIdentifier,
+    AssetIdentifier,
+    BookAction,
+    CallbackEvent,
+    ConnectionState,
+    NResult,
+    OrderValidity,
+    ProfitConnector,
+    ProfitError,
     // Note: OrderSide is already re-exported from broker
+    SendOrder,
 };
 
 // Constants
 pub use profit_dll::{
-    NL_OK, NL_INTERNAL_ERROR, NL_NOT_INITIALIZED, NL_INVALID_ARGS,
-    NL_WAITING_SERVER, NL_NO_LOGIN, NL_NO_LICENSE,
+    NL_INTERNAL_ERROR, NL_INVALID_ARGS, NL_NOT_INITIALIZED, NL_NO_LICENSE, NL_NO_LOGIN, NL_OK,
+    NL_WAITING_SERVER,
 };

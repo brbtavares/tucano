@@ -1,7 +1,10 @@
-use execution::{trade::{AssetFees, Trade, TradeId}, AssetIndex, InstrumentIndex, QuoteAsset};
-use markets::Side;
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
+use execution::{
+    trade::{AssetFees, Trade, TradeId},
+    AssetIndex, InstrumentIndex, QuoteAsset,
+};
+use markets::Side;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

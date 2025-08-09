@@ -1,11 +1,11 @@
 use crate::{
-    Identifier,
-    exchange::{Connector, subscription::ExchangeSub},
+    exchange::{subscription::ExchangeSub, Connector},
     instrument::InstrumentData,
     subscription::{Map, Subscription, SubscriptionKind, SubscriptionMeta},
+    Identifier,
 };
-use integration::subscription::SubscriptionId;
 use fnv::FnvHashMap;
+use integration::subscription::SubscriptionId;
 use serde::{Deserialize, Serialize};
 
 /// Defines how to map a collection of Toucan [`Subscription`]s into exchange specific

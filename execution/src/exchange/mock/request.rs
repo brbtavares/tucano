@@ -1,19 +1,17 @@
 use crate::{
-    UnindexedAccountSnapshot,
     balance::AssetBalance,
     error::UnindexedOrderError,
     order::{
-        Order,
         request::{OrderRequestCancel, OrderRequestOpen, UnindexedOrderResponseCancel},
         state::Open,
+        Order,
     },
     trade::Trade,
+    UnindexedAccountSnapshot,
 };
-use markets::{
-    ExchangeId,
-};
-use crate::{QuoteAsset, AssetNameExchange, InstrumentNameExchange};
+use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
+use markets::ExchangeId;
 use tokio::sync::oneshot;
 
 #[derive(Debug)]

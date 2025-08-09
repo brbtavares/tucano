@@ -4,12 +4,7 @@
 /// including instruments and execution components.
 use crate::engine::state::instrument::ConcreteInstrument;
 use execution::client::mock::MockExecutionConfig;
-use markets::{
-    Underlying,
-    asset::Asset,
-    exchange::ExchangeId,
-    instrument::Instrument,
-};
+use markets::{asset::Asset, exchange::ExchangeId, instrument::Instrument, Underlying};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -129,7 +124,10 @@ impl From<InstrumentConfig> for ConcreteInstrument {
             symbol: value.underlying.base.clone(),
             market: "default_market".to_string(),
             exchange: format!("{:?}", value.exchange),
-            underlying: Some(format!("{}_{}", value.underlying.base, value.underlying.quote)),
+            underlying: Some(format!(
+                "{}_{}",
+                value.underlying.base, value.underlying.quote
+            )),
             name_exchange: value.name_exchange,
         }
     }

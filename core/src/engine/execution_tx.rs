@@ -1,13 +1,13 @@
 use crate::{
-    engine::error::{IndexError, UnrecoverableEngineError}, 
+    engine::error::{IndexError, UnrecoverableEngineError},
     execution::request::ExecutionRequest,
 };
 use execution::{ExchangeIndex, InstrumentIndex};
-use markets::exchange::ExchangeId;
 use integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
 };
+use markets::exchange::ExchangeId;
 use std::fmt::Debug;
 
 /// Collection of [`ExecutionRequest`] [`Tx`]s for each

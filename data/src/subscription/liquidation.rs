@@ -1,6 +1,6 @@
 use super::SubscriptionKind;
-use markets::Side;
 use chrono::{DateTime, Utc};
+use markets::Side;
 use serde::{Deserialize, Serialize};
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`Liquidation`]

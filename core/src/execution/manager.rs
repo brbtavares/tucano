@@ -1,39 +1,39 @@
 use crate::execution::{
-    AccountStreamEvent,
     error::ExecutionError,
     request::{ExecutionRequest, RequestFuture},
+    AccountStreamEvent,
 };
 use data::streams::{
     consumer::StreamKey,
-    reconnect::stream::{ReconnectingStream, ReconnectionBackoffPolicy, init_reconnecting_stream},
+    reconnect::stream::{init_reconnecting_stream, ReconnectingStream, ReconnectionBackoffPolicy},
 };
 use execution::{
-    AccountEvent, AccountEventKind,
     client::ExecutionClient,
     error::{ConnectivityError, OrderError, UnindexedOrderError},
     indexer::{AccountEventIndexer, IndexedAccountStream},
     map::ExecutionInstrumentMap,
     order::{
-        Order,
         request::{
             OrderRequestCancel, OrderRequestOpen, OrderResponseCancel, UnindexedOrderResponseCancel,
         },
         state::{Open, OrderState},
+        Order,
     },
+    AccountEvent, AccountEventKind,
 };
-use execution::{AssetIndex, ExchangeIndex, InstrumentIndex, IndexError};
-use markets::exchange::ExchangeId;
+use execution::{AssetIndex, ExchangeIndex, IndexError, InstrumentIndex};
 use integration::{
-    channel::{Tx, UnboundedTx, mpsc_unbounded},
+    channel::{mpsc_unbounded, Tx, UnboundedTx},
     snapshot::Snapshot,
     stream::merge::merge,
 };
+use markets::exchange::ExchangeId;
 
 /// Placeholder types for name compatibility
 pub type AssetNameExchange = String;
 pub type InstrumentNameExchange = String;
 use derive_more::Constructor;
-use futures::{Stream, StreamExt, future::Either, stream::FuturesUnordered};
+use futures::{future::Either, stream::FuturesUnordered, Stream, StreamExt};
 use std::sync::Arc;
 use tracing::{error, info, warn};
 

@@ -4,8 +4,8 @@
 //! em um ambiente Windows com a DLL da Nelógica instalada.
 
 use markets::{
+    b3::{B3AssetFactory, B3Stock},
     profit_dll::ProfitConnector,
-    b3::{B3Stock, B3AssetFactory},
     Asset,
 };
 
@@ -24,7 +24,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Configurar caminho da DLL (opcional - auto-detecção via build.rs)
     let dll_path = std::env::var("PROFITDLL_PATH").ok();
-    
+
     if let Some(ref path) = dll_path {
         println!("📁 Caminho da DLL configurado: {}", path);
     } else {
@@ -34,44 +34,52 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Criar assets B3
     let petr4 = B3Stock::new("PETR4".to_string(), "Petrobras PN".to_string());
     let vale3 = B3AssetFactory::from_symbol("VALE3")?;
-    
+
     println!("\n📊 Assets criados:");
-    println!("  • {}: {} ({})", petr4.symbol(), "Petrobras PN", petr4.asset_type());
-    println!("  • {}: {} ({})", vale3.symbol(), "Vale ON", vale3.asset_type());
+    println!(
+        "  • {}: {} ({})",
+        petr4.symbol(),
+        "Petrobras PN",
+        petr4.asset_type()
+    );
+    println!(
+        "  • {}: {} ({})",
+        vale3.symbol(),
+        "Vale ON",
+        vale3.asset_type()
+    );
 
     // Inicializar ProfitConnector
     println!("\n🔌 Inicializando ProfitConnector...");
     let mut connector = ProfitConnector::new(dll_path.as_deref())?;
-    
+
     // NOTA: Para usar credenciais reais, descomente e configure:
     // let events = connector.initialize_login(
     //     "sua_chave_ativacao",
-    //     "seu_usuario", 
+    //     "seu_usuario",
     //     "sua_senha"
     // ).await?;
 
     // Versão de demonstração (mock)
-    let mut events = connector.initialize_login(
-        "demo_key",
-        "demo_user",
-        "demo_pass"
-    ).await?;
-    
+    let mut events = connector
+        .initialize_login("demo_key", "demo_user", "demo_pass")
+        .await?;
+
     println!("✅ ProfitConnector inicializado");
 
     // Subscrever a dados de mercado
     println!("\n📈 Configurando subscrições...");
     connector.subscribe_ticker(&petr4.symbol(), "BOVESPA")?;
     connector.subscribe_ticker(&vale3.symbol(), "BOVESPA")?;
-    
+
     println!("✅ Subscrições configuradas");
 
     // Processar eventos por um período limitado
     println!("\n🔄 Processando eventos (5 segundos)...");
-    
+
     let timeout = tokio::time::sleep(tokio::time::Duration::from_secs(5));
     tokio::pin!(timeout);
-    
+
     loop {
         tokio::select! {
             Some(event) = events.recv() => {
@@ -80,11 +88,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!("🔌 Estado da conexão: {:?} - Resultado: {}", connection_type, result);
                     }
                     markets::profit_dll::CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
-                        println!("💹 Novo negócio: {} @ {} - Preço: {} Volume: {}", 
+                        println!("💹 Novo negócio: {} @ {} - Preço: {} Volume: {}",
                                 ticker, exchange, price, volume);
                     }
                     markets::profit_dll::CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
-                        println!("📊 Resumo diário {}: O:{} H:{} L:{} C:{}", 
+                        println!("📊 Resumo diário {}: O:{} H:{} L:{} C:{}",
                                 ticker, open, high, low, close);
                     }
                     markets::profit_dll::CallbackEvent::ProgressChanged { ticker, progress, .. } => {
@@ -103,14 +111,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("\n✅ Exemplo concluído com sucesso!");
-    
+
     // Configurações para produção
     println!("\n🔧 Para usar em produção:");
     println!("  1. Instale a ProfitDLL da Nelógica");
     println!("  2. Configure PROFITDLL_PATH se necessário");
     println!("  3. Compile com: cargo build --features real_dll");
     println!("  4. Use credenciais reais no initialize_login()");
-    
+
     Ok(())
 }
 
@@ -124,7 +132,7 @@ mod tests {
         assert!(connector.is_ok());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn test_mock_initialization() {
         let mut connector = ProfitConnector::new(None).unwrap();
         let result = connector.initialize_login("test", "test", "test").await;
@@ -135,11 +143,11 @@ mod tests {
     fn test_windows_configuration() {
         if cfg!(target_os = "windows") {
             println!("✅ Configuração Windows detectada");
-            
+
             // Verificar se a feature real_dll está disponível
             #[cfg(feature = "real_dll")]
             println!("✅ Feature real_dll ativada");
-            
+
             #[cfg(not(feature = "real_dll"))]
             println!("⚠️  Feature real_dll não ativada - usando mock");
         } else {

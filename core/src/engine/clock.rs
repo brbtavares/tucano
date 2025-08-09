@@ -1,7 +1,7 @@
-use crate::{EngineEvent, engine::Processor, execution::AccountStreamEvent};
+use crate::{engine::Processor, execution::AccountStreamEvent, EngineEvent};
+use chrono::{DateTime, Utc};
 use data::streams::consumer::MarketStreamEvent;
 use execution::AccountEventKind;
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, ops::Add, sync::Arc};
 use tracing::{debug, error, warn};
@@ -167,9 +167,9 @@ impl<MarketEventKind: Debug> TimeExchange for EngineEvent<MarketEventKind> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::TimeDelta;
     use data::event::MarketEvent;
     use markets::{exchange::ExchangeId, instrument::InstrumentIndex};
-    use chrono::TimeDelta;
 
     fn market_event(time_exchange: DateTime<Utc>) -> EngineEvent<()> {
         EngineEvent::Market(MarketStreamEvent::Item(MarketEvent {

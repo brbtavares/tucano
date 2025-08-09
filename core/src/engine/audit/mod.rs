@@ -1,13 +1,11 @@
-use crate::{
-    engine::{
-        Engine, EngineOutput, UpdateFromAccountOutput, UpdateFromMarketOutput,
-        audit::context::EngineContext, clock::EngineClock, error::UnrecoverableEngineError,
-    },
+use crate::engine::{
+    audit::context::EngineContext, clock::EngineClock, error::UnrecoverableEngineError, Engine,
+    EngineOutput, UpdateFromAccountOutput, UpdateFromMarketOutput,
 };
-use integration::{FeedEnded, Terminal, collection::none_one_or_many::NoneOneOrMany};
-use strategy::{OnDisconnectStrategy, OnTradingDisabled};
 use derive_more::Constructor;
+use integration::{collection::none_one_or_many::NoneOneOrMany, FeedEnded, Terminal};
 use serde::{Deserialize, Serialize};
+use strategy::{OnDisconnectStrategy, OnTradingDisabled};
 
 /// Defines data structures that represent the context an `Engine` [`AuditTick`] was generated.
 pub mod context;

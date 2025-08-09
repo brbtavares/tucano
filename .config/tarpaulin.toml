@@ -1,0 +1,30 @@
+# Configuração do Tarpaulin para cobertura de código
+# https://github.com/xd009642/tarpaulin
+
+[tool.tarpaulin]
+# Diretórios a incluir na cobertura
+include-tests = false
+run-types = ["Tests", "Doctests"]
+
+# Formato de saída
+out = ["Xml", "Html", "Lcov"]
+
+# Excluir arquivos/diretórios da cobertura
+exclude = [
+    "*/build.rs",
+    "*/examples/*",
+    "*/tests/*",
+    "*/benches/*",
+]
+
+# Configurações avançadas
+follow-exec = true
+post-args = ["--ignore-filename-regex", ".*test.*"]
+
+# Timeout para testes
+timeout = 120
+
+# Configurações específicas para CI
+[tool.tarpaulin.ci]
+coveralls = true
+codecov = true

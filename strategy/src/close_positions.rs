@@ -1,12 +1,10 @@
 use execution::{
     order::{
-        OrderKey, OrderKind, TimeInForce,
         id::{ClientOrderId, StrategyId},
         request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
+        OrderKey, OrderKind, TimeInForce,
     },
-    AssetIndex,
-    ExchangeIndex,
-    InstrumentIndex,
+    AssetIndex, ExchangeIndex, InstrumentIndex,
 };
 use markets::Side;
 use rust_decimal::Decimal;
@@ -89,7 +87,7 @@ where
 }
 
 /// Generate market orders to close open positions.
-/// 
+///
 /// This is a utility function that generates market orders to close all open positions
 /// for a given instrument and strategy.
 pub fn close_open_positions_with_market_orders<ExchangeKey, InstrumentKey>(
@@ -108,7 +106,7 @@ where
     if quantity.is_zero() {
         return vec![];
     }
-    
+
     vec![build_ioc_market_order_to_close_position(
         exchange,
         instrument,

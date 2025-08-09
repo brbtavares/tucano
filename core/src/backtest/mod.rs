@@ -77,30 +77,28 @@ use crate::{
         summary::{BacktestSummary, MultiBacktestSummary},
     },
     engine::{
-        Processor,
         clock::HistoricalClock,
         execution_tx::MultiExchangeTxMap,
-        state::{EngineState, instrument::data::InstrumentDataState},
+        state::{instrument::data::InstrumentDataState, EngineState},
+        Processor,
     },
     error::ToucanError,
     risk::RiskManager,
     system::{builder::EngineFeedMode, config::ExecutionConfig},
 };
-use analytics::time::TimeInterval;
 use crate::{
     engine::Engine,
     execution::builder::{ExecutionBuild, ExecutionBuilder},
     system::builder::{AuditMode, SystemBuild},
 };
+use analytics::time::TimeInterval;
 use data::event::MarketEvent;
-use strategy::{
-    AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
-};
 use execution::{AccountEvent, InstrumentIndex};
 use futures::future::try_join_all;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{fmt::Debug, sync::Arc};
+use strategy::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Placeholder for IndexedInstruments
 pub type IndexedInstruments = Vec<()>;

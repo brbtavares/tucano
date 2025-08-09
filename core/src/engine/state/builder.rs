@@ -1,18 +1,17 @@
 use crate::engine::state::{
-    EngineState, asset::generate_empty_indexed_asset_states,
+    asset::generate_empty_indexed_asset_states,
     connectivity::generate_empty_indexed_connectivity_states,
     instrument::generate_indexed_instrument_states, order::Orders, position::PositionManager,
-    trading::TradingState,
+    trading::TradingState, EngineState,
 };
-use execution::{balance::{AssetBalance, Balance}, AssetIndex, ExchangeIndex, InstrumentIndex};
-use markets::{
-    Keyed,
-    exchange::ExchangeId,
-    instrument::Instrument,
-};
-use integration::snapshot::Snapshot;
 use chrono::{DateTime, Utc};
+use execution::{
+    balance::{AssetBalance, Balance},
+    AssetIndex, ExchangeIndex, InstrumentIndex,
+};
 use fnv::FnvHashMap;
+use integration::snapshot::Snapshot;
+use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
 use tracing::debug;
 
 /// Placeholder types

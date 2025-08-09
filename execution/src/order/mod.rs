@@ -1,9 +1,9 @@
+use crate::compat::*;
 use crate::order::{
     id::StrategyId,
     request::{OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen},
     state::UnindexedOrderState,
 };
-use crate::compat::*;
 use derive_more::{Constructor, Display};
 use id::ClientOrderId;
 use rust_decimal::Decimal;

@@ -12,16 +12,27 @@ pub type AssetKey = String;
 pub type InstrumentKey = String;
 
 // Re-export do markets - mantendo ExchangeId como enum original
-pub use markets::{Side, ExchangeId};
+pub use markets::{ExchangeId, Side};
 
 // Import dos tipos de order necessários
 use crate::order::OrderKey;
 
-// Tipos de response compatíveis  
+// Tipos de response compatíveis
 pub type UnindexedOrderKey = OrderKey<String>;
 
 // Para compatibilidade com código antigo que esperava IndexError
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, thiserror::Error, serde::Serialize, serde::Deserialize)]
+#[derive(
+    Debug,
+    Clone,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    thiserror::Error,
+    serde::Serialize,
+    serde::Deserialize,
+)]
 pub enum IndexError {
     #[error("Asset index error: {0}")]
     AssetIndex(String),

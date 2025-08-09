@@ -1,18 +1,25 @@
-use std::collections::HashMap;
 use rust_decimal::Decimal;
+use std::collections::HashMap;
 
 /// Calculate the absolute percentage difference between two decimal values.
-pub fn calculate_abs_percent_difference(value1: Decimal, value2: Decimal) -> Result<Decimal, &'static str> {
+pub fn calculate_abs_percent_difference(
+    value1: Decimal,
+    value2: Decimal,
+) -> Result<Decimal, &'static str> {
     if value2.is_zero() {
         return Err("Cannot calculate percentage difference with zero denominator");
     }
-    
+
     let diff = (value1 - value2).abs();
     Ok(diff / value2)
 }
 
 /// Calculate the notional value in quote currency.
-pub fn calculate_quote_notional(quantity: Decimal, price: Decimal, contract_size: Decimal) -> Result<Decimal, &'static str> {
+pub fn calculate_quote_notional(
+    quantity: Decimal,
+    price: Decimal,
+    contract_size: Decimal,
+) -> Result<Decimal, &'static str> {
     let notional = quantity * price * contract_size;
     Ok(notional)
 }
@@ -48,7 +55,11 @@ where
 }
 
 /// Utility function to validate order price against limits.
-pub fn validate_order_price<T>(order_price: &T, min_price: &T, max_price: &T) -> Result<(), &'static str>
+pub fn validate_order_price<T>(
+    order_price: &T,
+    min_price: &T,
+    max_price: &T,
+) -> Result<(), &'static str>
 where
     T: PartialOrd,
 {
@@ -62,7 +73,10 @@ where
 }
 
 /// Utility function to check if an instrument is allowed for trading.
-pub fn validate_instrument_allowed<T>(instrument: &T, allowed_instruments: &[T]) -> Result<(), &'static str>
+pub fn validate_instrument_allowed<T>(
+    instrument: &T,
+    allowed_instruments: &[T],
+) -> Result<(), &'static str>
 where
     T: PartialEq,
 {

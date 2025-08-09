@@ -62,8 +62,8 @@
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
 use data::streams::reconnect;
 use execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
-use markets::exchange::ExchangeId;
 use integration::channel::Channel;
+use markets::exchange::ExchangeId;
 
 /// Provides an execution manager builder for ergonomically initialising multiple execution links
 /// to mock and live exchanges.

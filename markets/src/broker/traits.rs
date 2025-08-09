@@ -20,16 +20,16 @@ pub enum BrokerId {
 pub enum BrokerError {
     #[error("Connection failed: {0}")]
     ConnectionFailed(String),
-    
+
     #[error("Authentication failed: {0}")]
     AuthenticationFailed(String),
-    
+
     #[error("Market data error: {0}")]
     MarketDataError(String),
-    
+
     #[error("Execution error: {0}")]
     ExecutionError(String),
-    
+
     #[error("Internal error: {0}")]
     InternalError(String),
 }
@@ -46,21 +46,21 @@ pub trait Broker {
 pub trait MarketDataProvider: Broker {
     type MarketEvent: Send + Sync;
     type SubscriptionId: Send + Sync;
-    
+
     async fn connect(&mut self) -> Result<(), BrokerError>;
     async fn disconnect(&mut self) -> Result<(), BrokerError>;
-    
+
     async fn subscribe_market_data(
         &mut self,
         asset: &(dyn Asset + Send + Sync),
         exchange: ExchangeId,
     ) -> Result<Self::SubscriptionId, BrokerError>;
-    
+
     async fn unsubscribe_market_data(
         &mut self,
         subscription_id: Self::SubscriptionId,
     ) -> Result<(), BrokerError>;
-    
+
     async fn next_market_event(&mut self) -> Option<Self::MarketEvent>;
 }
 
@@ -69,13 +69,13 @@ pub trait MarketDataProvider: Broker {
 pub trait OrderExecutor: Broker {
     type OrderId: Send + Sync;
     type ExecutionEvent: Send + Sync;
-    
+
     async fn connect(&mut self) -> Result<(), BrokerError>;
     async fn disconnect(&mut self) -> Result<(), BrokerError>;
-    
+
     async fn submit_order(&mut self, order: OrderRequest) -> Result<Self::OrderId, BrokerError>;
     async fn cancel_order(&mut self, order_id: Self::OrderId) -> Result<(), BrokerError>;
-    
+
     async fn next_execution_event(&mut self) -> Option<Self::ExecutionEvent>;
 }
 
@@ -85,12 +85,12 @@ pub trait AccountProvider: Broker {
     type Balance: Send + Sync;
     type Position: Send + Sync;
     type AccountEvent: Send + Sync;
-    
+
     async fn connect(&mut self) -> Result<(), BrokerError>;
-    
+
     async fn get_balances(&self) -> Result<Vec<Self::Balance>, BrokerError>;
     async fn get_positions(&self) -> Result<Vec<Self::Position>, BrokerError>;
-    
+
     async fn next_account_event(&mut self) -> Option<Self::AccountEvent>;
 }
 

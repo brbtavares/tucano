@@ -1,8 +1,8 @@
 use crate::engine::state::order::in_flight_recorder::InFlightRequestRecorder;
 use execution::order::{
-    Order,
     request::OrderResponseCancel,
     state::{ActiveOrderState, OrderState},
+    Order,
 };
 use integration::snapshot::Snapshot;
 use std::fmt::Debug;

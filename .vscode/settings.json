@@ -1,0 +1,14 @@
+{
+  "rust-analyzer.rustfmt.extraArgs": ["--config-path", "./rustfmt.toml"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "rust-lang.rust-analyzer",
+  "[rust]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "rust-analyzer.checkOnSave.command": "clippy",
+  "rust-analyzer.checkOnSave.extraArgs": ["--all-targets", "--all-features"],
+  "files.watcherExclude": {
+    "**/target/**": true
+  }
+}

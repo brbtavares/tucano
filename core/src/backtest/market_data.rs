@@ -1,7 +1,7 @@
 use crate::error::ToucanError;
+use chrono::{DateTime, Utc};
 use data::streams::consumer::MarketStreamEvent;
 use execution::InstrumentIndex;
-use chrono::{DateTime, Utc};
 use futures::Stream;
 use std::{future::Future, sync::Arc};
 

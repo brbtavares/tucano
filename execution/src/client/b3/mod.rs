@@ -7,30 +7,29 @@
 pub mod adapter;
 
 use crate::{
-    UnindexedAccountEvent, UnindexedAccountSnapshot, InstrumentAccountSnapshot,
+    balance::AssetBalance,
     client::ExecutionClient,
-    error::{UnindexedClientError, UnindexedOrderError, AssetNameExchange, InstrumentNameExchange},
+    compat::QuoteAsset,
+    error::{AssetNameExchange, InstrumentNameExchange, UnindexedClientError, UnindexedOrderError},
     order::{
+        id::OrderId,
         request::{OrderRequestCancel, OrderRequestOpen, UnindexedOrderResponseCancel},
         state::Open,
         Order, OrderKey, OrderKind,
-        id::{OrderId},
     },
-    balance::AssetBalance,
     trade::Trade,
-    compat::{QuoteAsset},
+    InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
-use markets::{
-    Side, ExchangeId,
-    ProfitError, ProfitConnector, SendOrder, AssetIdentifier, AccountIdentifier,
-    profit_dll::OrderSide,
-};
-use std::sync::Arc;
-use tokio::sync::{Mutex, mpsc};
-use tokio_stream::wrappers::UnboundedReceiverStream;
 use chrono::{DateTime, Utc};
+use markets::{
+    profit_dll::OrderSide, AccountIdentifier, AssetIdentifier, ExchangeId, ProfitConnector,
+    ProfitError, SendOrder, Side,
+};
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
+use std::sync::Arc;
+use tokio::sync::{mpsc, Mutex};
+use tokio_stream::wrappers::UnboundedReceiverStream;
 
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
@@ -118,8 +117,8 @@ impl ExecutionClient for B3ExecutionClient {
     ) -> Result<Vec<AssetBalance<AssetNameExchange>>, UnindexedClientError> {
         // Ensure connection is established
         self.ensure_connected().await?;
-        
-        // Return empty balances for now - in real implementation, 
+
+        // Return empty balances for now - in real implementation,
         // this would query ProfitDLL for current balances
         Ok(Vec::new())
     }
@@ -129,7 +128,7 @@ impl ExecutionClient for B3ExecutionClient {
     ) -> Result<Vec<Order<ExchangeId, InstrumentNameExchange, Open>>, UnindexedClientError> {
         // Ensure connection is established
         self.ensure_connected().await?;
-        
+
         // Return empty orders for now - in real implementation,
         // this would query ProfitDLL for current open orders
         Ok(Vec::new())
@@ -141,7 +140,7 @@ impl ExecutionClient for B3ExecutionClient {
     ) -> Result<Vec<Trade<QuoteAsset, InstrumentNameExchange>>, UnindexedClientError> {
         // Ensure connection is established
         self.ensure_connected().await?;
-        
+
         // Return empty trades for now - in real implementation,
         // this would query ProfitDLL for trades since the specified time
         Ok(Vec::new())
@@ -160,8 +159,11 @@ impl ExecutionClient for B3ExecutionClient {
         let orders = self.fetch_open_orders().await?;
 
         // Group orders by instrument
-        let instrument_snapshots: Vec<InstrumentAccountSnapshot<ExchangeId, AssetNameExchange, InstrumentNameExchange>> = 
-            instruments.iter().map(|instrument| {
+        let instrument_snapshots: Vec<
+            InstrumentAccountSnapshot<ExchangeId, AssetNameExchange, InstrumentNameExchange>,
+        > = instruments
+            .iter()
+            .map(|instrument| {
                 let instrument_orders = orders
                     .iter()
                     .filter(|order| &order.key.instrument == instrument)
@@ -169,7 +171,8 @@ impl ExecutionClient for B3ExecutionClient {
                     .collect();
 
                 InstrumentAccountSnapshot::new(instrument.clone(), instrument_orders)
-            }).collect();
+            })
+            .collect();
 
         Ok(UnindexedAccountSnapshot::new(
             ExchangeId::B3,
@@ -187,7 +190,7 @@ impl ExecutionClient for B3ExecutionClient {
         self.ensure_connected().await?;
 
         let (tx, rx) = mpsc::unbounded_channel();
-        
+
         // Store the sender for later use
         {
             let mut sender_guard = self.event_sender.lock().await;
@@ -223,15 +226,13 @@ impl ExecutionClient for B3ExecutionClient {
         request: OrderRequestOpen<ExchangeId, &InstrumentNameExchange>,
     ) -> Option<Order<ExchangeId, InstrumentNameExchange, Result<Open, UnindexedOrderError>>> {
         match self.ensure_connected().await {
-            Ok(_) => {
-                match self.send_order_to_b3(&request).await {
-                    Ok(order) => Some(order),
-                    Err(e) => {
-                        tracing::error!("Failed to send order to B3: {:?}", e);
-                        None
-                    }
+            Ok(_) => match self.send_order_to_b3(&request).await {
+                Ok(order) => Some(order),
+                Err(e) => {
+                    tracing::error!("Failed to send order to B3: {:?}", e);
+                    None
                 }
-            }
+            },
             Err(e) => {
                 tracing::error!("Failed to connect to B3: {:?}", e);
                 None
@@ -244,7 +245,7 @@ impl B3ExecutionClient {
     /// Ensure connection to B3 is established
     async fn ensure_connected(&self) -> Result<(), UnindexedClientError> {
         let mut connector_guard = self.connector.lock().await;
-        
+
         if connector_guard.is_none() {
             // Create new connection
             let connector = ProfitConnector::new(self.config.dll_path.as_deref())
@@ -278,7 +279,10 @@ impl B3ExecutionClient {
     async fn send_order_to_b3(
         &self,
         request: &OrderRequestOpen<ExchangeId, &InstrumentNameExchange>,
-    ) -> Result<Order<ExchangeId, InstrumentNameExchange, Result<Open, UnindexedOrderError>>, ProfitError> {
+    ) -> Result<
+        Order<ExchangeId, InstrumentNameExchange, Result<Open, UnindexedOrderError>>,
+        ProfitError,
+    > {
         let connector_guard = self.connector.lock().await;
         let _connector = connector_guard.as_ref().ok_or_else(|| {
             ProfitError::ConnectionFailed("No active connection to B3".to_string())
@@ -322,18 +326,18 @@ impl B3ExecutionClient {
     ) -> Result<SendOrder, ProfitError> {
         // This is a simplified conversion
         // Real implementation would need proper account/asset mapping
-        
+
         // Types are already imported above
         // AssetIdentifier and AccountIdentifier from markets::profit_dll
 
         let account = AccountIdentifier::new(
-            "default".to_string(), // account_id
+            "default".to_string(),   // account_id
             "ProfitDLL".to_string(), // broker
         );
 
         let instrument_str = format!("{:?}", request.key.instrument);
         let asset = AssetIdentifier::new(
-            instrument_str, // ticker
+            instrument_str,        // ticker
             "BOVESPA".to_string(), // exchange (B3)
         );
 
@@ -344,22 +348,15 @@ impl B3ExecutionClient {
 
         let order = match request.state.kind {
             OrderKind::Market => {
-                SendOrder::new_market_order(
-                    asset,
-                    account,
-                    order_side,
-                    request.state.quantity,
-                )
+                SendOrder::new_market_order(asset, account, order_side, request.state.quantity)
             }
-            OrderKind::Limit => {
-                SendOrder::new_limit_order(
-                    asset,
-                    account,
-                    order_side,
-                    request.state.quantity,
-                    request.state.price,
-                )
-            }
+            OrderKind::Limit => SendOrder::new_limit_order(
+                asset,
+                account,
+                order_side,
+                request.state.quantity,
+                request.state.price,
+            ),
         };
 
         Ok(order)

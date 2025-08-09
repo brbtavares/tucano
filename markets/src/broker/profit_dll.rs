@@ -4,8 +4,8 @@
 //! for B3 (Brazilian Stock Exchange) connectivity.
 
 use super::traits::*;
+use crate::profit_dll::{CallbackEvent, ProfitConnector};
 use crate::{Asset, ExchangeId};
-use crate::profit_dll::{ProfitConnector, CallbackEvent};
 use async_trait::async_trait;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
@@ -36,7 +36,7 @@ impl ProfitDLLBroker {
             is_connected: false,
         }
     }
-    
+
     /// Initialize the broker with authentication credentials
     pub async fn initialize(
         &mut self,
@@ -44,18 +44,18 @@ impl ProfitDLLBroker {
         user: &str,
         password: &str,
     ) -> Result<(), BrokerError> {
-        let connector = ProfitConnector::new(None)
-            .map_err(|e| BrokerError::ConnectionFailed(e.to_string()))?;
-            
+        let connector =
+            ProfitConnector::new(None).map_err(|e| BrokerError::ConnectionFailed(e.to_string()))?;
+
         let events = connector
             .initialize_login(activation_key, user, password)
             .await
             .map_err(|e| BrokerError::AuthenticationFailed(e.to_string()))?;
-            
+
         self.connector = Some(connector);
         self.event_receiver = Some(events);
         self.is_connected = true;
-        
+
         Ok(())
     }
 }
@@ -64,11 +64,11 @@ impl Broker for ProfitDLLBroker {
     fn id(&self) -> BrokerId {
         BrokerId::ProfitDLL
     }
-    
+
     fn name(&self) -> &'static str {
         "ProfitDLL"
     }
-    
+
     fn supported_exchanges(&self) -> Vec<ExchangeId> {
         vec![ExchangeId::B3]
     }
@@ -106,68 +106,75 @@ pub enum MarketEventType {
 impl MarketDataProvider for ProfitDLLBroker {
     type MarketEvent = ProfitMarketEvent;
     type SubscriptionId = String;
-    
+
     async fn connect(&mut self) -> Result<(), BrokerError> {
         if !self.is_connected {
             return Err(BrokerError::ConnectionFailed(
-                "Broker not initialized. Call initialize() first.".to_string()
+                "Broker not initialized. Call initialize() first.".to_string(),
             ));
         }
         Ok(())
     }
-    
+
     async fn disconnect(&mut self) -> Result<(), BrokerError> {
         self.is_connected = false;
         self.connector = None;
         self.event_receiver = None;
         Ok(())
     }
-    
+
     async fn subscribe_market_data(
         &mut self,
         asset: &(dyn Asset + Send + Sync),
         exchange: ExchangeId,
     ) -> Result<Self::SubscriptionId, BrokerError> {
         if exchange != ExchangeId::B3 {
-            return Err(BrokerError::MarketDataError(
-                format!("Unsupported exchange: {:?}", exchange)
-            ));
+            return Err(BrokerError::MarketDataError(format!(
+                "Unsupported exchange: {:?}",
+                exchange
+            )));
         }
-        
-        let connector = self.connector.as_ref()
+
+        let connector = self
+            .connector
+            .as_ref()
             .ok_or_else(|| BrokerError::ConnectionFailed("Not connected".to_string()))?;
-            
+
         // Subscribe to ticker using ProfitDLL
-        connector.subscribe_ticker(asset.symbol(), "B")
+        connector
+            .subscribe_ticker(asset.symbol(), "B")
             .map_err(|e| BrokerError::MarketDataError(e.to_string()))?;
-            
+
         Ok(asset.symbol().to_string())
     }
-    
+
     async fn unsubscribe_market_data(
         &mut self,
         subscription_id: Self::SubscriptionId,
     ) -> Result<(), BrokerError> {
-        let connector = self.connector.as_ref()
+        let connector = self
+            .connector
+            .as_ref()
             .ok_or_else(|| BrokerError::ConnectionFailed("Not connected".to_string()))?;
-            
-        connector.unsubscribe_ticker(&subscription_id, "B")
+
+        connector
+            .unsubscribe_ticker(&subscription_id, "B")
             .map_err(|e| BrokerError::MarketDataError(e.to_string()))?;
-            
+
         Ok(())
     }
-    
+
     async fn next_market_event(&mut self) -> Option<Self::MarketEvent> {
         let receiver = self.event_receiver.as_mut()?;
-        
+
         if let Ok(event) = receiver.try_recv() {
             // Convert ProfitDLL CallbackEvent to our MarketEvent
             match event {
-                CallbackEvent::NewTrade { 
-                    ticker, 
-                    exchange: _, 
-                    price, 
-                    volume, 
+                CallbackEvent::NewTrade {
+                    ticker,
+                    exchange: _,
+                    price,
+                    volume,
                     timestamp,
                     buy_agent: _,
                     sell_agent: _,
@@ -185,8 +192,8 @@ impl MarketDataProvider for ProfitDLLBroker {
                         timestamp,
                     })
                 }
-                CallbackEvent::DailySummary { 
-                    ticker, 
+                CallbackEvent::DailySummary {
+                    ticker,
                     exchange: _,
                     open: _,
                     high: _,
@@ -232,7 +239,9 @@ pub struct ProfitExecutionEvent {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ExecutionEventType {
     OrderAccepted,
-    OrderRejected { reason: String },
+    OrderRejected {
+        reason: String,
+    },
     PartialFill {
         filled_quantity: Decimal,
         fill_price: Decimal,
@@ -249,60 +258,65 @@ pub enum ExecutionEventType {
 impl OrderExecutor for ProfitDLLBroker {
     type OrderId = String;
     type ExecutionEvent = ProfitExecutionEvent;
-    
+
     async fn connect(&mut self) -> Result<(), BrokerError> {
         if !self.is_connected {
             return Err(BrokerError::ConnectionFailed(
-                "Broker not initialized. Call initialize() first.".to_string()
+                "Broker not initialized. Call initialize() first.".to_string(),
             ));
         }
         Ok(())
     }
-    
+
     async fn disconnect(&mut self) -> Result<(), BrokerError> {
         self.is_connected = false;
         self.connector = None;
         self.event_receiver = None;
         Ok(())
     }
-    
+
     async fn submit_order(&mut self, order: OrderRequest) -> Result<Self::OrderId, BrokerError> {
         if order.exchange != ExchangeId::B3 {
-            return Err(BrokerError::ExecutionError(
-                format!("Unsupported exchange: {:?}", order.exchange)
-            ));
+            return Err(BrokerError::ExecutionError(format!(
+                "Unsupported exchange: {:?}",
+                order.exchange
+            )));
         }
-        
-        let _connector = self.connector.as_ref()
+
+        let _connector = self
+            .connector
+            .as_ref()
             .ok_or_else(|| BrokerError::ConnectionFailed("Not connected".to_string()))?;
-            
+
         // Convert our order to ProfitDLL format and submit
         // This is a simplified version - real implementation would need more details
         let order_id = format!("ORDER_{}", chrono::Utc::now().timestamp_millis());
-        
+
         // TODO: Implement actual order submission via ProfitDLL
         // connector.submit_order(...)?;
-        
+
         Ok(order_id)
     }
-    
+
     async fn cancel_order(&mut self, _order_id: Self::OrderId) -> Result<(), BrokerError> {
-        let _connector = self.connector.as_ref()
+        let _connector = self
+            .connector
+            .as_ref()
             .ok_or_else(|| BrokerError::ConnectionFailed("Not connected".to_string()))?;
-            
+
         // TODO: Implement actual order cancellation via ProfitDLL
         // connector.cancel_order(&order_id)?;
-        
+
         Ok(())
     }
-    
+
     async fn next_execution_event(&mut self) -> Option<Self::ExecutionEvent> {
         let receiver = self.event_receiver.as_mut()?;
-        
+
         if let Ok(event) = receiver.try_recv() {
             // Convert ProfitDLL CallbackEvent to our ExecutionEvent
             match event {
-                CallbackEvent::AccountChanged { 
+                CallbackEvent::AccountChanged {
                     account_id,
                     account_holder: _,
                     broker_name: _,
@@ -361,41 +375,45 @@ impl AccountProvider for ProfitDLLBroker {
     type Balance = ProfitBalance;
     type Position = ProfitPosition;
     type AccountEvent = ProfitAccountEvent;
-    
+
     async fn connect(&mut self) -> Result<(), BrokerError> {
         if !self.is_connected {
             return Err(BrokerError::ConnectionFailed(
-                "Broker not initialized. Call initialize() first.".to_string()
+                "Broker not initialized. Call initialize() first.".to_string(),
             ));
         }
         Ok(())
     }
-    
+
     async fn get_balances(&self) -> Result<Vec<Self::Balance>, BrokerError> {
-        let _connector = self.connector.as_ref()
+        let _connector = self
+            .connector
+            .as_ref()
             .ok_or_else(|| BrokerError::ConnectionFailed("Not connected".to_string()))?;
-            
+
         // TODO: Implement actual balance retrieval via ProfitDLL
         // This is a placeholder
         Ok(vec![])
     }
-    
+
     async fn get_positions(&self) -> Result<Vec<Self::Position>, BrokerError> {
-        let _connector = self.connector.as_ref()
+        let _connector = self
+            .connector
+            .as_ref()
             .ok_or_else(|| BrokerError::ConnectionFailed("Not connected".to_string()))?;
-            
+
         // TODO: Implement actual position retrieval via ProfitDLL
         // This is a placeholder
         Ok(vec![])
     }
-    
+
     async fn next_account_event(&mut self) -> Option<Self::AccountEvent> {
         let receiver = self.event_receiver.as_mut()?;
-        
+
         if let Ok(event) = receiver.try_recv() {
             // Convert ProfitDLL CallbackEvent to our AccountEvent
             match event {
-                CallbackEvent::AccountChanged { 
+                CallbackEvent::AccountChanged {
                     account_id,
                     account_holder: _,
                     broker_name: _,

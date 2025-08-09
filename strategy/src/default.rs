@@ -1,17 +1,13 @@
 use crate::{
-    algo::AlgoStrategy,
-    close_positions::ClosePositionsStrategy,
-    on_disconnect::OnDisconnectStrategy,
-    on_trading_disabled::OnTradingDisabled,
+    algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
+    on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
 };
 use execution::{
     order::{
         id::StrategyId,
         request::{OrderRequestCancel, OrderRequestOpen},
     },
-    AssetIndex,
-    ExchangeIndex,
-    InstrumentIndex,
+    AssetIndex, ExchangeIndex, InstrumentIndex,
 };
 use markets::exchange::ExchangeId;
 use std::marker::PhantomData;

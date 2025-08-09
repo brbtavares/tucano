@@ -1,6 +1,4 @@
-use crate::{
-    summary::dataset::DataSetSummary,
-};
+use crate::summary::dataset::DataSetSummary;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
@@ -47,16 +45,10 @@ pub struct PnLReturns {
 
 impl PnLReturns {
     /// Update the `PnLReturns` from the next [`PositionExited`].
-    pub fn update<AssetKey, InstrumentKey>(
-        &mut self,
-        position: &PositionExited,
-    ) {
+    pub fn update<AssetKey, InstrumentKey>(&mut self, position: &PositionExited) {
         self.pnl_raw += position.pnl_realised;
 
-        let pnl_return = calculate_pnl_return(
-            position,
-            position.price_entry_average,
-        );
+        let pnl_return = calculate_pnl_return(position, position.price_entry_average);
 
         self.total.update(pnl_return);
 

@@ -1,12 +1,10 @@
-use crate::{
-    metric::drawdown::{
-        Drawdown, DrawdownGenerator,
-        max::{MaxDrawdown, MaxDrawdownGenerator},
-        mean::{MeanDrawdown, MeanDrawdownGenerator},
-    },
+use super::LocalSnapshot;
+use crate::metric::drawdown::{
+    max::{MaxDrawdown, MaxDrawdownGenerator},
+    mean::{MeanDrawdown, MeanDrawdownGenerator},
+    Drawdown, DrawdownGenerator,
 };
 use execution::balance::{AssetBalance, Balance};
-use super::LocalSnapshot;
 use serde::{Deserialize, Serialize};
 
 /// TearSheet summarising the trading session changes for an Asset.
@@ -50,13 +48,16 @@ impl TearSheetAssetGenerator {
     }
 
     /// Update the [`TearSheetAssetGenerator`] from the next [`LocalSnapshot`] [`AssetBalance`].
-    pub fn update_from_balance<AssetKey>(&mut self, balance: LocalSnapshot<&AssetBalance<AssetKey>>) {
+    pub fn update_from_balance<AssetKey>(
+        &mut self,
+        balance: LocalSnapshot<&AssetBalance<AssetKey>>,
+    ) {
         self.balance_now = Some(balance.value().balance);
 
-        if let Some(next_drawdown) = self.drawdown.update(
-            balance.value().balance.total,
-            balance.value().time_exchange,
-        ) {
+        if let Some(next_drawdown) = self
+            .drawdown
+            .update(balance.value().balance.total, balance.value().time_exchange)
+        {
             self.drawdown_mean.update(&next_drawdown);
             self.drawdown_max.update(&next_drawdown);
         }
@@ -88,8 +89,8 @@ impl TearSheetAssetGenerator {
 mod tests {
     use super::*;
     use crate::test_utils::time_plus_days;
-    use execution::AssetIndex;
     use chrono::{DateTime, Utc};
+    use execution::AssetIndex;
     use rust_decimal_macros::dec;
 
     fn balance(balance: Balance, time: DateTime<Utc>) -> AssetBalance<AssetIndex> {
@@ -113,10 +114,8 @@ mod tests {
 
         let base_time = DateTime::<Utc>::MIN_UTC;
 
-        let mut generator = TearSheetAssetGenerator::init(&balance(
-            Balance::new(dec!(1.0), dec!(1.0)),
-            base_time,
-        ));
+        let mut generator =
+            TearSheetAssetGenerator::init(&balance(Balance::new(dec!(1.0), dec!(1.0)), base_time));
 
         let cases = vec![
             // TC0: Balance increased from 1.0 peak, so no expected drawdowns
@@ -127,10 +126,7 @@ mod tests {
                 ),
                 expected: TearSheetAssetGenerator {
                     balance_now: Some(Balance::new(dec!(2.0), dec!(2.0))),
-                    drawdown: DrawdownGenerator::init(
-                        dec!(2.0),
-                        time_plus_days(base_time, 1),
-                    ),
+                    drawdown: DrawdownGenerator::init(dec!(2.0), time_plus_days(base_time, 1)),
                     drawdown_mean: MeanDrawdownGenerator::default(),
                     drawdown_max: MaxDrawdownGenerator::default(),
                 },
@@ -179,10 +175,7 @@ mod tests {
                 ),
                 expected: TearSheetAssetGenerator {
                     balance_now: Some(Balance::new(dec!(2.5), dec!(2.5))),
-                    drawdown: DrawdownGenerator::init(
-                        dec!(2.5),
-                        time_plus_days(base_time, 4),
-                    ),
+                    drawdown: DrawdownGenerator::init(dec!(2.5), time_plus_days(base_time, 4)),
                     drawdown_mean: MeanDrawdownGenerator {
                         count: 1,
                         mean_drawdown: Some(MeanDrawdown {
@@ -309,10 +302,7 @@ mod tests {
                 ),
                 expected: TearSheetAssetGenerator {
                     balance_now: Some(Balance::new(dec!(3.0), dec!(3.0))),
-                    drawdown: DrawdownGenerator::init(
-                        dec!(3.0),
-                        time_plus_days(base_time, 8),
-                    ),
+                    drawdown: DrawdownGenerator::init(dec!(3.0), time_plus_days(base_time, 8)),
                     drawdown_mean: MeanDrawdownGenerator {
                         count: 2,
                         mean_drawdown: Some(MeanDrawdown {

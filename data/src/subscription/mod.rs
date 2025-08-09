@@ -1,18 +1,12 @@
-use crate::{
-    exchange::Connector, 
-    instrument::InstrumentData,
-};
-use markets::{
-    Keyed, MarketDataInstrument, InstrumentKind,
-    exchange::ExchangeId,
-};
-use integration::{
-    Validator, error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId,
-};
+use crate::{exchange::Connector, instrument::InstrumentData};
 use derive_more::Display;
 use fnv::FnvHashMap;
+use integration::{
+    error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId, Validator,
+};
+use markets::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
 use serde::{Deserialize, Serialize};
-use smol_str::{ToSmolStr, format_smolstr};
+use smol_str::{format_smolstr, ToSmolStr};
 use std::{borrow::Borrow, fmt::Debug, hash::Hash};
 
 /// OrderBook [`SubscriptionKind`]s and the associated Toucan output data models.
@@ -96,27 +90,14 @@ where
     S: Into<String>,
 {
     fn from(
-        (exchange, base, quote, instrument_kind, kind): (
-            Exchange,
-            S,
-            S,
-            InstrumentKind,
-            Kind,
-        ),
+        (exchange, base, quote, instrument_kind, kind): (Exchange, S, S, InstrumentKind, Kind),
     ) -> Self {
         Self::new(exchange, (base, quote, instrument_kind), kind)
     }
 }
 
-impl<InstrumentKey, Exchange, S, Kind>
-    From<(
-        InstrumentKey,
-        Exchange,
-        S,
-        S,
-        InstrumentKind,
-        Kind,
-    )> for Subscription<Exchange, Keyed<InstrumentKey, MarketDataInstrument>, Kind>
+impl<InstrumentKey, Exchange, S, Kind> From<(InstrumentKey, Exchange, S, S, InstrumentKind, Kind)>
+    for Subscription<Exchange, Keyed<InstrumentKey, MarketDataInstrument>, Kind>
 where
     S: Into<String>,
 {
@@ -310,9 +291,7 @@ mod tests {
 
     mod subscription {
         use super::*;
-        use crate::{
-            subscription::trade::PublicTrades,
-        };
+        use crate::subscription::trade::PublicTrades;
         use markets::MarketDataInstrument;
 
         mod de {

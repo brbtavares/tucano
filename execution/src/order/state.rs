@@ -1,5 +1,5 @@
-use crate::{error::OrderError, order::id::OrderId};
 use crate::compat::*;
+use crate::{error::OrderError, order::id::OrderId};
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use rust_decimal::Decimal;

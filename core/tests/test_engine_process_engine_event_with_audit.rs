@@ -72,13 +72,11 @@
 //! - **Performance Metrics**: Validating PnL calculations and trading statistics
 
 use core::{
-    EngineEvent, Sequence, Timed,
     engine::{
-        Engine, EngineOutput,
         action::{
-            ActionOutput,
             generate_algo_orders::GenerateAlgoOrdersOutput,
             send_requests::{SendCancelsAndOpensOutput, SendRequestsOutput},
+            ActionOutput,
         },
         audit::EngineAudit,
         clock::HistoricalClock,
@@ -86,7 +84,6 @@ use core::{
         execution_tx::MultiExchangeTxMap,
         process_with_audit,
         state::{
-            EngineState,
             asset::AssetStates,
             connectivity::Health,
             global::DefaultGlobalData,
@@ -96,10 +93,13 @@ use core::{
             },
             position::PositionExited,
             trading::TradingState,
+            EngineState,
         },
+        Engine, EngineOutput,
     },
-    execution::{AccountStreamEvent, request::ExecutionRequest},
+    execution::{request::ExecutionRequest, AccountStreamEvent},
     test_utils::time_plus_days,
+    EngineEvent, Sequence, Timed,
 };
 
 use data::{
@@ -109,47 +109,45 @@ use data::{
 };
 
 use execution::{
-    AccountEvent, AccountEventKind, AccountSnapshot,
     balance::{AssetBalance, Balance},
     order::{
-        Order, OrderKey, OrderKind, TimeInForce,
         id::{ClientOrderId, OrderId, StrategyId},
         request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
         state::{ActiveOrderState, Open, OrderState},
+        Order, OrderKey, OrderKind, TimeInForce,
     },
     trade::{AssetFees, Trade, TradeId},
+    AccountEvent, AccountEventKind, AccountSnapshot,
 };
 
 use markets::{
-    Side, Underlying,
     asset::AssetIndex,
     exchange::{ExchangeId, ExchangeIndex},
     index::IndexedInstruments,
     instrument::{
-        Instrument, InstrumentIndex,
         spec::{
             InstrumentSpec, InstrumentSpecNotional, InstrumentSpecPrice, InstrumentSpecQuantity,
             OrderQuantityUnits,
         },
+        Instrument, InstrumentIndex,
     },
+    Side, Underlying,
 };
 
 use risk::DefaultRiskManager;
 
 use strategy::{
-    algo::AlgoStrategy,
-    close_positions::ClosePositionsStrategy,
-    on_disconnect::OnDisconnectStrategy,
-    on_trading_disabled::OnTradingDisabled,
+    algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
+    on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
 };
 
+use chrono::{DateTime, Utc};
+use fnv::FnvHashMap;
 use integration::{
-    channel::{UnboundedTx, mpsc_unbounded},
+    channel::{mpsc_unbounded, UnboundedTx},
     collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany},
     snapshot::Snapshot,
 };
-use chrono::{DateTime, Utc};
-use fnv::FnvHashMap;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 
@@ -159,15 +157,15 @@ const RISK_FREE_RETURN: Decimal = dec!(0.05);
 
 // Initial account balances for testing
 const STARTING_BALANCE_QUOTE: Balance = Balance {
-    total: dec!(40_000.0),  // Quote currency (e.g., USD, USDT)
+    total: dec!(40_000.0), // Quote currency (e.g., USD, USDT)
     free: dec!(40_000.0),
 };
 const STARTING_BALANCE_BASE: Balance = Balance {
-    total: dec!(1.0),       // Primary base asset
+    total: dec!(1.0), // Primary base asset
     free: dec!(1.0),
 };
 const STARTING_BALANCE_ALT: Balance = Balance {
-    total: dec!(10.0),      // Alternative base asset
+    total: dec!(10.0), // Alternative base asset
     free: dec!(10.0),
 };
 const QUOTE_FEES_PERCENT: f64 = 0.1; // 10% trading fees
@@ -291,15 +289,13 @@ fn test_engine_process_engine_event_with_audit() {
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(5));
     assert_eq!(audit.event, EngineAudit::process(event));
-    assert!(
-        engine
-            .state
-            .instruments
-            .instrument_index(&InstrumentIndex(0))
-            .orders
-            .0
-            .is_empty()
-    );
+    assert!(engine
+        .state
+        .instruments
+        .instrument_index(&InstrumentIndex(0))
+        .orders
+        .0
+        .is_empty());
 
     // Simulate Trade update for Sequence(3) primary_buy_order (fees 10% -> 1000 quote)
     let event = account_event_trade(0, 2, Side::Buy, 10_000.0, 1.0);
@@ -347,15 +343,13 @@ fn test_engine_process_engine_event_with_audit() {
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(9));
     assert_eq!(audit.event, EngineAudit::process(event));
-    assert!(
-        engine
-            .state
-            .instruments
-            .instrument_index(&InstrumentIndex(1))
-            .orders
-            .0
-            .is_empty()
-    );
+    assert!(engine
+        .state
+        .instruments
+        .instrument_index(&InstrumentIndex(1))
+        .orders
+        .0
+        .is_empty());
 
     // Simulate Trade update for Sequence(3) secondary_buy_order (fees 10% -> 0.01 base)
     let event = account_event_trade(1, 2, Side::Buy, 0.1, 1.0);
@@ -430,7 +424,7 @@ fn test_engine_process_engine_event_with_audit() {
             quantity: dec!(1),
         },
     };
-        assert_eq!(
+    assert_eq!(
         audit.event,
         EngineAudit::process_with_output(
             event,
@@ -455,15 +449,13 @@ fn test_engine_process_engine_event_with_audit() {
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(16));
     assert_eq!(audit.event, EngineAudit::process(event));
-    assert!(
-        engine
-            .state
-            .instruments
-            .instrument_index(&InstrumentIndex(0))
-            .orders
-            .0
-            .is_empty()
-    );
+    assert!(engine
+        .state
+        .instruments
+        .instrument_index(&InstrumentIndex(0))
+        .orders
+        .0
+        .is_empty());
 
     // Simulate Balance update for Sequence(15) primary_sell_order, AssetIndex(2)/quote increase
     let event = account_event_balance(2, 3, 27_000.0, 27_000.0); // 9k + 20k - 10% fees
@@ -522,7 +514,7 @@ fn test_engine_process_engine_event_with_audit() {
                 trades: vec![gen_trade_id(0), gen_trade_id(0)],
             }
         )
-    );    // Simulate exchange disconnection
+    ); // Simulate exchange disconnection
     let event = EngineEvent::Market(MarketStreamEvent::Reconnecting(ExchangeId::B3));
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(20));
@@ -669,15 +661,13 @@ fn test_engine_process_engine_event_with_audit() {
     let audit = process_with_audit(&mut engine, event.clone());
     assert_eq!(audit.context.sequence, Sequence(24));
     assert_eq!(audit.event, EngineAudit::process(event));
-    assert!(
-        engine
-            .state
-            .instruments
-            .instrument_index(&InstrumentIndex(1))
-            .orders
-            .0
-            .is_empty()
-    );
+    assert!(engine
+        .state
+        .instruments
+        .instrument_index(&InstrumentIndex(1))
+        .orders
+        .0
+        .is_empty());
 
     // Simulate Trade update for Sequence(21) LIMIT secondary_sell_order
     let event = account_event_trade(1, 5, Side::Sell, 0.05, 1.0);
@@ -850,7 +840,7 @@ impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
         } else {
             &InstrumentFilter::None
         };
-        
+
         let opens = state
             .instruments
             .instruments(concrete_filter)
@@ -986,8 +976,7 @@ fn build_engine(
     let initial_account = FnvHashMap::from(&state);
     assert_eq!(initial_account.len(), 1);
 
-    let execution_txs =
-        MultiExchangeTxMap::from_iter([(ExchangeId::Mock, Some(execution_tx))]);
+    let execution_txs = MultiExchangeTxMap::from_iter([(ExchangeId::Mock, Some(execution_tx))]);
 
     Engine::new(
         clock,

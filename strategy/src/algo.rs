@@ -6,8 +6,7 @@
 
 use execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},
-    ExchangeIndex,
-    InstrumentIndex,
+    ExchangeIndex, InstrumentIndex,
 };
 
 /// Interface de estratégia para geração de ordens algorítmicas baseadas no
@@ -34,12 +33,12 @@ use execution::{
 /// ```rust,no_run
 /// use strategy::algo::AlgoStrategy;
 /// use core::engine::EngineState;
-/// 
+///
 /// struct MovingAverageStrategy {
 ///     short_period: usize,
 ///     long_period: usize,
 /// }
-/// 
+///
 /// impl AlgoStrategy for MovingAverageStrategy {
 ///     type State = EngineState<MyGlobalData, MyInstrumentData>;
 ///     

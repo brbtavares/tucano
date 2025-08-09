@@ -1,31 +1,24 @@
-use crate::{
-    engine::state::{
-        instrument::{data::InstrumentDataState, filter::InstrumentFilter},
-        order::{Orders, manager::OrderManager},
-        position::{PositionExited, PositionManager},
-    },
+use crate::engine::state::{
+    instrument::{data::InstrumentDataState, filter::InstrumentFilter},
+    order::{manager::OrderManager, Orders},
+    position::{PositionExited, PositionManager},
 };
-use analytics::summary::instrument::TearSheetGenerator;
 use ::data::event::MarketEvent;
-use execution::{
-    InstrumentAccountSnapshot,
-    AssetIndex, ExchangeIndex, InstrumentIndex, QuoteAsset,
-    order::{
-        Order, OrderKey,
-        request::OrderResponseCancel,
-        state::{ActiveOrderState, OrderState},
-    },
-    trade::Trade,
-};
-use markets::{
-    Keyed,
-    exchange::ExchangeId,
-    instrument::Instrument,
-};
-use integration::{collection::FnvIndexMap, snapshot::Snapshot};
+use analytics::summary::instrument::TearSheetGenerator;
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
+use execution::{
+    order::{
+        request::OrderResponseCancel,
+        state::{ActiveOrderState, OrderState},
+        Order, OrderKey,
+    },
+    trade::Trade,
+    AssetIndex, ExchangeIndex, InstrumentAccountSnapshot, InstrumentIndex, QuoteAsset,
+};
+use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use itertools::{Either, Itertools};
+use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -41,11 +34,11 @@ pub struct ConcreteInstrument {
 
 impl Instrument for ConcreteInstrument {
     type Symbol = String;
-    
+
     fn symbol(&self) -> &Self::Symbol {
         &self.symbol
     }
-    
+
     fn market(&self) -> &str {
         &self.market
     }
@@ -352,20 +345,19 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     where
         InstrumentKey: Debug + Clone + PartialEq,
     {
-        self.position
-            .update_from_trade(trade)
-            .inspect(|closed| {
-                // Convert core PositionExited to analytics PositionExited
-                let analytics_position = analytics::summary::PositionExited {
-                    timestamp: closed.time_exit,
-                    pnl_realised: closed.pnl_realised,
-                    time_exit: closed.time_exit,
-                    instrument: "0".to_string(), // Placeholder conversion
-                    price_entry_average: closed.price_entry_average,
-                    quantity_abs_max: closed.quantity_abs_max,
-                };
-                self.tear_sheet.update_from_position::<AssetKey, InstrumentKey>(&analytics_position);
-            })
+        self.position.update_from_trade(trade).inspect(|closed| {
+            // Convert core PositionExited to analytics PositionExited
+            let analytics_position = analytics::summary::PositionExited {
+                timestamp: closed.time_exit,
+                pnl_realised: closed.pnl_realised,
+                time_exit: closed.time_exit,
+                instrument: "0".to_string(), // Placeholder conversion
+                price_entry_average: closed.price_entry_average,
+                quantity_abs_max: closed.quantity_abs_max,
+            };
+            self.tear_sheet
+                .update_from_position::<AssetKey, InstrumentKey>(&analytics_position);
+        })
     }
 
     /// Updates the instrument state based on a new market event.

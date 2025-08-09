@@ -1,4 +1,4 @@
-use crate::{Identifier, subscription::Subscription};
+use crate::{subscription::Subscription, Identifier};
 use integration::subscription::SubscriptionId;
 use serde::Deserialize;
 

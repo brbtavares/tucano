@@ -1,25 +1,25 @@
 use crate::{
-    AccountEvent, AccountEventKind, AccountSnapshot, InstrumentAccountSnapshot,
-    UnindexedAccountEvent, UnindexedAccountSnapshot,
     balance::AssetBalance,
+    compat::*,
     error::{
         ApiError, ClientError, KeyError, OrderError, UnindexedApiError, UnindexedClientError,
         UnindexedOrderError,
     },
     map::ExecutionInstrumentMap,
     order::{
-        Order, OrderEvent, OrderKey, OrderSnapshot, UnindexedOrderKey, UnindexedOrderSnapshot,
         request::OrderResponseCancel,
         state::{InactiveOrderState, OrderState, UnindexedOrderState},
+        Order, OrderEvent, OrderKey, OrderSnapshot, UnindexedOrderKey, UnindexedOrderSnapshot,
     },
     trade::Trade,
-    compat::*,
+    AccountEvent, AccountEventKind, AccountSnapshot, InstrumentAccountSnapshot,
+    UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
+use derive_more::Constructor;
 use integration::{
     snapshot::Snapshot,
     stream::indexed::{IndexedStream, Indexer},
 };
-use derive_more::Constructor;
 use std::sync::Arc;
 
 pub type IndexedAccountStream<St> = IndexedStream<AccountEventIndexer, St>;

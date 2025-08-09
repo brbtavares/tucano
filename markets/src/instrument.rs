@@ -6,7 +6,7 @@ use std::fmt::{Display, Formatter};
 /// Core trait for financial instruments
 pub trait Instrument {
     type Symbol: Display + Clone;
-    
+
     fn symbol(&self) -> &Self::Symbol;
     fn market(&self) -> &str;
 }
@@ -44,9 +44,9 @@ impl MarketDataInstrument {
     }
 }
 
-impl<S> From<(S, S, InstrumentKind)> for MarketDataInstrument 
-where 
-    S: Into<String>
+impl<S> From<(S, S, InstrumentKind)> for MarketDataInstrument
+where
+    S: Into<String>,
 {
     fn from((base, _quote, kind): (S, S, InstrumentKind)) -> Self {
         Self {

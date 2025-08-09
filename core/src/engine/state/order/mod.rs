@@ -1,18 +1,18 @@
 use crate::engine::state::order::{
     in_flight_recorder::InFlightRequestRecorder, manager::OrderManager,
 };
+use derive_more::Constructor;
 use execution::{
     order::{
-        Order,
         id::ClientOrderId,
         request::{OrderRequestCancel, OrderRequestOpen, OrderResponseCancel},
         state::{ActiveOrderState, CancelInFlight, OrderState},
+        Order,
     },
     ExchangeIndex, InstrumentIndex,
 };
-use integration::snapshot::Snapshot;
-use derive_more::Constructor;
 use fnv::FnvHashMap;
+use integration::snapshot::Snapshot;
 use serde::{Deserialize, Serialize};
 use std::{collections::hash_map::Entry, fmt::Debug};
 use tracing::{debug, error, warn};
@@ -398,17 +398,17 @@ where
 mod tests {
     use super::*;
     use crate::{engine::state::order::Orders, test_utils::time_plus_secs};
+    use chrono::{DateTime, Utc};
     use execution::{
         error::{ConnectivityError, OrderError},
         order::{
-            Order, OrderKey, OrderKind, TimeInForce,
             id::{ClientOrderId, OrderId, StrategyId},
             request::{RequestCancel, RequestOpen},
             state::{ActiveOrderState, CancelInFlight, Cancelled, Open, OpenInFlight},
+            Order, OrderKey, OrderKind, TimeInForce,
         },
     };
-    use markets::{Side, exchange::ExchangeId};
-    use chrono::{DateTime, Utc};
+    use markets::{exchange::ExchangeId, Side};
     use rust_decimal_macros::dec;
     use smol_str::SmolStr;
 

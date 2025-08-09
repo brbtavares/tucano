@@ -1,6 +1,6 @@
 use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
-use markets::Underlying;
 use integration::collection::one_or_many::OneOrMany;
+use markets::Underlying;
 use serde::{Deserialize, Serialize};
 
 /// Instrument filter.

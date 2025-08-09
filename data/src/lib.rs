@@ -13,35 +13,35 @@
 
 //! # 📊 Data - Módulo de Streaming de Dados de Mercado
 //!
-//! Biblioteca de alta performance para integração via WebSocket, especializada em streaming 
+//! Biblioteca de alta performance para integração via WebSocket, especializada em streaming
 //! de dados públicos de mercado de exchanges líderes - bateria incluída. Características:
 //!
 //! ## 🎯 Características Principais
-//! 
-//! * **🚀 Simplicidade**: Interface simples com [`StreamBuilder`](streams::builder::StreamBuilder) 
+//!
+//! * **🚀 Simplicidade**: Interface simples com [`StreamBuilder`](streams::builder::StreamBuilder)
 //!   e [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para configuração rápida
-//! * **🔄 Padronização**: Interface unificada para consumo de dados WebSocket com modelo 
+//! * **🔄 Padronização**: Interface unificada para consumo de dados WebSocket com modelo
 //!   de dados normalizado para todos os exchanges
-//! * **⚡ Tempo Real**: Integrações WebSocket em tempo real permitindo consumo de dados 
+//! * **⚡ Tempo Real**: Integrações WebSocket em tempo real permitindo consumo de dados
 //!   tick-by-tick normalizados
-//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições com novas 
+//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições com novas
 //!   integrações de exchanges
 //!
 //! ## 🏗️ API do Usuário
-//! 
-//! - [`StreamBuilder`](streams::builder::StreamBuilder) para inicializar [`MarketStream`]s 
+//!
+//! - [`StreamBuilder`](streams::builder::StreamBuilder) para inicializar [`MarketStream`]s
 //!   de tipos específicos de dados
-//! - [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para inicializar 
+//! - [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para inicializar
 //!   [`MarketStream`]s de todos os tipos de dados suportados simultaneamente
 //! - Defina quais dados de mercado deseja usando o tipo [`Subscription`]
-//! - Passe [`Subscription`]s para os métodos [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) 
+//! - Passe [`Subscription`]s para os métodos [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe)
 //!   ou [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)
-//! - Cada chamada para [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) 
-//!   (ou batch para [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)) 
+//! - Cada chamada para [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe)
+//!   (ou batch para [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init))
 //!   abre uma nova conexão WebSocket ao exchange - controle total
 //!
 //! ## 📈 Exchanges Suportados
-//! 
+//!
 //! - **🇧🇷 B3**: Bolsa brasileira via ProfitDLL
 //! - **🌍 Binance**: Spot e Futures USD
 //! - **🇺🇸 Coinbase**: Exchange americano
@@ -49,7 +49,7 @@
 //! - **🌐 Gate.io**: Spot trading
 //!
 //! ## 💡 Exemplos de Uso
-//! 
+//!
 //! Veja o diretório /examples para uma coleção abrangente de exemplos.
 //!
 //! ### Trades Públicos Multi-Exchange
@@ -121,17 +121,17 @@ use crate::{
     transformer::ExchangeTransformer,
 };
 use async_trait::async_trait;
-use markets::exchange::ExchangeId;
+use futures::{SinkExt, Stream, StreamExt};
 use integration::{
-    Transformer,
     error::SocketError,
     protocol::{
-        StreamParser,
         websocket::{WebSocketParser, WsMessage, WsSink, WsStream},
+        StreamParser,
     },
     stream::ExchangeStream,
+    Transformer,
 };
-use futures::{SinkExt, Stream, StreamExt};
+use markets::exchange::ExchangeId;
 use std::{collections::VecDeque, future::Future};
 use tokio::sync::mpsc;
 use tracing::{debug, error, warn};

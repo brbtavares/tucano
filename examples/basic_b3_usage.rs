@@ -1,9 +1,9 @@
 //! Exemplo básico de uso das abstrações B3 do Toucan
-//! 
+//!
 //! Este arquivo demonstra como usar as implementações B3 básicas
 //! com as traits do markets. Baseado nos testes originais.
 
-use markets::{Asset, Exchange, Instrument, AssetType, ExchangeId};
+use markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
 
 // Implementação B3 básica para referência
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -16,7 +16,7 @@ impl Asset for BasicB3Asset {
     fn symbol(&self) -> &str {
         &self.symbol
     }
-    
+
     fn asset_type(&self) -> AssetType {
         self.asset_type.clone()
     }
@@ -28,11 +28,11 @@ pub struct BasicB3Exchange;
 
 impl Exchange for BasicB3Exchange {
     type ExchangeId = ExchangeId;
-    
+
     fn id(&self) -> Self::ExchangeId {
         ExchangeId::B3
     }
-    
+
     fn name(&self) -> &'static str {
         "B3 - Brasil Bolsa Balcão"
     }
@@ -48,11 +48,11 @@ pub struct BasicB3Instrument {
 
 impl Instrument for BasicB3Instrument {
     type Symbol = String;
-    
+
     fn symbol(&self) -> &Self::Symbol {
         &self.symbol
     }
-    
+
     fn market(&self) -> &str {
         "B" // B3 market designation
     }
@@ -91,13 +91,13 @@ fn main() {
     println!("  Symbol: {}", instrument.symbol());
 
     println!("\n✅ Todas as abstrações funcionando corretamente!");
-    
+
     // NOTA: Este é um exemplo básico. Para uso avançado,
     // prefira as implementações em markets::b3 que oferecem:
     // - B3Stock, B3ETF, B3REIT com campos específicos
     // - B3AssetFactory para criação automática
     // - Integração com broker ProfitDLL
-    
+
     println!("\n💡 Para funcionalidades avançadas, veja:");
     println!("   • markets::b3::* para assets especializados");
     println!("   • markets::broker::ProfitDLLBroker para trading");
@@ -114,7 +114,7 @@ mod tests {
             symbol: "VALE3".to_string(),
             asset_type: AssetType::Stock,
         };
-        
+
         assert_eq!(asset.symbol(), "VALE3");
         assert_eq!(asset.asset_type(), AssetType::Stock);
     }
@@ -122,7 +122,7 @@ mod tests {
     #[test]
     fn test_basic_b3_exchange() {
         let exchange = BasicB3Exchange;
-        
+
         assert_eq!(exchange.id(), ExchangeId::B3);
         assert_eq!(exchange.name(), "B3 - Brasil Bolsa Balcão");
     }
@@ -133,13 +133,13 @@ mod tests {
             symbol: "ITUB4".to_string(),
             asset_type: AssetType::Stock,
         };
-        
+
         let instrument = BasicB3Instrument {
             symbol: "ITUB4".to_string(),
             asset,
             exchange: BasicB3Exchange,
         };
-        
+
         assert_eq!(instrument.symbol(), "ITUB4");
     }
 }

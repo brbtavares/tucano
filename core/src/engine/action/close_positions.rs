@@ -1,17 +1,14 @@
-use crate::{
-    engine::{
-        Engine,
-        action::send_requests::{SendCancelsAndOpensOutput, SendRequests},
-        execution_tx::ExecutionTxMap,
-        state::{
-            instrument::filter::InstrumentFilter,
-            order::in_flight_recorder::InFlightRequestRecorder,
-        },
+use crate::engine::{
+    action::send_requests::{SendCancelsAndOpensOutput, SendRequests},
+    execution_tx::ExecutionTxMap,
+    state::{
+        instrument::filter::InstrumentFilter, order::in_flight_recorder::InFlightRequestRecorder,
     },
+    Engine,
 };
 use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
-use strategy::ClosePositionsStrategy;
 use std::fmt::Debug;
+use strategy::ClosePositionsStrategy;
 
 /// Trait that defines how the [`Engine`] generates & sends order requests for closing open
 /// positions.

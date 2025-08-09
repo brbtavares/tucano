@@ -32,7 +32,7 @@
 //!
 //! // Multiple instrument filters
 //! let multi_filters: NoneOneOrMany<String> = NoneOneOrMany::Many(vec![
-//!     "PETR4".to_string(), 
+//!     "PETR4".to_string(),
 //!     "VALE3".to_string()
 //! ]);
 //!

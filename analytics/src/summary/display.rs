@@ -1,5 +1,5 @@
 use crate::{
-    summary::{TradingSummary, asset::TearSheetAsset, instrument::TearSheet},
+    summary::{asset::TearSheetAsset, instrument::TearSheet, TradingSummary},
     time::TimeInterval,
 };
 use prettytable::{Cell, Row, Table};
@@ -207,8 +207,7 @@ where
         let mut header_row = Row::new(vec![Cell::new("").style_spec("bcB")]);
         for asset in self.assets.keys() {
             header_row.add_cell(
-                Cell::new(&format!("{}_{}", asset.exchange, asset.asset))
-                    .style_spec("bcB"),
+                Cell::new(&format!("{}_{}", asset.exchange, asset.asset)).style_spec("bcB"),
             );
         }
         table.add_row(header_row);

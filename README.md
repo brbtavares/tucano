@@ -60,8 +60,24 @@ cargo build --release
 # Executar testes
 cargo test
 
+# Formatação de código (usa rustfmt.toml)
+cargo fmt
+
+# Verificar formatação (CI/CD)
+cargo fmt --check
+
+# Lint de código (usa .config/clippy.toml)
+cargo clippy -- -D warnings
+
+# Script personalizado de formatação
+./scripts/format.sh
+./scripts/format.sh --check
+
 # Executar exemplo básico
 cargo run --example basic_b3_usage
+
+# Gerar documentação
+cargo doc --open
 ```
 
 ### Configuração para B3
@@ -306,6 +322,22 @@ cargo bench
 
 # Testes específicos
 cargo test -p core --test engine_tests
+```
+
+### Formatação Automática
+
+O projeto usa [`rustfmt.toml`](rustfmt.toml) para garantir código consistente:
+
+- **VS Code**: Formatação automática ao salvar (configurado em `.vscode/settings.json`)
+- **CI/CD**: Verificação automática no GitHub Actions
+- **Manual**: Execute `cargo fmt` para formatar todo o código
+
+```bash
+# Verificar se código está formatado (usado no CI)
+cargo fmt --check
+
+# Formatar automaticamente
+cargo fmt
 ```
 
 ### Estrutura de Testes

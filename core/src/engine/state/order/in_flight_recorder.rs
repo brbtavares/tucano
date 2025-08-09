@@ -1,5 +1,8 @@
 use crate::engine::state::EngineState;
-use execution::{order::request::{OrderRequestCancel, OrderRequestOpen}, ExchangeIndex, InstrumentIndex};
+use execution::{
+    order::request::{OrderRequestCancel, OrderRequestOpen},
+    ExchangeIndex, InstrumentIndex,
+};
 
 /// Synchronous in-flight open and in-flight cancel order request tracker.
 ///

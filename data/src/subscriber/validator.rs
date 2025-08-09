@@ -3,15 +3,15 @@ use crate::{
     subscription::{Map, SubscriptionKind},
 };
 use async_trait::async_trait;
+use futures::StreamExt;
 use integration::{
-    Validator,
     error::SocketError,
     protocol::{
-        StreamParser,
         websocket::{WebSocket, WebSocketParser, WsMessage},
+        StreamParser,
     },
+    Validator,
 };
-use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tracing::debug;
 

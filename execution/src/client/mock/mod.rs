@@ -1,16 +1,16 @@
 use crate::{
-    UnindexedAccountEvent, UnindexedAccountSnapshot,
     balance::AssetBalance,
     client::ExecutionClient,
     compat::*,
     error::{ConnectivityError, UnindexedClientError, UnindexedOrderError},
     exchange::mock::request::MockExchangeRequest,
     order::{
-        Order, OrderEvent, OrderKey,
         request::{OrderRequestCancel, OrderRequestOpen, UnindexedOrderResponseCancel},
         state::Open,
+        Order, OrderEvent, OrderKey,
     },
     trade::Trade,
+    UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
@@ -18,7 +18,7 @@ use futures::stream::BoxStream;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use tokio::sync::{broadcast, mpsc, oneshot};
-use tokio_stream::{StreamExt, wrappers::BroadcastStream};
+use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::error;
 
 #[derive(

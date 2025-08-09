@@ -123,7 +123,7 @@ pub mod test_utils {
     //!
     //! Fornece funções auxiliares para criação de dados de teste
     //! e manipulação temporal em cenários de teste.
-    
+
     use chrono::{DateTime, Utc};
 
     /// Adiciona dias a uma data base para criação de dados de teste.

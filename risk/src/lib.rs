@@ -17,7 +17,7 @@
 //! Interface principal para revisão e filtragem de ordens:
 //! ```rust,no_run
 //! use risk::{RiskManager, RiskApproved, RiskRefused};
-//! 
+//!
 //! impl RiskManager for MyRiskManager {
 //!     fn check_order(&self, order: &Order) -> Result<RiskApproved<Order>, RiskRefused<Order>> {
 //!         // Implementar validações específicas
@@ -87,7 +87,7 @@
 //! ```rust,no_run
 //! use core::engine::Engine;
 //! use risk::RiskManager;
-//! 
+//!
 //! let engine = Engine::new(
 //!     clock,
 //!     state,
@@ -105,14 +105,13 @@ pub mod check;
 
 pub use check::*;
 
-use serde::{Deserialize, Serialize};
-use std::{fmt::Debug, hash::Hash, marker::PhantomData};
+use derive_more::{Constructor, Display, From};
 use execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},
-    ExchangeIndex,
-    InstrumentIndex,
+    ExchangeIndex, InstrumentIndex,
 };
-use derive_more::{Constructor, Display, From};
+use serde::{Deserialize, Serialize};
+use std::{fmt::Debug, hash::Hash, marker::PhantomData};
 
 /// Resultado aprovado de uma verificação do [`RiskManager`].
 ///
@@ -122,11 +121,24 @@ use derive_more::{Constructor, Display, From};
 /// # Exemplo
 /// ```rust
 /// use risk::RiskApproved;
-/// 
+///
 /// let approved_order = RiskApproved::new(order);
 /// println!("Ordem aprovada: {}", approved_order);
 /// ```
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Display, From, Constructor)]
+#[derive(
+    Debug,
+    Clone,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    From,
+    Constructor,
+)]
 pub struct RiskApproved<T>(pub T);
 
 impl<T> RiskApproved<T> {
@@ -144,7 +156,7 @@ impl<T> RiskApproved<T> {
 /// # Exemplo
 /// ```rust
 /// use risk::RiskRefused;
-/// 
+///
 /// let refused = RiskRefused::new(order, "Excede limite de posição");
 /// println!("Ordem rejeitada: {}", refused.reason);
 /// ```
@@ -189,12 +201,12 @@ impl<T, Reason> RiskRefused<T, Reason> {
 /// ## Exemplo de Implementação
 /// ```rust,no_run
 /// use risk::{RiskManager, RiskApproved, RiskRefused};
-/// 
+///
 /// struct MyRiskManager {
 ///     max_position: f64,
 ///     max_exposure: f64,
 /// }
-/// 
+///
 /// impl RiskManager for MyRiskManager {
 ///     fn check_order(&self, order: &Order) -> Result<RiskApproved<Order>, RiskRefused<Order>> {
 ///         if order.quantity > self.max_position {
@@ -251,10 +263,16 @@ impl<ExchangeKey, InstrumentKey> RiskManager<ExchangeKey, InstrumentKey> for NoR
     ) {
         let approved_cancels: Vec<_> = cancels.into_iter().map(RiskApproved::new).collect();
         let approved_opens: Vec<_> = opens.into_iter().map(RiskApproved::new).collect();
-        let refused_cancels: Vec<RiskRefused<OrderRequestCancel<ExchangeKey, InstrumentKey>>> = vec![];
+        let refused_cancels: Vec<RiskRefused<OrderRequestCancel<ExchangeKey, InstrumentKey>>> =
+            vec![];
         let refused_opens: Vec<RiskRefused<OrderRequestOpen<ExchangeKey, InstrumentKey>>> = vec![];
-        
-        (approved_cancels, approved_opens, refused_cancels, refused_opens)
+
+        (
+            approved_cancels,
+            approved_opens,
+            refused_cancels,
+            refused_opens,
+        )
     }
 }
 

@@ -1,7 +1,7 @@
 use crate::{
     compat::*,
     error::OrderError,
-    order::{OrderEvent, OrderKind, TimeInForce, id::OrderId, Cancelled},
+    order::{id::OrderId, Cancelled, OrderEvent, OrderKind, TimeInForce},
 };
 use derive_more::Constructor;
 use rust_decimal::Decimal;

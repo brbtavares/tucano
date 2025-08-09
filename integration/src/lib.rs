@@ -22,7 +22,7 @@
 //!
 //! * **🔧 Baixo Nível**: Traduz streams de dados brutos comunicados via web
 //!   em qualquer modelo de dados desejado usando transformações arbitrárias
-//! * **🚀 Flexibilidade**: Compatível com qualquer protocolo (WebSocket, FIX, 
+//! * **🚀 Flexibilidade**: Compatível com qualquer protocolo (WebSocket, FIX,
 //!   Http, etc.), qualquer modelo input/output, e transformações definidas pelo usuário
 //!
 //! ## 🏗️ Abstrações Fundamentais
@@ -31,7 +31,7 @@
 //! Comunicação HTTP configurável e assinada entre cliente e servidor:
 //! ```rust,no_run
 //! use integration::protocol::http::rest::RestClient;
-//! 
+//!
 //! let client = RestClient::new()
 //!     .with_auth(api_key, secret)
 //!     .with_rate_limit(100); // requests per second
@@ -41,7 +41,7 @@
 //! Comunicação configurável sobre protocolos de stream assíncronos:
 //! ```rust,no_run
 //! use integration::stream::ExchangeStream;
-//! 
+//!
 //! let stream = ExchangeStream::new()
 //!     .with_reconnect()
 //!     .with_heartbeat(30); // seconds
@@ -79,7 +79,7 @@
 //!     subscription::Subscription,
 //!     metric::Metric
 //! };
-//! 
+//!
 //! async fn setup_integration() {
 //!     // Configurar cliente WebSocket
 //!     let mut ws_client = WebSocketClient::new("wss://exchange.com/ws")

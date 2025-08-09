@@ -1,18 +1,17 @@
 use crate::{
+    engine::{state::order::in_flight_recorder::InFlightRequestRecorder, Processor},
     Timed,
-    engine::{Processor, state::order::in_flight_recorder::InFlightRequestRecorder},
 };
 use data::{
     event::{DataKind, MarketEvent},
     subscription::book::OrderBookL1,
 };
-use execution::{
-    AccountEvent,
-    order::request::{OrderRequestCancel, OrderRequestOpen},
-    AssetIndex, ExchangeIndex, InstrumentIndex,
-};
 use derive_more::Constructor;
-use rust_decimal::{Decimal, prelude::FromPrimitive};
+use execution::{
+    order::request::{OrderRequestCancel, OrderRequestOpen},
+    AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex,
+};
+use rust_decimal::{prelude::FromPrimitive, Decimal};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
