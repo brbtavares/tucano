@@ -27,7 +27,7 @@ use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
 /// Placeholder types
 pub type AssetNameInternal = String;
 pub type IndexedInstruments = Vec<()>; // Simplified placeholder
-
+    use markets::{exchange::ExchangeId, Keyed, Underlying, ConcreteInstrument};
 #[derive(Debug, Clone, PartialEq)]
 pub struct ExchangeAsset<T> {
     pub exchange_id: String,
@@ -138,10 +138,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     ///
     /// Controls whether the engine processes events synchronously or asynchronously.
     pub fn engine_feed_mode(self, value: EngineFeedMode) -> Self {
-        Self {
-            engine_feed_mode: Some(value),
-            ..self
-        }
+    Self { engine_feed_mode: Some(value), ..self }
     }
 
     /// Optionally configure the [`AuditMode`] (enabled or disabled).
@@ -207,9 +204,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     >
     where
         Clock: EngineClock + Clone + Send + Sync + 'static,
-        FnInstrumentData: Fn(
-            &'a Keyed<InstrumentIndex, Instrument<Keyed<ExchangeIndex, ExchangeId>, AssetIndex>>,
-        ) -> InstrumentData,
+    FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         let Self {
             args:

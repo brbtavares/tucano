@@ -18,31 +18,11 @@ use execution::{
 };
 use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use itertools::{Either, Itertools};
-use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
+use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
-/// Concrete instrument implementation
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ConcreteInstrument {
-    pub symbol: String,
-    pub market: String,
-    pub exchange: String,
-    pub underlying: Option<String>, // Simplified underlying representation
-    pub name_exchange: String,      // Exchange-specific name
-}
-
-impl Instrument for ConcreteInstrument {
-    type Symbol = String;
-
-    fn symbol(&self) -> &Self::Symbol {
-        &self.symbol
-    }
-
-    fn market(&self) -> &str {
-        &self.market
-    }
-}
+// ConcreteInstrument now defined in markets crate
 
 /// Placeholder types
 pub type AssetNameExchange = String;
@@ -64,16 +44,8 @@ pub mod filter;
 /// Note that the same instruments with the same [`InstrumentNameExchange`] (eg/ "btc_usdt") but
 /// on different exchanges will have their own [`InstrumentState`].
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-pub struct InstrumentStates<
-    InstrumentData,
-    ExchangeKey = ExchangeIndex,
-    AssetKey = AssetIndex,
-    InstrumentKey = InstrumentIndex,
->(
-    pub  FnvIndexMap<
-        InstrumentNameInternal,
-        InstrumentState<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>,
-    >,
+pub struct InstrumentStates<InstrumentData, ExchangeKey = ExchangeIndex, InstrumentKey = InstrumentIndex>(
+    pub FnvIndexMap<InstrumentNameInternal, InstrumentState<InstrumentData, ExchangeKey, InstrumentKey>>,
 );
 
 impl<InstrumentData> InstrumentStates<InstrumentData> {
@@ -216,11 +188,10 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
                     .values()
                     .filter(|state| instruments.contains(&state.key)),
             )),
-            Underlyings(underlying) => Either::Right(Either::Left(
-                self.0
-                    .values()
-                    .filter(|state| underlying.contains(&state.instrument.underlying)),
-            )),
+            Underlyings(_underlying) => {
+                // Temporary: ConcreteInstrument.underlying is Option<String>. Skip filtering.
+                Either::Right(Either::Left(self.0.values().filter(|_| false)))
+            }
         }
     }
 
@@ -261,12 +232,7 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
 /// This aggregates all the state and data for a single instrument, providing a comprehensive
 /// view of the instrument.
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Constructor)]
-pub struct InstrumentState<
-    InstrumentData,
-    ExchangeKey = ExchangeIndex,
-    AssetKey = AssetIndex,
-    InstrumentKey = InstrumentIndex,
-> {
+pub struct InstrumentState<InstrumentData, ExchangeKey = ExchangeIndex, InstrumentKey = InstrumentIndex> {
     /// Unique `InstrumentKey` identifier for the instrument this state is associated with.
     pub key: InstrumentKey,
 
@@ -287,8 +253,8 @@ pub struct InstrumentState<
     pub data: InstrumentData,
 }
 
-impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
-    InstrumentState<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
+impl<InstrumentData, ExchangeKey, InstrumentKey>
+    InstrumentState<InstrumentData, ExchangeKey, InstrumentKey>
 {
     /// Updates the instrument state using an account snapshot from the exchange.
     ///
@@ -296,11 +262,10 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     /// the most recent order state is applied.
     pub fn update_from_account_snapshot(
         &mut self,
-        snapshot: &InstrumentAccountSnapshot<ExchangeKey, AssetKey, InstrumentKey>,
+    snapshot: &InstrumentAccountSnapshot<ExchangeKey, AssetIndex, InstrumentKey>,
     ) where
         ExchangeKey: Debug + Clone,
         InstrumentKey: Debug + Clone,
-        AssetKey: Debug + Clone,
     {
         for order in &snapshot.orders {
             self.update_from_order_snapshot(Snapshot(order))
@@ -310,10 +275,9 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     /// Updates the instrument state from an [`Order`] snapshot.
     pub fn update_from_order_snapshot(
         &mut self,
-        order: Snapshot<&Order<ExchangeKey, InstrumentKey, OrderState<AssetKey, InstrumentKey>>>,
+    order: Snapshot<&Order<ExchangeKey, InstrumentKey, OrderState<AssetIndex, InstrumentKey>>>,
     ) where
         ExchangeKey: Debug + Clone,
-        AssetKey: Debug + Clone,
         InstrumentKey: Debug + Clone,
     {
         self.orders.update_from_order_snapshot(order);
@@ -323,14 +287,13 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     /// [`OrderRequestCancel`](toucan_execution::order::request::OrderRequestCancel) response.
     pub fn update_from_cancel_response(
         &mut self,
-        response: &OrderResponseCancel<ExchangeKey, AssetKey, InstrumentKey>,
+        response: &OrderResponseCancel<ExchangeKey, AssetIndex, InstrumentKey>,
     ) where
         ExchangeKey: Debug + Clone,
-        AssetKey: Debug + Clone,
         InstrumentKey: Debug + Clone,
     {
         self.orders
-            .update_from_cancel_response::<AssetKey>(response);
+            .update_from_cancel_response::<AssetIndex>(response);
     }
 
     /// Updates the instrument state based on a new trade.
@@ -356,7 +319,7 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
                 quantity_abs_max: closed.quantity_abs_max,
             };
             self.tear_sheet
-                .update_from_position::<AssetKey, InstrumentKey>(&analytics_position);
+                .update_from_position::<AssetIndex, InstrumentKey>(&analytics_position);
         })
     }
 
@@ -366,9 +329,9 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     /// open [`Position`](super::position::Position) `pnl_unrealised` is re-calculated.
     pub fn update_from_market(
         &mut self,
-        event: &MarketEvent<InstrumentKey, InstrumentData::MarketEventKind>,
+    event: &MarketEvent<InstrumentKey, InstrumentData::MarketEventKind>,
     ) where
-        InstrumentData: InstrumentDataState<ExchangeKey, AssetKey, InstrumentKey>,
+    InstrumentData: InstrumentDataState<ExchangeKey, AssetIndex, InstrumentKey>,
     {
         self.data.process(event);
 
@@ -384,14 +347,9 @@ impl<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>
     }
 }
 
-pub fn generate_unindexed_instrument_account_snapshot<
-    InstrumentData,
-    ExchangeKey,
-    AssetKey,
-    InstrumentKey,
->(
+pub fn generate_unindexed_instrument_account_snapshot<InstrumentData, ExchangeKey, InstrumentKey>(
     exchange: ExchangeId,
-    state: &InstrumentState<InstrumentData, ExchangeKey, AssetKey, InstrumentKey>,
+    state: &InstrumentState<InstrumentData, ExchangeKey, InstrumentKey>,
 ) -> InstrumentAccountSnapshot<ExchangeId, AssetNameExchange, InstrumentNameExchange>
 where
     ExchangeKey: Debug + Clone,
@@ -454,22 +412,17 @@ pub fn generate_indexed_instrument_states<'a, FnPosMan, FnOrders, FnInsData, Ins
 where
     FnPosMan: Fn() -> PositionManager,
     FnOrders: Fn() -> Orders,
-    FnInsData: Fn(
-        &'a Keyed<InstrumentIndex, Instrument<Keyed<ExchangeIndex, ExchangeId>, AssetIndex>>,
-    ) -> InstrumentData,
+    FnInsData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
 {
     InstrumentStates(
         instruments
-            .instruments()
             .iter()
             .map(|instrument| {
-                let exchange_index = instrument.value.exchange.key;
-
                 (
-                    instrument.value.name_internal.clone(),
+                    instrument.value.name_exchange.clone(),
                     InstrumentState::new(
                         instrument.key,
-                        instrument.value.clone().map_exchange_key(exchange_index),
+                        instrument.value.clone(),
                         TearSheetGenerator::init(time_engine_start),
                         position_manager_init(),
                         orders_init(),

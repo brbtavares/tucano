@@ -15,12 +15,12 @@ use std::fmt::Debug;
 /// Placeholder for ExchangeAsset
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
 pub struct ExchangeAsset<T> {
-    pub exchange_id: String,
+    pub exchange_id: markets::exchange::ExchangeId,
     pub asset: T,
 }
 
 impl<T> ExchangeAsset<T> {
-    pub fn new(exchange_id: String, asset: T) -> Self {
+    pub fn new(exchange_id: markets::exchange::ExchangeId, asset: T) -> Self {
         Self { exchange_id, asset }
     }
 }
@@ -111,7 +111,7 @@ impl AssetStates {
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Constructor)]
 pub struct AssetState {
     /// `Asset` name data that details the internal and exchange names.
-    pub asset: String, // Using String as concrete asset type
+    pub asset: String, // simplified asset name
 
     /// TearSheet generator for summarising trading session changes the asset.
     pub statistics: TearSheetAssetGenerator,
@@ -144,19 +144,13 @@ impl AssetState {
 
 impl From<&AssetState> for AssetBalance<AssetNameExchange> {
     fn from(value: &AssetState) -> Self {
-        let AssetState {
-            asset,
-            statistics: _,
-            balance,
-        } = value;
-
-        let (balance, time_exchange) = match balance {
+        let (balance, time_exchange) = match value.balance {
             None => (Balance::default(), Utc::now()),
             Some(balance) => (balance.value, balance.time),
         };
 
         Self {
-            asset: asset.name_exchange.clone(),
+            asset: value.asset.clone(),
             balance,
             time_exchange,
         }
@@ -167,25 +161,15 @@ impl From<&AssetState> for AssetBalance<AssetNameExchange> {
 ///
 /// Note that the `time_exchange` is set to `DateTime::<Utc>::MIN_UTC`
 pub fn generate_empty_indexed_asset_states(instruments: &IndexedInstruments) -> AssetStates {
-    AssetStates(
-        instruments
-            .assets()
-            .iter()
-            .map(|asset| {
-                (
-                    ExchangeAsset::new(
-                        asset.value.exchange,
-                        asset.value.asset.name_internal.clone(),
-                    ),
-                    AssetState::new(
-                        asset.value.asset.clone(),
-                        TearSheetAssetGenerator::default(),
-                        None,
-                    ),
-                )
-            })
-            .collect(),
-    )
+    // Placeholder: derive unique (exchange, base asset) pairs from instruments list
+    let mut map: FnvIndexMap<ExchangeAsset<AssetNameInternal>, AssetState> = FnvIndexMap::default();
+    for keyed in instruments.iter() {
+    let exchange_id = keyed.value.exchange.clone();
+        let asset_name = keyed.value.symbol.clone();
+        let key = ExchangeAsset::new(exchange_id, asset_name.clone());
+        map.entry(key).or_insert_with(|| AssetState::new(asset_name, TearSheetAssetGenerator::default(), None));
+    }
+    AssetStates(map)
 }
 
 #[cfg(test)]

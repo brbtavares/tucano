@@ -242,7 +242,7 @@ pub mod run;
 /// ```rust
 /// impl Processor<MarketEvent> for MyStrategy {
 ///     type Audit = StrategyAudit;
-///     
+///
 ///     fn process(&mut self, event: MarketEvent) -> Self::Audit {
 ///         // Processa evento de mercado
 ///         // Retorna auditoria das decisões tomadas
@@ -616,9 +616,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     ///
     /// # Returns
     /// Gerador configurado com estado atual da sessão
-    pub fn trading_summary_generator(
-        &self,
-    ) -> TradingSummaryGenerator<StrategyIndex, InstrumentIndex>
+    pub fn trading_summary_generator(&self, risk_free_return: Decimal) -> TradingSummaryGenerator
     where
         Clock: EngineClock,
     {

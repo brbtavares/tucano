@@ -2,7 +2,7 @@
 ///
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
-use crate::engine::state::instrument::ConcreteInstrument;
+use markets::ConcreteInstrument; // updated import for shared instrument
 use execution::client::mock::MockExecutionConfig;
 use markets::{asset::Asset, exchange::ExchangeId, instrument::Instrument, Underlying};
 use serde::{Deserialize, Serialize};
@@ -123,7 +123,7 @@ impl From<InstrumentConfig> for ConcreteInstrument {
         Self {
             symbol: value.underlying.base.clone(),
             market: "default_market".to_string(),
-            exchange: format!("{:?}", value.exchange),
+            exchange: value.exchange,
             underlying: Some(format!(
                 "{}_{}",
                 value.underlying.base, value.underlying.quote

@@ -206,6 +206,9 @@ pub use profit_dll::{
     SendOrder,
 };
 
+// Re-export commonly used instrument struct
+pub use crate::instrument::ConcreteInstrument;
+
 // Constants
 pub use profit_dll::{
     NL_INTERNAL_ERROR, NL_INVALID_ARGS, NL_NOT_INITIALIZED, NL_NO_LICENSE, NL_NO_LOGIN, NL_OK,

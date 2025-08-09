@@ -11,7 +11,7 @@ use execution::{
 };
 use fnv::FnvHashMap;
 use integration::snapshot::Snapshot;
-use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
+use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
 use tracing::debug;
 
 /// Placeholder types
@@ -100,9 +100,7 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
     /// If optional data is not provided (eg/ Balances), default values are used (eg/ zero Balance).
     pub fn build<InstrumentData>(self) -> EngineState<GlobalData, InstrumentData>
     where
-        FnInstrumentData: Fn(
-            &'a Keyed<InstrumentIndex, Instrument<Keyed<ExchangeIndex, ExchangeId>, AssetIndex>>,
-        ) -> InstrumentData,
+    FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         let Self {
             instruments,

@@ -20,13 +20,26 @@ use execution::{
 };
 use fnv::FnvHashMap;
 use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
-use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
+use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
 /// Placeholder for IndexedInstruments
-pub type IndexedInstruments =
-    Vec<Keyed<InstrumentIndex, crate::engine::state::instrument::ConcreteInstrument>>;
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
+
+pub trait IndexedInstrumentsExt {
+    fn exchanges(&self) -> Box<dyn Iterator<Item = ExchangeId> + '_>;
+    fn instruments_iter(&self) -> Box<dyn Iterator<Item = InstrumentIndex> + '_>;
+}
+
+impl IndexedInstrumentsExt for IndexedInstruments {
+    fn exchanges(&self) -> Box<dyn Iterator<Item = ExchangeId> + '_> {
+        Box::new(self.iter().map(|k| k.value.exchange))
+    }
+    fn instruments_iter(&self) -> Box<dyn Iterator<Item = InstrumentIndex> + '_> {
+        Box::new(self.iter().map(|k| k.key))
+    }
+}
 
 /// Asset-centric state and associated state management logic.
 pub mod asset;
@@ -73,7 +86,7 @@ pub struct EngineState<GlobalData, InstrumentData> {
 
     /// State of every instrument (eg/ "b3_spot_petr4_brl", "binance_spot_btc_usdt", etc.)
     /// being tracked by the `Engine`.
-    pub instruments: InstrumentStates<InstrumentData, ExchangeIndex, AssetIndex, InstrumentIndex>,
+    pub instruments: InstrumentStates<InstrumentData, ExchangeIndex, InstrumentIndex>,
 }
 
 impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
@@ -84,9 +97,7 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         instrument_data_init: FnInstrumentData,
     ) -> EngineStateBuilder<'_, GlobalData, FnInstrumentData>
     where
-        FnInstrumentData: Fn(
-            &Keyed<InstrumentIndex, Instrument<Keyed<ExchangeIndex, ExchangeId>, AssetIndex>>,
-        ) -> InstrumentData,
+    FnInstrumentData: Fn(&Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         EngineStateBuilder::new(instruments, global, instrument_data_init)
     }

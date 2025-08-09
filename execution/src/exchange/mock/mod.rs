@@ -21,7 +21,7 @@ use fnv::FnvHashMap;
 use futures::stream::BoxStream;
 use integration::snapshot::Snapshot;
 use itertools::Itertools;
-use markets::{ExchangeId, Instrument, Side};
+use markets::{ExchangeId, Instrument, Side, ConcreteInstrument};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;
@@ -38,7 +38,7 @@ pub struct MockExchange {
     pub fees_percent: Decimal,
     pub request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
     pub event_tx: broadcast::Sender<UnindexedAccountEvent>,
-    pub instruments: FnvHashMap<InstrumentNameExchange, Box<dyn Instrument<Symbol = String>>>,
+    pub instruments: FnvHashMap<InstrumentNameExchange, ConcreteInstrument>,
     pub account: AccountState,
     pub order_sequence: u64,
     pub time_exchange_latest: DateTime<Utc>,
@@ -49,7 +49,7 @@ impl MockExchange {
         config: MockExecutionConfig,
         request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
         event_tx: broadcast::Sender<UnindexedAccountEvent>,
-        instruments: FnvHashMap<InstrumentNameExchange, Box<dyn Instrument<Symbol = String>>>,
+    instruments: FnvHashMap<InstrumentNameExchange, ConcreteInstrument>,
     ) -> Self {
         Self {
             exchange: config.mocked_exchange,
@@ -392,16 +392,13 @@ impl MockExchange {
     pub fn find_instrument_data(
         &self,
         instrument: &InstrumentNameExchange,
-    ) -> Result<&dyn Instrument<Symbol = String>, UnindexedApiError> {
-        self.instruments
-            .get(instrument)
-            .map(|boxed| boxed.as_ref())
-            .ok_or_else(|| {
-                ApiError::InstrumentInvalid(
-                    instrument.clone(),
-                    format!("MockExchange is not set-up for managing: {instrument}"),
-                )
-            })
+    ) -> Result<&ConcreteInstrument, UnindexedApiError> {
+        self.instruments.get(instrument).ok_or_else(|| {
+            ApiError::InstrumentInvalid(
+                instrument.clone(),
+                format!("MockExchange is not set-up for managing: {instrument}"),
+            )
+        })
     }
 
     fn order_id_sequence_fetch_add(&mut self) -> OrderId {

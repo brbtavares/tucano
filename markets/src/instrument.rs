@@ -55,3 +55,25 @@ where
         }
     }
 }
+
+/// Concrete instrument implementation shared across crates
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ConcreteInstrument {
+    pub symbol: String,
+    pub market: String,
+    pub exchange: crate::exchange::ExchangeId,
+    pub underlying: Option<String>,
+    pub name_exchange: String,
+}
+
+impl Instrument for ConcreteInstrument {
+    type Symbol = String;
+
+    fn symbol(&self) -> &Self::Symbol {
+        &self.symbol
+    }
+
+    fn market(&self) -> &str {
+        &self.market
+    }
+}
