@@ -23,16 +23,29 @@ pub struct ExecutionInstrumentMap {
     pub exchange: Keyed<ExchangeIndex, ExchangeId>,
     pub assets: FnvIndexSet<AssetNameExchange>,
     pub instruments: FnvIndexSet<InstrumentNameExchange>,
-    pub asset_names: FnvHashMap<AssetNameExchange, AssetIndex>,
-    pub instrument_names: FnvHashMap<InstrumentNameExchange, InstrumentIndex>,
+    pub asset_names: FnvHashMap<AssetNameExchange, TAssetIndex>,
+    pub instrument_names: FnvHashMap<InstrumentNameExchange, TInstrumentIndex>,
 }
+
+// MIGRATION STEP: se a feature `typed_indices` estiver ativa, reexporta os newtypes
+// e define aliases locais para uso interno deste módulo.
+#[cfg(feature = "typed_indices")]
+use crate::compat::typed as typed_indices;
+#[cfg(feature = "typed_indices")]
+type TAssetIndex = typed_indices::AssetIndex;
+#[cfg(not(feature = "typed_indices"))]
+type TAssetIndex = AssetIndex;
+#[cfg(feature = "typed_indices")]
+type TInstrumentIndex = typed_indices::InstrumentIndex;
+#[cfg(not(feature = "typed_indices"))]
+type TInstrumentIndex = InstrumentIndex;
 
 impl ExecutionInstrumentMap {
     /// Construct a new [`Self`] using the provided indexed assets and instruments.
     pub fn new(
-    exchange: Keyed<ExchangeIndex, ExchangeId>,
-        assets: FnvIndexMap<AssetIndex, AssetNameExchange>,
-        instruments: FnvIndexMap<InstrumentIndex, InstrumentNameExchange>,
+        exchange: Keyed<ExchangeIndex, ExchangeId>,
+        assets: FnvIndexMap<TAssetIndex, AssetNameExchange>,
+        instruments: FnvIndexMap<TInstrumentIndex, InstrumentNameExchange>,
     ) -> Self {
         Self {
             exchange,
@@ -74,7 +87,7 @@ impl ExecutionInstrumentMap {
         })
     }
 
-    pub fn find_asset_index(&self, asset: &AssetNameExchange) -> Result<AssetIndex, IndexError> {
+    pub fn find_asset_index(&self, asset: &AssetNameExchange) -> Result<TAssetIndex, IndexError> {
         self.asset_names.get(asset).cloned().ok_or_else(|| {
             IndexError::AssetIndex(format!("ExecutionInstrumentMap does not contain: {asset}"))
         })
@@ -95,7 +108,7 @@ impl ExecutionInstrumentMap {
     pub fn find_instrument_index(
         &self,
         instrument: &InstrumentNameExchange,
-    ) -> Result<InstrumentIndex, IndexError> {
+    ) -> Result<TInstrumentIndex, IndexError> {
         self.instrument_names
             .get(instrument)
             .cloned()
