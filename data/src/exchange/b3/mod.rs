@@ -37,6 +37,15 @@ pub struct B3ProfitConnector {
     event_receiver: Option<mpsc::UnboundedReceiver<CallbackEvent>>,
 }
 
+impl std::fmt::Debug for B3ProfitConnector {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("B3ProfitConnector")
+            .field("connected", &self.profit_connector.is_some())
+            .field("has_event_receiver", &self.event_receiver.is_some())
+            .finish()
+    }
+}
+
 impl B3ProfitConnector {
     pub fn new() -> Self {
         Self {

@@ -32,6 +32,7 @@ use tracing::{error, info};
 pub mod account;
 pub mod request;
 
+#[derive(Debug)]
 pub struct MockExchange {
     pub exchange: ExchangeId,
     pub latency_ms: u64,
