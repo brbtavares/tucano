@@ -8,13 +8,7 @@ use serde::Deserialize;
 /// send to the exchange server.
 ///
 /// ### Examples
-/// #### Binance OrderBooksL2
-/// ```json
-/// ExchangeSub {
-///     channel: BinanceChannel("@depth@100ms"),
-///     market: BinanceMarket("btcusdt"),
-/// }
-/// ```
+///
 /// #### B3 Trades
 /// ```rust,ignore
 /// ExchangeSub {
@@ -26,18 +20,10 @@ use serde::Deserialize;
 pub struct ExchangeSub<Channel, Market> {
     /// Type that defines how to translate a Toucan [`Subscription`] into an exchange specific
     /// channel to be subscribed to.
-    ///
-    /// ### Examples
-    /// - [`BinanceChannel("@depth@100ms")`](super::binance::channel::BinanceChannel)
-    /// - [`BinanceChannel("trade")`](super::binance::channel::BinanceChannel)
     pub channel: Channel,
 
     /// Type that defines how to translate a Toucan [`Subscription`] into an exchange specific
     /// market that can be subscribed to.
-    ///
-    /// ### Examples
-    /// - [`BinanceMarket("btcusdt")`](super::binance::market::BinanceMarket)
-    /// - [`BinanceMarket("BTCUSDT")`](super::binance::market::BinanceMarket)
     pub market: Market,
 }
 

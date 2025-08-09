@@ -222,12 +222,7 @@ pub fn exchange_supports_instrument_kind_sub_kind(
     use SubKind::*;
 
     match (exchange_id, instrument_kind, sub_kind) {
-        // (BinanceSpot, Spot, PublicTrades | OrderBooksL1 | OrderBooksL2) => true,
-        // (
-        //     BinanceFuturesUsd,
-        //     Perpetual,
-        //     PublicTrades | OrderBooksL1 | OrderBooksL2 | Liquidations,
-        // ) => true,
+        // Spot exchanges
         (B3, Spot, PublicTrades | OrderBooksL1) => true,
 
         (_, _, _) => false,
@@ -301,25 +296,6 @@ mod tests {
                 subscription::{book::OrderBooksL2, trade::PublicTrades},
             };
             use markets::MarketDataInstrument;
-
-            #[test]
-            fn test_subscription_binance_spot_public_trades() {
-                /*
-                let input = r#"
-                {
-                    "exchange": "binance_spot",
-                    "instrument": {
-                        "symbol": "btcusdt",
-                        "kind": "spot"
-                    },
-                    "kind": "public_trades"
-                }
-                "#;
-
-                serde_json::from_str::<Subscription<BinanceSpot, MarketDataInstrument, PublicTrades>>(input)
-                    .unwrap();
-                */
-            }
         }
     }
 

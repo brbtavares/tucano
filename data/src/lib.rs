@@ -43,74 +43,6 @@
 //! ## 📈 Exchanges Suportados
 //!
 //! - **🇧🇷 B3**: Bolsa brasileira via ProfitDLL
-//! - **🌍 Binance**: Spot e Futures USD
-//! - **🇺🇸 Coinbase**: Exchange americano
-//! - **🌏 OKX**: Exchange global
-//! - **🌐 Gate.io**: Spot trading
-//!
-//! ## 💡 Exemplos de Uso
-//!
-//! Veja o diretório /examples para uma coleção abrangente de exemplos.
-//!
-//! ### Trades Públicos Multi-Exchange
-//! ```rust,no_run
-//! use data::{
-//!     exchange::{
-//!         gateio::spot::GateioSpot,
-//!         binance::{futures::BinanceFuturesUsd, spot::BinanceSpot},
-//!         coinbase::Coinbase,
-//!         okx::Okx,
-//!     },
-//!     streams::{Streams, reconnect::stream::ReconnectingStream},
-//!     subscription::trade::PublicTrades,
-//! };
-//! use markets::instrument::market_data::kind::MarketDataInstrumentKind;
-//! use futures::StreamExt;
-//! use tracing::warn;
-//!
-//! #[tokio::main]
-//! async fn main() {
-//!     // Initialise PublicTrades Streams for various exchanges
-//!     // '--> each call to StreamBuilder::subscribe() initialises a separate WebSocket connection
-//!
-//!     let streams = Streams::<PublicTrades>::builder()
-//!         .subscribe([
-//!             (BinanceSpot::default(), "btc", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
-//!             (BinanceSpot::default(), "eth", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
-//!         ])
-//!         .subscribe([
-//!             (BinanceFuturesUsd::default(), "btc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-//!             (BinanceFuturesUsd::default(), "eth", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-//!         ])
-//!         .subscribe([
-//!             (Coinbase, "btc", "usd", MarketDataInstrumentKind::Spot, PublicTrades),
-//!             (Coinbase, "eth", "usd", MarketDataInstrumentKind::Spot, PublicTrades),
-//!         ])
-//!         .subscribe([
-//!             (GateioSpot::default(), "btc", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
-//!             (GateioSpot::default(), "eth", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
-//!         ])
-//!         .subscribe([
-//!             (Okx, "btc", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
-//!             (Okx, "eth", "usdt", MarketDataInstrumentKind::Spot, PublicTrades),
-//!             (Okx, "btc", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-//!             (Okx, "eth", "usdt", MarketDataInstrumentKind::Perpetual, PublicTrades),
-//!        ])
-//!         .init()
-//!         .await
-//!         .unwrap();
-//!
-//!     // Select and merge every exchange Stream using futures_util::stream::select_all
-//!     // Note: use `Streams.select(ExchangeId)` to interact with individual exchange streams!
-//!     let mut joined_stream = streams
-//!         .select_all()
-//!         .with_error_handler(|error| warn!(?error, "MarketStream generated error"));
-//!
-//!     while let Some(event) = joined_stream.next().await {
-//!         println!("{event:?}");
-//!     }
-//! }
-//! ```
 use crate::{
     error::DataError,
     event::MarketEvent,
@@ -176,10 +108,6 @@ pub mod books;
 /// Cases that need custom logic, such as fetching initial [`OrderBooksL2`](subscription::book::OrderBooksL2)
 /// and [`OrderBooksL3`](subscription::book::OrderBooksL3) snapshots on startup, may require custom
 /// [`ExchangeTransformer`] implementations.
-/// For examples, see [`Binance`](exchange::binance::Binance) [`OrderBooksL2`](subscription::book::OrderBooksL2)
-/// [`ExchangeTransformer`] implementations for
-/// [`spot`](exchange::binance::spot::l2::BinanceSpotOrderBooksL2Transformer) and
-/// [`futures_usd`](exchange::binance::futures::l2::BinanceFuturesUsdOrderBooksL2Transformer).
 pub mod transformer;
 
 /// Convenient type alias for an [`ExchangeStream`] utilising a tungstenite
@@ -216,10 +144,6 @@ where
 /// Defines how to fetch market data snapshots for a collection of [`Subscription`]s.
 ///
 /// Useful when a [`MarketStream`] requires an initial snapshot on start-up.
-///
-/// See examples such as Binance OrderBooksL2: <br>
-/// - [`BinanceSpotOrderBooksL2SnapshotFetcher`](exchange::binance::spot::l2::BinanceSpotOrderBooksL2SnapshotFetcher)
-/// - [`BinanceFuturesUsdOrderBooksL2SnapshotFetcher`](exchange::binance::futures::l2::BinanceFuturesUsdOrderBooksL2SnapshotFetcher)
 pub trait SnapshotFetcher<Exchange, Kind> {
     fn fetch_snapshots<Instrument>(
         subscriptions: &[Subscription<Exchange, Instrument, Kind>],

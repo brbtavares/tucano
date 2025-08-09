@@ -52,19 +52,11 @@ where
 
     /// Type that defines how to translate a Toucan `Subscription` into an exchange specific
     /// channel to be subscribed to.
-    ///
-    /// ### Examples
-    /// - [`BinanceChannel("@depth@100ms")`](binance::channel::BinanceChannel)
-    /// - [`BinanceChannel("trade")`](binance::channel::BinanceChannel)
     type Channel: AsRef<str>;
 
     /// Type that defines how to translate a Toucan
     /// `Subscription` into an exchange specific market that
     /// can be subscribed to.
-    ///
-    /// ### Examples
-    /// - [`BinanceMarket("btcusdt")`](binance::market::BinanceMarket)
-    /// - [`BinanceMarket("BTCUSDT")`](binance::market::BinanceMarket)
     type Market: AsRef<str>;
 
     /// [`Subscriber`] type that establishes a connection with the exchange server, and actions
@@ -116,10 +108,6 @@ where
 /// Used when an exchange has servers different
 /// [`InstrumentKind`](toucan_instrument::instrument::kind::InstrumentKind) market data on distinct servers,
 /// allowing all the [`Connector`] logic to be identical apart from what this trait provides.
-///
-/// ### Examples
-/// - [`BinanceServerSpot`](binance::spot::BinanceServerSpot)
-/// - [`BinanceServerFuturesUsd`](binance::futures::BinanceServerFuturesUsd)
 pub trait ExchangeServer: Default + Debug + Clone + Send {
     const ID: ExchangeId;
     fn websocket_url() -> &'static str;
