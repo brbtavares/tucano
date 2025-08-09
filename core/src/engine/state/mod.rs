@@ -20,7 +20,7 @@ use execution::{
 };
 use fnv::FnvHashMap;
 use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
-use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
+use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument}; // ExchangeId still used in connectivity
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -37,7 +37,7 @@ impl IndexedInstrumentsExt for IndexedInstruments {
         Box::new(self.iter().map(|k| k.value.exchange))
     }
     fn instruments_iter(&self) -> Box<dyn Iterator<Item = InstrumentIndex> + '_> {
-        Box::new(self.iter().map(|k| k.key))
+    Box::new(self.iter().map(|k| k.key.clone()))
     }
 }
 
@@ -119,15 +119,13 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         GlobalData: for<'a> Processor<&'a AccountEvent>,
         InstrumentData: for<'a> Processor<&'a AccountEvent>,
     {
-        // Set exchange account connectivity to Healthy if it was Reconnecting
-        self.connectivity.update_from_account_event(&event.exchange);
+    // Set exchange account connectivity to Healthy if it was Reconnecting
+    self.connectivity.update_from_account_event(&event.exchange);
 
         let output = match &event.kind {
             AccountEventKind::Snapshot(snapshot) => {
                 for balance in &snapshot.balances {
-                    self.assets
-                        .asset_index_mut(&balance.asset)
-                        .update_from_balance(Snapshot(balance))
+                    self.assets.asset_index_mut(&balance.asset).update_from_balance(Snapshot(balance))
                 }
                 for instrument in &snapshot.instruments {
                     let instrument_state = self
@@ -140,9 +138,7 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
                 None
             }
             AccountEventKind::BalanceSnapshot(balance) => {
-                self.assets
-                    .asset_index_mut(&balance.0.asset)
-                    .update_from_balance(balance.as_ref());
+                self.assets.asset_index_mut(&balance.0.asset).update_from_balance(balance.as_ref());
                 None
             }
             AccountEventKind::OrderSnapshot(order) => {
@@ -193,7 +189,11 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         InstrumentData: InstrumentDataState,
     {
         // Set exchange market data connectivity to Healthy if it was Reconnecting
-        self.connectivity.update_from_market_event(&event.exchange);
+        // Convert ExchangeId to external ExchangeIndex (String) interface
+        let exchange_index = event.exchange.to_string();
+        self
+            .connectivity
+            .update_from_market_event(&exchange_index);
 
         let instrument_state = self.instruments.instrument_index_mut(&event.instrument);
 

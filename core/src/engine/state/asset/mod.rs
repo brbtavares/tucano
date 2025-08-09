@@ -8,26 +8,12 @@ use execution::{
 };
 use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use itertools::Either;
-use markets::asset::Asset;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
-/// Placeholder for ExchangeAsset
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
-pub struct ExchangeAsset<T> {
-    pub exchange_id: markets::exchange::ExchangeId,
-    pub asset: T,
-}
-
-impl<T> ExchangeAsset<T> {
-    pub fn new(exchange_id: markets::exchange::ExchangeId, asset: T) -> Self {
-        Self { exchange_id, asset }
-    }
-}
-
 /// Placeholder types for asset names
-pub type AssetNameExchange = String;
-pub type AssetNameInternal = String;
+pub type AssetNameExchange = String; // external exchange name
+pub type AssetNameInternal = String; // internal unified name
 
 /// Placeholder for IndexedInstruments - reused from parent module
 use super::IndexedInstruments;
@@ -35,71 +21,47 @@ use super::IndexedInstruments;
 /// Defines an `AssetFilter`, used to filter asset-centric data structures.
 pub mod filter;
 
-/// Collection of exchange [`AssetState`]s indexed by [`AssetIndex`].
-///
-/// Note that the same named assets on different exchanges will have their own [`AssetState`].
+/// Collection of asset states indexed by an `AssetIndex` (currently a `String`).
+/// Simplified: one state per asset symbol (exchange dimension ignored for now).
 #[derive(Debug, Clone, PartialEq, Default, Deserialize, Serialize)]
-pub struct AssetStates(pub FnvIndexMap<ExchangeAsset<AssetNameInternal>, AssetState>);
+pub struct AssetStates(pub FnvIndexMap<AssetNameInternal, AssetState>);
 
 impl AssetStates {
     /// Return a reference to the `AssetState` associated with an `AssetIndex`.
     ///
     /// Panics if the `AssetState` associated with the `AssetIndex` does not exist.
-    pub fn asset_index(&self, key: &AssetIndex) -> &AssetState {
-        self.0
-            .get(key)
-            .unwrap_or_else(|| panic!("AssetStates does not contain: {key}"))
-    }
+    pub fn asset_index(&self, key: &AssetIndex) -> &AssetState { self.asset(key) }
 
     /// Return a mutable reference to the `AssetState` associated with an `AssetIndex`.
     ///
     /// Panics if the `AssetState` associated with the `AssetIndex` does not exist.
-    pub fn asset_index_mut(&mut self, key: &AssetIndex) -> &mut AssetState {
-        self.0
-            .get_mut(key)
-            .unwrap_or_else(|| panic!("AssetStates does not contain: {key}"))
-    }
+    pub fn asset_index_mut(&mut self, key: &AssetIndex) -> &mut AssetState { self.asset_mut(key) }
 
     /// Return a reference to the `AssetState` associated with an `ExchangeAsset<AssetNameInternal>`.
     ///
     /// Panics if the `AssetState` associated with the `ExchangeAsset<AssetNameInternal>`
     /// does not exist.
-    pub fn asset(&self, key: &ExchangeAsset<AssetNameInternal>) -> &AssetState {
-        self.0
-            .get(key)
-            .unwrap_or_else(|| panic!("AssetStates does not contain: {key:?}"))
-    }
+    pub fn asset(&self, key: &AssetNameInternal) -> &AssetState { self.0.get(key).unwrap_or_else(|| panic!("AssetStates does not contain: {key}")) }
 
     /// Return a mutable reference to the `AssetState` associated with an
     /// `ExchangeAsset<AssetNameInternal>`.
     ///
     /// Panics if the `AssetState` associated with the `ExchangeAsset<AssetNameInternal>`
     /// does not exist.
-    pub fn asset_mut(&mut self, key: &ExchangeAsset<AssetNameInternal>) -> &mut AssetState {
-        self.0
-            .get_mut(key)
-            .unwrap_or_else(|| panic!("AssetStates does not contain: {key:?}"))
-    }
+    pub fn asset_mut(&mut self, key: &AssetNameInternal) -> &mut AssetState { self.0.get_mut(key).unwrap_or_else(|| panic!("AssetStates does not contain: {key}")) }
 
     /// Return an `Iterator` of filtered `AssetState`s based on the provided [`AssetFilter`].
     pub fn filtered<'a>(&'a self, filter: &'a AssetFilter) -> impl Iterator<Item = &'a AssetState> {
         use filter::AssetFilter::*;
         match filter {
             None => Either::Left(self.assets()),
-            Exchanges(exchanges) => Either::Right(self.0.iter().filter_map(|(asset, state)| {
-                if exchanges.contains(&asset.exchange_id) {
-                    Some(state)
-                } else {
-                    Option::<&AssetState>::None
-                }
-            })),
+            // Exchange filtering temporarily disabled in simplified model
+            Exchanges(_ex) => Either::Right(self.assets()),
         }
     }
 
     /// Returns an `Iterator` of all `AssetState`s being tracked.
-    pub fn assets(&self) -> impl Iterator<Item = &AssetState> {
-        self.0.values()
-    }
+    pub fn assets(&self) -> impl Iterator<Item = &AssetState> { self.0.values() }
 }
 
 /// Represents the current state of an asset, including its [`Balance`] and last update
@@ -111,7 +73,7 @@ impl AssetStates {
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Constructor)]
 pub struct AssetState {
     /// `Asset` name data that details the internal and exchange names.
-    pub asset: String, // simplified asset name
+    pub asset: String, // simplified asset name (internal)
 
     /// TearSheet generator for summarising trading session changes the asset.
     pub statistics: TearSheetAssetGenerator,
@@ -161,13 +123,11 @@ impl From<&AssetState> for AssetBalance<AssetNameExchange> {
 ///
 /// Note that the `time_exchange` is set to `DateTime::<Utc>::MIN_UTC`
 pub fn generate_empty_indexed_asset_states(instruments: &IndexedInstruments) -> AssetStates {
-    // Placeholder: derive unique (exchange, base asset) pairs from instruments list
-    let mut map: FnvIndexMap<ExchangeAsset<AssetNameInternal>, AssetState> = FnvIndexMap::default();
+    let mut map: FnvIndexMap<AssetNameInternal, AssetState> = FnvIndexMap::default();
     for keyed in instruments.iter() {
-    let exchange_id = keyed.value.exchange.clone();
         let asset_name = keyed.value.symbol.clone();
-        let key = ExchangeAsset::new(exchange_id, asset_name.clone());
-        map.entry(key).or_insert_with(|| AssetState::new(asset_name, TearSheetAssetGenerator::default(), None));
+        map.entry(asset_name.clone())
+            .or_insert_with(|| AssetState::new(asset_name, TearSheetAssetGenerator::default(), None));
     }
     AssetStates(map)
 }

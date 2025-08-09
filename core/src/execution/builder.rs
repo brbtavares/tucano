@@ -1,6 +1,6 @@
 use crate::{
     engine::{
-        clock::EngineClock, execution_tx::MultiExchangeTxMap, state::instrument::ConcreteInstrument,
+        clock::EngineClock, execution_tx::MultiExchangeTxMap,
     },
     error::ToucanError,
     execution::{
@@ -24,7 +24,8 @@ use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use fnv::FnvHashMap;
 use futures::{future::try_join_all, FutureExt};
 use integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
-use markets::{exchange::ExchangeId, instrument::Instrument, Keyed, Underlying};
+use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
+use crate::engine::state::{IndexedInstruments, IndexedInstrumentsExt};
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{
     sync::{broadcast, mpsc},
@@ -34,7 +35,6 @@ use tokio::{
 /// Placeholder types
 pub type AssetNameExchange = String;
 pub type InstrumentNameExchange = String;
-pub type IndexedInstruments = Vec<()>; // Simplified placeholder
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum InstrumentKind {
@@ -58,7 +58,6 @@ pub struct InstrumentSpecQuantity {
 
 #[derive(Debug, Clone)]
 pub enum OrderQuantityUnits {
-    Asset(String),
     Contract,
     Quote,
 }
@@ -145,8 +144,8 @@ impl<'a> ExecutionBuilder<'a> {
         request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
         event_tx: broadcast::Sender<UnindexedAccountEvent>,
     ) -> RunFuture {
-        let instruments =
-            generate_mock_exchange_instruments(self.instruments, config.mocked_exchange);
+        // TODO: implement real filtering when instruments structure finalized
+        let instruments = FnvHashMap::default();
         Box::pin(MockExchange::new(config, request_rx, event_tx, instruments).run())
     }
 
@@ -175,13 +174,14 @@ impl<'a> ExecutionBuilder<'a> {
         Client::AccountStream: Send,
         Client::Config: Send,
     {
-        let instrument_map = generate_execution_instrument_map(self.instruments, exchange)?;
+    let instrument_map = generate_execution_instrument_map(self.instruments, exchange)?;
+    let exchange_index_clone = instrument_map.exchange.key.clone();
 
         let (execution_tx, execution_rx) = mpsc_unbounded();
 
         if self
             .execution_txs
-            .insert(exchange, (instrument_map.exchange.key, execution_tx))
+            .insert(exchange, (exchange_index_clone, execution_tx))
             .is_some()
         {
             return Err(ToucanError::ExecutionBuilder(format!(
@@ -226,22 +226,13 @@ impl<'a> ExecutionBuilder<'a> {
         let execution_tx_map = self
             .instruments
             .exchanges()
-            .iter()
-            .map(|exchange| {
-                // If IndexedInstruments execution not used for execution, add None to map
-                let Some((added_execution_exchange_index, added_execution_exchange_tx)) =
-                    self.execution_txs.remove(&exchange.value)
-                else {
-                    return (exchange.value, None);
+            .map(|exchange_id| {
+                // Attempt to remove transmitter entry keyed by ExchangeId
+                let Some((exchange_index, execution_tx)) = self.execution_txs.remove(&exchange_id) else {
+                    return (exchange_id, None);
                 };
-
-                assert_eq!(
-                    exchange.key, added_execution_exchange_index,
-                    "execution ExchangeIndex != IndexedInstruments Keyed<ExchangeIndex, ExchangeId>"
-                );
-
-                // If execution has been added, add Some(ExecutionTx) to map
-                (exchange.value, Some(added_execution_exchange_tx))
+                // Add transmitter, cloning ExchangeId for map key
+                (exchange_id, Some(execution_tx))
             })
             .collect();
 
@@ -412,27 +403,6 @@ fn generate_mock_exchange_instruments(
     instruments: &IndexedInstruments,
     exchange: ExchangeId,
 ) -> FnvHashMap<InstrumentNameExchange, ConcreteInstrument> {
-    instruments
-        .instruments()
-        .iter()
-        .filter_map(
-            |Keyed {
-                 key: _,
-                 value: instrument,
-             }| {
-                if instrument.exchange.value != exchange {
-                    return None;
-                }
-
-                // Access fields from ConcreteInstrument
-                let exchange = &instrument.exchange;
-                let name_internal = &instrument.symbol;
-                let name_exchange = &instrument.name_exchange;
-                let underlying = &instrument.underlying;
-
-                // Return the concrete instrument directly
-                Some((instrument.name_exchange.clone(), instrument.clone()))
-            },
-        )
-        .collect()
+    // TODO: adapt when IndexedInstruments is migrated into core crate context.
+    FnvHashMap::default()
 }

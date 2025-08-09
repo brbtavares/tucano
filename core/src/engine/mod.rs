@@ -394,7 +394,7 @@ where
 impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk> SyncShutdown
     for Engine<Clock, EngineState<GlobalData, InstrumentData>, ExecutionTxs, Strategy, Risk>
 where
-    ExecutionTxs: ExecutionTxMap,
+    ExecutionTxs: ExecutionTxMap<ExchangeIndex, InstrumentIndex>,
 {
     type Result = ();
 
@@ -428,7 +428,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     pub fn action(&mut self, command: &Command) -> ActionOutput
     where
         InstrumentData: InFlightRequestRecorder,
-        ExecutionTxs: ExecutionTxMap,
+    ExecutionTxs: ExecutionTxMap<ExchangeIndex, InstrumentIndex>,
         Strategy: ClosePositionsStrategy<State = EngineState<GlobalData, InstrumentData>>,
         Risk: RiskManager,
     {

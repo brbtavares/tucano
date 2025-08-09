@@ -4,7 +4,7 @@
 /// including instruments and execution components.
 use markets::ConcreteInstrument; // updated import for shared instrument
 use execution::client::mock::MockExecutionConfig;
-use markets::{asset::Asset, exchange::ExchangeId, instrument::Instrument, Underlying};
+use markets::{exchange::ExchangeId, Underlying};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 

@@ -3,8 +3,11 @@ use fnv::FnvHashMap;
 use integration::collection::{FnvIndexMap, FnvIndexSet};
 use markets::Keyed;
 
-// Tipo temporário para substituir IndexedInstruments
-pub type IndexedInstruments = String;
+// Use the core representation of IndexedInstruments (Vec<Keyed<InstrumentIndex, ConcreteInstrument>>)
+// without creating a hard compile-time dependency (keep lightweight placeholder for now).
+// We'll accept any slice of Keyed instrument indices from the caller.
+use markets::ConcreteInstrument;
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
 
 /// Indexed instrument map used to associate the internal Toucan representation of instruments and
 /// assets with the [`ExecutionClient`](super::client::ExecutionClient) representation.
@@ -27,7 +30,7 @@ pub struct ExecutionInstrumentMap {
 impl ExecutionInstrumentMap {
     /// Construct a new [`Self`] using the provided indexed assets and instruments.
     pub fn new(
-        exchange: Keyed<ExchangeIndex, ExchangeId>,
+    exchange: Keyed<ExchangeIndex, ExchangeId>,
         assets: FnvIndexMap<AssetIndex, AssetNameExchange>,
         instruments: FnvIndexMap<InstrumentIndex, InstrumentNameExchange>,
     ) -> Self {
@@ -55,18 +58,9 @@ impl ExecutionInstrumentMap {
     }
 
     pub fn find_exchange_id(&self, exchange: ExchangeIndex) -> Result<ExchangeId, KeyError> {
-        // Converter String (ExchangeIndex) para ExchangeId (enum)
-        // TODO: Implementar conversão adequada baseada no exchange string
-        use markets::ExchangeId;
-        match exchange.as_str() {
-            "B3" => Ok(ExchangeId::B3),
-            "Mock" => Ok(ExchangeId::Mock),
-            _ => Ok(ExchangeId::Mock), // Default to Mock for unknown exchanges
-        }
+        Ok(ExchangeId::from(exchange.as_str()))
     }
-
     pub fn find_exchange_index(&self, exchange: ExchangeId) -> Result<ExchangeIndex, IndexError> {
-        // Converter ExchangeId (enum) para String (ExchangeIndex)
         Ok(exchange.to_string())
     }
 
@@ -114,17 +108,13 @@ impl ExecutionInstrumentMap {
 }
 
 pub fn generate_execution_instrument_map(
-    instruments: &IndexedInstruments,
+    _instruments: &IndexedInstruments,
     exchange: ExchangeId,
 ) -> Result<ExecutionInstrumentMap, IndexError> {
-    // TODO: Implementar para nova arquitetura markets
-    // Por enquanto, retornamos um mapa vazio para permitir compilação
-
-    use markets::Keyed;
-
+    // TODO: Build real mapping from provided instruments. For now return empty map for compile.
     Ok(ExecutionInstrumentMap::new(
         Keyed::new(exchange.to_string(), exchange),
-        FnvIndexMap::default(), // assets vazios por enquanto
-        FnvIndexMap::default(), // instruments vazios por enquanto
+        FnvIndexMap::default(),
+        FnvIndexMap::default(),
     ))
 }

@@ -22,23 +22,11 @@ use integration::{
     snapshot::SnapUpdates,
     FeedEnded, Terminal,
 };
-use markets::{exchange::ExchangeId, instrument::Instrument, Keyed};
+use markets::{exchange::ExchangeId, Keyed, Underlying, ConcreteInstrument};
+use crate::engine::state::IndexedInstruments;
 
 /// Placeholder types
 pub type AssetNameInternal = String;
-pub type IndexedInstruments = Vec<()>; // Simplified placeholder
-    use markets::{exchange::ExchangeId, Keyed, Underlying, ConcreteInstrument};
-#[derive(Debug, Clone, PartialEq)]
-pub struct ExchangeAsset<T> {
-    pub exchange_id: String,
-    pub asset: T,
-}
-
-impl<T> ExchangeAsset<T> {
-    pub fn new(exchange_id: String, asset: T) -> Self {
-        Self { exchange_id, asset }
-    }
-}
 use derive_more::Constructor;
 use fnv::FnvHashMap;
 use futures::Stream;
@@ -76,7 +64,7 @@ pub enum AuditMode {
 ///
 /// Contains all the required components to build and initialise a full Toucan trading system,
 /// including the `Engine` and all supporting infrastructure.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Constructor)]
+#[derive(Debug, Clone, PartialEq, Constructor)]
 pub struct SystemArgs<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData> {
     /// Indexed collection of instruments the system will track.
     pub instruments: &'a IndexedInstruments,
@@ -113,7 +101,7 @@ pub struct SystemBuilder<'a, Clock, Strategy, Risk, MarketStream, GlobalData, Fn
     engine_feed_mode: Option<EngineFeedMode>,
     audit_mode: Option<AuditMode>,
     trading_state: Option<TradingState>,
-    balances: FnvHashMap<ExchangeAsset<AssetNameInternal>, Balance>,
+    balances: FnvHashMap<AssetNameInternal, Balance>,
 }
 
 impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
@@ -168,16 +156,11 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     ///
     /// Note the internal implementation uses a `HashMap`, so duplicate
     /// `ExchangeAsset<AssetNameInternal>` keys are overwritten.
-    pub fn balances<BalanceIter, KeyedBalance>(mut self, balances: BalanceIter) -> Self
+    pub fn balances<BalanceIter>(mut self, balances: BalanceIter) -> Self
     where
-        BalanceIter: IntoIterator<Item = KeyedBalance>,
-        KeyedBalance: Into<Keyed<ExchangeAsset<AssetNameInternal>, Balance>>,
+        BalanceIter: IntoIterator<Item = (AssetNameInternal, Balance)>,
     {
-        self.balances.extend(balances.into_iter().map(|keyed| {
-            let Keyed { key, value } = keyed.into();
-
-            (key, value)
-        }));
+        self.balances.extend(balances);
         self
     }
 
@@ -246,11 +229,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
         let state = EngineStateBuilder::new(instruments, global_data, instrument_data_init)
             .time_engine_start(clock.time())
             .trading_state(trading_state)
-            .balances(
-                balances
-                    .into_iter()
-                    .map(|(key, value)| Keyed::new(key, value)),
-            )
+            .balances(balances.into_iter())
             .build();
 
         // Construct Engine

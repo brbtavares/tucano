@@ -101,7 +101,8 @@ use std::{fmt::Debug, sync::Arc};
 use strategy::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Placeholder for IndexedInstruments
-pub type IndexedInstruments = Vec<()>;
+use markets::{Keyed, ConcreteInstrument};
+pub type IndexedInstruments = Vec<Keyed<String, ConcreteInstrument>>;
 
 /// Defines the interface and implementations for different types of market data sources
 /// that can be used in backtests.

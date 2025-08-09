@@ -1,11 +1,11 @@
-use execution::ExchangeIndex;
 use indexmap::IndexMap;
 use markets::exchange::ExchangeId;
+use execution::ExchangeIndex; // rollback path B: external String key interface
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 
 /// Placeholder for IndexedInstruments - reused from parent module
-use super::IndexedInstruments;
+use super::{IndexedInstruments, IndexedInstrumentsExt};
 
 /// Maintains a global connection [`Health`], as well as the connection status of market data
 /// and account connections for each exchange.
@@ -38,11 +38,12 @@ impl ConnectivityStates {
     /// If after the update all `ConnectivityState`s are healthy, the global health is set to
     /// `Health::Healthy`.
     pub fn update_from_account_event(&mut self, exchange: &ExchangeIndex) {
+        let exchange = ExchangeId::from(exchange.as_str());
         if self.global == Health::Healthy {
             return;
         }
 
-        let state = self.connectivity_index_mut(exchange);
+        let state = self.connectivity_mut(&exchange);
         if state.account == Health::Healthy {
             return;
         }
@@ -74,12 +75,13 @@ impl ConnectivityStates {
     ///
     /// If after the update all `ConnectivityState`s are healthy, the global health is set to
     /// `Health::Healthy`.
-    pub fn update_from_market_event(&mut self, exchange: &ExchangeId) {
+    pub fn update_from_market_event(&mut self, exchange: &ExchangeIndex) {
+        let exchange = ExchangeId::from(exchange.as_str());
         if self.global == Health::Healthy {
             return;
         }
 
-        let state = self.connectivity_mut(exchange);
+        let state = self.connectivity_mut(&exchange);
         if state.market_data == Health::Healthy {
             return;
         }
@@ -96,24 +98,15 @@ impl ConnectivityStates {
         }
     }
 
-    /// Returns a reference to the `ConnectivityState` associated with the
-    /// provided `ExchangeIndex`.
-    ///
-    /// Panics if the `ConnectivityState` associated with the `ExchangeIndex` is not found.
+    // Index-based accessors (ExchangeIndex = String) retained; convert on lookup by parsing
     pub fn connectivity_index(&self, key: &ExchangeIndex) -> &ConnectivityState {
-        self.exchanges
-            .get(key)
-            .unwrap_or_else(|| panic!("ConnectivityStates does not contain: {key}"))
+        // Attempt to parse into ExchangeId; fall back to panic for unknown
+        let id = ExchangeId::from(key.as_str());
+        self.connectivity(&id)
     }
-
-    /// Returns a mutable reference to the `ConnectivityState` associated with the
-    /// provided `ExchangeIndex`.
-    ///
-    /// Panics if the `ConnectivityState` associated with the `ExchangeIndex` is not found.
     pub fn connectivity_index_mut(&mut self, key: &ExchangeIndex) -> &mut ConnectivityState {
-        self.exchanges
-            .get_mut(key)
-            .unwrap_or_else(|| panic!("ConnectivityStates does not contain: {key}"))
+        let id = ExchangeId::from(key.as_str());
+        self.connectivity_mut(&id)
     }
 
     /// Returns a reference to the `ConnectivityState` associated with the
@@ -202,8 +195,7 @@ pub fn generate_empty_indexed_connectivity_states(
         global: Health::Reconnecting,
         exchanges: instruments
             .exchanges()
-            .iter()
-            .map(|exchange| (exchange.value, ConnectivityState::default()))
+            .map(|exchange_id| (exchange_id, ConnectivityState::default()))
             .collect(),
     }
 }

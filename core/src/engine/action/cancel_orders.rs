@@ -38,7 +38,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk> CancelOrde
     for Engine<Clock, EngineState<GlobalData, InstrumentData>, ExecutionTxs, Strategy, Risk>
 where
     InstrumentData: InFlightRequestRecorder,
-    ExecutionTxs: ExecutionTxMap,
+    ExecutionTxs: ExecutionTxMap<ExchangeIndex, InstrumentIndex>,
 {
     fn cancel_orders(
         &mut self,

@@ -15,7 +15,7 @@ use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
 use tracing::debug;
 
 /// Placeholder types
-use super::asset::{AssetNameInternal, ExchangeAsset};
+use super::asset::AssetNameInternal;
 use super::IndexedInstruments;
 
 /// Builder utility for an [`EngineState`] instance.
@@ -25,7 +25,7 @@ pub struct EngineStateBuilder<'a, GlobalData, FnInstrumentData> {
     trading_state: Option<TradingState>,
     time_engine_start: Option<DateTime<Utc>>,
     global: GlobalData,
-    balances: FnvHashMap<ExchangeAsset<AssetNameInternal>, Balance>,
+    balances: FnvHashMap<AssetNameInternal, Balance>,
     instrument_data_init: FnInstrumentData,
 }
 
@@ -82,16 +82,11 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
     ///
     /// Note the internal implementation uses a `HashMap`, so duplicate
     /// `ExchangeAsset<AssetNameInternal>` keys are overwritten.
-    pub fn balances<BalanceIter, KeyedBalance>(mut self, balances: BalanceIter) -> Self
+    pub fn balances<BalanceIter>(mut self, balances: BalanceIter) -> Self
     where
-        BalanceIter: IntoIterator<Item = KeyedBalance>,
-        KeyedBalance: Into<Keyed<ExchangeAsset<AssetNameInternal>, Balance>>,
+        BalanceIter: IntoIterator<Item = (AssetNameInternal, Balance)>,
     {
-        self.balances.extend(balances.into_iter().map(|keyed| {
-            let Keyed { key, value } = keyed.into();
-
-            (key, value)
-        }));
+        self.balances.extend(balances);
         self
     }
 
@@ -123,14 +118,12 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
 
         // Update empty AssetStates from provided exchange asset Balances
         let mut assets = generate_empty_indexed_asset_states(instruments);
-        for (key, balance) in balances {
-            assets
-                .asset_mut(&key)
-                .update_from_balance(Snapshot(&AssetBalance {
-                    asset: key.asset,
-                    balance,
-                    time_exchange: time_engine_start,
-                }))
+        for (asset_name, balance) in balances {
+            assets.asset_mut(&asset_name).update_from_balance(Snapshot(&AssetBalance {
+                asset: asset_name.clone(),
+                balance,
+                time_exchange: time_engine_start,
+            }))
         }
 
         // Generate empty InstrumentStates using provided FnInstrumentData etc.

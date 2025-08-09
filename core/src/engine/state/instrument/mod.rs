@@ -178,11 +178,14 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
         use filter::InstrumentFilter::*;
         match filter {
             None => Either::Left(Either::Left(self.0.values())),
-            Exchanges(exchanges) => Either::Left(Either::Right(
-                self.0
-                    .values()
-                    .filter(|state| exchanges.contains(&state.instrument.exchange)),
-            )),
+            Exchanges(exchanges) => {
+                // exchanges is OneOrMany<ExchangeIndex> (String) in compatibility layer; compare stringified
+                Either::Left(Either::Right(
+                    self.0.values().filter(|state| {
+                        exchanges.contains(&state.instrument.exchange.to_string())
+                    }),
+                ))
+            }
             Instruments(instruments) => Either::Right(Either::Right(
                 self.0
                     .values()
@@ -207,20 +210,22 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
         use filter::InstrumentFilter::*;
         match filter {
             None => Either::Left(Either::Left(self.0.values_mut())),
-            Exchanges(exchanges) => Either::Left(Either::Right(
-                self.0
-                    .values_mut()
-                    .filter(|state| exchanges.contains(&state.instrument.exchange)),
-            )),
+            Exchanges(exchanges) => {
+                Either::Left(Either::Right(
+                    self.0.values_mut().filter(|state| {
+                        exchanges.contains(&state.instrument.exchange.to_string())
+                    }),
+                ))
+            }
             Instruments(instruments) => Either::Right(Either::Right(
                 self.0
                     .values_mut()
                     .filter(|state| instruments.contains(&state.key)),
             )),
-            Underlyings(underlying) => Either::Right(Either::Left(
+            Underlyings(_underlying) => Either::Right(Either::Left(
                 self.0
                     .values_mut()
-                    .filter(|state| underlying.contains(&state.instrument.underlying)),
+                    .filter(|_| false), // temporarily disabled underlying filter
             )),
         }
     }
@@ -421,7 +426,7 @@ where
                 (
                     instrument.value.name_exchange.clone(),
                     InstrumentState::new(
-                        instrument.key,
+                        instrument.key.clone(),
                         instrument.value.clone(),
                         TearSheetGenerator::init(time_engine_start),
                         position_manager_init(),

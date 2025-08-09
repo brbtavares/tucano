@@ -14,7 +14,7 @@ use std::fmt::Debug;
 /// exchange [`ExecutionManager`](crate::execution::manager::ExecutionManager).
 ///
 /// Facilitates the routing of execution requests in a multi or single exchange trading system.
-pub trait ExecutionTxMap<ExchangeKey = ExchangeIndex, InstrumentKey = InstrumentIndex> {
+pub trait ExecutionTxMap<ExchangeKey = ExchangeId, InstrumentKey = InstrumentIndex> {
     type ExecutionTx: Tx<Item = ExecutionRequest<ExchangeKey, InstrumentKey>>;
 
     /// Attempt to find the [`ExecutionRequest`] [`Tx`] for the provided `ExchangeKey`.
@@ -47,7 +47,7 @@ impl<Tx> FromIterator<(ExchangeId, Option<Tx>)> for MultiExchangeTxMap<Tx> {
     where
         Iter: IntoIterator<Item = (ExchangeId, Option<Tx>)>,
     {
-        MultiExchangeTxMap(FnvIndexMap::from_iter(iter))
+    MultiExchangeTxMap(FnvIndexMap::from_iter(iter))
     }
 }
 
@@ -69,6 +69,36 @@ impl<'a, Tx> IntoIterator for &'a mut MultiExchangeTxMap<Tx> {
     }
 }
 
+// Default impl (ExchangeId key) so calls with default generic parameters (eg SyncShutdown bound)
+impl<Transmitter> ExecutionTxMap for MultiExchangeTxMap<Transmitter>
+where
+    Transmitter: Tx<Item = ExecutionRequest<ExchangeId, InstrumentIndex>> + Debug,
+{
+    type ExecutionTx = Transmitter;
+
+    fn find(
+        &self,
+        exchange: &ExchangeId,
+    ) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
+        self.0
+            .get(exchange)
+            .and_then(|tx| tx.as_ref())
+            .ok_or_else(|| {
+                UnrecoverableEngineError::IndexError(IndexError::ExchangeIndex(format!(
+                    "failed to find ExecutionTx for ExchangeId: {exchange}. Available: {self:?}"
+                )))
+            })
+    }
+
+    fn iter<'a>(&'a self) -> impl Iterator<Item = &'a Self::ExecutionTx>
+    where
+        Self::ExecutionTx: 'a,
+    {
+        self.0.values().filter_map(|tx| tx.as_ref())
+    }
+}
+
+// ExchangeIndex (String) lookup impl for Path B rollback external interface
 impl<Transmitter> ExecutionTxMap<ExchangeIndex, InstrumentIndex> for MultiExchangeTxMap<Transmitter>
 where
     Transmitter: Tx<Item = ExecutionRequest> + Debug,
@@ -79,12 +109,13 @@ where
         &self,
         exchange: &ExchangeIndex,
     ) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
+        let id = ExchangeId::from(exchange.as_str());
         self.0
-            .get(exchange)
+            .get(&id)
             .and_then(|tx| tx.as_ref())
             .ok_or_else(|| {
                 UnrecoverableEngineError::IndexError(IndexError::ExchangeIndex(format!(
-                    "failed to find ExecutionTx for ExchangeIndex: {exchange}. Available: {self:?}"
+                    "failed to find ExecutionTx for ExchangeId: {exchange}. Available: {self:?}"
                 )))
             })
     }
