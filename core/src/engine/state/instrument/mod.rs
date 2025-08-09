@@ -17,7 +17,7 @@ use execution::{
     AssetIndex, ExchangeIndex, InstrumentAccountSnapshot, InstrumentIndex, QuoteAsset,
 };
 use integration::{collection::FnvIndexMap, snapshot::Snapshot};
-use itertools::{Either, Itertools};
+use itertools::Either; // Itertools unused
 use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

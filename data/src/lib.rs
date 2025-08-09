@@ -43,6 +43,15 @@
 //! ## 📈 Exchanges Suportados
 //!
 //! - **🇧🇷 B3**: Bolsa brasileira via ProfitDLL
+
+// Silence unused dependency warnings for transitional deps (pending removal)
+#[allow(unused_imports)]
+use {
+    itertools as _,
+    reqwest as _,
+    serde_json as _,
+    vecmap as _,
+};
 use crate::{
     error::DataError,
     event::MarketEvent,

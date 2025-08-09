@@ -24,7 +24,7 @@ use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use fnv::FnvHashMap;
 use futures::{future::try_join_all, FutureExt};
 use integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
-use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
+use markets::{exchange::ExchangeId, ConcreteInstrument};
 use crate::engine::state::{IndexedInstruments, IndexedInstrumentsExt};
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{
@@ -88,7 +88,6 @@ pub struct ExecutionBuilder<'a> {
     mock_exchange_futures: Vec<RunFuture>,
     execution_init_futures: Vec<ExecutionInitFuture>,
 }
-
 impl<'a> ExecutionBuilder<'a> {
     /// Construct a new `ExecutionBuilder` using the provided `IndexedInstruments`.
     pub fn new(instruments: &'a IndexedInstruments) -> Self {
@@ -399,10 +398,4 @@ impl IntoIterator for ExecutionHandles {
     }
 }
 
-fn generate_mock_exchange_instruments(
-    instruments: &IndexedInstruments,
-    exchange: ExchangeId,
-) -> FnvHashMap<InstrumentNameExchange, ConcreteInstrument> {
-    // TODO: adapt when IndexedInstruments is migrated into core crate context.
-    FnvHashMap::default()
-}
+// (Removed unused generate_mock_exchange_instruments helper)

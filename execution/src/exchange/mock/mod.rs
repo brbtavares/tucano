@@ -21,7 +21,7 @@ use fnv::FnvHashMap;
 use futures::stream::BoxStream;
 use integration::snapshot::Snapshot;
 use itertools::Itertools;
-use markets::{ExchangeId, Instrument, Side, ConcreteInstrument};
+use markets::{ExchangeId, Side, ConcreteInstrument};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;

@@ -15,8 +15,8 @@ use crate::engine::{
 use data::event::MarketEvent;
 use derive_more::Constructor;
 use execution::{
-    balance::AssetBalance, AccountEvent, AccountEventKind, AssetIndex, ExchangeIndex,
-    InstrumentIndex, QuoteAsset, UnindexedAccountSnapshot,
+    balance::AssetBalance, AccountEvent, AccountEventKind, ExchangeIndex, InstrumentIndex,
+    QuoteAsset, UnindexedAccountSnapshot,
 };
 use fnv::FnvHashMap;
 use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};

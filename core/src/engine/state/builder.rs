@@ -7,11 +7,11 @@ use crate::engine::state::{
 use chrono::{DateTime, Utc};
 use execution::{
     balance::{AssetBalance, Balance},
-    AssetIndex, ExchangeIndex, InstrumentIndex,
+    InstrumentIndex,
 };
 use fnv::FnvHashMap;
 use integration::snapshot::Snapshot;
-use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
+use markets::{Keyed, ConcreteInstrument};
 use tracing::debug;
 
 /// Placeholder types

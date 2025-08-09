@@ -11,6 +11,8 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
+// (moved dummy imports below crate docs to satisfy inner doc comment placement rules)
+
 //! # ⚡ Execution - Módulo de Execução de Ordens
 //!
 //! Stream de dados privados de conta de venues financeiros e execução de ordens
@@ -72,7 +74,7 @@
 //! async fn execute_strategy(client: &mut impl ExecutionClient) {
 //!     // Criar ordem de compra
 //!     let order = Order::market_buy("PETR4", 100.0);
-//!     
+//!
 //!     // Enviar ordem
 //!     match client.submit_order(order).await {
 //!         Ok(ack) => println!("Ordem aceita: {:?}", ack),
@@ -82,6 +84,10 @@
 //! ```
 //!
 //! Veja `README.md` para mais informações e exemplos.
+
+// Silence transitional unused deps (must appear after inner crate docs)
+#[allow(unused_imports)]
+use {data as _, serde_json as _};
 
 use crate::{
     balance::AssetBalance,

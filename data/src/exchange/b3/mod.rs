@@ -10,6 +10,8 @@
 //! - **Future-Ready**: Easy to add other B3 APIs (official REST/WebSocket, etc.)
 //! - **Asset Integration**: Works with markets::b3 asset types for proper categorization
 
+#![allow(async_fn_in_trait)] // suppress async fn in trait warnings for this integration while refactoring
+
 pub mod exchange;
 pub mod instrument;
 pub mod types;
@@ -18,6 +20,7 @@ pub use exchange::B3Exchange;
 use markets::b3::{B3AssetCategory, B3AssetFactory};
 use markets::profit_dll::{CallbackEvent, ProfitConnector};
 use tokio::sync::mpsc;
+#[allow(unused_imports)]
 pub use types::*;
 
 /// B3 exchange connector using ProfitDLL

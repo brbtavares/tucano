@@ -11,6 +11,8 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
+// (moved dummy use below to allow crate-level inner doc comments `//!` to appear before any items)
+
 //! # 🔄 Integration - Framework de Integração de Alta Performance
 //!
 //! Framework de baixo nível e alta performance para composição de integrações
@@ -37,7 +39,7 @@
 //!     .with_rate_limit(100); // requests per second
 //! ```
 //!
-//! ### ExchangeStream  
+//! ### ExchangeStream
 //! Comunicação configurável sobre protocolos de stream assíncronos:
 //! ```rust,no_run
 //! use integration::stream::ExchangeStream;
@@ -85,11 +87,11 @@
 //!     let mut ws_client = WebSocketClient::new("wss://exchange.com/ws")
 //!         .with_reconnect()
 //!         .connect().await?;
-//!     
+//!
 //!     // Subscrever dados de mercado
 //!     let subscription = Subscription::new("PETR4", "trades");
 //!     ws_client.subscribe(subscription).await?;
-//!     
+//!
 //!     // Processar dados em tempo real
 //!     while let Some(data) = ws_client.next().await {
 //!         process_market_data(data);
@@ -99,6 +101,10 @@
 //!
 //! Ambas abstrações fornecem a cola robusta necessária para traduzir
 //! convenientemente entre modelos de dados de servidor e cliente.
+
+// Silence transitional unused dependency warnings (must appear after inner crate docs)
+#[allow(unused_imports)]
+use markets as _;
 
 use crate::error::SocketError;
 use serde::{Deserialize, Serialize};

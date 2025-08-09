@@ -16,13 +16,13 @@ use crate::{
     system::{config::ExecutionConfig, System, SystemAuxillaryHandles},
 };
 use data::streams::reconnect::stream::ReconnectingStream;
-use execution::{balance::Balance, AssetIndex, ExchangeIndex, InstrumentIndex};
+use execution::{balance::Balance, InstrumentIndex};
 use integration::{
     channel::{mpsc_unbounded, Channel, ChannelTxDroppable},
     snapshot::SnapUpdates,
     FeedEnded, Terminal,
 };
-use markets::{exchange::ExchangeId, Keyed, Underlying, ConcreteInstrument};
+use markets::{ConcreteInstrument, Keyed};
 use crate::engine::state::IndexedInstruments;
 
 /// Placeholder types
@@ -126,7 +126,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     ///
     /// Controls whether the engine processes events synchronously or asynchronously.
     pub fn engine_feed_mode(self, value: EngineFeedMode) -> Self {
-    Self { engine_feed_mode: Some(value), ..self }
+        Self { engine_feed_mode: Some(value), ..self }
     }
 
     /// Optionally configure the [`AuditMode`] (enabled or disabled).
