@@ -1,10 +1,10 @@
-//! Example demonstrating ProfitDLL integration with B3 assets
-//!
-//! This example shows how to:
-//! 1. Create different types of B3 assets (stocks, ETFs, REITs)
-//! 2. Initialize the ProfitDLL broker
-//! 3. Subscribe to market data for B3 instruments
-//! 4. Handle incoming market events
+// Example demonstrating ProfitDLL integration with B3 assets
+//
+// This example shows how to:
+// 1. Create different types of B3 assets (stocks, ETFs, REITs)
+// 2. Initialize the ProfitDLL broker
+// 3. Subscribe to market data for B3 instruments
+// 4. Handle incoming market events
 
 use markets::{
     b3::{B3AssetFactory, B3Stock, B3ETF, B3REIT},

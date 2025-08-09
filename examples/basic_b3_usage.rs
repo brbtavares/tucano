@@ -1,7 +1,7 @@
-//! Exemplo básico de uso das abstrações B3 do Toucan
-//!
-//! Este arquivo demonstra como usar as implementações B3 básicas
-//! com as traits do markets. Baseado nos testes originais.
+// Exemplo básico de uso das abstrações B3 do Toucan
+//
+// Este arquivo demonstra como usar as implementações B3 básicas
+// com as traits do markets. Baseado nos testes originais.
 
 use markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
 

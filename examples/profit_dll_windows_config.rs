@@ -1,7 +1,7 @@
-//! Exemplo de configuração e uso da ProfitDLL em Windows
-//!
-//! Este exemplo demonstra como configurar e usar a ProfitDLL real
-//! em um ambiente Windows com a DLL da Nelógica instalada.
+// Exemplo de configuração e uso da ProfitDLL em Windows
+//
+// Este exemplo demonstra como configurar e usar a ProfitDLL real
+// em um ambiente Windows com a DLL da Nelógica instalada.
 
 use markets::{
     b3::{B3AssetFactory, B3Stock},
