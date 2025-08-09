@@ -1,5 +1,67 @@
 # Toucan Core Module
 
+> Esta seção inicial foi adicionada para contextualizar o escopo brasileiro (B3 / ProfitDLL) e o status atual de implementação. O conteúdo original em inglês permanece abaixo como documentação abrangente.
+
+## 🇧🇷 Visão Geral (B3 / Mercado Brasileiro)
+O módulo **Core** é o "cérebro" da plataforma Toucan. Ele coordena estado, eventos e orquestra a interação entre Estratégia, Risco, Execução, Dados, Métricas e Mercados. É aqui que a negociação algorítmica de ações e derivativos da B3 (stocks, índice, mini‑índice, dólar, mini‑dólar, futuros de bitcoin, ouro etc.) será consolidada de forma unificada.
+
+## 🎯 Papel na Arquitetura
+| Responsabilidade | Descrição |
+|------------------|-----------|
+| Motor de Eventos | Loop que recebe MarketEvents / AccountEvents / Comandos e aplica mutações atômicas de estado |
+| Gerenciamento de Estado | Estruturas otimizadas para rastrear posições, ordens, saldos, conectividade e relógios |
+| Roteamento de Execução | Usa `ExecutionTxMap` / `MultiExchangeTxMap` para endereçar pedidos a cada venue (ex: ProfitDLL → B3) |
+| Integração Estratégia | Aplica sinais gerados pelos traits de estratégia (strategy crate) no fluxo de eventos |
+| Ganchos de Risco | Invoca validadores definidos na crate `risk` antes de submeter ordens |
+| Auditoria | Emissão de eventos de auditoria (para métricas, replay, compliance) |
+| Backtest / Live Abstração | Mesma API para simulação e operação real, alterando somente o relógio e origem de dados |
+
+## 🔑 Principais Estruturas / Traits
+- `Engine` – Orquestrador central, dirige processamento de eventos.
+- `EngineState` – Estado canônico (posições, ordens, balances, instrumentos, trading state).
+- `ExecutionTxMap` / `MultiExchangeTxMap` – Camada de compatibilidade para chaves (`ExchangeId` interno vs `String` externo) e roteamento.
+- `AccountEvent` / `MarketEvent` (via crates externas) – Unificam entradas de dados e atualizações de conta.
+- `TradingState` – Liga/Desliga negociação algorítmica atomicamente.
+- `Audit` (módulo) – Emissão de eventos estruturados para rastreabilidade.
+- `SyncShutdown` & mecanismos de encerramento seguro.
+
+## 🧬 Dependências Internas
+| Depende de | Motivo |
+|------------|-------|
+| markets | Tipos de Exchange/Instrument/Assets (incluindo B3) |
+| execution | Canal de requisições de ordens + mock / ProfitDLL abstração indireta |
+| data | Market stream events e snapshots |
+| strategy | Callbacks / geração de sinais |
+| risk | Validações pré‑execução |
+| integration | Canais / protocolo de mensagens genéricos |
+| analytics | Métricas de performance / agregação de resultados |
+
+## ✅ Concluído (Estado Atual)
+- Rollback de compatibilidade de chaves para estabilização pós refatoração (String ↔ ExchangeId) concluído.
+- Estruturas de estado centrais compilando sem erros.
+- Suporte a execução mock funcionando para testes.
+- Infraestrutura de auditoria conectável.
+- Documentação extensa em inglês mantida (abaixo) para aprofundamento.
+
+## 🧪 Parcialmente Implementado
+- Backtest: estrutura base presente; necessita enriquecimento de feed histórico real de B3.
+- Multi‑exchange real: somente B3 (via ProfitDLL) em andamento; demais exchanges futuras (derivativos / cripto) não integradas.
+- Métricas avançadas de latência e PnL em tempo real: placeholders parciais.
+- Circuit breaker / failover de conectividade: design previsto, implementação mínima.
+
+## 🚧 Pendências / Roadmap
+- Unificar definitivamente `ExchangeId` (remover camada de compatibilidade temporária) quando estáveis os índices externos.
+- Implementar persistência incremental (journaling) para recovery rápido.
+- Camada de plug‑in para relógios customizados (ex: simulação de micro‑latência).
+- Orquestração de estratégias múltiplas com partição de capital.
+- Bridge para múltiplas corretoras ProfitDLL (testar variações de latência / robustez).
+- Hooks de risco adicionais (exposição setorial, concentração por emissor) específicos de B3.
+
+## 🧾 Nota
+Esta seção resume o estado atual focado no mercado brasileiro. O restante do README (abaixo) mantém descrições detalhadas originais em inglês para referência abrangente.
+
+---
+
 The **Core** module is the central orchestration layer of the Toucan algorithmic trading framework. It provides the main trading engine, system coordination, execution management, and foundational components that enable professional-grade live trading, paper trading, and backtesting capabilities.
 
 ## 🏗️ Architecture Overview
