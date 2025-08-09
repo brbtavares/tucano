@@ -11,10 +11,67 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-/// Core is a Rust framework for building professional grade live-trading, paper-trading and back-testing systems. The
-/// central Engine facilitates executing on many exchanges simultaneously, and offers the flexibility to run most types of
-/// trading strategies.  It allows turning algorithmic order generation on/off and can action Commands issued from external
-/// processes (eg/ CloseAllPositions, OpenOrders, CancelOrders, etc.)
+//! # 🧠 Core - Engine Principal do Framework Toucan
+//!
+//! Framework Rust para construção de sistemas profissionais de trading ao vivo,
+//! paper trading e backtesting. O Engine central facilita execução em múltiplos
+//! exchanges simultaneamente e oferece flexibilidade para executar a maioria dos
+//! tipos de estratégias de trading.
+//!
+//! ## 🎯 Características Principais
+//!
+//! - **Multi-Exchange**: Execução simultânea em múltiplos exchanges
+//! - **Estratégias Flexíveis**: Suporte a diversos tipos de estratégias algorítmicas
+//! - **Controle Dinâmico**: Liga/desliga geração de ordens algorítmicas
+//! - **Comandos Externos**: Aceita comandos de processos externos
+//! - **Type Safety**: Sistema de tipos Rust para máxima segurança
+//!
+//! ## 🏗️ Arquitetura do Engine
+//!
+//! O Engine é o componente central que:
+//! - Processa eventos de mercado e conta em tempo real
+//! - Executa estratégias algorítmicas configuradas
+//! - Gerencia estado global do sistema de trading
+//! - Aplica regras de gestão de risco
+//! - Mantém auditoria completa de operações
+//!
+//! ## 🔄 Fluxo de Processamento
+//!
+//! ```text
+//! Eventos de Mercado/Conta
+//!           ↓
+//!      Engine Central
+//!           ↓
+//!    Estratégia + Risk
+//!           ↓
+//!    Ordens Geradas
+//!           ↓
+//!   Execution Clients
+//!           ↓
+//!      Exchanges
+//! ```
+//!
+//! ## 💡 Comandos Suportados
+//!
+//! - `CloseAllPositions`: Fecha todas as posições abertas
+//! - `OpenOrders`: Lista ordens abertas
+//! - `CancelOrders`: Cancela ordens específicas
+//! - `SetTradingState`: Controla estado de trading (enabled/disabled)
+//! - `GetPositions`: Consulta posições atuais
+//!
+//! ## 🧩 Componentes Integrados
+//!
+//! - **EngineState**: Estado global com dados de mercado e conta
+//! - **TradingStrategy**: Interface para estratégias algorítmicas
+//! - **RiskManager**: Validação e controle de risco
+//! - **ExecutionClients**: Conectividade com exchanges
+//! - **AuditTrail**: Rastreamento completo de operações
+
+/// Core é um framework Rust para construção de sistemas profissionais de live-trading,
+/// paper-trading e back-testing. O Engine central facilita execução em muitos exchanges
+/// simultaneamente, e oferece flexibilidade para executar a maioria dos tipos de
+/// estratégias de trading. Permite ligar/desligar geração de ordens algorítmicas e pode
+/// executar Comandos emitidos de processos externos (ex: CloseAllPositions, OpenOrders, CancelOrders, etc.)
 use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,

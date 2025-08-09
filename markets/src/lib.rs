@@ -11,39 +11,127 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Markets - Simplified Abstractions
+//! # 🏛️ Markets - Abstrações Simplificadas de Mercado
 //! 
-//! Core traits and types for exchanges, instruments, and assets.
-//! Focused on essential abstractions without specific implementations.
+//! Traits e tipos fundamentais para exchanges, instrumentos e ativos financeiros.
+//! Focado em abstrações essenciais sem implementações específicas.
 //! 
-//! ## Modules
-//! - `broker`: Broker abstraction layer with ProfitDLL integration
-//! - `b3`: Brazilian Stock Exchange (B3) asset definitions
-//! - `profit_dll`: ProfitDLL integration (real DLL on Windows, mock elsewhere)
+//! ## 🎯 Filosofia de Design
+//! 
+//! Este módulo implementa uma arquitetura **híbrida** que combina:
+//! - **Abstrações Reutilizáveis**: Traits genéricos para máxima flexibilidade
+//! - **Implementações Específicas**: Tipos brasileiros com terminologia nativa
+//! - **Extensibilidade**: Fácil adição de novos exchanges e instrumentos
+//! 
+//! ## 🏗️ Módulos Principais
+//! 
+//! - `exchange`: Abstrações de exchange e identificadores
+//! - `asset`: Definições de ativos financeiros e tipos
+//! - `instrument`: Abstrações de instrumentos financeiros
+//! - `side`: Enumeração de lados de operação (Buy/Sell)
+//! - `b3`: Definições específicas da Bolsa Brasileira (B3)
+//! - `profit_dll`: Integração com ProfitDLL (real no Windows, mock em outros)
+//! - `broker`: Camada de abstração de corretoras
+//! 
+//! ## 💡 Conceitos Fundamentais
+//! 
+//! ### Exchange
+//! Representa um mercado ou bolsa onde instrumentos são negociados:
+//! ```rust,no_run
+//! use markets::{Exchange, ExchangeId};
+//! 
+//! struct B3Exchange;
+//! impl Exchange for B3Exchange {
+//!     type ExchangeId = B3ExchangeId;
+//!     fn id(&self) -> Self::ExchangeId { /* ... */ }
+//!     fn name(&self) -> &'static str { "B3" }
+//! }
+//! ```
+//! 
+//! ### Instrument
+//! Define instrumentos financeiros negociáveis:
+//! ```rust,no_run
+//! use markets::{Instrument, InstrumentKind};
+//! 
+//! struct Stock {
+//!     symbol: String,
+//!     kind: InstrumentKind,
+//! }
+//! ```
+//! 
+//! ### Asset
+//! Representa ativos financeiros subjacentes:
+//! ```rust,no_run
+//! use markets::{Asset, AssetType};
+//! 
+//! struct BrazilianReal;
+//! impl Asset for BrazilianReal {
+//!     fn symbol(&self) -> &str { "BRL" }
+//!     fn asset_type(&self) -> AssetType { AssetType::Currency }
+//! }
+//! ```
+//! 
+//! ## 🇧🇷 Suporte ao Mercado Brasileiro
+//! 
+//! - **B3 Integration**: Suporte nativo à Bolsa Brasileira
+//! - **ProfitDLL**: Conectividade através da Nelógica
+//! - **Terminologia Local**: Uso de termos específicos do mercado brasileiro
+//! - **Regulamentação**: Conformidade com regras da CVM
+//!
 
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
-/// Re-export key traits for convenience
+/// Re-exporta traits principais para conveniência de uso.
+///
+/// Permite importar facilmente os traits fundamentais do módulo
+/// sem precisar especificar o caminho completo de cada submódulo.
 pub use asset::{Asset, AssetType};
+pub use exchange::{Exchange, ExchangeId};
 pub use instrument::{Instrument, InstrumentKind, MarketDataInstrument};
 pub use side::Side;
-pub use exchange::{Exchange, ExchangeId};
 
-/// Defines exchange abstractions
+/// Define abstrações de exchanges financeiros.
+///
+/// Contém traits e tipos para representar diferentes mercados
+/// e bolsas onde instrumentos financeiros são negociados.
 pub mod exchange;
 
-/// Defines asset abstractions  
+/// Define abstrações de ativos financeiros.
+///
+/// Inclui definições para diferentes tipos de ativos como
+/// moedas, ações, commodities, etc., com suas características
+/// específicas e métodos de identificação.
 pub mod asset;
 
-/// Defines instrument abstractions
+/// Define abstrações de instrumentos financeiros.
+///
+/// Contém traits e estruturas para representar instrumentos
+/// negociáveis como ações, opções, futuros, etc., incluindo
+/// metadados de mercado e identificação.
 pub mod instrument;
 
-/// Defines side enum
+/// Define enumeração de lados de operação.
+///
+/// Especifica se uma operação é de compra (Buy) ou venda (Sell),
+/// fundamental para definição de ordens e análise de fluxo.
 pub mod side;
 
-/// A keyed value utility
+/// Utilitário para valores com chave associada.
+///
+/// Estrutura genérica que combina uma chave com um valor,
+/// útil para mapear dados com identificadores específicos
+/// de forma type-safe e eficiente.
+///
+/// # Exemplo
+/// ```rust
+/// use markets::Keyed;
+/// 
+/// let keyed_price = Keyed::new("PETR4", 25.50);
+/// assert_eq!(keyed_price.key, "PETR4");
+/// assert_eq!(keyed_price.value, 25.50);
+/// ```
 #[derive(
     Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Constructor,
 )]

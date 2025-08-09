@@ -11,19 +11,94 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Integration
-//! High-performance, low-level framework for composing flexible web integrations.
+//! # 🔄 Integration - Framework de Integração de Alta Performance
 //!
-//! Utilised by other Toucan trading ecosystem crates to build robust financial execution integrations,
-//! primarily for public data collection & trade execution. It is:
-//! * **Low-Level**: Translates raw data streams communicated over the web into any desired data model using arbitrary data transformations.
-//! * **Flexible**: Compatible with any protocol (WebSocket, FIX, Http, etc.), any input/output model, and any user defined transformations.
+//! Framework de baixo nível e alta performance para composição de integrações
+//! web flexíveis. Utilizado por outras crates do ecossistema Toucan para
+//! construir integrações financeiras robustas, principalmente para coleta de
+//! dados públicos e execução de trades.
 //!
-//! ## Core abstractions:
-//! - **RestClient** providing configurable signed Http communication between client & server.
-//! - **ExchangeStream** providing configurable communication over any asynchronous stream protocols (WebSocket, FIX, etc.).
+//! ## 🎯 Características Principais
 //!
-//! Both core abstractions provide the robust glue you need to conveniently translate between server & client data models.
+//! * **🔧 Baixo Nível**: Traduz streams de dados brutos comunicados via web
+//!   em qualquer modelo de dados desejado usando transformações arbitrárias
+//! * **🚀 Flexibilidade**: Compatível com qualquer protocolo (WebSocket, FIX, 
+//!   Http, etc.), qualquer modelo input/output, e transformações definidas pelo usuário
+//!
+//! ## 🏗️ Abstrações Fundamentais
+//!
+//! ### RestClient
+//! Comunicação HTTP configurável e assinada entre cliente e servidor:
+//! ```rust,no_run
+//! use integration::protocol::http::rest::RestClient;
+//! 
+//! let client = RestClient::new()
+//!     .with_auth(api_key, secret)
+//!     .with_rate_limit(100); // requests per second
+//! ```
+//!
+//! ### ExchangeStream  
+//! Comunicação configurável sobre protocolos de stream assíncronos:
+//! ```rust,no_run
+//! use integration::stream::ExchangeStream;
+//! 
+//! let stream = ExchangeStream::new()
+//!     .with_reconnect()
+//!     .with_heartbeat(30); // seconds
+//! ```
+//!
+//! ## 🌐 Protocolos Suportados
+//!
+//! - **WebSocket**: Streaming em tempo real
+//! - **HTTP REST**: APIs tradicionais
+//! - **FIX Protocol**: Protocolo financeiro padrão
+//! - **Extensível**: Fácil adição de novos protocolos
+//!
+//! ## 📊 Funcionalidades de Integração
+//!
+//! ### Transformação de Dados
+//! - **Parser Flexível**: Converte dados de diferentes formatos
+//! - **Normalização**: Padroniza dados de múltiplos exchanges
+//! - **Validação**: Verificação de integridade em tempo real
+//!
+//! ### Gestão de Conectividade
+//! - **Auto-Reconnect**: Reconexão automática em falhas
+//! - **Heartbeat**: Monitoramento de conectividade
+//! - **Circuit Breaker**: Proteção contra falhas em cascata
+//!
+//! ### Métricas e Monitoramento
+//! - **Real-Time Metrics**: Métricas de performance em tempo real
+//! - **Health Checks**: Verificações de saúde do sistema
+//! - **Alerting**: Sistema de alertas para anomalias
+//!
+//! ## 💡 Exemplo de Uso
+//!
+//! ```rust,no_run
+//! use integration::{
+//!     protocol::websocket::WebSocketClient,
+//!     subscription::Subscription,
+//!     metric::Metric
+//! };
+//! 
+//! async fn setup_integration() {
+//!     // Configurar cliente WebSocket
+//!     let mut ws_client = WebSocketClient::new("wss://exchange.com/ws")
+//!         .with_reconnect()
+//!         .connect().await?;
+//!     
+//!     // Subscrever dados de mercado
+//!     let subscription = Subscription::new("PETR4", "trades");
+//!     ws_client.subscribe(subscription).await?;
+//!     
+//!     // Processar dados em tempo real
+//!     while let Some(data) = ws_client.next().await {
+//!         process_market_data(data);
+//!     }
+//! }
+//! ```
+//!
+//! Ambas abstrações fornecem a cola robusta necessária para traduzir
+//! convenientemente entre modelos de dados de servidor e cliente.
 
 use crate::error::SocketError;
 use serde::{Deserialize, Serialize};

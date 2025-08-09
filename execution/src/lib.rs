@@ -11,16 +11,77 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Execution
-//! Stream private account data from financial venues, and execute (live or mock) orders. Also provides
-//! a feature rich MockExchange and MockExecutionClient to assist with backtesting and paper-trading.
+//! # ⚡ Execution - Módulo de Execução de Ordens
 //!
-//! **It is:**
-//! * **Easy**: ExecutionClient trait provides a unified and simple language for interacting with exchanges.
-//! * **Normalised**: Allow your strategy to communicate with every real or MockExchange using the same interface.
-//! * **Extensible**: Execution is highly extensible, making it easy to contribute by adding new exchange integrations!
+//! Stream de dados privados de conta de venues financeiros e execução de ordens
+//! (ao vivo ou simuladas). Também fornece MockExchange e MockExecutionClient
+//! ricos em recursos para auxiliar backtesting e paper trading.
 //!
-//! See `README.md` for more information and examples.
+//! ## 🎯 Características Principais
+//!
+//! * **🚀 Simplicidade**: Trait ExecutionClient fornece linguagem unificada 
+//!   e simples para interagir com exchanges
+//! * **🔄 Padronização**: Permite que sua estratégia se comunique com qualquer 
+//!   exchange real ou Mock usando a mesma interface
+//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições 
+//!   com novas integrações de exchanges
+//!
+//! ## 🏗️ Componentes Principais
+//!
+//! ### ExecutionClient
+//! Interface unificada para execução de ordens em diferentes exchanges:
+//! ```rust,no_run
+//! use execution::client::ExecutionClient;
+//! 
+//! // Implementação para qualquer exchange
+//! impl ExecutionClient for MyExchange {
+//!     async fn submit_order(&mut self, order: Order) -> Result<OrderAck> {
+//!         // Lógica específica do exchange
+//!     }
+//! }
+//! ```
+//!
+//! ### MockExchange
+//! Exchange simulado para backtesting e testes:
+//! - **Latência Realística**: Simula delays de rede e processamento
+//! - **Slippage**: Modela escorregamento de preços real
+//! - **Rejeições**: Simula rejeições por risco ou liquidez
+//!
+//! ### Gestão de Saldos
+//! Sistema robusto para tracking de saldos e posições:
+//! - **Multi-Asset**: Suporte a múltiplos ativos simultaneamente
+//! - **Real-Time**: Atualizações em tempo real via streams
+//! - **Reconciliação**: Validação automática de consistência
+//!
+//! ## 📊 Exchanges Suportados
+//!
+//! - **🇧🇷 B3**: Via ProfitDLL da Nelógica
+//! - **🌍 Binance**: Spot e Futures
+//! - **🇺🇸 Coinbase**: Exchange americano
+//! - **🧪 Mock**: Exchange simulado para testes
+//!
+//! ## 💡 Exemplo de Uso
+//!
+//! ```rust,no_run
+//! use execution::{
+//!     client::ExecutionClient,
+//!     order::{Order, OrderKind},
+//!     trade::Trade
+//! };
+//! 
+//! async fn execute_strategy(client: &mut impl ExecutionClient) {
+//!     // Criar ordem de compra
+//!     let order = Order::market_buy("PETR4", 100.0);
+//!     
+//!     // Enviar ordem
+//!     match client.submit_order(order).await {
+//!         Ok(ack) => println!("Ordem aceita: {:?}", ack),
+//!         Err(e) => println!("Erro: {:?}", e),
+//!     }
+//! }
+//! ```
+//!
+//! Veja `README.md` para mais informações e exemplos.
 
 use crate::{
     balance::AssetBalance,

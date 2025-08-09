@@ -11,26 +11,48 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! # Data
-//! A high-performance WebSocket integration library for streaming public market data from leading cryptocurrency
-//! exchanges - batteries included. It is:
-//! * **Easy**: Data's simple [`StreamBuilder`](streams::builder::StreamBuilder) and [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) interface allows for easy & quick setup (see example below and /examples!).
-//! * **Normalised**: Data's unified interface for consuming public WebSocket data means every Exchange returns a normalised data model.
-//! * **Real-Time**: Data utilises real-time WebSocket integrations enabling the consumption of normalised tick-by-tick data.
-//! * **Extensible**: Data is highly extensible, and therefore easy to contribute to with coding new integrations!
+//! # 📊 Data - Módulo de Streaming de Dados de Mercado
 //!
-//! ## User API
-//! - [`StreamBuilder`](streams::builder::StreamBuilder) for initialising [`MarketStream`]s of specific data kinds.
-//! - [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) for initialising [`MarketStream`]s of every supported data kind at once.
-//! - Define what exchange market data you want to stream using the [`Subscription`] type.
-//! - Pass [`Subscription`]s to the [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) or [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init) methods.
-//! - Each call to the [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) (or each batch passed to the [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init))
-//!   method opens a new WebSocket connection to the exchange - giving you full control.
+//! Biblioteca de alta performance para integração via WebSocket, especializada em streaming 
+//! de dados públicos de mercado de exchanges líderes - bateria incluída. Características:
 //!
-//! ## Examples
-//! For a comprehensive collection of examples, see the /examples directory.
+//! ## 🎯 Características Principais
+//! 
+//! * **🚀 Simplicidade**: Interface simples com [`StreamBuilder`](streams::builder::StreamBuilder) 
+//!   e [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para configuração rápida
+//! * **🔄 Padronização**: Interface unificada para consumo de dados WebSocket com modelo 
+//!   de dados normalizado para todos os exchanges
+//! * **⚡ Tempo Real**: Integrações WebSocket em tempo real permitindo consumo de dados 
+//!   tick-by-tick normalizados
+//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições com novas 
+//!   integrações de exchanges
 //!
-//! ### Multi Exchange Public Trades
+//! ## 🏗️ API do Usuário
+//! 
+//! - [`StreamBuilder`](streams::builder::StreamBuilder) para inicializar [`MarketStream`]s 
+//!   de tipos específicos de dados
+//! - [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para inicializar 
+//!   [`MarketStream`]s de todos os tipos de dados suportados simultaneamente
+//! - Defina quais dados de mercado deseja usando o tipo [`Subscription`]
+//! - Passe [`Subscription`]s para os métodos [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) 
+//!   ou [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)
+//! - Cada chamada para [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) 
+//!   (ou batch para [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)) 
+//!   abre uma nova conexão WebSocket ao exchange - controle total
+//!
+//! ## 📈 Exchanges Suportados
+//! 
+//! - **🇧🇷 B3**: Bolsa brasileira via ProfitDLL
+//! - **🌍 Binance**: Spot e Futures USD
+//! - **🇺🇸 Coinbase**: Exchange americano
+//! - **🌏 OKX**: Exchange global
+//! - **🌐 Gate.io**: Spot trading
+//!
+//! ## 💡 Exemplos de Uso
+//! 
+//! Veja o diretório /examples para uma coleção abrangente de exemplos.
+//!
+//! ### Trades Públicos Multi-Exchange
 //! ```rust,no_run
 //! use data::{
 //!     exchange::{
