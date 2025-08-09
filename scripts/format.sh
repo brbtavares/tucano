@@ -1,14 +1,14 @@
 #!/bin/bash
 # Toucan Project - Format script
-# Uses rustfmt with custom config path
+# Uses rustfmt with standard config in project root
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-CONFIG_PATH="$SCRIPT_DIR/.config/rustfmt.toml"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 if [ "$1" = "--check" ]; then
     echo "🔍 Checking code formatting..."
-    cargo fmt --all -- --config-path="$CONFIG_PATH" --check
+    cd "$PROJECT_ROOT" && cargo fmt --all -- --check
 else
     echo "🎨 Formatting code..."
-    cargo fmt --all -- --config-path="$CONFIG_PATH"
+    cd "$PROJECT_ROOT" && cargo fmt --all
 fi
