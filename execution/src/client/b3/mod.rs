@@ -18,12 +18,12 @@ use crate::{
         Order, OrderKey, OrderKind,
     },
     trade::Trade,
+    transport::{Transport, TransportInstrument, TransportSide, TransportOrderKind, TransportTimeInForce, TransportAccountId, ProfitDLLTransport, TransportEvent},
     InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
 use markets::{
-    profit_dll::OrderSide, AccountIdentifier, AssetIdentifier, ExchangeId, ProfitConnector,
-    ProfitError, SendOrder, Side,
+    ExchangeId, ProfitError, SendOrder, Side,
 };
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
@@ -76,7 +76,7 @@ impl B3Config {
 /// B3 execution client using ProfitDLL
 pub struct B3ExecutionClient {
     config: B3Config,
-    connector: Arc<Mutex<Option<ProfitConnector>>>,
+    transport: Arc<dyn Transport>,
     event_sender: Arc<Mutex<Option<mpsc::UnboundedSender<UnindexedAccountEvent>>>>,
 }
 
@@ -84,7 +84,7 @@ impl Clone for B3ExecutionClient {
     fn clone(&self) -> Self {
         Self {
             config: self.config.clone(),
-            connector: self.connector.clone(),
+            transport: self.transport.clone(),
             event_sender: self.event_sender.clone(),
         }
     }
@@ -105,18 +105,20 @@ impl ExecutionClient for B3ExecutionClient {
     type AccountStream = UnboundedReceiverStream<UnindexedAccountEvent>;
 
     fn new(config: Self::Config) -> Self {
-        Self {
-            config,
-            connector: Arc::new(Mutex::new(None)),
-            event_sender: Arc::new(Mutex::new(None)),
-        }
+        // For now, always use ProfitDLLTransport; later allow injection
+        let transport = ProfitDLLTransport::new(
+            config.dll_path.clone(),
+            config.activation_key.clone(),
+            config.username.clone(),
+            config.password.clone(),
+        );
+        Self { config, transport: Arc::new(transport), event_sender: Arc::new(Mutex::new(None)) }
     }
 
     async fn fetch_balances(
         &self,
     ) -> Result<Vec<AssetBalance<AssetNameExchange>>, UnindexedClientError> {
-        // Ensure connection is established
-        self.ensure_connected().await?;
+    self.ensure_connected().await?;
 
         // Return empty balances for now - in real implementation,
         // this would query ProfitDLL for current balances
@@ -126,8 +128,7 @@ impl ExecutionClient for B3ExecutionClient {
     async fn fetch_open_orders(
         &self,
     ) -> Result<Vec<Order<ExchangeId, InstrumentNameExchange, Open>>, UnindexedClientError> {
-        // Ensure connection is established
-        self.ensure_connected().await?;
+    self.ensure_connected().await?;
 
         // Return empty orders for now - in real implementation,
         // this would query ProfitDLL for current open orders
@@ -138,8 +139,7 @@ impl ExecutionClient for B3ExecutionClient {
         &self,
         _time_since: DateTime<Utc>,
     ) -> Result<Vec<Trade<QuoteAsset, InstrumentNameExchange>>, UnindexedClientError> {
-        // Ensure connection is established
-        self.ensure_connected().await?;
+    self.ensure_connected().await?;
 
         // Return empty trades for now - in real implementation,
         // this would query ProfitDLL for trades since the specified time
@@ -151,8 +151,7 @@ impl ExecutionClient for B3ExecutionClient {
         _assets: &[AssetNameExchange],
         instruments: &[InstrumentNameExchange],
     ) -> Result<UnindexedAccountSnapshot, UnindexedClientError> {
-        // Ensure connection is established
-        self.ensure_connected().await?;
+    self.ensure_connected().await?;
 
         // Fetch current data
         let balances = self.fetch_balances().await?;
@@ -245,35 +244,25 @@ impl ExecutionClient for B3ExecutionClient {
 
 impl B3ExecutionClient {
     /// Ensure connection to B3 is established
-    async fn ensure_connected(&self) -> Result<(), UnindexedClientError> {
-        let mut connector_guard = self.connector.lock().await;
-
-        if connector_guard.is_none() {
-            // Create new connection
-            let connector = ProfitConnector::new(self.config.dll_path.as_deref())
-                .map_err(|e| UnindexedClientError::AccountSnapshot(e.to_string()))?;
-
-            // Initialize login
-            let _events = connector
-                .initialize_login(
-                    &self.config.activation_key,
-                    &self.config.username,
-                    &self.config.password,
-                )
-                .await
-                .map_err(|e| UnindexedClientError::AccountSnapshot(e.to_string()))?;
-
-            *connector_guard = Some(connector);
-        }
-
-        Ok(())
-    }
+    async fn ensure_connected(&self) -> Result<(), UnindexedClientError> { self.transport.connect().await.map_err(|e| UnindexedClientError::AccountSnapshot(e.to_string())) }
 
     /// Start processing events from ProfitDLL and convert them to Toucan events
     async fn start_event_processing(&self) -> Result<(), UnindexedClientError> {
         // This would start a background task to process ProfitDLL events
         // and convert them to Toucan AccountEvents
         tracing::info!("Starting B3 event processing");
+        let mut rx = self.transport.account_events().await.map_err(|e| UnindexedClientError::AccountStream(e.to_string()))?;
+        let sender_holder = self.event_sender.clone();
+        tokio::spawn(async move {
+            while let Some(evt) = rx.recv().await {
+                if let TransportEvent::OrderAccepted { .. } = evt {
+                    if let Some(tx) = sender_holder.lock().await.as_ref() {
+                        // Placeholder: translate to UnindexedAccountEvent when we have order mapping
+                        let _ = tx;
+                    }
+                }
+            }
+        });
         Ok(())
     }
 
@@ -285,20 +274,18 @@ impl B3ExecutionClient {
         Order<ExchangeId, InstrumentNameExchange, Result<Open, UnindexedOrderError>>,
         ProfitError,
     > {
-        let connector_guard = self.connector.lock().await;
-        let _connector = connector_guard.as_ref().ok_or_else(|| {
-            ProfitError::ConnectionFailed("No active connection to B3".to_string())
-        })?;
-
-        // Convert Toucan order request to ProfitDLL order
-        let _profit_order = self.convert_to_profit_order(request)?;
-
-        // Send order through ProfitDLL
-        // This is a placeholder - actual implementation would call connector.send_order()
-        let instrument_str = format!("{:?}", request.key.instrument); // Convert to string
-        tracing::info!("Sending order to B3: instrument={}", instrument_str);
-
-        // Create the order structure with all required fields
+        // Convert request to transport invocation
+        let instrument_str = format!("{:?}", request.key.instrument);
+        let instrument = TransportInstrument::new(instrument_str.clone(), "B3");
+        let side = match request.state.side { Side::Buy => TransportSide::Buy, Side::Sell => TransportSide::Sell };
+        let kind = match request.state.kind { OrderKind::Market => TransportOrderKind::Market, OrderKind::Limit => TransportOrderKind::Limit };
+        let tif = match request.state.time_in_force { _ => TransportTimeInForce::Day }; // TODO map properly
+        let account = TransportAccountId::new("default", "ProfitDLL");
+    let _opened = self.transport.open_order(&instrument, side, request.state.quantity, kind, Some(request.state.price), tif, request.key.cid.0.as_str(), &account)
+            .await
+            .map_err(|e| ProfitError::ConnectionFailed(e.to_string()))?;
+        tracing::info!("Sending order via transport: instrument={}", instrument.symbol);
+        // Build internal order representation
         let order = Order {
             key: OrderKey {
                 exchange: ExchangeId::B3,
@@ -322,47 +309,7 @@ impl B3ExecutionClient {
     }
 
     /// Convert Toucan order request to ProfitDLL SendOrder
-    fn convert_to_profit_order(
-        &self,
-        request: &OrderRequestOpen<ExchangeId, &InstrumentNameExchange>,
-    ) -> Result<SendOrder, ProfitError> {
-        // This is a simplified conversion
-        // Real implementation would need proper account/asset mapping
-
-        // Types are already imported above
-        // AssetIdentifier and AccountIdentifier from markets::profit_dll
-
-        let account = AccountIdentifier::new(
-            "default".to_string(),   // account_id
-            "ProfitDLL".to_string(), // broker
-        );
-
-        let instrument_str = format!("{:?}", request.key.instrument);
-        let asset = AssetIdentifier::new(
-            instrument_str,        // ticker
-            "BOVESPA".to_string(), // exchange (B3)
-        );
-
-        let order_side = match request.state.side {
-            Side::Buy => OrderSide::Buy,
-            Side::Sell => OrderSide::Sell,
-        };
-
-        let order = match request.state.kind {
-            OrderKind::Market => {
-                SendOrder::new_market_order(asset, account, order_side, request.state.quantity)
-            }
-            OrderKind::Limit => SendOrder::new_limit_order(
-                asset,
-                account,
-                order_side,
-                request.state.quantity,
-                request.state.price,
-            ),
-        };
-
-        Ok(order)
-    }
+    fn convert_to_profit_order(&self, _request: &OrderRequestOpen<ExchangeId, &InstrumentNameExchange>) -> Result<SendOrder, ProfitError> { Err(ProfitError::InternalError("legacy path disabled in favor of transport".into())) }
 }
 
 // Re-export for easier access

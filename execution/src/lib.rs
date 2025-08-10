@@ -112,6 +112,7 @@ pub mod indexer;
 pub mod map;
 pub mod order;
 pub mod trade;
+pub mod transport; // Phase 2: transport abstraction layer (connectivity/protocol)
 
 /// Convenient type alias for an [`AccountEvent`] keyed with [`ExchangeId`],
 /// [`AssetNameExchange`], and [`InstrumentNameExchange`].
