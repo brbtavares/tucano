@@ -109,12 +109,12 @@ pub const NL_NO_LICENSE: NResult = -2147483642;
 /// real do ProfitDLL.
 #[derive(Debug)]
 pub struct ProfitConnector {
-    connected: bool,
+    _connected: bool,
 }
 
 impl ProfitConnector {
     pub fn new(_dll_path: Option<&str>) -> Result<Self, String> {
-        Ok(Self { connected: false })
+    Ok(Self { _connected: false })
     }
 
     pub async fn initialize_login(

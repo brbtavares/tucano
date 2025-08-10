@@ -81,42 +81,106 @@ impl ExecutionInstrumentMap {
         &self,
         asset: AssetIndex,
     ) -> Result<&AssetNameExchange, KeyError> {
-        // Como AssetIndex é String agora, podemos procurar diretamente
-        self.asset_names.get(&asset).ok_or_else(|| {
-            KeyError::AssetKey(format!("ExecutionInstrumentMap does not contain: {asset}"))
-        })
+        // Quando a feature typed_indices está ativa, precisamos procurar o nome correspondente
+        // pelo valor (índice) armazenado. Como é um HashMap name -> index, fazemos uma busca linear.
+        // Custo aceitável enquanto os índices são pequenos; pode ser otimizado (mapa reverso) se necessário.
+        #[cfg(feature = "typed_indices")]
+        {
+            self.asset_names
+                .iter()
+                .find(|(_, v)| v.as_str() == asset)
+                .map(|(k, _)| k)
+                .ok_or_else(|| {
+                    KeyError::AssetKey(format!(
+                        "ExecutionInstrumentMap does not contain: {asset}"
+                    ))
+                })
+        }
+        #[cfg(not(feature = "typed_indices"))]
+        {
+            // Sem typed_indices, AssetIndex == String e TAssetIndex == String
+            self.asset_names.get(&asset).ok_or_else(|| {
+                KeyError::AssetKey(format!(
+                    "ExecutionInstrumentMap does not contain: {asset}"
+                ))
+            })
+        }
     }
 
-    pub fn find_asset_index(&self, asset: &AssetNameExchange) -> Result<TAssetIndex, IndexError> {
-        self.asset_names.get(asset).cloned().ok_or_else(|| {
-            IndexError::AssetIndex(format!("ExecutionInstrumentMap does not contain: {asset}"))
-        })
+    pub fn find_asset_index(&self, asset: &AssetNameExchange) -> Result<AssetIndex, IndexError> {
+        #[cfg(feature = "typed_indices")]
+        {
+            self.asset_names
+                .get(asset)
+                .map(|v| v.to_string())
+                .ok_or_else(|| {
+                    IndexError::AssetIndex(format!(
+                        "ExecutionInstrumentMap does not contain: {asset}"
+                    ))
+                })
+        }
+        #[cfg(not(feature = "typed_indices"))]
+        {
+            self.asset_names.get(asset).cloned().ok_or_else(|| {
+                IndexError::AssetIndex(format!(
+                    "ExecutionInstrumentMap does not contain: {asset}"
+                ))
+            })
+        }
     }
 
     pub fn find_instrument_name_exchange(
         &self,
         instrument: InstrumentIndex,
     ) -> Result<&InstrumentNameExchange, KeyError> {
-        // Como InstrumentIndex é String agora, podemos procurar diretamente
-        self.instrument_names.get(&instrument).ok_or_else(|| {
-            KeyError::InstrumentKey(format!(
-                "ExecutionInstrumentMap does not contain: {instrument}"
-            ))
-        })
+        #[cfg(feature = "typed_indices")]
+        {
+            self.instrument_names
+                .iter()
+                .find(|(_, v)| v.as_str() == instrument)
+                .map(|(k, _)| k)
+                .ok_or_else(|| {
+                    KeyError::InstrumentKey(format!(
+                        "ExecutionInstrumentMap does not contain: {instrument}"
+                    ))
+                })
+        }
+        #[cfg(not(feature = "typed_indices"))]
+        {
+            self.instrument_names.get(&instrument).ok_or_else(|| {
+                KeyError::InstrumentKey(format!(
+                    "ExecutionInstrumentMap does not contain: {instrument}"
+                ))
+            })
+        }
     }
 
     pub fn find_instrument_index(
         &self,
         instrument: &InstrumentNameExchange,
-    ) -> Result<TInstrumentIndex, IndexError> {
-        self.instrument_names
-            .get(instrument)
-            .cloned()
-            .ok_or_else(|| {
-                IndexError::InstrumentIndex(format!(
-                    "ExecutionInstrumentMap does not contain: {instrument}"
-                ))
-            })
+    ) -> Result<InstrumentIndex, IndexError> {
+        #[cfg(feature = "typed_indices")]
+        {
+            self.instrument_names
+                .get(instrument)
+                .map(|v| v.to_string())
+                .ok_or_else(|| {
+                    IndexError::InstrumentIndex(format!(
+                        "ExecutionInstrumentMap does not contain: {instrument}"
+                    ))
+                })
+        }
+        #[cfg(not(feature = "typed_indices"))]
+        {
+            self.instrument_names
+                .get(instrument)
+                .cloned()
+                .ok_or_else(|| {
+                    IndexError::InstrumentIndex(format!(
+                        "ExecutionInstrumentMap does not contain: {instrument}"
+                    ))
+                })
+        }
     }
 }
 

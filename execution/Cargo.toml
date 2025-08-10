@@ -9,6 +9,10 @@ description = "Stream private account data from financial venues, and execute (l
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["accessibility", "simulation"]
 
+[features]
+# Habilita newtypes experimentais para indices/nomes (map.rs usa cfg(feature = "typed_indices")).
+typed_indices = []
+
 
 [dependencies]
 # Toucan Ecosystem

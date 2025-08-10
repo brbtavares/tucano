@@ -237,7 +237,7 @@ impl AccountEventIndexer {
         } = order;
 
         let exchange = self.map.find_exchange_id(exchange.clone())?;
-        let instrument = self.map.find_instrument_name_exchange(instrument.clone())?;
+    let instrument = self.map.find_instrument_name_exchange(instrument.clone())?;
 
         Ok(OrderEvent {
             key: OrderKey {
@@ -282,7 +282,7 @@ impl AccountEventIndexer {
             fees,
         } = trade;
 
-        let instrument_index = self.map.find_instrument_index(&instrument)?;
+    let instrument_index = self.map.find_instrument_index(&instrument)?;
 
         Ok(Trade {
             id,
