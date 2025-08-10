@@ -1,7 +1,6 @@
 # 🇧🇷 Toucan - Framework de Trading Algorítmico para B3
 
 [![Rust](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
 
 Framework moderno de trading algorítmico desenvolvido em Rust, especializado no mercado brasileiro (B3) com integração nativa via ProfitDLL da Nelógica.
@@ -466,16 +465,6 @@ export REDIS_URL=redis://localhost:6379
 - 📋 Multi-threading otimizado
 - 📋 Métricas avançadas de risco
 - 📋 API REST para controle externo
-
-## 📝 Licença
-
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## 🤝 Suporte
-
-Para dúvidas ou problemas:
-- Abrir [issue](https://github.com/brbtavares/toucan/issues) no GitHub
-- Contatar: brbtavares@email.com
 
 ---
 
