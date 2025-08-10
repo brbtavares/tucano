@@ -134,7 +134,7 @@ impl Transport for MockTransport {
 // -----------------------------------------------------------------------------
 use markets::profit_dll::{CallbackEvent, ProfitConnector};
 use tokio::sync::{mpsc::UnboundedSender, Mutex};
-use std::sync::Arc;
+use std::{sync::Arc, collections::HashMap};
 
 #[derive(Debug)]
 pub struct ProfitDLLTransport {
@@ -144,6 +144,8 @@ pub struct ProfitDLLTransport {
     user: String,
     password: String,
     events_tx: Arc<Mutex<Option<UnboundedSender<TransportEvent>>>>,
+    // Map symbol -> last client_cid used to open an order (best-effort correlation for trades)
+    symbol_last_client: Arc<Mutex<HashMap<String, String>>>,
 }
 
 impl ProfitDLLTransport {
@@ -160,6 +162,7 @@ impl ProfitDLLTransport {
             user,
             password,
             events_tx: Arc::new(Mutex::new(None)),
+            symbol_last_client: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
@@ -179,11 +182,22 @@ impl ProfitDLLTransport {
 
     fn spawn_event_loop(&self, mut rx: tokio::sync::mpsc::UnboundedReceiver<CallbackEvent>) {
         let tx_holder = self.events_tx.clone();
+        let symbol_last_client = self.symbol_last_client.clone();
         tokio::spawn(async move {
             while let Some(evt) = rx.recv().await {
                 let mapped = match evt {
                     CallbackEvent::StateChanged { .. } => Some(TransportEvent::Heartbeat),
-                    // TODO: Map real trade / order events once ProfitConnector produces them
+                    CallbackEvent::NewTrade { ticker, price, volume, timestamp, .. } => {
+                        // Attempt to correlate to last opened order for this symbol
+                        let maybe_cid = { symbol_last_client.lock().await.get(&ticker).cloned() };
+                        if let Some(cid) = maybe_cid {
+                            let order_id = TransportOrderId(format!("DLL-{ticker}-{cid}"));
+                            Some(TransportEvent::Trade { order_id, price, quantity: volume, fees: Decimal::ZERO, time: timestamp })
+                        } else {
+                            // Without correlation we can't emit a trade (would be orphan). Emit heartbeat to keep stream alive.
+                            Some(TransportEvent::Heartbeat)
+                        }
+                    }
                     _ => None,
                 };
                 if let Some(ev) = mapped {
@@ -220,6 +234,8 @@ impl Transport for ProfitDLLTransport {
             self.ensure_connected_inner().await?;
             let order_id = format!("DLL-{}-{}", instrument.symbol, client_cid);
             let id = TransportOrderId(order_id);
+            // Record last client cid for symbol
+            self.symbol_last_client.lock().await.insert(instrument.symbol.clone(), client_cid.to_string());
             if let Some(tx) = self.events_tx.lock().await.as_ref() {
                 let _ = tx.send(TransportEvent::OrderAccepted { client_cid: client_cid.to_string(), id: id.clone() });
             }
