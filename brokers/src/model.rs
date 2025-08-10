@@ -87,3 +87,46 @@ impl BrokerRegistry {
     pub fn get(&self, id: &str) -> Option<&BrokerMetadata> { self.by_id.get(id) }
     pub fn iter(&self) -> impl Iterator<Item = (&BrokerId, &BrokerMetadata)> { self.by_id.iter() }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rust_decimal_macros::dec;
+    use chrono::TimeDelta;
+
+    #[test]
+    fn cost_formula_basic() {
+        let f = CostFormula { fixed: dec!(2), rate_gross: dec!(0.001), per_contract: dec!(0.5) };
+        let gross = dec!(10_000); // 10k * 0.1% = 10
+        let contracts = dec!(3); // 3 * 0.5 = 1.5
+        assert_eq!(f.cost(gross, contracts), dec!(2) + dec!(10) + dec!(1.5));
+    }
+
+    #[test]
+    fn cost_model_override() {
+        let mut cm = CostModel { default: CostFormula { fixed: dec!(1), rate_gross: dec!(0), per_contract: dec!(0) }, instrument_overrides: IndexMap::new() };
+        cm.instrument_overrides.insert("instA".into(), CostFormula { fixed: dec!(0), rate_gross: dec!(0.002), per_contract: dec!(0) });
+        // instA override
+        assert_eq!(cm.cost(&"instA".into(), dec!(1000), dec!(1)), dec!(2));
+        // instB fallback default
+        assert_eq!(cm.cost(&"instB".into(), dec!(1000), dec!(1)), dec!(1));
+    }
+
+    #[test]
+    fn broker_metadata_builders() {
+        let meta = BrokerMetadata::new("xp".into(), Some("123".into()), "XP INVESTIMENTOS")
+            .add_certification(CertificationRecord { certification: BrokerCertification::PqoB3, valid_from: Utc::now(), valid_to: None })
+            .with_cost_model(CostModel { default: CostFormula::default(), instrument_overrides: IndexMap::new() });
+        assert_eq!(meta.id, "xp");
+        assert_eq!(meta.code.as_deref(), Some("123"));
+        assert!(meta.certifications.iter().any(|c| c.certification == BrokerCertification::PqoB3));
+    }
+
+    #[test]
+    fn certification_record_validity() {
+        let now = Utc::now();
+        let rec = CertificationRecord { certification: BrokerCertification::PqoB3, valid_from: now - TimeDelta::days(10), valid_to: None };
+        assert!(rec.valid_from < now);
+        assert!(rec.valid_to.is_none());
+    }
+}

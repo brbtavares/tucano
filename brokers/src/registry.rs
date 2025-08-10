@@ -69,3 +69,19 @@ pub fn certified_b3_brokers(now: DateTime<Utc>) -> BrokerRegistry {
     }
     reg
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn certified_b3_brokers_populates_registry() {
+        let now = Utc::now();
+        let reg = certified_b3_brokers(now);
+        assert!(reg.iter().count() > 10, "expected many certified brokers");
+        assert!(reg.get("xpinvestimentoscctvmsa").is_some(), "XP slug missing");
+        for (_id, meta) in reg.iter() {
+            assert!(!meta.name.as_ref().is_empty());
+            assert!(!meta.certifications.is_empty(), "broker missing certification record");
+        }
+    }
+}
