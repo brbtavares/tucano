@@ -20,7 +20,7 @@
 //! ## 🎯 Estratégias Principais
 //!
 //! - [`AlgoStrategy`] - Geração de ordens algorítmicas baseadas em sinais
-//! - [`ClosePositionsStrategy`] - Fechamento automático de posições abertas  
+//! - [`ClosePositionsStrategy`] - Fechamento automático de posições abertas
 //! - [`OnDisconnectStrategy`] - Tratamento de desconexões de exchanges
 //! - [`OnTradingDisabledStrategy`] - Ações quando trading é desabilitado
 //!
@@ -51,7 +51,7 @@
 //! ### Estratégias Algorítmicas
 //! Geram sinais de compra/venda baseados em análise técnica ou fundamentalista:
 //! - **Mean Reversion**: Reversão à média
-//! - **Momentum**: Seguimento de tendência  
+//! - **Momentum**: Seguimento de tendência
 //! - **Arbitrage**: Arbitragem entre mercados
 //! - **Market Making**: Provisão de liquidez
 //!
@@ -95,6 +95,16 @@
 //! 3. **Geração de Sinais**: Criação de ordens baseadas em lógica
 //! 4. **Execução**: Envio de ordens para o exchange
 //! 5. **Monitoramento**: Acompanhamento de posições e performance
+
+// Silence unused_crate_dependencies warnings by referencing crates as suggested by compiler.
+// These crates are re-exported or intended for downstream strategy implementations.
+use chrono as _;
+use derive_more as _;
+use itertools as _;
+use serde as _;
+use smol_str as _;
+use thiserror as _;
+use tracing as _;
 
 /// Define interface de estratégia para geração de ordens algorítmicas baseadas
 /// no `EngineState` atual.

@@ -51,7 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Inicializar ProfitConnector
     println!("\n🔌 Inicializando ProfitConnector...");
-    let mut connector = ProfitConnector::new(dll_path.as_deref())?;
+    let connector = ProfitConnector::new(dll_path.as_deref())?;
 
     // NOTA: Para usar credenciais reais, descomente e configure:
     // let events = connector.initialize_login(

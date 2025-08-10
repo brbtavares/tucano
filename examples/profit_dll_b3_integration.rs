@@ -75,7 +75,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize ProfitDLL broker
     println!("\n🔌 Initializing ProfitDLL Broker:");
 
-    let mut broker = ProfitDLLBroker::new();
+    let broker = ProfitDLLBroker::new();
     println!("  • Broker ID: {:?}", broker.id());
     println!("  • Broker Name: {}", broker.name());
     println!(

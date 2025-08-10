@@ -22,12 +22,10 @@ use crate::{
     InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
-use markets::{
-    ExchangeId, ProfitError, SendOrder, Side,
-};
+use markets::{ExchangeId, ProfitError, Side};
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 
@@ -74,10 +72,21 @@ impl B3Config {
 }
 
 /// B3 execution client using ProfitDLL
+#[derive(Debug, Clone)]
+struct StoredOrderCtx {
+    instrument: String,
+    side: Side,
+    price: Decimal,
+    quantity: Decimal,
+    kind: OrderKind,
+    tif: crate::order::TimeInForce,
+}
+
 pub struct B3ExecutionClient {
     config: B3Config,
     transport: Arc<dyn Transport>,
     event_sender: Arc<Mutex<Option<mpsc::UnboundedSender<UnindexedAccountEvent>>>>,
+    order_ctx: Arc<Mutex<HashMap<String, StoredOrderCtx>>>,
 }
 
 impl Clone for B3ExecutionClient {
@@ -86,6 +95,7 @@ impl Clone for B3ExecutionClient {
             config: self.config.clone(),
             transport: self.transport.clone(),
             event_sender: self.event_sender.clone(),
+            order_ctx: self.order_ctx.clone(),
         }
     }
 }
@@ -112,7 +122,7 @@ impl ExecutionClient for B3ExecutionClient {
             config.username.clone(),
             config.password.clone(),
         );
-        Self { config, transport: Arc::new(transport), event_sender: Arc::new(Mutex::new(None)) }
+    Self { config, transport: Arc::new(transport), event_sender: Arc::new(Mutex::new(None)), order_ctx: Arc::new(Mutex::new(HashMap::new())) }
     }
 
     async fn fetch_balances(
@@ -253,12 +263,34 @@ impl B3ExecutionClient {
         tracing::info!("Starting B3 event processing");
         let mut rx = self.transport.account_events().await.map_err(|e| UnindexedClientError::AccountStream(e.to_string()))?;
         let sender_holder = self.event_sender.clone();
-        tokio::spawn(async move {
+        let order_ctx = self.order_ctx.clone();
+    tokio::spawn(async move {
+            use crate::order::{state::Open, id::{StrategyId, ClientOrderId}};
+            use integration::snapshot::Snapshot;
             while let Some(evt) = rx.recv().await {
-                if let TransportEvent::OrderAccepted { .. } = evt {
+        if let TransportEvent::OrderAccepted { client_cid, id: _ } = evt {
                     if let Some(tx) = sender_holder.lock().await.as_ref() {
-                        // Placeholder: translate to UnindexedAccountEvent when we have order mapping
-                        let _ = tx;
+                        let ctx_opt = { order_ctx.lock().await.get(&client_cid).cloned() };
+                        if let Some(ctx) = ctx_opt {
+                            let order: Order<ExchangeId, String, crate::order::state::OrderState<String, String>> = Order {
+                                key: OrderKey { exchange: ExchangeId::B3, instrument: ctx.instrument.clone(), strategy: StrategyId(SmolStr::new_inline("default")), cid: ClientOrderId(SmolStr::from(client_cid.clone())) },
+                                side: ctx.side,
+                                price: ctx.price,
+                                quantity: ctx.quantity,
+                                kind: ctx.kind,
+                                time_in_force: ctx.tif,
+                                state: crate::order::state::OrderState::Active(
+                                    crate::order::state::ActiveOrderState::Open(
+                                        Open::new(OrderId::from(SmolStr::new_inline("TEMP")), chrono::Utc::now(), Decimal::ZERO)
+                                    )
+                                ),
+                            };
+                            let snapshot = Snapshot(order);
+                            let event = crate::AccountEvent { exchange: ExchangeId::B3, broker: Some("ProfitDLL".to_string()), account: Some("default".to_string()), kind: crate::AccountEventKind::OrderSnapshot(snapshot) };
+                            let _ = tx.send(event);
+                        } else {
+                            tracing::warn!(cid=%client_cid, "OrderAccepted sem contexto armazenado");
+                        }
                     }
                 }
             }
@@ -279,11 +311,31 @@ impl B3ExecutionClient {
         let instrument = TransportInstrument::new(instrument_str.clone(), "B3");
         let side = match request.state.side { Side::Buy => TransportSide::Buy, Side::Sell => TransportSide::Sell };
         let kind = match request.state.kind { OrderKind::Market => TransportOrderKind::Market, OrderKind::Limit => TransportOrderKind::Limit };
-        let tif = match request.state.time_in_force { _ => TransportTimeInForce::Day }; // TODO map properly
+        // Map internal TimeInForce to transport variant
+        let tif = match request.state.time_in_force {
+            crate::order::TimeInForce::GoodUntilCancelled { .. } => TransportTimeInForce::GTC,
+            crate::order::TimeInForce::GoodUntilEndOfDay => TransportTimeInForce::Day,
+            crate::order::TimeInForce::ImmediateOrCancel => TransportTimeInForce::IOC,
+            crate::order::TimeInForce::FillOrKill => TransportTimeInForce::FOK,
+        };
         let account = TransportAccountId::new("default", "ProfitDLL");
     let _opened = self.transport.open_order(&instrument, side, request.state.quantity, kind, Some(request.state.price), tif, request.key.cid.0.as_str(), &account)
             .await
             .map_err(|e| ProfitError::ConnectionFailed(e.to_string()))?;
+        // Store context for later event reconciliation
+        {
+            self.order_ctx.lock().await.insert(
+                request.key.cid.0.to_string(),
+                StoredOrderCtx {
+                    instrument: (*request.key.instrument).clone(),
+                    side: request.state.side,
+                    price: request.state.price,
+                    quantity: request.state.quantity,
+                    kind: request.state.kind,
+                    tif: request.state.time_in_force,
+                },
+            );
+        }
         tracing::info!("Sending order via transport: instrument={}", instrument.symbol);
         // Build internal order representation
         let order = Order {
@@ -308,8 +360,6 @@ impl B3ExecutionClient {
         Ok(order)
     }
 
-    /// Convert Toucan order request to ProfitDLL SendOrder
-    fn convert_to_profit_order(&self, _request: &OrderRequestOpen<ExchangeId, &InstrumentNameExchange>) -> Result<SendOrder, ProfitError> { Err(ProfitError::InternalError("legacy path disabled in favor of transport".into())) }
 }
 
 // Re-export for easier access

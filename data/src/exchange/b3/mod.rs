@@ -20,8 +20,8 @@ pub use exchange::B3Exchange;
 use markets::b3::{B3AssetCategory, B3AssetFactory};
 use markets::profit_dll::{CallbackEvent, ProfitConnector};
 use tokio::sync::mpsc;
-#[allow(unused_imports)]
-pub use types::*;
+// Re-export only required symbols (avoid wildcard causing warnings)
+pub use types::B3Instrument;
 
 /// B3 exchange connector using ProfitDLL
 ///
@@ -88,7 +88,7 @@ impl B3ProfitConnector {
     pub fn subscribe_asset(&self, symbol: &str) -> Result<(), Box<dyn std::error::Error>> {
         if let Some(connector) = &self.profit_connector {
             // Create asset from symbol to determine proper market
-            let asset = B3AssetFactory::from_symbol(symbol)?;
+            let _asset = B3AssetFactory::from_symbol(symbol)?;
 
             // Subscribe with appropriate market designation
             // Most B3 assets use "B" market, but this could be extended
@@ -99,7 +99,7 @@ impl B3ProfitConnector {
 
     /// Get asset category from symbol
     pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
-        let asset = B3AssetFactory::from_symbol(symbol)?;
+    let _asset = B3AssetFactory::from_symbol(symbol)?;
 
         // This requires implementing a method to get category from the trait object
         // For now, we'll use pattern matching on the symbol

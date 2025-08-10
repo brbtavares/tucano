@@ -24,12 +24,12 @@ use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use fnv::FnvHashMap;
 use futures::{future::try_join_all, FutureExt};
 use integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
-use markets::{exchange::ExchangeId, ConcreteInstrument};
+use markets::exchange::ExchangeId;
 use crate::engine::state::{IndexedInstruments, IndexedInstrumentsExt};
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{
-    sync::{broadcast, mpsc},
     task::{JoinError, JoinHandle},
+    sync::{mpsc, broadcast},
 };
 
 /// Placeholder types
@@ -227,7 +227,7 @@ impl<'a> ExecutionBuilder<'a> {
             .exchanges()
             .map(|exchange_id| {
                 // Attempt to remove transmitter entry keyed by ExchangeId
-                let Some((exchange_index, execution_tx)) = self.execution_txs.remove(&exchange_id) else {
+                let Some((_exchange_index, execution_tx)) = self.execution_txs.remove(&exchange_id) else {
                     return (exchange_id, None);
                 };
                 // Add transmitter, cloning ExchangeId for map key

@@ -132,7 +132,7 @@ impl Transport for MockTransport {
 // -----------------------------------------------------------------------------
 // ProfitDLL transport (thin wrapper) - experimental
 // -----------------------------------------------------------------------------
-use markets::profit_dll::{CallbackEvent, ProfitConnector, ProfitError, OrderSide};
+use markets::profit_dll::{CallbackEvent, ProfitConnector};
 use tokio::sync::{mpsc::UnboundedSender, Mutex};
 use std::sync::Arc;
 
