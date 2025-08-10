@@ -160,6 +160,8 @@ impl MockExchange {
 
         UnindexedAccountSnapshot {
             exchange: self.exchange,
+            broker: None,
+            account: None,
             balances,
             instruments,
         }
@@ -414,6 +416,8 @@ impl MockExchange {
     {
         UnindexedAccountEvent {
             exchange: self.exchange,
+            broker: None,
+            account: None,
             kind: kind.into(),
         }
     }

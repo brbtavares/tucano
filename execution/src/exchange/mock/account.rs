@@ -77,6 +77,8 @@ impl From<UnindexedAccountSnapshot> for AccountState {
             exchange: _,
             balances,
             instruments,
+            broker: _,
+            account: _,
         } = value;
 
         let balances = balances

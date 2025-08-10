@@ -40,7 +40,7 @@ impl Indexer for AccountEventIndexer {
 
 impl AccountEventIndexer {
     pub fn account_event(&self, event: UnindexedAccountEvent) -> Result<AccountEvent, IndexError> {
-        let UnindexedAccountEvent { exchange, kind } = event;
+    let UnindexedAccountEvent { exchange, kind, broker: _, account: _ } = event;
 
         let exchange = self.map.find_exchange_index(exchange)?;
 
@@ -60,7 +60,7 @@ impl AccountEventIndexer {
             AccountEventKind::Trade(trade) => AccountEventKind::Trade(self.trade(trade)?),
         };
 
-        Ok(AccountEvent { exchange, kind })
+    Ok(AccountEvent { exchange, broker: None, account: None, kind })
     }
 
     pub fn snapshot(
@@ -71,6 +71,8 @@ impl AccountEventIndexer {
             exchange,
             balances,
             instruments,
+            broker: _,
+            account: _,
         } = snapshot;
 
         let exchange = self.map.find_exchange_index(exchange)?;
@@ -98,6 +100,8 @@ impl AccountEventIndexer {
 
         Ok(AccountSnapshot {
             exchange,
+            broker: None,
+            account: None,
             balances,
             instruments,
         })

@@ -130,6 +130,9 @@ pub struct AccountEvent<
     InstrumentKey = InstrumentIndex,
 > {
     pub exchange: ExchangeKey,
+    // Fase 1: introdução opcional de Broker/Account (multi-corretora)
+    pub broker: Option<BrokerId>,
+    pub account: Option<AccountId>,
     pub kind: AccountEventKind<ExchangeKey, AssetKey, InstrumentKey>,
 }
 
@@ -140,6 +143,8 @@ impl<ExchangeKey, AssetKey, InstrumentKey> AccountEvent<ExchangeKey, AssetKey, I
     {
         Self {
             exchange,
+            broker: None,
+            account: None,
             kind: kind.into(),
         }
     }
@@ -187,6 +192,8 @@ pub struct AccountSnapshot<
     InstrumentKey = InstrumentIndex,
 > {
     pub exchange: ExchangeKey,
+    pub broker: Option<BrokerId>,
+    pub account: Option<AccountId>,
     pub balances: Vec<AssetBalance<AssetKey>>,
     pub instruments: Vec<InstrumentAccountSnapshot<ExchangeKey, AssetKey, InstrumentKey>>,
 }

@@ -182,6 +182,8 @@ where
                 let indexed_snapshot = indexer.snapshot(snapshot)?;
                 Ok(AccountEvent {
                     exchange: indexer.map.exchange.key.clone(),
+                    broker: None,
+                    account: None,
                     kind: AccountEventKind::Snapshot(indexed_snapshot),
                 })
             }
@@ -355,6 +357,8 @@ where
 
         Ok(AccountStreamEvent::Item(AccountEvent {
             exchange: order.key.exchange.clone(),
+            broker: None,
+            account: None,
             kind: AccountEventKind::OrderCancelled(order),
         }))
     }
@@ -366,6 +370,8 @@ where
 
         AccountStreamEvent::Item(AccountEvent {
             exchange: key.exchange.clone(),
+            broker: None,
+            account: None,
             kind: AccountEventKind::OrderCancelled(OrderResponseCancel {
                 key,
                 state: Err(OrderError::Connectivity(ConnectivityError::Timeout)),
@@ -397,6 +403,8 @@ where
 
         Ok(AccountStreamEvent::Item(AccountEvent {
             exchange: key.exchange.clone(),
+            broker: None,
+            account: None,
             kind: AccountEventKind::OrderSnapshot(Snapshot(Order {
                 key,
                 side,
@@ -416,6 +424,8 @@ where
 
         AccountStreamEvent::Item(AccountEvent {
             exchange: key.exchange.clone(),
+            broker: None,
+            account: None,
             kind: AccountEventKind::OrderSnapshot(Snapshot(Order {
                 key,
                 side: state.side,

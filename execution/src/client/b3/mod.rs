@@ -176,6 +176,8 @@ impl ExecutionClient for B3ExecutionClient {
 
         Ok(UnindexedAccountSnapshot::new(
             ExchangeId::B3,
+            None,
+            None,
             balances,
             instrument_snapshots,
         ))

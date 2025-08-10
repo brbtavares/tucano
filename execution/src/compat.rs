@@ -11,6 +11,11 @@ pub type ExchangeIndex = String;
 pub type ExchangeKey = String;
 pub type AssetKey = String;
 pub type InstrumentKey = String;
+// Nova camada (Fase 1 da separação Exchange / Broker / Transporte)
+// BrokerId: identifica a corretora (ex: "XP", "CLEAR"). Inicialmente alias = String.
+// AccountId: identifica a conta dentro do broker (ex: número da conta / login).
+pub type BrokerId = String;
+pub type AccountId = String;
 
 /// Newtypes experimentais para migração futura (ainda não usados). Fornecem maior segurança
 /// sem quebrar o código atual. Quando adotados, bastará substituir imports:

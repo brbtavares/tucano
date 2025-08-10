@@ -224,6 +224,8 @@ impl<GlobalData, InstrumentData> From<&EngineState<GlobalData, InstrumentData>>
                 *exchange,
                 UnindexedAccountSnapshot {
                     exchange: *exchange,
+                    broker: None,
+                    account: None,
                     balances: assets
                         .filtered(&AssetFilter::Exchanges(OneOrMany::One(*exchange)))
                         .map(AssetBalance::from)
