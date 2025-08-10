@@ -60,10 +60,17 @@ pub fn certified_b3_brokers(now: DateTime<Utc>) -> BrokerRegistry {
     let mut reg = BrokerRegistry::new();
     for name in names {
         let id = slug(name);
-        // Placeholder: no broker code mapping yet.
-        let meta = BrokerMetadata::new(id, None, BrokerName(name.to_string()))
+        let code_hint = match name {
+            "XP INVESTIMENTOS CCTVM S/A" => Some("XP"),
+            "BTG PACTUAL CTVM S.A." => Some("BTG"),
+            "ITAU CV S/A" => Some("ITAU"),
+            "BRADESCO S/A CTVM" => Some("BBDC"),
+            "SANTANDER CCVM S/A" => Some("SAN"),
+            "SAFRA DTVM LTDA" => Some("SAFRA"),
+            _ => None,
+        }.map(|c| c.to_string());
+        let meta = BrokerMetadata::new(id, code_hint, BrokerName(name.to_string()))
             .add_certification(pqo(now))
-            // Simplified generic cost model: zero fixed, zero rate.
             .with_cost_model(CostModel { default: CostFormula { fixed: Decimal::ZERO, rate_gross: Decimal::ZERO, per_contract: Decimal::ZERO }, instrument_overrides: Default::default() });
         reg.insert(meta);
     }

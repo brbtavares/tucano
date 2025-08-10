@@ -42,6 +42,10 @@ impl CostFormula {
     pub fn cost(&self, gross_value: Decimal, contracts: Decimal) -> Decimal {
         self.fixed + (self.rate_gross * gross_value) + (self.per_contract * contracts)
     }
+    /// Aplica custo a um valor de ordem (sinônimo de cost para semântica de domínio).
+    pub fn apply(&self, order_value: Decimal, qty_contracts: Decimal) -> Decimal {
+        self.cost(order_value, qty_contracts)
+    }
 }
 
 /// Modelo de custos diferenciados por instrumento (ou família).
@@ -56,6 +60,24 @@ impl CostModel {
             .get(instrument)
             .unwrap_or(&self.default)
             .cost(gross_value, contracts)
+    }
+
+    /// Aplica custo diretamente (alias de cost) para semântica.
+    pub fn apply(&self, instrument: &InstrumentKey, order_value: Decimal, qty_contracts: Decimal) -> Decimal {
+        self.cost(instrument, order_value, qty_contracts)
+    }
+
+    /// Insere/atualiza override para um instrumento.
+    pub fn with_override(mut self, instrument: impl Into<InstrumentKey>, formula: CostFormula) -> Self {
+        self.instrument_overrides.insert(instrument.into(), formula);
+        self
+    }
+
+    /// Verdadeiro se não há qualquer custo configurado.
+    pub fn is_zero(&self) -> bool {
+        let z = Decimal::ZERO;
+        self.default.fixed == z && self.default.rate_gross == z && self.default.per_contract == z &&
+            self.instrument_overrides.values().all(|f| f.fixed==z && f.rate_gross==z && f.per_contract==z)
     }
 }
 
