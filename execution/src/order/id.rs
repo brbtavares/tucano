@@ -60,6 +60,8 @@ impl OrderId {
     pub fn new<S: AsRef<str>>(id: S) -> Self {
         Self(SmolStr::new(id))
     }
+
+    pub fn as_str(&self) -> &str { self.0.as_str() }
 }
 
 #[derive(

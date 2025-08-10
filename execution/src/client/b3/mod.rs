@@ -41,6 +41,10 @@ pub struct B3Config {
     /// Connection settings
     pub auto_reconnect: bool,
     pub connection_timeout_secs: u64,
+    /// Broker identifier (Phase 1 multi-broker scaffold)
+    pub broker_id: String,
+    /// Account identifier within broker
+    pub account_id: String,
 }
 
 impl B3Config {
@@ -52,6 +56,8 @@ impl B3Config {
             password,
             auto_reconnect: true,
             connection_timeout_secs: 30,
+            broker_id: "ProfitDLL".to_string(),
+            account_id: "default".to_string(),
         }
     }
 
@@ -69,6 +75,16 @@ impl B3Config {
         self.connection_timeout_secs = timeout_secs;
         self
     }
+
+    pub fn with_broker_id(mut self, broker_id: impl Into<String>) -> Self {
+        self.broker_id = broker_id.into();
+        self
+    }
+
+    pub fn with_account_id(mut self, account_id: impl Into<String>) -> Self {
+        self.account_id = account_id.into();
+        self
+    }
 }
 
 /// B3 execution client using ProfitDLL
@@ -80,6 +96,8 @@ struct StoredOrderCtx {
     quantity: Decimal,
     kind: OrderKind,
     tif: crate::order::TimeInForce,
+    strategy: crate::order::id::StrategyId,
+    order_id: Option<OrderId>,
 }
 
 pub struct B3ExecutionClient {
@@ -264,34 +282,67 @@ impl B3ExecutionClient {
         let mut rx = self.transport.account_events().await.map_err(|e| UnindexedClientError::AccountStream(e.to_string()))?;
         let sender_holder = self.event_sender.clone();
         let order_ctx = self.order_ctx.clone();
+        let broker = self.config.broker_id.clone();
+        let account = self.config.account_id.clone();
     tokio::spawn(async move {
-            use crate::order::{state::Open, id::{StrategyId, ClientOrderId}};
+            use crate::order::{state::Open, id::{ClientOrderId}};
             use integration::snapshot::Snapshot;
+            use crate::trade::{Trade, AssetFees, TradeId};
             while let Some(evt) = rx.recv().await {
-        if let TransportEvent::OrderAccepted { client_cid, id: _ } = evt {
-                    if let Some(tx) = sender_holder.lock().await.as_ref() {
-                        let ctx_opt = { order_ctx.lock().await.get(&client_cid).cloned() };
-                        if let Some(ctx) = ctx_opt {
-                            let order: Order<ExchangeId, String, crate::order::state::OrderState<String, String>> = Order {
-                                key: OrderKey { exchange: ExchangeId::B3, instrument: ctx.instrument.clone(), strategy: StrategyId(SmolStr::new_inline("default")), cid: ClientOrderId(SmolStr::from(client_cid.clone())) },
-                                side: ctx.side,
-                                price: ctx.price,
-                                quantity: ctx.quantity,
-                                kind: ctx.kind,
-                                time_in_force: ctx.tif,
-                                state: crate::order::state::OrderState::Active(
-                                    crate::order::state::ActiveOrderState::Open(
-                                        Open::new(OrderId::from(SmolStr::new_inline("TEMP")), chrono::Utc::now(), Decimal::ZERO)
-                                    )
-                                ),
-                            };
-                            let snapshot = Snapshot(order);
-                            let event = crate::AccountEvent { exchange: ExchangeId::B3, broker: Some("ProfitDLL".to_string()), account: Some("default".to_string()), kind: crate::AccountEventKind::OrderSnapshot(snapshot) };
-                            let _ = tx.send(event);
-                        } else {
-                            tracing::warn!(cid=%client_cid, "OrderAccepted sem contexto armazenado");
+                match evt {
+                    TransportEvent::OrderAccepted { client_cid, id } => {
+                        if let Some(tx) = sender_holder.lock().await.as_ref() {
+                            // update context with order id
+                            let mut guard = order_ctx.lock().await;
+                            if let Some(mut ctx) = guard.get_mut(&client_cid) {
+                                let internal_id = OrderId::from(SmolStr::from(id.0.clone()));
+                                ctx.order_id = Some(internal_id.clone());
+                                let order: Order<ExchangeId, String, crate::order::state::OrderState<String, String>> = Order {
+                                    key: OrderKey { exchange: ExchangeId::B3, instrument: ctx.instrument.clone(), strategy: ctx.strategy.clone(), cid: ClientOrderId(SmolStr::from(client_cid.clone())) },
+                                    side: ctx.side,
+                                    price: ctx.price,
+                                    quantity: ctx.quantity,
+                                    kind: ctx.kind,
+                                    time_in_force: ctx.tif,
+                                    state: crate::order::state::OrderState::active(
+                                        Open::new(internal_id, chrono::Utc::now(), Decimal::ZERO)
+                                    ),
+                                };
+                                let snapshot = Snapshot(order);
+                                let event = crate::AccountEvent { exchange: ExchangeId::B3, broker: Some(broker.clone()), account: Some(account.clone()), kind: crate::AccountEventKind::OrderSnapshot(snapshot) };
+                                let _ = tx.send(event);
+                            } else {
+                                tracing::warn!(cid=%client_cid, "OrderAccepted sem contexto armazenado");
+                            }
                         }
                     }
+                    TransportEvent::Trade { order_id, price, quantity, fees, time } => {
+                        if let Some(tx) = sender_holder.lock().await.as_ref() {
+                            let guard = order_ctx.lock().await;
+                            // try find by matching order_id string
+                            if let Some((cid, ctx)) = guard.iter().find(|(_cid, c)| c.order_id.as_ref().map(|id| id.as_str()) == Some(order_id.0.as_str())) {
+                                let trade = Trade::new(
+                                    TradeId::new(format!("TRADE-{}-{}", cid, time.timestamp())),
+                                    ctx.order_id.clone().unwrap_or_else(|| OrderId::from(SmolStr::new_inline("UNKNOWN"))),
+                                    ctx.instrument.clone(),
+                                    ctx.strategy.clone(),
+                                    time,
+                                    ctx.side,
+                                    price,
+                                    quantity,
+                                    AssetFees::quote_fees(fees),
+                                );
+                                let event = crate::AccountEvent { exchange: ExchangeId::B3, broker: Some(broker.clone()), account: Some(account.clone()), kind: crate::AccountEventKind::Trade(trade) };
+                                let _ = tx.send(event);
+                            } else {
+                                tracing::warn!(order_id=%order_id.0, "Trade sem contexto correspondente");
+                            }
+                        }
+                    }
+                    TransportEvent::OrderRejected { client_cid, reason } => {
+                        tracing::warn!(cid=%client_cid, %reason, "OrderRejected ainda não mapeado para evento interno");
+                    }
+                    _ => { /* ignore others for now */ }
                 }
             }
         });
@@ -307,7 +358,7 @@ impl B3ExecutionClient {
         ProfitError,
     > {
         // Convert request to transport invocation
-        let instrument_str = format!("{:?}", request.key.instrument);
+    let instrument_str = format!("{:?}", request.key.instrument);
         let instrument = TransportInstrument::new(instrument_str.clone(), "B3");
         let side = match request.state.side { Side::Buy => TransportSide::Buy, Side::Sell => TransportSide::Sell };
         let kind = match request.state.kind { OrderKind::Market => TransportOrderKind::Market, OrderKind::Limit => TransportOrderKind::Limit };
@@ -318,8 +369,8 @@ impl B3ExecutionClient {
             crate::order::TimeInForce::ImmediateOrCancel => TransportTimeInForce::IOC,
             crate::order::TimeInForce::FillOrKill => TransportTimeInForce::FOK,
         };
-        let account = TransportAccountId::new("default", "ProfitDLL");
-    let _opened = self.transport.open_order(&instrument, side, request.state.quantity, kind, Some(request.state.price), tif, request.key.cid.0.as_str(), &account)
+        let account = TransportAccountId::new(self.config.account_id.clone(), self.config.broker_id.clone());
+        let opened = self.transport.open_order(&instrument, side, request.state.quantity, kind, Some(request.state.price), tif, request.key.cid.0.as_str(), &account)
             .await
             .map_err(|e| ProfitError::ConnectionFailed(e.to_string()))?;
         // Store context for later event reconciliation
@@ -333,6 +384,8 @@ impl B3ExecutionClient {
                     quantity: request.state.quantity,
                     kind: request.state.kind,
                     tif: request.state.time_in_force,
+                    strategy: request.key.strategy.clone(),
+                    order_id: Some(OrderId::from(SmolStr::from(opened.id.0.clone()))),
                 },
             );
         }
@@ -351,7 +404,7 @@ impl B3ExecutionClient {
             kind: request.state.kind,
             time_in_force: request.state.time_in_force,
             state: Ok(Open::new(
-                OrderId::from(SmolStr::new("B3_ORDER_123")),
+                OrderId::from(SmolStr::from(opened.id.0)),
                 chrono::Utc::now(),
                 Decimal::ZERO,
             )),
@@ -364,3 +417,87 @@ impl B3ExecutionClient {
 
 // Re-export for easier access
 pub use B3ExecutionClient as B3Client;
+
+// -------------------------------------------------------------------------------------------------
+// Test support & unit tests
+// -------------------------------------------------------------------------------------------------
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use futures::StreamExt;
+    use rust_decimal_macros::dec;
+    use tokio::sync::mpsc;
+    use markets::ExchangeId;
+    use futures::future::BoxFuture;
+    use crate::transport::TransportOrderId;
+
+    #[derive(Debug)]
+    struct DummyTransport {
+        events_tx: mpsc::UnboundedSender<TransportEvent>,
+        events_rx_once: Mutex<Option<mpsc::UnboundedReceiver<TransportEvent>>>,
+    }
+
+    impl DummyTransport {
+        fn new() -> Arc<Self> {
+            let (tx, rx) = mpsc::unbounded_channel();
+            Arc::new(Self { events_tx: tx, events_rx_once: Mutex::new(Some(rx)) })
+        }
+        fn push(&self, evt: TransportEvent) { let _ = self.events_tx.send(evt); }
+    }
+
+    impl Transport for DummyTransport {
+        fn name(&self) -> &'static str { "dummy" }
+        fn connect(&self) -> BoxFuture<'_, Result<(), crate::transport::TransportError>> { Box::pin(async { Ok(()) }) }
+        fn account_events(&self) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, crate::transport::TransportError>> {
+            Box::pin(async move { Ok(self.events_rx_once.lock().await.take().expect("account_events called once")) })
+        }
+        fn open_order<'a>(&'a self, _instrument: &'a TransportInstrument, _side: TransportSide, _quantity: Decimal, _kind: TransportOrderKind, _price: Option<Decimal>, _tif: TransportTimeInForce, client_cid: &'a str, _account: &'a TransportAccountId) -> BoxFuture<'a, Result<crate::transport::TransportOpenOrder, crate::transport::TransportError>> {
+            Box::pin(async move {
+                let id = TransportOrderId(format!("DUMMY-{client_cid}"));
+                let opened = crate::transport::TransportOpenOrder { id: id.clone(), submitted_at: Utc::now(), filled_qty: Decimal::ZERO };
+                let _ = self.events_tx.send(TransportEvent::OrderAccepted { client_cid: client_cid.to_string(), id });
+                Ok(opened)
+            })
+        }
+        fn cancel_order<'a>(&'a self, _id: &'a TransportOrderId) -> BoxFuture<'a, Result<(), crate::transport::TransportError>> { Box::pin(async { Ok(()) }) }
+    }
+
+    impl B3ExecutionClient {
+        fn with_transport(config: B3Config, transport: Arc<dyn Transport>) -> Self {
+            Self { config, transport, event_sender: Arc::new(Mutex::new(None)), order_ctx: Arc::new(Mutex::new(HashMap::new())) }
+        }
+    }
+
+    #[tokio::test]
+    async fn order_acceptance_translates_to_order_snapshot_event() {
+        let transport = DummyTransport::new();
+        let config = B3Config::new("k".into(), "u".into(), "p".into()).with_account_id("acct").with_broker_id("broker");
+        let client = B3ExecutionClient::with_transport(config, transport.clone());
+
+        // Start stream
+    let mut stream = client.account_stream(&[], &["PETR4".to_string()]).await.expect("stream");
+
+        // Open order (will trigger OrderAccepted via DummyTransport.open_order)
+    use crate::order::request::OrderRequestOpen;
+    use crate::order::{OrderKind, TimeInForce};
+        use crate::order::id::{ClientOrderId, StrategyId};
+        use integration::snapshot::Snapshot;
+        let instrument_name = "PETR4".to_string();
+    use crate::order::request::RequestOpen;
+        let req = OrderRequestOpen {
+            key: crate::order::OrderKey { exchange: ExchangeId::B3, instrument: &instrument_name, strategy: StrategyId(SmolStr::new_inline("strat")), cid: ClientOrderId(SmolStr::new_inline("CID1")) },
+            state: RequestOpen { side: Side::Buy, price: dec!(10.0), quantity: dec!(5), kind: OrderKind::Limit, time_in_force: TimeInForce::GoodUntilEndOfDay }
+        };
+        let _order = client.open_order(req).await.expect("open order");
+
+        // Expect one event (OrderSnapshot)
+        let evt = stream.next().await.expect("event");
+        match evt.kind {
+            crate::AccountEventKind::OrderSnapshot(Snapshot(order)) => {
+                assert_eq!(order.key.instrument, "PETR4");
+                assert_eq!(order.side, Side::Buy);
+            }
+            other => panic!("unexpected event: {:?}", other),
+        }
+    }
+}
