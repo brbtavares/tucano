@@ -31,15 +31,23 @@
 //! ## 🏗️ Componentes Principais
 //!
 //! ### ExecutionClient
-//! Interface unificada para execução de ordens em diferentes exchanges:
-//! ```rust,no_run
+//! Interface unificada para execução de ordens em diferentes exchanges.
+//! Abaixo um esboço (não compilável) de como uma implementação concreta poderia ficar:
+//! ```rust,ignore
 //! use execution::client::ExecutionClient;
+//! use markets::ExchangeId;
 //!
-//! // Implementação para qualquer exchange
-//! impl ExecutionClient for MyExchange {
-//!     async fn submit_order(&mut self, order: Order) -> Result<OrderAck> {
-//!         // Lógica específica do exchange
-//!     }
+//! #[derive(Clone)]
+//! struct MyClient;
+//!
+//! impl ExecutionClient for MyClient {
+//!     const EXCHANGE: ExchangeId = ExchangeId::B3; // exemplo
+//!     type Config = ();
+//!     type AccountStream = futures::stream::Empty<execution::UnindexedAccountEvent>;
+//!     fn new(_: Self::Config) -> Self { Self }
+//!     // Demais métodos exigidos pelo trait devem ser implementados...
+//!     // fn account_snapshot(..) -> ... { }
+//!     // fn open_order(..) -> ... { }
 //! }
 //! ```
 //!
@@ -64,22 +72,22 @@
 //!
 //! ## 💡 Exemplo de Uso
 //!
-//! ```rust,no_run
-//! use execution::{
-//!     client::ExecutionClient,
-//!     order::{Order, OrderKind},
-//!     trade::Trade
-//! };
+//! ```rust,ignore
+//! // Exemplo conceitual de fluxo (pseudocódigo):
+//! use execution::client::ExecutionClient;
+//! use execution::order::request::OrderRequestOpen;
+//! use execution::order::{OrderKind, TimeInForce, OrderKey};
+//! use execution::order::id::{ClientOrderId, StrategyId};
+//! use markets::ExchangeId;
+//! use rust_decimal_macros::dec;
 //!
-//! async fn execute_strategy(client: &mut impl ExecutionClient) {
-//!     // Criar ordem de compra
-//!     let order = Order::market_buy("PETR4", 100.0);
-//!
-//!     // Enviar ordem
-//!     match client.submit_order(order).await {
-//!         Ok(ack) => println!("Ordem aceita: {:?}", ack),
-//!         Err(e) => println!("Erro: {:?}", e),
-//!     }
+//! async fn exemplo(mut client: impl ExecutionClient) {
+//!     let instrument = "PETR4".to_string();
+//!     let req = OrderRequestOpen {
+//!         key: OrderKey { exchange: ExchangeId::B3, instrument: &instrument, strategy: StrategyId("s".into()), cid: ClientOrderId("c1".into()) },
+//!         state: execution::order::request::RequestOpen { side: markets::Side::Buy, price: dec!(10), quantity: dec!(5), kind: OrderKind::Limit, time_in_force: TimeInForce::GoodUntilEndOfDay }
+//!     };
+//!     let _maybe_order = client.open_order(req).await; // retorna Option<...>
 //! }
 //! ```
 //!

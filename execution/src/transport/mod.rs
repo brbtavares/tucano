@@ -82,6 +82,7 @@ pub enum TransportEvent {
         fees: Decimal,
         time: DateTime<Utc>,
     },
+    OrderCancelled { order_id: TransportOrderId, client_cid: String, time: DateTime<Utc> },
     Heartbeat,
 }
 
@@ -243,6 +244,12 @@ impl Transport for ProfitDLLTransport {
         })
     }
     fn cancel_order<'a>(&'a self, id: &'a TransportOrderId) -> BoxFuture<'a, Result<(), TransportError>> {
-        Box::pin(async move { self.ensure_connected_inner().await?; let _ = id; Ok(()) })
+        Box::pin(async move {
+            self.ensure_connected_inner().await?;
+            if let Some(tx) = self.events_tx.lock().await.as_ref() {
+                let _ = tx.send(TransportEvent::OrderCancelled { order_id: id.clone(), client_cid: "UNKNOWN".to_string(), time: Utc::now() });
+            }
+            Ok(())
+        })
     }
 }
