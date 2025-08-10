@@ -1,3 +1,18 @@
+/// Compatibility type aliases during the ongoing markets → execution refactor.
+///
+/// Why aliases (pub type X = String)?
+/// - Fast migration away from the previous strongly-typed index newtypes.
+/// - Zero runtime cost / zero code churn in dependent crates.
+/// - Easy rollback and incremental re-introduction of real newtypes later.
+///
+/// When to migrate to real newtypes again:
+/// - After stabilising engine + analytics behaviour under string route.
+/// - Once we want compiler to prevent accidental cross-kind mixups (asset vs instrument).
+///
+/// Transitional plan (see long design note below): keep these aliases exported here;
+/// begin introducing opt‑in newtypes under `compat::typed` for modules that are
+/// ready (e.g. indexing, persistence). Downstream crates should not assume these
+/// stay aliases forever—treat them as semantic identifiers.
 // Tipos de compatibilidade para migração da arquitetura markets
 // Mantemos aliases simples para não quebrar o build; adicionamos módulo opcional
 // `typed` com newtypes para migração progressiva (opt-in).

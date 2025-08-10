@@ -388,7 +388,8 @@ where
             pnl_unrealised: Decimal::ZERO,
             pnl_realised: -trade.fees.fees,
             fees_enter: trade.fees.clone(),
-            fees_exit: AssetFees::default(),
+            // Ensure consistent lowercase asset naming for exit fees placeholder
+            fees_exit: AssetFees { asset: trade.fees.asset.clone(), fees: Decimal::ZERO },
             time_enter: trade.time_exchange,
             time_exchange_update: trade.time_exchange,
             trades,

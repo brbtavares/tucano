@@ -61,7 +61,10 @@
 
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
 use data::streams::reconnect;
-use execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex}; // now String aliases from execution::compat
+// Transition note: we purposefully avoid importing alias types (AssetIndex, ExchangeIndex,
+// InstrumentIndex) here to demonstrate direct String usage. Other modules may retain
+// the aliases for semantic clarity until newtypes are reintroduced.
+use execution::AccountEvent; // alias types replaced locally by String
 use integration::channel::Channel;
 use markets::exchange::ExchangeId;
 
@@ -82,9 +85,9 @@ pub mod request;
 /// Convenient type alias that represents a [`reconnect::Event`] produced by the [`AccountEvent`]
 /// stream.
 pub type AccountStreamEvent<
-    ExchangeKey = ExchangeIndex,
-    AssetKey = AssetIndex,
-    InstrumentKey = InstrumentIndex,
+    ExchangeKey = String,
+    AssetKey = String,
+    InstrumentKey = String,
 > = reconnect::Event<ExchangeId, AccountEvent<ExchangeKey, AssetKey, InstrumentKey>>;
 
 /// Initialised [`ExecutionBuild`](builder::ExecutionBuild).

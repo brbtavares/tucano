@@ -288,7 +288,7 @@ pub mod test_utils {
             price: price.try_into().unwrap(),
             quantity: quantity.try_into().unwrap(),
             fees: AssetFees {
-                asset: "quote_asset".to_string(), // QuoteAsset is String
+                asset: "quote".to_string(), // Normalised quote asset name
                 fees: fees.try_into().unwrap(),
             },
         }
