@@ -2,11 +2,12 @@
 resolver = "2"
 members = [
     "analytics",
+    "brokers",
     "core",
     "data",
     "execution",
     "integration",
-    "macros", 
+    "macros",
     "markets",
     "risk",
     "strategy",

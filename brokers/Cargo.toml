@@ -1,0 +1,20 @@
+[package]
+name = "brokers"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+description = "Broker abstraction layer: identification, cost models, certification metadata"
+authors = ["Toucan Contributors"]
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true, optional = true }
+rust_decimal = { workspace = true }
+chrono = { workspace = true, features = ["serde"] }
+indexmap = { workspace = true, features = ["serde"] }
+fnv = { workspace = true }
+thiserror = { workspace = true }
+strum = { version = "0.26", features = ["derive"] }
+
+[features]
+json = ["serde_json"]
