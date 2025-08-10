@@ -137,25 +137,19 @@ mod tests {
     use super::*;
     use crate::test_utils::asset_state;
     use chrono::{DateTime, TimeZone, Utc};
-    use markets::asset::name::AssetNameExchange;
+    // Removed legacy AssetNameExchange import; using simple String names.
     use rust_decimal_macros::dec;
 
     #[test]
     fn test_update_from_balance_with_first_ever_snapshot() {
         let mut state = AssetState {
-            asset: Asset {
-                name_internal: "btc".to_string(),
-                name_exchange: "btc".to_string(),
-            },
+            asset: "btc".to_string(),
             statistics: Default::default(),
             balance: None,
         };
 
         let snapshot = Snapshot(AssetBalance {
-            asset: Asset {
-                name_internal: "btc".to_string(),
-                name_exchange: "btc".to_string(),
-            },
+            asset: "btc".to_string(),
             balance: Balance {
                 total: dec!(1100.0),
                 free: dec!(1100.0),
@@ -175,10 +169,7 @@ mod tests {
         let mut state = asset_state("btc", 1000.0, 1000.0, DateTime::<Utc>::MIN_UTC);
 
         let snapshot = Snapshot(AssetBalance {
-            asset: Asset {
-                name_internal: "btc".to_string(),
-                name_exchange: "xbt".to_string(),
-            },
+            asset: "xbt".to_string(),
             balance: Balance {
                 total: dec!(1100.0),
                 free: dec!(1100.0),
@@ -201,10 +192,8 @@ mod tests {
         let mut state = asset_state("btc", 1000.0, 900.0, time);
 
         let snapshot = Snapshot(AssetBalance {
-            asset: Asset {
-                name_internal: "btc".to_string(),
-                name_exchange: "xbt".to_string(),
-            },
+            // Simplified: asset indices now plain String keys
+            asset: "btc".to_string(),
             balance: Balance {
                 total: dec!(1000.0),
                 free: dec!(800.0),
@@ -224,10 +213,7 @@ mod tests {
         let mut state = asset_state("btc", 1000.0, 900.0, DateTime::<Utc>::MAX_UTC);
 
         let snapshot = Snapshot(AssetBalance {
-            asset: Asset {
-                name_internal: "btc".to_string(),
-                name_exchange: "xbt".to_string(),
-            },
+            asset: "btc".to_string(),
             balance: Balance {
                 total: dec!(1000.0),
                 free: dec!(800.0),

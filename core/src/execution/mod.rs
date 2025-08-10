@@ -61,7 +61,7 @@
 
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
 use data::streams::reconnect;
-use execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
+use execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex}; // now String aliases from execution::compat
 use integration::channel::Channel;
 use markets::exchange::ExchangeId;
 

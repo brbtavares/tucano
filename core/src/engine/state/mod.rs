@@ -23,6 +23,8 @@ use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
 use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument}; // ExchangeId still used in connectivity
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+use analytics::summary::asset::TearSheetAssetGenerator;
+use crate::engine::state::asset::AssetState;
 
 /// Placeholder for IndexedInstruments
 pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
@@ -125,7 +127,21 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         let output = match &event.kind {
             AccountEventKind::Snapshot(snapshot) => {
                 for balance in &snapshot.balances {
-                    self.assets.asset_index_mut(&balance.asset).update_from_balance(Snapshot(balance))
+                    if !self.assets.0.contains_key(&balance.asset) {
+                        // Lazily initialise missing asset state (test simplification)
+                        self.assets.0.insert(
+                            balance.asset.clone(),
+                            AssetState {
+                                asset: balance.asset.clone(),
+                                statistics: TearSheetAssetGenerator::init(balance),
+                                balance: None,
+                            },
+                        );
+                    }
+                    self
+                        .assets
+                        .asset_index_mut(&balance.asset)
+                        .update_from_balance(Snapshot(balance))
                 }
                 for instrument in &snapshot.instruments {
                     let instrument_state = self

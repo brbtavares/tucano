@@ -119,6 +119,16 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
         // Update empty AssetStates from provided exchange asset Balances
         let mut assets = generate_empty_indexed_asset_states(instruments);
         for (asset_name, balance) in balances {
+            if !assets.0.contains_key(&asset_name) {
+                assets.0.insert(
+                    asset_name.clone(),
+                    crate::engine::state::asset::AssetState::new(
+                        asset_name.clone(),
+                        analytics::summary::asset::TearSheetAssetGenerator::default(),
+                        None,
+                    ),
+                );
+            }
             assets.asset_mut(&asset_name).update_from_balance(Snapshot(&AssetBalance {
                 asset: asset_name.clone(),
                 balance,

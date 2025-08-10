@@ -423,8 +423,9 @@ where
         instruments
             .iter()
             .map(|instrument| {
+                // Use the provided instrument.key (already a String alias) as the internal key
                 (
-                    instrument.value.name_exchange.clone(),
+                    instrument.key.clone(),
                     InstrumentState::new(
                         instrument.key.clone(),
                         instrument.value.clone(),

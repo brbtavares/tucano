@@ -169,14 +169,14 @@ mod tests {
     use super::*;
     use chrono::TimeDelta;
     use data::event::MarketEvent;
-    use markets::{exchange::ExchangeId, instrument::InstrumentIndex};
+    use markets::exchange::ExchangeId;
 
     fn market_event(time_exchange: DateTime<Utc>) -> EngineEvent<()> {
         EngineEvent::Market(MarketStreamEvent::Item(MarketEvent {
             time_exchange,
             time_received: Default::default(),
             exchange: ExchangeId::Mock,
-            instrument: InstrumentIndex::new(0),
+            instrument: "inst0".to_string(),
             kind: (),
         }))
     }

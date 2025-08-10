@@ -620,20 +620,42 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-        use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
-        use integration::collection::FnvIndexMap;
+    use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
+    use integration::collection::FnvIndexMap;
+    use analytics::summary::InstrumentNameInternal;
 
-        // Create placeholder empty collections since analytics expects simplified types
-        let instruments: FnvIndexMap<InstrumentIndex, ()> = FnvIndexMap::default();
-        let assets: FnvIndexMap<AssetIndex, AssetBalance<AssetIndex>> = FnvIndexMap::default();
+        // Populate instruments map using engine state's instrument keys
+        let instruments: FnvIndexMap<InstrumentIndex, ()> = self
+            .state
+            .instruments
+            .0
+            .keys()
+            .map(|k| (k.clone(), ()))
+            .collect();
 
-        TradingSummaryGenerator::init::<(), AssetIndex>(
+        // Populate assets map using engine state's asset balances (if any)
+        let assets: FnvIndexMap<AssetIndex, AssetBalance<AssetIndex>> = self
+            .state
+            .assets
+            .0
+            .iter()
+            .filter_map(|(k, v)| v.balance.map(|b| (k.clone(), AssetBalance { asset: k.clone(), balance: b.value, time_exchange: b.time })))
+            .collect();
+
+        let mut gen = TradingSummaryGenerator::init::<(), AssetIndex>(
             risk_free_return,
             self.meta.time_start,
             self.time(),
             &instruments,
             &assets,
-        )
+        );
+
+        // Inject existing instrument tear sheets (keyed by internal instrument key)
+        for (key, state) in &self.state.instruments.0 {
+            gen.instruments.insert(InstrumentNameInternal(key.clone()), state.tear_sheet.clone());
+        }
+
+        gen
     }
 }
 

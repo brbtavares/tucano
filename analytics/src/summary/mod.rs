@@ -51,6 +51,11 @@ impl std::fmt::Display for InstrumentNameInternal {
     }
 }
 
+// Allow lookups by &str in IndexMap
+impl std::borrow::Borrow<str> for InstrumentNameInternal {
+    fn borrow(&self) -> &str { &self.0 }
+}
+
 // Placeholder for ExchangeAsset - simplified for integration
 #[derive(Debug, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub struct ExchangeAsset<T> {
@@ -71,7 +76,7 @@ use serde::{Deserialize, Serialize};
 /// Placeholder for AssetStates - this will be properly resolved when integrating
 pub type AssetStates<AssetKey> = FnvIndexMap<AssetIndex, AssetBalance<AssetKey>>;
 
-/// Placeholder for InstrumentStates - this will be properly resolved when integrating  
+/// Placeholder for InstrumentStates - this will be properly resolved when integrating
 pub type InstrumentStates = FnvIndexMap<InstrumentIndex, ()>;
 
 /// Placeholder for LocalSnapshot - this will be properly resolved when integrating
