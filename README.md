@@ -470,3 +470,43 @@ export REDIS_URL=redis://localhost:6379
 
 **Toucan** - Trading algorítmico moderno para o mercado brasileiro 🇧🇷  
 *Desenvolvido com ❤️ em Rust*
+
+## 🧭 Roadmap de Arquitetura (Exchange vs Broker vs Transporte)
+
+Objetivo: separar claramente três camadas hoje parcialmente acopladas.
+
+1. Exchange (mercado)
+    - Representado por `ExchangeId` (enum).
+    - Responsável por catálogo de instrumentos, normalização de símbolos, calendários.
+2. Broker / Account (corretora)
+    - Nova identificação: `BrokerId`, `AccountId`.
+    - Responsável por saldos, posições, envio de ordens (semântica de conta), limites e permissões.
+3. Transporte / Adapter
+    - Abstrai meio físico/protocolo (DLL Profit, WebSocket, FIX, REST).
+    - Exposto via trait (futuro) `TransportAdapter` (connect, subscribe, send, shutdown).
+
+### Estado Atual (antes da refatoração)
+`ExchangeId` é usado como chave para tudo. Código da Profit DLL mistura: lógica de broker (account events), lógica de exchange (símbolos) e transporte (chamadas FFI) no mesmo módulo.
+
+### Fases Planejadas
+Fase 1 (iniciada): Introduzir aliases `BrokerId` e `AccountId` para permitir evolução sem quebra.
+Fase 2: Extrair módulo `transport::profit_dll` contendo somente IO/FFI; deixar conversões em adapter.
+Fase 3: Criar trait `BrokerAccount` para operações de conta/ordem (usa internamente um `TransportAdapter`).
+Fase 4: Criar trait `ExchangeCatalogue` em `markets` para resolução de instrumentos e metadados.
+Fase 5: Atualizar `ExecutionClient` para compor `BrokerAccount + ExchangeCatalogue` em vez de implementar tudo.
+Fase 6: Revisar mapas de instrumentos para escopo `(ExchangeId, BrokerId)` evitando colisões multi-conta.
+Fase 7: Estratificar erros: `TransportError`, `BrokerError`, `ExchangeRuleError`, mantendo `ClientError` como envelope.
+Fase 8: Otimizações (índices numéricos, caching, normalização consistente B3).
+
+### Benefícios
+- Multi-conta e multi-broker sem refactor profundo futuro.
+- Testes mais isolados (mock de transporte sem simular exchange inteira).
+- Evolução de protocolos (ex: adicionar FIX) sem tocar em lógica de ordens.
+- Claridade semântica → menos risco de confusões entre camadas.
+
+### Métrica de Conclusão da Fase 1
+- `BrokerId` e `AccountId` disponíveis em `execution::compat`.
+- Documentação deste roadmap publicada (este bloco).
+- Nenhuma quebra de build.
+
+Próximos passos imediatos: propagar `BrokerId` (Option) em eventos de conta e depois extrair transporte ProfitDLL.
