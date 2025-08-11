@@ -14,7 +14,7 @@ chrono = { workspace = true, features = ["serde"] }
 indexmap = { workspace = true, features = ["serde"] }
 fnv = { workspace = true }
 thiserror = { workspace = true }
-strum = { version = "0.26", features = ["derive"] }
+strum = { version = "0.27", features = ["derive"] }
 
 [features]
 json = ["serde_json"]
