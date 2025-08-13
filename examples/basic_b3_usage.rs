@@ -1,4 +1,4 @@
-// Exemplo básico de uso das abstrações B3 do Toucan
+// Exemplo básico de uso das abstrações B3 do Tucano
 //
 // Este arquivo demonstra como usar as implementações B3 básicas
 // com as traits do markets. Baseado nos testes originais.
@@ -59,7 +59,7 @@ impl Instrument for BasicB3Instrument {
 }
 
 fn main() {
-    println!("🧪 Teste Básico - Abstrações B3 do Toucan");
+    println!("🧪 Teste Básico - Abstrações B3 do Tucano");
     println!("=========================================");
 
     // Criar um asset B3

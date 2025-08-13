@@ -80,7 +80,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    println!("\n✅ Cliente B3 integrado com sucesso ao framework Toucan!");
+    println!("\n✅ Cliente B3 integrado com sucesso ao framework Tucano!");
     println!("🔧 Implementação básica funcional - pronta para desenvolvimento completo");
 
     Ok(())
