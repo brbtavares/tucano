@@ -16,14 +16,14 @@ spin_sleep = { workspace = true }
 tokio = { workspace = true, features = ["fs"]}
 
 [dependencies]
-"tucano-analytics" = { workspace = true }
-"tucano-risk" = { workspace = true }
+"tucano-analytics" = "0.1.0"
+"tucano-risk" = "0.1.0"
 # Tucano Ecosystem
-"tucano-integration" = { workspace = true }
-"tucano-markets" = { workspace = true }
-"tucano-data" = { workspace = true }
-"tucano-execution" = { workspace = true }
-"tucano-trader" = { workspace = true }
+"tucano-integration" = "0.9.1"
+"tucano-markets" = "0.3.1"
+"tucano-data" = "0.10.1"
+"tucano-execution" = "0.5.3"
+"tucano-trader" = "0.1.0"
 
 # Logging
 tracing = { workspace = true }
