@@ -47,9 +47,9 @@ O Tucano (ex-Toucan) implementa uma **arquitetura híbrida** que combina:
 # Instalar Rust (versão 1.75 ou superior)
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# Clonar o repositório
-git clone https://github.com/brbtavares/toucan.git
-cd toucan
+# Clonar o repositório (novo nome)
+git clone https://github.com/brbtavares/tucano.git
+cd tucano
 ```
 
 ### Compilação
