@@ -1,11 +1,11 @@
 [package]
-name = "risk"
+name = "tucano-risk"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-execution = { workspace = true }
-markets = { workspace = true }
+"tucano-execution" = { workspace = true }
+"tucano-markets" = { workspace = true }
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
 derive_more = { version = "1", features = ["constructor", "display", "from"] }

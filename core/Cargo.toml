@@ -1,5 +1,5 @@
 [package]
-name = "core"
+name = "tucano-core"
 version = "0.12.2"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
@@ -15,14 +15,14 @@ spin_sleep = { workspace = true }
 tokio = { workspace = true, features = ["fs"]}
 
 [dependencies]
-analytics = { workspace = true }
-risk = { workspace = true }
+"tucano-analytics" = { workspace = true }
+"tucano-risk" = { workspace = true }
 # Tucano Ecosystem
-integration = { workspace = true }
-markets = { workspace = true }
-data = { workspace = true }
-execution = { workspace = true }
-trader = { workspace = true }
+"tucano-integration" = { workspace = true }
+"tucano-markets" = { workspace = true }
+"tucano-data" = { workspace = true }
+"tucano-execution" = { workspace = true }
+"tucano-trader" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

@@ -1,5 +1,5 @@
 [package]
-name = "execution"
+name = "tucano-execution"
 version = "0.5.3"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
@@ -16,9 +16,9 @@ typed_indices = []
 
 [dependencies]
 # Tucano Ecosystem
-data = { workspace = true }
-integration = { workspace = true }
-markets = { workspace = true }
+"tucano-data" = { workspace = true }
+"tucano-integration" = { workspace = true }
+"tucano-markets" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

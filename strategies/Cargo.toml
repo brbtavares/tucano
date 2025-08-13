@@ -1,5 +1,5 @@
 [package]
-name = "strategies"
+name = "tucano-strategies"
 version = "0.1.0"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
@@ -17,10 +17,10 @@ microstructure = []
 options = []
 
 [dependencies]
-trader = { path = "../trader" }
-execution = { workspace = true }
-markets = { workspace = true }
-analytics = { workspace = true, optional = true }
+"tucano-trader" = { path = "../trader" }
+"tucano-execution" = { workspace = true }
+"tucano-markets" = { workspace = true }
+"tucano-analytics" = { workspace = true, optional = true }
 chrono = { workspace = true, features = ["serde"] }
 serde = { workspace = true, features = ["derive"] }
 tracing = { workspace = true }

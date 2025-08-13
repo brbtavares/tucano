@@ -1,5 +1,5 @@
 [package]
-name = "data"
+name = "tucano-data"
 version = "0.10.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
@@ -15,9 +15,9 @@ rust_decimal_macros = { workspace = true }
 
 [dependencies]
 # Tucano Ecosystem
-integration = { workspace = true }
-markets = { workspace = true }
-macros = { workspace = true }
+"tucano-integration" = { workspace = true }
+"tucano-markets" = { workspace = true }
+"tucano-macros" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }
