@@ -229,7 +229,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
         let state = EngineStateBuilder::new(instruments, global_data, instrument_data_init)
             .time_engine_start(clock.time())
             .trading_state(trading_state)
-            .balances(balances.into_iter())
+            .balances(balances)
             .build();
 
         // Construct Engine

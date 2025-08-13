@@ -86,11 +86,7 @@ where
         ctx: tracing_subscriber::layer::Context<'_, S>,
     ) -> bool {
         if let Some(span) = ctx.lookup_current() {
-            if span.name() == AUDIT_REPLICA_STATE_UPDATE_SPAN_NAME {
-                false
-            } else {
-                true
-            }
+            span.name() != AUDIT_REPLICA_STATE_UPDATE_SPAN_NAME
         } else {
             true
         }
