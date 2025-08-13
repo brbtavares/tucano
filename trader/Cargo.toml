@@ -12,8 +12,8 @@ license = "MIT"
 
 [dependencies]
 # Tucano Ecosystem
-"tucano-execution" = { workspace = true }
-"tucano-markets" = { workspace = true }
+"tucano-execution" = "0.5.3"
+"tucano-markets" = "0.3.1"
 
 # Data Structures
 rust_decimal = { workspace = true }
