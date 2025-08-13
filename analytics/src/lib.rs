@@ -1,3 +1,4 @@
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 📊 Analytics - Módulo de Análise Financeira
 //!
 //! Este módulo fornece ferramentas abrangentes para análise quantitativa de dados financeiros,

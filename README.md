@@ -341,5 +341,13 @@ export REDIS_URL=redis://localhost:6379
 
 ---
 
+## ⚠️ Disclaimer
+
+Este projeto é fornecido "NO ESTADO EM QUE SE ENCONTRA", sem garantias de qualquer tipo. Não constitui recomendação de investimento, aconselhamento financeiro, legal ou fiscal. Trading envolve risco elevado e pode gerar perdas superiores ao capital investido. O usuário é o único responsável por configuração, testes (backtest/simulação), conformidade regulatória e resultados obtidos. Os autores não se responsabilizam por perdas diretas, indiretas, incidentais, especiais ou consequenciais decorrentes do uso ou incapacidade de uso deste software. Se você não concorda com estes termos, não utilize o projeto.
+
+Resumo curto: uso educacional/experimental; valide tudo em ambiente controlado antes de produção.
+
+---
+
 **Tucano** – Trading algorítmico moderno para o mercado brasileiro 🇧🇷  
-*MIT License* – ver [LICENSE](LICENSE)
+*MIT License* – ver [LICENSE](LICENSE) | [DISCLAIMER](DISCLAIMER.md)

@@ -11,6 +11,7 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 📊 Data - Módulo de Streaming de Dados de Mercado
 //!
 //! Biblioteca de alta performance para integração via WebSocket, especializada em streaming

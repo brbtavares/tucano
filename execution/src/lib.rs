@@ -12,6 +12,7 @@
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 // (moved dummy imports below crate docs to satisfy inner doc comment placement rules)
 
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # ⚡ Execution - Módulo de Execução de Ordens
 //!
 //! Stream de dados privados de conta de venues financeiros e execução de ordens

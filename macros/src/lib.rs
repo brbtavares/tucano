@@ -1,3 +1,4 @@
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 🔧 Macros - Utilitários de Geração de Código
 //!
 //! Crate contendo macros procedurais Rust para automatizar geração de código

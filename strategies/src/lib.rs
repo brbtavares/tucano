@@ -1,3 +1,4 @@
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! Estratégias concretas agrupadas (ativadas via feature flags).
 
 pub mod shared;
