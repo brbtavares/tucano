@@ -1,3 +1,4 @@
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 🔧 Macros - Utilitários de Geração de Código
 //!
 //! Crate contendo macros procedurais Rust para automatizar geração de código
@@ -39,7 +40,7 @@
 //! - Retorna erro descritivo em caso de incompatibilidade
 //! - Usa a constante `ID` do tipo para validação
 //!
-//! ### SerExchange  
+//! ### SerExchange
 //! Gera implementação de `Serialize` que converte para string:
 //! - Serializa usando o ID único do exchange
 //! - Garante consistência entre serialização e deserialização

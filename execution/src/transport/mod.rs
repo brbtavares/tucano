@@ -14,10 +14,10 @@
 //!   remains in higher layers.
 
 use chrono::{DateTime, Utc};
+use futures::future::BoxFuture;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
-use futures::future::BoxFuture;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransportOrderId(pub String);
@@ -30,7 +30,10 @@ pub struct TransportAccountId {
 
 impl TransportAccountId {
     pub fn new(account: impl Into<String>, broker: impl Into<String>) -> Self {
-        Self { account: account.into(), broker: broker.into() }
+        Self {
+            account: account.into(),
+            broker: broker.into(),
+        }
     }
 }
 
@@ -42,18 +45,32 @@ pub struct TransportInstrument {
 
 impl TransportInstrument {
     pub fn new(symbol: impl Into<String>, exchange: impl Into<String>) -> Self {
-        Self { symbol: symbol.into(), exchange: exchange.into() }
+        Self {
+            symbol: symbol.into(),
+            exchange: exchange.into(),
+        }
     }
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-pub enum TransportSide { Buy, Sell }
+pub enum TransportSide {
+    Buy,
+    Sell,
+}
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-pub enum TransportOrderKind { Market, Limit }
+pub enum TransportOrderKind {
+    Market,
+    Limit,
+}
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-pub enum TransportTimeInForce { Day, IOC, GTC, FOK }
+pub enum TransportTimeInForce {
+    Day,
+    IOC,
+    GTC,
+    FOK,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransportOpenOrder {
@@ -64,17 +81,26 @@ pub struct TransportOpenOrder {
 
 #[derive(Debug, thiserror::Error)]
 pub enum TransportError {
-    #[error("connectivity: {0}")] Connectivity(String),
-    #[error("protocol: {0}")] Protocol(String),
-    #[error("rejected: {0}")] Rejected(String),
+    #[error("connectivity: {0}")]
+    Connectivity(String),
+    #[error("protocol: {0}")]
+    Protocol(String),
+    #[error("rejected: {0}")]
+    Rejected(String),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TransportEvent {
     Connected,
     Disconnected,
-    OrderAccepted { client_cid: String, id: TransportOrderId },
-    OrderRejected { client_cid: String, reason: String },
+    OrderAccepted {
+        client_cid: String,
+        id: TransportOrderId,
+    },
+    OrderRejected {
+        client_cid: String,
+        reason: String,
+    },
     Trade {
         order_id: TransportOrderId,
         price: Decimal,
@@ -82,14 +108,20 @@ pub enum TransportEvent {
         fees: Decimal,
         time: DateTime<Utc>,
     },
-    OrderCancelled { order_id: TransportOrderId, client_cid: String, time: DateTime<Utc> },
+    OrderCancelled {
+        order_id: TransportOrderId,
+        client_cid: String,
+        time: DateTime<Utc>,
+    },
     Heartbeat,
 }
 
 pub trait Transport: Send + Sync + 'static {
     fn name(&self) -> &'static str;
     fn connect(&self) -> BoxFuture<'_, Result<(), TransportError>>;
-    fn account_events(&self) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, TransportError>>;
+    fn account_events(
+        &self,
+    ) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, TransportError>>;
     fn open_order<'a>(
         &'a self,
         instrument: &'a TransportInstrument,
@@ -101,7 +133,10 @@ pub trait Transport: Send + Sync + 'static {
         client_cid: &'a str,
         account: &'a TransportAccountId,
     ) -> BoxFuture<'a, Result<TransportOpenOrder, TransportError>>;
-    fn cancel_order<'a>(&'a self, id: &'a TransportOrderId) -> BoxFuture<'a, Result<(), TransportError>>;
+    fn cancel_order<'a>(
+        &'a self,
+        id: &'a TransportOrderId,
+    ) -> BoxFuture<'a, Result<(), TransportError>>;
 }
 
 /// A mock transport for tests and initial integration.
@@ -109,10 +144,19 @@ pub trait Transport: Send + Sync + 'static {
 pub struct MockTransport;
 
 impl Transport for MockTransport {
-    fn name(&self) -> &'static str { "mock" }
-    fn connect(&self) -> BoxFuture<'_, Result<(), TransportError>> { Box::pin(async { Ok(()) }) }
-    fn account_events(&self) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, TransportError>> {
-        Box::pin(async { let (_tx, rx) = mpsc::unbounded_channel(); Ok(rx) })
+    fn name(&self) -> &'static str {
+        "mock"
+    }
+    fn connect(&self) -> BoxFuture<'_, Result<(), TransportError>> {
+        Box::pin(async { Ok(()) })
+    }
+    fn account_events(
+        &self,
+    ) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, TransportError>> {
+        Box::pin(async {
+            let (_tx, rx) = mpsc::unbounded_channel();
+            Ok(rx)
+        })
     }
     fn open_order<'a>(
         &'a self,
@@ -125,17 +169,28 @@ impl Transport for MockTransport {
         client_cid: &'a str,
         _account: &'a TransportAccountId,
     ) -> BoxFuture<'a, Result<TransportOpenOrder, TransportError>> {
-        Box::pin(async move { Ok(TransportOpenOrder { id: TransportOrderId(format!("MOCK-{client_cid}")), submitted_at: Utc::now(), filled_qty: Decimal::ZERO }) })
+        Box::pin(async move {
+            Ok(TransportOpenOrder {
+                id: TransportOrderId(format!("MOCK-{client_cid}")),
+                submitted_at: Utc::now(),
+                filled_qty: Decimal::ZERO,
+            })
+        })
     }
-    fn cancel_order<'a>(&'a self, _id: &'a TransportOrderId) -> BoxFuture<'a, Result<(), TransportError>> { Box::pin(async { Ok(()) }) }
+    fn cancel_order<'a>(
+        &'a self,
+        _id: &'a TransportOrderId,
+    ) -> BoxFuture<'a, Result<(), TransportError>> {
+        Box::pin(async { Ok(()) })
+    }
 }
 
 // -----------------------------------------------------------------------------
 // ProfitDLL transport (thin wrapper) - experimental
 // -----------------------------------------------------------------------------
 use markets::profit_dll::{CallbackEvent, ProfitConnector};
+use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc::UnboundedSender, Mutex};
-use std::{sync::Arc, collections::HashMap};
 
 #[derive(Debug)]
 pub struct ProfitDLLTransport {
@@ -172,7 +227,8 @@ impl ProfitDLLTransport {
         if guard.is_none() {
             let connector = ProfitConnector::new(self.dll_path.as_deref())
                 .map_err(|e| TransportError::Connectivity(e))?;
-            let rx = connector.initialize_login(&self.activation_key, &self.user, &self.password)
+            let rx = connector
+                .initialize_login(&self.activation_key, &self.user, &self.password)
                 .await
                 .map_err(|e| TransportError::Connectivity(e))?;
             self.spawn_event_loop(rx);
@@ -188,12 +244,24 @@ impl ProfitDLLTransport {
             while let Some(evt) = rx.recv().await {
                 let mapped = match evt {
                     CallbackEvent::StateChanged { .. } => Some(TransportEvent::Heartbeat),
-                    CallbackEvent::NewTrade { ticker, price, volume, timestamp, .. } => {
+                    CallbackEvent::NewTrade {
+                        ticker,
+                        price,
+                        volume,
+                        timestamp,
+                        ..
+                    } => {
                         // Attempt to correlate to last opened order for this symbol
                         let maybe_cid = { symbol_last_client.lock().await.get(&ticker).cloned() };
                         if let Some(cid) = maybe_cid {
                             let order_id = TransportOrderId(format!("DLL-{ticker}-{cid}"));
-                            Some(TransportEvent::Trade { order_id, price, quantity: volume, fees: Decimal::ZERO, time: timestamp })
+                            Some(TransportEvent::Trade {
+                                order_id,
+                                price,
+                                quantity: volume,
+                                fees: Decimal::ZERO,
+                                time: timestamp,
+                            })
                         } else {
                             // Without correlation we can't emit a trade (would be orphan). Emit heartbeat to keep stream alive.
                             Some(TransportEvent::Heartbeat)
@@ -202,7 +270,9 @@ impl ProfitDLLTransport {
                     _ => None,
                 };
                 if let Some(ev) = mapped {
-                    if let Some(tx) = tx_holder.lock().await.as_ref() { let _ = tx.send(ev); }
+                    if let Some(tx) = tx_holder.lock().await.as_ref() {
+                        let _ = tx.send(ev);
+                    }
                 }
             }
         });
@@ -210,9 +280,15 @@ impl ProfitDLLTransport {
 }
 
 impl Transport for ProfitDLLTransport {
-    fn name(&self) -> &'static str { "profit_dll" }
-    fn connect(&self) -> BoxFuture<'_, Result<(), TransportError>> { Box::pin(async { self.ensure_connected_inner().await }) }
-    fn account_events(&self) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, TransportError>> {
+    fn name(&self) -> &'static str {
+        "profit_dll"
+    }
+    fn connect(&self) -> BoxFuture<'_, Result<(), TransportError>> {
+        Box::pin(async { self.ensure_connected_inner().await })
+    }
+    fn account_events(
+        &self,
+    ) -> BoxFuture<'_, Result<mpsc::UnboundedReceiver<TransportEvent>, TransportError>> {
         Box::pin(async {
             self.ensure_connected_inner().await?;
             let (tx, rx) = mpsc::unbounded_channel();
@@ -236,18 +312,35 @@ impl Transport for ProfitDLLTransport {
             let order_id = format!("DLL-{}-{}", instrument.symbol, client_cid);
             let id = TransportOrderId(order_id);
             // Record last client cid for symbol
-            self.symbol_last_client.lock().await.insert(instrument.symbol.clone(), client_cid.to_string());
+            self.symbol_last_client
+                .lock()
+                .await
+                .insert(instrument.symbol.clone(), client_cid.to_string());
             if let Some(tx) = self.events_tx.lock().await.as_ref() {
-                let _ = tx.send(TransportEvent::OrderAccepted { client_cid: client_cid.to_string(), id: id.clone() });
+                let _ = tx.send(TransportEvent::OrderAccepted {
+                    client_cid: client_cid.to_string(),
+                    id: id.clone(),
+                });
             }
-            Ok(TransportOpenOrder { id, submitted_at: Utc::now(), filled_qty: Decimal::ZERO })
+            Ok(TransportOpenOrder {
+                id,
+                submitted_at: Utc::now(),
+                filled_qty: Decimal::ZERO,
+            })
         })
     }
-    fn cancel_order<'a>(&'a self, id: &'a TransportOrderId) -> BoxFuture<'a, Result<(), TransportError>> {
+    fn cancel_order<'a>(
+        &'a self,
+        id: &'a TransportOrderId,
+    ) -> BoxFuture<'a, Result<(), TransportError>> {
         Box::pin(async move {
             self.ensure_connected_inner().await?;
             if let Some(tx) = self.events_tx.lock().await.as_ref() {
-                let _ = tx.send(TransportEvent::OrderCancelled { order_id: id.clone(), client_cid: "UNKNOWN".to_string(), time: Utc::now() });
+                let _ = tx.send(TransportEvent::OrderCancelled {
+                    order_id: id.clone(),
+                    client_cid: "UNKNOWN".to_string(),
+                    time: Utc::now(),
+                });
             }
             Ok(())
         })

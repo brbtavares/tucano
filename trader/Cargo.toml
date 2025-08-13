@@ -3,14 +3,14 @@ name = "trader"
 version = "0.1.0"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-repository = "https://github.com/brbtavares/toucan"
+repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Core strategy abstractions (traits, types) for the Toucan trading ecosystem"
+description = "Abstrações centrais de estratégia (traits, tipos) para o ecossistema de trading Tucano"
 keywords = ["trading", "strategies", "algo", "framework"]
 categories = ["algorithms", "finance"]
 
 [dependencies]
-# Toucan Ecosystem
+# Tucano Ecosystem
 execution = { workspace = true }
 markets = { workspace = true }
 

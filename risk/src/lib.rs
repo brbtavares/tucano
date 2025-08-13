@@ -1,3 +1,4 @@
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 🛡️ Risk - Módulo de Gestão de Risco
 //!
 //! Framework abrangente para gestão de risco em trading algorítmico,

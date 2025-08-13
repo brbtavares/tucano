@@ -30,25 +30,37 @@ impl AssetStates {
     /// Return a reference to the `AssetState` associated with an `AssetIndex`.
     ///
     /// Panics if the `AssetState` associated with the `AssetIndex` does not exist.
-    pub fn asset_index(&self, key: &AssetIndex) -> &AssetState { self.asset(key) }
+    pub fn asset_index(&self, key: &AssetIndex) -> &AssetState {
+        self.asset(key)
+    }
 
     /// Return a mutable reference to the `AssetState` associated with an `AssetIndex`.
     ///
     /// Panics if the `AssetState` associated with the `AssetIndex` does not exist.
-    pub fn asset_index_mut(&mut self, key: &AssetIndex) -> &mut AssetState { self.asset_mut(key) }
+    pub fn asset_index_mut(&mut self, key: &AssetIndex) -> &mut AssetState {
+        self.asset_mut(key)
+    }
 
     /// Return a reference to the `AssetState` associated with an `ExchangeAsset<AssetNameInternal>`.
     ///
     /// Panics if the `AssetState` associated with the `ExchangeAsset<AssetNameInternal>`
     /// does not exist.
-    pub fn asset(&self, key: &AssetNameInternal) -> &AssetState { self.0.get(key).unwrap_or_else(|| panic!("AssetStates does not contain: {key}")) }
+    pub fn asset(&self, key: &AssetNameInternal) -> &AssetState {
+        self.0
+            .get(key)
+            .unwrap_or_else(|| panic!("AssetStates does not contain: {key}"))
+    }
 
     /// Return a mutable reference to the `AssetState` associated with an
     /// `ExchangeAsset<AssetNameInternal>`.
     ///
     /// Panics if the `AssetState` associated with the `ExchangeAsset<AssetNameInternal>`
     /// does not exist.
-    pub fn asset_mut(&mut self, key: &AssetNameInternal) -> &mut AssetState { self.0.get_mut(key).unwrap_or_else(|| panic!("AssetStates does not contain: {key}")) }
+    pub fn asset_mut(&mut self, key: &AssetNameInternal) -> &mut AssetState {
+        self.0
+            .get_mut(key)
+            .unwrap_or_else(|| panic!("AssetStates does not contain: {key}"))
+    }
 
     /// Return an `Iterator` of filtered `AssetState`s based on the provided [`AssetFilter`].
     pub fn filtered<'a>(&'a self, filter: &'a AssetFilter) -> impl Iterator<Item = &'a AssetState> {
@@ -61,7 +73,9 @@ impl AssetStates {
     }
 
     /// Returns an `Iterator` of all `AssetState`s being tracked.
-    pub fn assets(&self) -> impl Iterator<Item = &AssetState> { self.0.values() }
+    pub fn assets(&self) -> impl Iterator<Item = &AssetState> {
+        self.0.values()
+    }
 }
 
 /// Represents the current state of an asset, including its [`Balance`] and last update
@@ -126,8 +140,9 @@ pub fn generate_empty_indexed_asset_states(instruments: &IndexedInstruments) -> 
     let mut map: FnvIndexMap<AssetNameInternal, AssetState> = FnvIndexMap::default();
     for keyed in instruments.iter() {
         let asset_name = keyed.value.symbol.clone();
-        map.entry(asset_name.clone())
-            .or_insert_with(|| AssetState::new(asset_name, TearSheetAssetGenerator::default(), None));
+        map.entry(asset_name.clone()).or_insert_with(|| {
+            AssetState::new(asset_name, TearSheetAssetGenerator::default(), None)
+        });
     }
     AssetStates(map)
 }

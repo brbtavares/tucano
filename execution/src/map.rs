@@ -91,18 +91,14 @@ impl ExecutionInstrumentMap {
                 .find(|(_, v)| v.as_str() == asset)
                 .map(|(k, _)| k)
                 .ok_or_else(|| {
-                    KeyError::AssetKey(format!(
-                        "ExecutionInstrumentMap does not contain: {asset}"
-                    ))
+                    KeyError::AssetKey(format!("ExecutionInstrumentMap does not contain: {asset}"))
                 })
         }
         #[cfg(not(feature = "typed_indices"))]
         {
             // Sem typed_indices, AssetIndex == String e TAssetIndex == String
             self.asset_names.get(&asset).ok_or_else(|| {
-                KeyError::AssetKey(format!(
-                    "ExecutionInstrumentMap does not contain: {asset}"
-                ))
+                KeyError::AssetKey(format!("ExecutionInstrumentMap does not contain: {asset}"))
             })
         }
     }
@@ -122,9 +118,7 @@ impl ExecutionInstrumentMap {
         #[cfg(not(feature = "typed_indices"))]
         {
             self.asset_names.get(asset).cloned().ok_or_else(|| {
-                IndexError::AssetIndex(format!(
-                    "ExecutionInstrumentMap does not contain: {asset}"
-                ))
+                IndexError::AssetIndex(format!("ExecutionInstrumentMap does not contain: {asset}"))
             })
         }
     }

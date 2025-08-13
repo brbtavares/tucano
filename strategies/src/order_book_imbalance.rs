@@ -3,11 +3,11 @@
 //! Reutilizável tanto em modo live quanto em backtest.
 //! Não depende de indicadores técnicos; apenas compara volume agregado de bids vs asks.
 
-use trader::AlgoStrategy;
-use markets::Side;
 use execution::order::request::OrderRequestOpen;
 use execution::{ExchangeIndex, InstrumentIndex};
+use markets::Side;
 use rust_decimal::Decimal;
+use trader::AlgoStrategy;
 
 /// Configuração para a estratégia de desequilíbrio.
 #[derive(Debug, Clone)]
@@ -20,7 +20,10 @@ pub struct OrderBookImbalanceConfig {
 
 impl Default for OrderBookImbalanceConfig {
     fn default() -> Self {
-        Self { threshold: Decimal::new(60, 2), quantity: Decimal::ONE } // 0.60
+        Self {
+            threshold: Decimal::new(60, 2),
+            quantity: Decimal::ONE,
+        } // 0.60
     }
 }
 
@@ -37,7 +40,10 @@ pub struct OrderBookImbalanceStrategy<C = OrderBookImbalanceConfig> {
 
 impl<C> OrderBookImbalanceStrategy<C> {
     pub fn new(config: C) -> Self {
-        Self { config, state: OrderBookImbalanceState::default() }
+        Self {
+            config,
+            state: OrderBookImbalanceState::default(),
+        }
     }
 }
 
@@ -58,7 +64,9 @@ impl<C: AsRef<OrderBookImbalanceConfig>> AlgoStrategy<ExchangeIndex, InstrumentI
         &self,
         _state: &Self::State,
     ) -> (
-        impl IntoIterator<Item = execution::order::request::OrderRequestCancel<ExchangeIndex, InstrumentIndex>>,
+        impl IntoIterator<
+            Item = execution::order::request::OrderRequestCancel<ExchangeIndex, InstrumentIndex>,
+        >,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>>,
     ) {
         // Sem acesso real ao livro aqui — retornar vazio até integração com dados.

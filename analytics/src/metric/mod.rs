@@ -20,6 +20,30 @@
 //!
 //! ## 💡 Exemplo de Uso
 //!
+//! Cálculo do Sharpe Ratio (estatísticas fictícias) e geração de drawdown usando `DrawdownGenerator`:
+//!
+//! ```rust
+//! use analytics::metric::sharpe::SharpeRatio;
+//! use analytics::metric::drawdown::DrawdownGenerator;
+//! use rust_decimal_macros::dec;
+//! use chrono::{DateTime, Utc};
+//!
+//! // Estatísticas (exemplo)
+//! let risk_free = dec!(0.0015);
+//! let mean_ret  = dec!(0.0025);
+//! let std_dev   = dec!(0.02);
+//! let interval = chrono::TimeDelta::hours(2);
+//! let sharpe = SharpeRatio::calculate(risk_free, mean_ret, std_dev, interval);
+//! assert!(sharpe.value != rust_decimal::Decimal::ZERO);
+//!
+//! // Exemplo mínimo de uso do DrawdownGenerator
+//! let t0 = DateTime::<Utc>::MIN_UTC;
+//! let mut gen = DrawdownGenerator::init(dec!(100), t0);
+//! // valor cai (gera drawdown interno, mas não emite ainda)
+//! gen.update(dec!(90), t0 + chrono::TimeDelta::days(1));
+//! // valor volta acima do pico → emite drawdown
+//! let dd = gen.update(dec!(120), t0 + chrono::TimeDelta::days(2));
+//! assert!(dd.is_some());
 //! Cálculo simples do Sharpe Ratio com estatísticas agregadas do período (valores hipotéticos).
 //!
 //! ```rust

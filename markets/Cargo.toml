@@ -3,9 +3,9 @@ name = "markets"
 version = "0.3.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-repository = "https://github.com/brbtavares/toucan"
+repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Core Toucan Exchange, Instrument and Asset data structures and associated utilities."
+description = "Estruturas centrais de Exchange, Instrument e Asset do Tucano e utilidades associadas."
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["accessibility", "simulation"]
 

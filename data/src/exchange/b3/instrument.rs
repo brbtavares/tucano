@@ -102,7 +102,7 @@ impl B3Instrument {
         Self::new(ticker.into(), "BOVESPA".to_string(), B3SecurityType::Stock)
     }
 
-    /// Create a BMF futures instrument  
+    /// Create a BMF futures instrument
     pub fn bmf(ticker: impl Into<String>) -> Self {
         Self::new(ticker.into(), "BMF".to_string(), B3SecurityType::Future)
     }
@@ -173,6 +173,15 @@ pub mod utils {
 
     /// Parse a ticker symbol to extract underlying asset for derivatives
     pub fn parse_underlying(ticker: &str) -> Option<String> {
+        // Padrões suportados (heurísticos simples):
+        //  - Opções:  <UNDERLYING><LETRA><DIGITOS{2,}>   ex: PETR4P250 -> PETR4
+        //  - Futuros: <UNDERLYING><LETRA><DIGITOS{2}>     ex: WINV24   -> WIN
+        // Heurística: contar dígitos finais (>=2), pegar letra imediatamente anterior
+        // e retornar prefixo antes dessa letra.
+        let chars: Vec<char> = ticker.chars().collect();
+        if chars.len() < 6 {
+            // mínimo razoável para derivativo (ex: WINV24 tem 6)
+            return None;
         // Heurísticas simples para B3:
         // Opções: subjacente + letra(s) + dígitos (ex: PETR4P250 => PETR4)
         // Futuros: código base + letra mês + dois dígitos ano (ex: WINV24 => WIN)
@@ -211,7 +220,31 @@ pub mod utils {
             }
         }
 
-        None
+        // Contar dígitos consecutivos no fim
+        let mut idx = chars.len();
+        while idx > 0 && chars[idx - 1].is_ascii_digit() {
+            idx -= 1;
+        }
+        let digits_start = idx;
+        let digits_len = chars.len() - digits_start;
+        if digits_len < 2 {
+            // precisa de pelo menos 2 dígitos para ano / strike
+            return None;
+        }
+        if digits_start == 0 {
+            return None;
+        }
+        let letter_pos = digits_start - 1;
+        let letter = chars[letter_pos];
+        if !letter.is_ascii_alphabetic() {
+            return None;
+        }
+        if letter_pos < 3 {
+            // subjacente muito curto, provavelmente não derivativo
+            return None;
+        }
+        let underlying = &ticker[..letter_pos];
+        Some(underlying.to_string())
     }
 
     /// Determine security type from ticker pattern

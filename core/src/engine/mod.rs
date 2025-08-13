@@ -145,8 +145,8 @@ use integration::channel::Tx;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 use tracing::info;
+use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Defines how the [`Engine`] actions a [`Command`], and the associated outputs.
 ///
@@ -428,7 +428,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     pub fn action(&mut self, command: &Command) -> ActionOutput
     where
         InstrumentData: InFlightRequestRecorder,
-    ExecutionTxs: ExecutionTxMap<ExchangeIndex, InstrumentIndex>,
+        ExecutionTxs: ExecutionTxMap<ExchangeIndex, InstrumentIndex>,
         Strategy: ClosePositionsStrategy<State = EngineState<GlobalData, InstrumentData>>,
         Risk: RiskManager,
     {
@@ -620,9 +620,9 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-    use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
-    use integration::collection::FnvIndexMap;
-    use analytics::summary::InstrumentNameInternal;
+        use analytics::summary::InstrumentNameInternal;
+        use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
+        use integration::collection::FnvIndexMap;
 
         // Populate instruments map using engine state's instrument keys
         let instruments: FnvIndexMap<InstrumentIndex, ()> = self
@@ -639,7 +639,18 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
             .assets
             .0
             .iter()
-            .filter_map(|(k, v)| v.balance.map(|b| (k.clone(), AssetBalance { asset: k.clone(), balance: b.value, time_exchange: b.time })))
+            .filter_map(|(k, v)| {
+                v.balance.map(|b| {
+                    (
+                        k.clone(),
+                        AssetBalance {
+                            asset: k.clone(),
+                            balance: b.value,
+                            time_exchange: b.time,
+                        },
+                    )
+                })
+            })
             .collect();
 
         let mut gen = TradingSummaryGenerator::init::<(), AssetIndex>(
@@ -652,7 +663,10 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
 
         // Inject existing instrument tear sheets (keyed by internal instrument key)
         for (key, state) in &self.state.instruments.0 {
-            gen.instruments.insert(InstrumentNameInternal(key.clone()), state.tear_sheet.clone());
+            gen.instruments.insert(
+                InstrumentNameInternal(key.clone()),
+                state.tear_sheet.clone(),
+            );
         }
 
         gen

@@ -11,7 +11,7 @@ use execution::{
 };
 use fnv::FnvHashMap;
 use integration::snapshot::Snapshot;
-use markets::{Keyed, ConcreteInstrument};
+use markets::{ConcreteInstrument, Keyed};
 use tracing::debug;
 
 /// Placeholder types
@@ -95,7 +95,7 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
     /// If optional data is not provided (eg/ Balances), default values are used (eg/ zero Balance).
     pub fn build<InstrumentData>(self) -> EngineState<GlobalData, InstrumentData>
     where
-    FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
+        FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         let Self {
             instruments,
@@ -129,11 +129,13 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
                     ),
                 );
             }
-            assets.asset_mut(&asset_name).update_from_balance(Snapshot(&AssetBalance {
-                asset: asset_name.clone(),
-                balance,
-                time_exchange: time_engine_start,
-            }))
+            assets
+                .asset_mut(&asset_name)
+                .update_from_balance(Snapshot(&AssetBalance {
+                    asset: asset_name.clone(),
+                    balance,
+                    time_exchange: time_engine_start,
+                }))
         }
 
         // Generate empty InstrumentStates using provided FnInstrumentData etc.
