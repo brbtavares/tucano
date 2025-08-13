@@ -1,5 +1,5 @@
 [package]
-name = "macros"
+name = "tucano-macros"
 version = "0.2.0"
 authors = ["JustAStream"]
 edition = "2021"

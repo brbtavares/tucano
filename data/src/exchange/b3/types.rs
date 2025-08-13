@@ -5,12 +5,12 @@
 //! while maintaining Brazilian market terminology.
 
 use chrono::{DateTime, Utc};
-use markets::profit_dll::OrderSide;
-use markets::{Asset, AssetType};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
+use tucano_markets::profit_dll::OrderSide;
+use tucano_markets::{Asset, AssetType};
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -75,11 +75,11 @@ impl Display for B3Asset {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             B3Asset::BRL => write!(f, "BRL"),
-            B3Asset::Stock(s) => write!(f, "STOCK:{}", s),
-            B3Asset::Fund(s) => write!(f, "FUND:{}", s),
-            B3Asset::Future(s) => write!(f, "FUTURE:{}", s),
-            B3Asset::Option(s) => write!(f, "OPTION:{}", s),
-            B3Asset::Other(s) => write!(f, "OTHER:{}", s),
+            B3Asset::Stock(s) => write!(f, "STOCK:{s}"),
+            B3Asset::Fund(s) => write!(f, "FUND:{s}"),
+            B3Asset::Future(s) => write!(f, "FUTURE:{s}"),
+            B3Asset::Option(s) => write!(f, "OPTION:{s}"),
+            B3Asset::Other(s) => write!(f, "OTHER:{s}"),
         }
     }
 }

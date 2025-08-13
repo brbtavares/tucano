@@ -19,15 +19,15 @@ use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, TimeDelta, Utc};
 use fnv::FnvHashMap;
 use futures::stream::BoxStream;
-use integration::snapshot::Snapshot;
 use itertools::Itertools;
-use markets::{ConcreteInstrument, ExchangeId, Side};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;
 use tokio::sync::{broadcast, mpsc, oneshot};
 use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::{error, info};
+use tucano_integration::snapshot::Snapshot;
+use tucano_markets::{ConcreteInstrument, ExchangeId, Side};
 
 pub mod account;
 pub mod request;
@@ -262,7 +262,7 @@ impl MockExchange {
         let underlying = match self.find_instrument_data(&request.key.instrument) {
             Ok(_instrument) => {
                 // TODO: Implementar corretamente para nova arquitetura
-                use markets::Underlying;
+                use tucano_markets::Underlying;
                 Underlying::new("MOCK_BASE".to_string(), "MOCK_QUOTE".to_string())
             }
             Err(error) => return (build_open_order_err_response(request, error), None),

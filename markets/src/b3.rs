@@ -330,18 +330,12 @@ impl B3AssetFactory {
 
         // ETF detection (ends with 11)
         if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
-            return Ok(Box::new(B3ETF::new(
-                symbol.clone(),
-                format!("ETF {}", symbol),
-            )));
+            return Ok(Box::new(B3ETF::new(symbol.clone(), format!("ETF {symbol}"))));
         }
 
         // REIT detection (ends with 11B or just 11 with B pattern)
         if symbol.ends_with("11B") || (symbol.len() >= 6 && symbol.ends_with("11")) {
-            return Ok(Box::new(B3REIT::new(
-                symbol.clone(),
-                format!("REIT {}", symbol),
-            )));
+            return Ok(Box::new(B3REIT::new(symbol.clone(), format!("REIT {symbol}"))));
         }
 
         // Stock detection (4 letters + 1-2 digits)
@@ -349,18 +343,12 @@ impl B3AssetFactory {
             let (letters, numbers) = symbol.split_at(4);
             if letters.chars().all(|c| c.is_alphabetic()) && numbers.chars().all(|c| c.is_numeric())
             {
-                return Ok(Box::new(B3Stock::new(
-                    symbol.clone(),
-                    format!("Company {}", letters),
-                )));
+                return Ok(Box::new(B3Stock::new(symbol.clone(), format!("Company {letters}"))));
             }
         }
 
         // Default to stock if pattern doesn't match
-        Ok(Box::new(B3Stock::new(
-            symbol.clone(),
-            format!("Asset {}", symbol),
-        )))
+    Ok(Box::new(B3Stock::new(symbol.clone(), format!("Asset {symbol}"))))
     }
 
     /// Create a B3 option from symbol and details

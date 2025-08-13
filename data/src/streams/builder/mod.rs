@@ -10,14 +10,14 @@ use crate::{
     subscription::{Subscription, SubscriptionKind},
     Identifier,
 };
-use integration::{channel::Channel, Validator};
-use markets::exchange::ExchangeId;
 use std::{
     collections::HashMap,
     fmt::{Debug, Display},
     future::Future,
     pin::Pin,
 };
+use tucano_integration::{channel::Channel, Validator};
+use tucano_markets::exchange::ExchangeId;
 
 /// Defines the [`MultiStreamBuilder`](multi::MultiStreamBuilder) API for ergonomically
 /// initialising a common [`Streams<Output>`](Streams) from multiple

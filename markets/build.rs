@@ -38,8 +38,8 @@ fn configure_windows_dll() {
     for path in &possible_paths {
         let dll_path = Path::new(path).join("ProfitDLL.dll");
         if dll_path.exists() {
-            println!("✅ ProfitDLL.dll encontrada em: {}", path);
-            println!("cargo:rustc-link-search=native={}", path);
+            println!("✅ ProfitDLL.dll encontrada em: {path}");
+            println!("cargo:rustc-link-search=native={path}");
             dll_found = true;
             break;
         }
@@ -50,11 +50,8 @@ fn configure_windows_dll() {
         if let Ok(dll_path) = env::var("PROFITDLL_PATH") {
             let dll_file = Path::new(&dll_path).join("ProfitDLL.dll");
             if dll_file.exists() {
-                println!(
-                    "✅ ProfitDLL.dll encontrada via PROFITDLL_PATH: {}",
-                    dll_path
-                );
-                println!("cargo:rustc-link-search=native={}", dll_path);
+                println!("✅ ProfitDLL.dll encontrada via PROFITDLL_PATH: {dll_path}");
+                println!("cargo:rustc-link-search=native={dll_path}");
                 dll_found = true;
             }
         }

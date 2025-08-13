@@ -3,11 +3,14 @@ use crate::engine::state::{
     order::{manager::OrderManager, Orders},
     position::{PositionExited, PositionManager},
 };
-use ::data::event::MarketEvent;
-use analytics::summary::instrument::TearSheetGenerator;
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
-use execution::{
+use itertools::Either;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+use tucano_analytics::summary::{self, instrument::TearSheetGenerator};
+use tucano_data::event::MarketEvent;
+use tucano_execution::{
     order::{
         request::OrderResponseCancel,
         state::{ActiveOrderState, OrderState},
@@ -16,11 +19,8 @@ use execution::{
     trade::Trade,
     AssetIndex, ExchangeIndex, InstrumentAccountSnapshot, InstrumentIndex, QuoteAsset,
 };
-use integration::{collection::FnvIndexMap, snapshot::Snapshot};
-use itertools::Either; // Itertools unused
-use markets::{exchange::ExchangeId, ConcreteInstrument, Keyed};
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
+use tucano_integration::{collection::FnvIndexMap, snapshot::Snapshot};
+use tucano_markets::{exchange::ExchangeId, ConcreteInstrument, Keyed};
 
 // ConcreteInstrument now defined in markets crate
 
@@ -320,7 +320,7 @@ impl<InstrumentData, ExchangeKey, InstrumentKey>
     {
         self.position.update_from_trade(trade).inspect(|closed| {
             // Convert core PositionExited to analytics PositionExited
-            let analytics_position = analytics::summary::PositionExited {
+            let analytics_position = summary::PositionExited {
                 timestamp: closed.time_exit,
                 pnl_realised: closed.pnl_realised,
                 time_exit: closed.time_exit,

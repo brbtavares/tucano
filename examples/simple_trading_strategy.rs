@@ -8,7 +8,7 @@
 // - Gestão de posições
 // - Lógica de stop loss e take profit
 
-use markets::{
+use tucano_markets::{
     ExchangeId,
     broker::{ProfitDLLBroker, MarketDataProvider, OrderExecutor, OrderRequest},
     profit_dll::OrderSide,

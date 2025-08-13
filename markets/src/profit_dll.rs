@@ -129,18 +129,12 @@ impl ProfitConnector {
     }
 
     pub fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), String> {
-        println!(
-            "📊 ProfitConnector: Subscribing to {} on {}",
-            ticker, exchange
-        );
+    println!("📊 ProfitConnector: Subscribing to {ticker} on {exchange}");
         Ok(())
     }
 
     pub fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), String> {
-        println!(
-            "📊 ProfitConnector: Unsubscribing from {} on {}",
-            ticker, exchange
-        );
+    println!("📊 ProfitConnector: Unsubscribing from {ticker} on {exchange}");
         Ok(())
     }
 }

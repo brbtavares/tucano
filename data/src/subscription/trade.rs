@@ -1,7 +1,7 @@
 use super::SubscriptionKind;
-use macros::{DeSubKind, SerSubKind};
-use markets::Side;
 use serde::{Deserialize, Serialize};
+use tucano_macros::{DeSubKind, SerSubKind};
+use tucano_markets::Side;
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`PublicTrade`]
 /// [`MarketEvent<T>`](crate::event::MarketEvent) events.

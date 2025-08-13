@@ -3,7 +3,7 @@
 // Este arquivo demonstra como usar as implementações B3 básicas
 // com as traits do markets. Baseado nos testes originais.
 
-use markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
+use tucano_markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
 
 // Implementação B3 básica para referência
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

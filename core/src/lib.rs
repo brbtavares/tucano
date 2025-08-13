@@ -77,16 +77,16 @@ use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
 };
-use ::execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
 use chrono::{DateTime, Utc};
-use data::{
+use derive_more::{Constructor, From};
+use serde::{Deserialize, Serialize};
+use shutdown::Shutdown;
+use tucano_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use derive_more::{Constructor, From};
-use integration::Terminal;
-use serde::{Deserialize, Serialize};
-use shutdown::Shutdown;
+use tucano_execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
+use tucano_integration::Terminal;
 
 // Suppress unused extern crate warnings
 use prettytable as _;
@@ -108,13 +108,13 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
-pub use risk;
-pub use trader as strategy; // temporary alias for backward compatibility
+pub use tucano_risk as risk;
+pub use tucano_trader as strategy; // temporary alias for backward compatibility
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
-pub use analytics;
+pub use tucano_analytics as analytics; // transitional re-export
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
@@ -225,13 +225,13 @@ impl Sequence {
 /// Core test utilities.
 pub mod test_utils {
     use crate::{engine::state::asset::AssetState, Timed};
-    use analytics::summary::asset::TearSheetAssetGenerator;
-    use execution::{
+    use tucano_analytics::summary::asset::TearSheetAssetGenerator;
+    use tucano_execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
-    use markets::Side;
+    use tucano_markets::Side;
 
     // Placeholder type for integration
     type InstrumentNameInternal = String;

@@ -1,7 +1,7 @@
 use crate::engine::Processor;
-use data::event::MarketEvent;
-use execution::AccountEvent;
 use serde::{Deserialize, Serialize};
+use tucano_data::event::MarketEvent;
+use tucano_execution::AccountEvent;
 
 /// Empty `GlobalData` that can be used for `Strategy` and `RiskManager` combinations that
 /// require no specific global data state.

@@ -4,8 +4,8 @@ use crate::metric::drawdown::{
     mean::{MeanDrawdown, MeanDrawdownGenerator},
     Drawdown, DrawdownGenerator,
 };
-use execution::balance::{AssetBalance, Balance};
 use serde::{Deserialize, Serialize};
+use tucano_execution::balance::{AssetBalance, Balance};
 
 /// TearSheet summarising the trading session changes for an Asset.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
@@ -90,8 +90,8 @@ mod tests {
     use super::*;
     use crate::test_utils::time_plus_days;
     use chrono::{DateTime, Utc};
-    use execution::AssetIndex;
     use rust_decimal_macros::dec;
+    use tucano_execution::AssetIndex;
 
     fn balance(balance: Balance, time: DateTime<Utc>) -> AssetBalance<AssetIndex> {
         AssetBalance {

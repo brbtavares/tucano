@@ -2,9 +2,9 @@ use super::SubscriptionKind;
 use crate::books::{mid_price, volume_weighted_mid_price, Level, OrderBook};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
-use macros::{DeSubKind, SerSubKind};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
+use tucano_macros::{DeSubKind, SerSubKind};
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`OrderBookL1`]
 /// market events.

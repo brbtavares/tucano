@@ -16,7 +16,6 @@
 // Tipos de compatibilidade para migração da arquitetura markets
 // Mantemos aliases simples para não quebrar o build; adicionamos módulo opcional
 // `typed` com newtypes para migração progressiva (opt-in).
-
 pub type AssetIndex = String;
 pub type InstrumentIndex = String;
 pub type AssetNameExchange = String;
@@ -73,7 +72,7 @@ pub mod typed {
 }
 
 // Re-export do markets - mantendo ExchangeId como enum original
-pub use markets::{ExchangeId, Side};
+pub use tucano_markets::{ExchangeId, Side};
 
 // Import dos tipos de order necessários
 use crate::order::OrderKey;

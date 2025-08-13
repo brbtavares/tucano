@@ -4,11 +4,11 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
-use markets::Side;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{Display, Formatter};
+use tucano_markets::Side;
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, From)]
 pub struct TradeId<T = SmolStr>(pub T);

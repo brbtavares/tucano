@@ -14,10 +14,10 @@ use crate::{
 };
 use derive_more::Constructor;
 use futures::Stream;
-use markets::exchange::ExchangeId;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use tracing::info;
+use tucano_markets::exchange::ExchangeId;
 
 /// Default [`ReconnectionBackoffPolicy`] for a [`reconnecting`](`ReconnectingStream`) [`MarketStream`].
 pub const STREAM_RECONNECTION_POLICY: ReconnectionBackoffPolicy = ReconnectionBackoffPolicy {

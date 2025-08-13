@@ -188,9 +188,9 @@ impl Transport for MockTransport {
 // -----------------------------------------------------------------------------
 // ProfitDLL transport (thin wrapper) - experimental
 // -----------------------------------------------------------------------------
-use markets::profit_dll::{CallbackEvent, ProfitConnector};
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc::UnboundedSender, Mutex};
+use tucano_markets::profit_dll::{CallbackEvent, ProfitConnector};
 
 #[derive(Debug)]
 pub struct ProfitDLLTransport {
@@ -226,11 +226,11 @@ impl ProfitDLLTransport {
         let mut guard = self.connector.lock().await;
         if guard.is_none() {
             let connector = ProfitConnector::new(self.dll_path.as_deref())
-                .map_err(|e| TransportError::Connectivity(e))?;
+                .map_err(TransportError::Connectivity)?;
             let rx = connector
                 .initialize_login(&self.activation_key, &self.user, &self.password)
                 .await
-                .map_err(|e| TransportError::Connectivity(e))?;
+                .map_err(TransportError::Connectivity)?;
             self.spawn_event_loop(rx);
             *guard = Some(connector);
         }

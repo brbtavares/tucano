@@ -5,9 +5,9 @@ use crate::{
     subscription::SubscriptionKind,
 };
 use futures_util::StreamExt;
-use integration::channel::Channel;
-use markets::exchange::ExchangeId;
 use std::{collections::HashMap, fmt::Debug, future::Future, pin::Pin};
+use tucano_integration::channel::Channel;
+use tucano_markets::exchange::ExchangeId;
 
 /// Communicative type alias representing the [`Future`] result of a [`StreamBuilder::init`] call
 /// generated whilst executing [`MultiStreamBuilder::add`].

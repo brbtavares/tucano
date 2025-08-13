@@ -57,19 +57,19 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures::{SinkExt, Stream, StreamExt};
-use integration::{
+use std::{collections::VecDeque, future::Future};
+use tokio::sync::mpsc;
+use tracing::{debug, error, warn};
+use tucano_integration::{
     error::SocketError,
     protocol::{
-        websocket::{WebSocketParser, WsMessage, WsSink, WsStream},
+        websocket::{self, WebSocketParser, WsMessage, WsSink, WsStream},
         StreamParser,
     },
     stream::ExchangeStream,
     Transformer,
 };
-use markets::exchange::ExchangeId;
-use std::{collections::VecDeque, future::Future};
-use tokio::sync::mpsc;
-use tracing::{debug, error, warn};
+use tucano_markets::exchange::ExchangeId;
 #[allow(unused_imports)]
 use {itertools as _, reqwest as _, serde_json as _, vecmap as _};
 
@@ -116,7 +116,7 @@ pub mod books;
 pub mod transformer;
 
 /// Convenient type alias for an [`ExchangeStream`] utilising a tungstenite
-/// [`WebSocket`](integration::protocol::websocket::WebSocket).
+/// [`WebSocket`](tucano_integration::protocol::websocket::WebSocket).
 pub type ExchangeWsStream<Transformer> = ExchangeStream<WebSocketParser, WsStream, Transformer>;
 
 /// Defines a generic identification type for the implementor.
@@ -283,7 +283,7 @@ pub async fn distribute_messages_to_exchange(
 ) {
     while let Some(message) = ws_sink_rx.recv().await {
         if let Err(error) = ws_sink.send(message).await {
-            if integration::protocol::websocket::is_websocket_disconnected(&error) {
+            if websocket::is_websocket_disconnected(&error) {
                 break;
             }
 

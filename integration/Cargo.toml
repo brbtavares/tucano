@@ -1,5 +1,5 @@
 [package]
-name = "integration"
+name = "tucano-integration"
 version = "0.9.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
@@ -15,7 +15,7 @@ sha2 = { workspace = true }
 
 [dependencies]
 # Tucano Ecosystem
-markets = { workspace = true }
+"tucano-markets" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

@@ -1,5 +1,5 @@
 [package]
-name = "analytics"
+name = "tucano-analytics"
 version = "0.1.0"
 edition = "2021"
 
@@ -14,7 +14,7 @@ fnv = "1.0"
 uuid = { version = "1.0", features = ["serde"] }
 smol_str = { workspace = true }
 prettytable = "0.10"
-execution = { workspace = true }
-markets = { workspace = true }
-integration = { workspace = true }
+"tucano-execution" = { workspace = true }
+"tucano-markets" = { workspace = true }
+"tucano-integration" = { workspace = true }
 rust_decimal_macros= { version = "1", workspace = true }

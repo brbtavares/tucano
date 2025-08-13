@@ -18,6 +18,10 @@ pub struct ProfitDLLBroker {
     is_connected: bool,
 }
 
+impl Default for ProfitDLLBroker {
+    fn default() -> Self { Self::new() }
+}
+
 impl std::fmt::Debug for ProfitDLLBroker {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("ProfitDLLBroker")
@@ -129,10 +133,7 @@ impl MarketDataProvider for ProfitDLLBroker {
         exchange: ExchangeId,
     ) -> Result<Self::SubscriptionId, BrokerError> {
         if exchange != ExchangeId::B3 {
-            return Err(BrokerError::MarketDataError(format!(
-                "Unsupported exchange: {:?}",
-                exchange
-            )));
+            return Err(BrokerError::MarketDataError(format!("Unsupported exchange: {exchange:?}")));
         }
 
         let connector = self

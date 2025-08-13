@@ -1,7 +1,7 @@
-use integration::error::SocketError;
-use markets::ExchangeId;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use tucano_integration::error::SocketError;
+use tucano_markets::ExchangeId;
 
 // Tipos temporários para compatibilidade durante migração
 pub type AssetIndex = String;

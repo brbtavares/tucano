@@ -1,10 +1,10 @@
 [package]
-name = "toucan-examples"
+name = "tucano-examples"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-markets = { path = "../markets" }
+"tucano-markets" = { path = "../markets" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tokio-stream = { workspace = true }
 rust_decimal = { workspace = true }

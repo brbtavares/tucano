@@ -3,7 +3,7 @@
 // Este exemplo demonstra como configurar e usar a ProfitDLL real
 // em um ambiente Windows com a DLL da Nelógica instalada.
 
-use markets::{
+use tucano_markets::{
     b3::{B3AssetFactory, B3Stock},
     profit_dll::ProfitConnector,
     Asset,
@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dll_path = std::env::var("PROFITDLL_PATH").ok();
 
     if let Some(ref path) = dll_path {
-        println!("📁 Caminho da DLL configurado: {}", path);
+        println!("📁 Caminho da DLL configurado: {path}");
     } else {
         println!("🔍 Auto-detectando localização da DLL...");
     }
@@ -36,18 +36,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let vale3 = B3AssetFactory::from_symbol("VALE3")?;
 
     println!("\n📊 Assets criados:");
-    println!(
-        "  • {}: {} ({})",
-        petr4.symbol(),
-        "Petrobras PN",
-        petr4.asset_type()
-    );
-    println!(
-        "  • {}: {} ({})",
-        vale3.symbol(),
-        "Vale ON",
-        vale3.asset_type()
-    );
+    println!("  • {}: Petrobras PN ({})", petr4.symbol(), petr4.asset_type());
+    println!("  • {}: Vale ON ({})", vale3.symbol(), vale3.asset_type());
 
     // Inicializar ProfitConnector
     println!("\n🔌 Inicializando ProfitConnector...");
@@ -69,8 +59,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Subscrever a dados de mercado
     println!("\n📈 Configurando subscrições...");
-    connector.subscribe_ticker(&petr4.symbol(), "BOVESPA")?;
-    connector.subscribe_ticker(&vale3.symbol(), "BOVESPA")?;
+    connector.subscribe_ticker(petr4.symbol(), "BOVESPA")?;
+    connector.subscribe_ticker(vale3.symbol(), "BOVESPA")?;
 
     println!("✅ Subscrições configuradas");
 
@@ -84,22 +74,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tokio::select! {
             Some(event) = events.recv() => {
                 match event {
-                    markets::profit_dll::CallbackEvent::StateChanged { connection_type, result } => {
-                        println!("🔌 Estado da conexão: {:?} - Resultado: {}", connection_type, result);
+                    tucano_markets::profit_dll::CallbackEvent::StateChanged { connection_type, result } => {
+                        println!("🔌 Estado da conexão: {connection_type:?} - Resultado: {result}");
                     }
-                    markets::profit_dll::CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
-                        println!("💹 Novo negócio: {} @ {} - Preço: {} Volume: {}",
-                                ticker, exchange, price, volume);
+                    tucano_markets::profit_dll::CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
+                        println!("💹 Novo negócio: {ticker} @ {exchange} - Preço: {price} Volume: {volume}");
                     }
-                    markets::profit_dll::CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
-                        println!("📊 Resumo diário {}: O:{} H:{} L:{} C:{}",
-                                ticker, open, high, low, close);
+                    tucano_markets::profit_dll::CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
+                        println!("📊 Resumo diário {ticker}: O:{open} H:{high} L:{low} C:{close}");
                     }
-                    markets::profit_dll::CallbackEvent::ProgressChanged { ticker, progress, .. } => {
-                        println!("⏳ Progresso subscrição {}: {}%", ticker, progress);
+                    tucano_markets::profit_dll::CallbackEvent::ProgressChanged { ticker, progress, .. } => {
+                        println!("⏳ Progresso subscrição {ticker}: {progress}%");
                     }
                     _ => {
-                        println!("📨 Evento recebido: {:?}", event);
+                        println!("📨 Evento recebido: {event:?}");
                     }
                 }
             }

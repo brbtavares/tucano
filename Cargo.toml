@@ -16,17 +16,17 @@ members = [
 ]
 
 [workspace.dependencies]
-# Toucan Ecosystem
-analytics = { path = "./analytics", version = "0.1.0" }
-core = { path = "./core", version = "0.12.2" }
-integration = { path = "./integration", version = "0.9.1" }
-markets = { path = "./markets", version = "0.3.1" }
-data = { path = "./data", version = "0.10.1" }
-execution = { path = "./execution", version = "0.5.3" }
-macros = { path = "./macros", version = "0.2.0" }
-risk = { path = "./risk", version = "0.1.0" }
-trader = { path = "./trader", version = "0.1.0" }
-strategies = { path = "./strategies", version = "0.1.0" }
+# Tucano Ecosystem (direct crate names with tucano- prefix)
+tucano-analytics = { path = "./analytics", version = "0.1.0" }
+tucano-core = { path = "./core", version = "0.12.2" }
+tucano-integration = { path = "./integration", version = "0.9.1" }
+tucano-markets = { path = "./markets", version = "0.3.1" }
+tucano-data = { path = "./data", version = "0.10.1" }
+tucano-execution = { path = "./execution", version = "0.5.3" }
+tucano-macros = { path = "./macros", version = "0.2.0" }
+tucano-risk = { path = "./risk", version = "0.1.0" }
+tucano-trader = { path = "./trader", version = "0.1.0" }
+tucano-strategies = { path = "./strategies", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }

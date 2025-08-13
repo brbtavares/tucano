@@ -17,9 +17,9 @@ pub mod instrument;
 pub mod types;
 
 pub use exchange::B3Exchange;
-use markets::b3::{B3AssetCategory, B3AssetFactory};
-use markets::profit_dll::{CallbackEvent, ProfitConnector};
 use tokio::sync::mpsc;
+use tucano_markets::b3::{B3AssetCategory, B3AssetFactory};
+use tucano_markets::profit_dll::{CallbackEvent, ProfitConnector};
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;
 
@@ -35,6 +35,10 @@ pub use types::B3Instrument;
 pub struct B3ProfitConnector {
     profit_connector: Option<ProfitConnector>,
     event_receiver: Option<mpsc::UnboundedReceiver<CallbackEvent>>,
+}
+
+impl Default for B3ProfitConnector {
+    fn default() -> Self { Self::new() }
 }
 
 impl std::fmt::Debug for B3ProfitConnector {
@@ -99,25 +103,17 @@ impl B3ProfitConnector {
 
     /// Get asset category from symbol
     pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
-        let _asset = B3AssetFactory::from_symbol(symbol)?;
-
-        // This requires implementing a method to get category from the trait object
-        // For now, we'll use pattern matching on the symbol
+        let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol
         if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
-            Ok(B3AssetCategory::ETF)
-        } else if symbol.ends_with("11B") {
-            Ok(B3AssetCategory::REIT)
-        } else if symbol.len() >= 5 && symbol.len() <= 6 {
-            let (letters, numbers) = symbol.split_at(4);
-            if letters.chars().all(|c| c.is_alphabetic()) && numbers.chars().all(|c| c.is_numeric())
-            {
-                Ok(B3AssetCategory::Stock)
-            } else {
-                Ok(B3AssetCategory::Stock) // Default
-            }
-        } else {
-            Ok(B3AssetCategory::Stock) // Default
+            return Ok(B3AssetCategory::ETF);
         }
+        if symbol.ends_with("11B") {
+            return Ok(B3AssetCategory::REIT);
+        }
+        if (5..=6).contains(&symbol.len()) {
+            return Ok(B3AssetCategory::Stock);
+        }
+        Ok(B3AssetCategory::Stock)
     }
 
     /// Process incoming events from ProfitDLL
@@ -169,7 +165,7 @@ impl B3MarketEvent {
                 connection_type,
                 result,
             } => B3MarketEvent::StateChanged {
-                connection_type: format!("{:?}", connection_type),
+                connection_type: format!("{connection_type:?}"),
                 result,
             },
             CallbackEvent::NewTrade {

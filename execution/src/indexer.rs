@@ -16,11 +16,11 @@ use crate::{
     UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use derive_more::Constructor;
-use integration::{
+use std::sync::Arc;
+use tucano_integration::{
     snapshot::Snapshot,
     stream::indexed::{IndexedStream, Indexer},
 };
-use std::sync::Arc;
 
 pub type IndexedAccountStream<St> = IndexedStream<AccountEventIndexer, St>;
 

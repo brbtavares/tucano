@@ -1,5 +1,5 @@
 [package]
-name = "trader"
+name = "tucano-trader"
 version = "0.1.0"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
@@ -11,8 +11,8 @@ categories = ["algorithms", "finance"]
 
 [dependencies]
 # Tucano Ecosystem
-execution = { workspace = true }
-markets = { workspace = true }
+"tucano-execution" = { workspace = true }
+"tucano-markets" = { workspace = true }
 
 # Data Structures
 rust_decimal = { workspace = true }

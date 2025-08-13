@@ -1,12 +1,12 @@
 //! B3 instrument definitions and utilities
 
 use crate::instrument::InstrumentData;
-use markets::{
+use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
+use tucano_markets::{
     Instrument,
     InstrumentKind, // Import trait from simplified markets
 };
-use rust_decimal::Decimal;
-use serde::{Deserialize, Serialize};
 
 /// B3 instrument data structure
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -134,7 +134,7 @@ impl B3Instrument {
     }
 }
 
-/// Implement markets::Instrument trait for B3Instrument
+/// Implement tucano_markets::Instrument trait for B3Instrument
 impl Instrument for B3Instrument {
     type Symbol = String;
 
@@ -182,20 +182,28 @@ pub mod utils {
         if chars.len() < 6 {
             // mínimo razoável para derivativo (ex: WINV24 tem 6)
             return None;
+        }
         // Heurísticas simples para B3:
         // Opções: subjacente + letra(s) + dígitos (ex: PETR4P250 => PETR4)
         // Futuros: código base + letra mês + dois dígitos ano (ex: WINV24 => WIN)
 
-        if ticker.len() < 3 { return None; }
+        if ticker.len() < 3 {
+            return None;
+        }
 
         // 1. Detectar um sufixo de mês/ano de futuro (Letra + 2 dígitos finais)
         if ticker.len() >= 4 {
             let chars: Vec<char> = ticker.chars().collect();
-            if chars.len() >= 3 && chars[chars.len()-3].is_alphabetic() && chars[chars.len()-2].is_ascii_digit() && chars[chars.len()-1].is_ascii_digit() {
+            if chars.len() >= 3
+                && chars[chars.len() - 3].is_alphabetic()
+                && chars[chars.len() - 2].is_ascii_digit()
+                && chars[chars.len() - 1].is_ascii_digit()
+            {
                 // Exemplo: WINV24 -> base até antes da letra do mês (remover 3 últimos e depois remover eventual letra final do base?)
                 // Simplificação: cortar os últimos 3 chars e se o resultante terminar com letra do mês anterior deixamos como está.
-                let base = &ticker[..ticker.len()-3];
-                if base.len() >= 3 { // heurística mínima
+                let base = &ticker[..ticker.len() - 3];
+                if base.len() >= 3 {
+                    // heurística mínima
                     return Some(base.to_string());
                 }
             }
@@ -204,17 +212,34 @@ pub mod utils {
         // 2. Opções: encontrar fronteira onde começam blocos alfanuméricos após o subjacente.
         // Estratégia: contar dígitos finais consecutivos. Se >= 2 e antes houver uma letra distinta do padrão numérico de ação, extrair prefixo antes da sequência letra+digitos.
         let mut digits_at_end = 0;
-        for c in ticker.chars().rev() { if c.is_ascii_digit() { digits_at_end += 1; } else { break; } }
+        for c in ticker.chars().rev() {
+            if c.is_ascii_digit() {
+                digits_at_end += 1;
+            } else {
+                break;
+            }
+        }
         if digits_at_end >= 2 && digits_at_end < ticker.len() {
             // Remover dígitos finais para analisar possível letra(s) de série
-            let without_digits = &ticker[..ticker.len()-digits_at_end];
+            let without_digits = &ticker[..ticker.len() - digits_at_end];
             // Ex: PETR4P -> remover último bloco de letras de série (P) se existir
             let mut series_len = 0;
-            for c in without_digits.chars().rev() { if c.is_ascii_alphabetic() { series_len += 1; } else { break; } }
+            for c in without_digits.chars().rev() {
+                if c.is_ascii_alphabetic() {
+                    series_len += 1;
+                } else {
+                    break;
+                }
+            }
             if series_len > 0 && series_len < without_digits.len() {
-                let underlying_candidate = &without_digits[..without_digits.len()-series_len];
+                let underlying_candidate = &without_digits[..without_digits.len() - series_len];
                 // Validar que termina com dígito típico de ação (ex 3/4/11 etc.)
-                if underlying_candidate.chars().last().map(|c| c.is_ascii_digit()).unwrap_or(false) {
+                if underlying_candidate
+                    .chars()
+                    .last()
+                    .map(|c| c.is_ascii_digit())
+                    .unwrap_or(false)
+                {
                     return Some(underlying_candidate.to_string());
                 }
             }
@@ -251,9 +276,9 @@ pub mod utils {
     pub fn infer_security_type(ticker: &str) -> B3SecurityType {
         if ticker.ends_with("11") {
             B3SecurityType::Reit
-        } else if ticker.len() > 5 && ticker.chars().nth_back(0).map_or(false, |c| c.is_numeric()) {
+        } else if ticker.len() > 5 && ticker.chars().nth_back(0).is_some_and(|c| c.is_numeric()) {
             B3SecurityType::Option
-        } else if ticker.len() <= 4 || (ticker.len() == 5 && ticker.chars().last() == Some('4')) {
+        } else if ticker.len() <= 4 || (ticker.len() == 5 && ticker.ends_with('4')) {
             B3SecurityType::Stock
         } else {
             B3SecurityType::Other

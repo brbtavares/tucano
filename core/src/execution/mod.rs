@@ -60,13 +60,13 @@
 //! ```
 
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
-use data::streams::reconnect;
+use tucano_data::streams::reconnect;
 // Transition note: we purposefully avoid importing alias types (AssetIndex, ExchangeIndex,
 // InstrumentIndex) here to demonstrate direct String usage. Other modules may retain
 // the aliases for semantic clarity until newtypes are reintroduced.
-use execution::AccountEvent; // alias types replaced locally by String
-use integration::channel::Channel;
-use markets::exchange::ExchangeId;
+use tucano_execution::AccountEvent; // alias types replaced locally by String
+use tucano_integration::channel::Channel;
+use tucano_markets::exchange::ExchangeId;
 
 /// Provides an execution manager builder for ergonomically initialising multiple execution links
 /// to mock and live exchanges.

@@ -71,7 +71,7 @@
 //! - **Audit Trail**: Ensuring complete audit log generation
 //! - **Performance Metrics**: Validating PnL calculations and trading statistics
 
-use core::{
+use tucano_core::{
     engine::{
         action::{
             generate_algo_orders::GenerateAlgoOrdersOutput,
@@ -102,13 +102,13 @@ use core::{
     EngineEvent, Sequence, Timed,
 };
 
-use data::{
+use tucano_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
     subscription::trade::PublicTrade,
 };
 
-use execution::{
+use tucano_execution::{
     balance::{AssetBalance, Balance},
     order::{
         id::{ClientOrderId, OrderId, StrategyId},
@@ -120,25 +120,25 @@ use execution::{
     AccountEvent, AccountEventKind, AccountSnapshot,
 };
 
-use core::engine::state::IndexedInstruments;
-use markets::{ExchangeId, Side}; // instrument list alias
+use tucano_core::engine::state::IndexedInstruments;
+use tucano_markets::{ExchangeId, Side}; // instrument list alias
 
-use risk::DefaultRiskManager;
+use tucano_risk::DefaultRiskManager;
 
-use trader::{
+use tucano_trader::{
     algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
     on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
 };
 
 use chrono::{DateTime, Utc};
 use fnv::FnvHashMap;
-use integration::{
+use rust_decimal::Decimal;
+use rust_decimal_macros::dec;
+use tucano_integration::{
     channel::{mpsc_unbounded, UnboundedTx},
     collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany},
     snapshot::Snapshot,
 };
-use rust_decimal::Decimal;
-use rust_decimal_macros::dec;
 
 // Test configuration constants
 const STARTING_TIMESTAMP: DateTime<Utc> = DateTime::<Utc>::MIN_UTC;
@@ -930,9 +930,9 @@ fn build_engine(
 > {
     // Simplified instrument list using placeholder keys inst0/inst1
     let instruments: IndexedInstruments = vec![
-        markets::Keyed::new(
+        tucano_markets::Keyed::new(
             "inst0".to_string(),
-            markets::ConcreteInstrument {
+            tucano_markets::ConcreteInstrument {
                 symbol: "BASE".into(),
                 market: "spot".into(),
                 exchange: ExchangeId::Mock,
@@ -940,9 +940,9 @@ fn build_engine(
                 name_exchange: "BASEQUOTE".into(),
             },
         ),
-        markets::Keyed::new(
+        tucano_markets::Keyed::new(
             "inst1".to_string(),
-            markets::ConcreteInstrument {
+            tucano_markets::ConcreteInstrument {
                 symbol: "ALT".into(),
                 market: "spot".into(),
                 exchange: ExchangeId::Mock,
