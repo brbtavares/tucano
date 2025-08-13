@@ -18,7 +18,7 @@ use execution::{
 };
 use integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use itertools::Either; // Itertools unused
-use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument};
+use markets::{exchange::ExchangeId, ConcreteInstrument, Keyed};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -44,8 +44,15 @@ pub mod filter;
 /// Note that the same instruments with the same [`InstrumentNameExchange`] (eg/ "btc_usdt") but
 /// on different exchanges will have their own [`InstrumentState`].
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-pub struct InstrumentStates<InstrumentData, ExchangeKey = ExchangeIndex, InstrumentKey = InstrumentIndex>(
-    pub FnvIndexMap<InstrumentNameInternal, InstrumentState<InstrumentData, ExchangeKey, InstrumentKey>>,
+pub struct InstrumentStates<
+    InstrumentData,
+    ExchangeKey = ExchangeIndex,
+    InstrumentKey = InstrumentIndex,
+>(
+    pub  FnvIndexMap<
+        InstrumentNameInternal,
+        InstrumentState<InstrumentData, ExchangeKey, InstrumentKey>,
+    >,
 );
 
 impl<InstrumentData> InstrumentStates<InstrumentData> {
@@ -180,11 +187,9 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
             None => Either::Left(Either::Left(self.0.values())),
             Exchanges(exchanges) => {
                 // exchanges is OneOrMany<ExchangeIndex> (String) in compatibility layer; compare stringified
-                Either::Left(Either::Right(
-                    self.0.values().filter(|state| {
-                        exchanges.contains(&state.instrument.exchange.to_string())
-                    }),
-                ))
+                Either::Left(Either::Right(self.0.values().filter(|state| {
+                    exchanges.contains(&state.instrument.exchange.to_string())
+                })))
             }
             Instruments(instruments) => Either::Right(Either::Right(
                 self.0
@@ -211,11 +216,9 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
         match filter {
             None => Either::Left(Either::Left(self.0.values_mut())),
             Exchanges(exchanges) => {
-                Either::Left(Either::Right(
-                    self.0.values_mut().filter(|state| {
-                        exchanges.contains(&state.instrument.exchange.to_string())
-                    }),
-                ))
+                Either::Left(Either::Right(self.0.values_mut().filter(|state| {
+                    exchanges.contains(&state.instrument.exchange.to_string())
+                })))
             }
             Instruments(instruments) => Either::Right(Either::Right(
                 self.0
@@ -223,9 +226,7 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
                     .filter(|state| instruments.contains(&state.key)),
             )),
             Underlyings(_underlying) => Either::Right(Either::Left(
-                self.0
-                    .values_mut()
-                    .filter(|_| false), // temporarily disabled underlying filter
+                self.0.values_mut().filter(|_| false), // temporarily disabled underlying filter
             )),
         }
     }
@@ -237,7 +238,11 @@ impl<InstrumentData> InstrumentStates<InstrumentData> {
 /// This aggregates all the state and data for a single instrument, providing a comprehensive
 /// view of the instrument.
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Constructor)]
-pub struct InstrumentState<InstrumentData, ExchangeKey = ExchangeIndex, InstrumentKey = InstrumentIndex> {
+pub struct InstrumentState<
+    InstrumentData,
+    ExchangeKey = ExchangeIndex,
+    InstrumentKey = InstrumentIndex,
+> {
     /// Unique `InstrumentKey` identifier for the instrument this state is associated with.
     pub key: InstrumentKey,
 
@@ -267,7 +272,7 @@ impl<InstrumentData, ExchangeKey, InstrumentKey>
     /// the most recent order state is applied.
     pub fn update_from_account_snapshot(
         &mut self,
-    snapshot: &InstrumentAccountSnapshot<ExchangeKey, AssetIndex, InstrumentKey>,
+        snapshot: &InstrumentAccountSnapshot<ExchangeKey, AssetIndex, InstrumentKey>,
     ) where
         ExchangeKey: Debug + Clone,
         InstrumentKey: Debug + Clone,
@@ -280,7 +285,7 @@ impl<InstrumentData, ExchangeKey, InstrumentKey>
     /// Updates the instrument state from an [`Order`] snapshot.
     pub fn update_from_order_snapshot(
         &mut self,
-    order: Snapshot<&Order<ExchangeKey, InstrumentKey, OrderState<AssetIndex, InstrumentKey>>>,
+        order: Snapshot<&Order<ExchangeKey, InstrumentKey, OrderState<AssetIndex, InstrumentKey>>>,
     ) where
         ExchangeKey: Debug + Clone,
         InstrumentKey: Debug + Clone,
@@ -334,9 +339,9 @@ impl<InstrumentData, ExchangeKey, InstrumentKey>
     /// open [`Position`](super::position::Position) `pnl_unrealised` is re-calculated.
     pub fn update_from_market(
         &mut self,
-    event: &MarketEvent<InstrumentKey, InstrumentData::MarketEventKind>,
+        event: &MarketEvent<InstrumentKey, InstrumentData::MarketEventKind>,
     ) where
-    InstrumentData: InstrumentDataState<ExchangeKey, AssetIndex, InstrumentKey>,
+        InstrumentData: InstrumentDataState<ExchangeKey, AssetIndex, InstrumentKey>,
     {
         self.data.process(event);
 

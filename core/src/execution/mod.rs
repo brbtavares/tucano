@@ -84,11 +84,8 @@ pub mod request;
 
 /// Convenient type alias that represents a [`reconnect::Event`] produced by the [`AccountEvent`]
 /// stream.
-pub type AccountStreamEvent<
-    ExchangeKey = String,
-    AssetKey = String,
-    InstrumentKey = String,
-> = reconnect::Event<ExchangeId, AccountEvent<ExchangeKey, AssetKey, InstrumentKey>>;
+pub type AccountStreamEvent<ExchangeKey = String, AssetKey = String, InstrumentKey = String> =
+    reconnect::Event<ExchangeId, AccountEvent<ExchangeKey, AssetKey, InstrumentKey>>;
 
 /// Initialised [`ExecutionBuild`](builder::ExecutionBuild).
 ///

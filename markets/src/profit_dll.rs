@@ -114,7 +114,7 @@ pub struct ProfitConnector {
 
 impl ProfitConnector {
     pub fn new(_dll_path: Option<&str>) -> Result<Self, String> {
-    Ok(Self { _connected: false })
+        Ok(Self { _connected: false })
     }
 
     pub async fn initialize_login(

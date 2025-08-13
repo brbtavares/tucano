@@ -101,7 +101,7 @@ use std::{fmt::Debug, sync::Arc};
 use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Placeholder for IndexedInstruments
-use markets::{Keyed, ConcreteInstrument};
+use markets::{ConcreteInstrument, Keyed};
 pub type IndexedInstruments = Vec<Keyed<String, ConcreteInstrument>>;
 
 /// Defines the interface and implementations for different types of market data sources

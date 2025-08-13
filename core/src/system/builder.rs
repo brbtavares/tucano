@@ -1,3 +1,4 @@
+use crate::engine::state::IndexedInstruments;
 use crate::{
     engine::{
         audit::{context::EngineContext, Auditor},
@@ -23,7 +24,6 @@ use integration::{
     FeedEnded, Terminal,
 };
 use markets::{ConcreteInstrument, Keyed};
-use crate::engine::state::IndexedInstruments;
 
 /// Placeholder types
 pub type AssetNameInternal = String;
@@ -124,7 +124,10 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     ///
     /// Controla se o engine processa eventos de forma síncrona ou assíncrona.
     pub fn engine_feed_mode(self, value: EngineFeedMode) -> Self {
-        Self { engine_feed_mode: Some(value), ..self }
+        Self {
+            engine_feed_mode: Some(value),
+            ..self
+        }
     }
 
     /// Configura opcionalmente o [`AuditMode`] (habilitado ou desabilitado).
@@ -180,11 +183,11 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
             Event,
             MarketStream,
         >,
-    TucanoError,
+        TucanoError,
     >
     where
         Clock: EngineClock + Clone + Send + Sync + 'static,
-    FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
+        FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         let Self {
             args:

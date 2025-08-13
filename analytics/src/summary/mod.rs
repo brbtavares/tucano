@@ -53,7 +53,9 @@ impl std::fmt::Display for InstrumentNameInternal {
 
 // Allow lookups by &str in IndexMap
 impl std::borrow::Borrow<str> for InstrumentNameInternal {
-    fn borrow(&self) -> &str { &self.0 }
+    fn borrow(&self) -> &str {
+        &self.0
+    }
 }
 
 // Placeholder for ExchangeAsset - simplified for integration

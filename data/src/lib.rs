@@ -45,13 +45,6 @@
 //! - **🇧🇷 B3**: Bolsa brasileira via ProfitDLL
 
 // Silence unused dependency warnings for transitional deps (pending removal)
-#[allow(unused_imports)]
-use {
-    itertools as _,
-    reqwest as _,
-    serde_json as _,
-    vecmap as _,
-};
 use crate::{
     error::DataError,
     event::MarketEvent,
@@ -76,6 +69,8 @@ use markets::exchange::ExchangeId;
 use std::{collections::VecDeque, future::Future};
 use tokio::sync::mpsc;
 use tracing::{debug, error, warn};
+#[allow(unused_imports)]
+use {itertools as _, reqwest as _, serde_json as _, vecmap as _};
 
 /// All [`Error`](std::error::Error)s generated in Data.
 pub mod error;

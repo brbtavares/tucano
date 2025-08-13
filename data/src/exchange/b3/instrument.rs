@@ -179,7 +179,8 @@ pub mod utils {
         // Heurística: contar dígitos finais (>=2), pegar letra imediatamente anterior
         // e retornar prefixo antes dessa letra.
         let chars: Vec<char> = ticker.chars().collect();
-        if chars.len() < 6 { // mínimo razoável para derivativo (ex: WINV24 tem 6)
+        if chars.len() < 6 {
+            // mínimo razoável para derivativo (ex: WINV24 tem 6)
             return None;
         }
 
@@ -190,16 +191,20 @@ pub mod utils {
         }
         let digits_start = idx;
         let digits_len = chars.len() - digits_start;
-        if digits_len < 2 { // precisa de pelo menos 2 dígitos para ano / strike
+        if digits_len < 2 {
+            // precisa de pelo menos 2 dígitos para ano / strike
             return None;
         }
-        if digits_start == 0 { return None; }
+        if digits_start == 0 {
+            return None;
+        }
         let letter_pos = digits_start - 1;
         let letter = chars[letter_pos];
         if !letter.is_ascii_alphabetic() {
             return None;
         }
-        if letter_pos < 3 { // subjacente muito curto, provavelmente não derivativo
+        if letter_pos < 3 {
+            // subjacente muito curto, provavelmente não derivativo
             return None;
         }
         let underlying = &ticker[..letter_pos];

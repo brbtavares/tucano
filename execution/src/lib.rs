@@ -10,7 +10,6 @@
     rust_2018_idioms
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
-
 // (moved dummy imports below crate docs to satisfy inner doc comment placement rules)
 
 //! # ⚡ Execution - Módulo de Execução de Ordens

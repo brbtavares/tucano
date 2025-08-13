@@ -47,7 +47,7 @@ impl<Tx> FromIterator<(ExchangeId, Option<Tx>)> for MultiExchangeTxMap<Tx> {
     where
         Iter: IntoIterator<Item = (ExchangeId, Option<Tx>)>,
     {
-    MultiExchangeTxMap(FnvIndexMap::from_iter(iter))
+        MultiExchangeTxMap(FnvIndexMap::from_iter(iter))
     }
 }
 
@@ -76,10 +76,7 @@ where
 {
     type ExecutionTx = Transmitter;
 
-    fn find(
-        &self,
-        exchange: &ExchangeId,
-    ) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
+    fn find(&self, exchange: &ExchangeId) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
         self.0
             .get(exchange)
             .and_then(|tx| tx.as_ref())
@@ -110,14 +107,11 @@ where
         exchange: &ExchangeIndex,
     ) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
         let id = ExchangeId::from(exchange.as_str());
-        self.0
-            .get(&id)
-            .and_then(|tx| tx.as_ref())
-            .ok_or_else(|| {
-                UnrecoverableEngineError::IndexError(IndexError::ExchangeIndex(format!(
-                    "failed to find ExecutionTx for ExchangeId: {exchange}. Available: {self:?}"
-                )))
-            })
+        self.0.get(&id).and_then(|tx| tx.as_ref()).ok_or_else(|| {
+            UnrecoverableEngineError::IndexError(IndexError::ExchangeIndex(format!(
+                "failed to find ExecutionTx for ExchangeId: {exchange}. Available: {self:?}"
+            )))
+        })
     }
 
     fn iter<'a>(&'a self) -> impl Iterator<Item = &'a Self::ExecutionTx>
