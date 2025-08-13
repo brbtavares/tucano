@@ -11,7 +11,7 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use futures::Stream;
-use markets::ExchangeId;
+use tucano_markets::ExchangeId;
 use std::future::Future;
 
 // Tipos temporários para compatibilidade

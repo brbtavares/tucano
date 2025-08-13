@@ -12,7 +12,7 @@ use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use fnv::FnvHashMap;
-use markets::ExchangeId;
+use tucano_markets::ExchangeId;
 
 #[derive(Debug, Constructor)]
 pub struct AccountState {

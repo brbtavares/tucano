@@ -1,5 +1,5 @@
 use integration::error::SocketError;
-use markets::ExchangeId;
+use tucano_markets::ExchangeId;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

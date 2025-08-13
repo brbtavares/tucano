@@ -25,7 +25,7 @@ use crate::{
     InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
-use markets::{ExchangeId, ProfitError, Side};
+use tucano_markets::{ExchangeId, ProfitError, Side};
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{collections::HashMap, sync::Arc};
@@ -621,7 +621,7 @@ mod tests {
     use futures::future::BoxFuture;
     use futures::StreamExt;
     use integration::snapshot::Snapshot;
-    use markets::ExchangeId;
+    use tucano_markets::ExchangeId;
     use rust_decimal_macros::dec;
     use tokio::sync::mpsc;
 

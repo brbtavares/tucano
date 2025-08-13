@@ -7,7 +7,7 @@ use execution::{
     },
     AssetIndex, ExchangeIndex, InstrumentIndex,
 };
-use markets::Side;
+use tucano_markets::Side;
 use rust_decimal::Decimal;
 
 pub trait ClosePositionsStrategy<

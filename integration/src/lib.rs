@@ -104,7 +104,7 @@
 
 // Silence transitional unused dependency warnings (must appear after inner crate docs)
 #[allow(unused_imports)]
-use markets as _;
+use tucano_markets as _;
 
 use crate::error::SocketError;
 use serde::{Deserialize, Serialize};

@@ -5,7 +5,7 @@
 
 use execution::order::request::OrderRequestOpen;
 use execution::{ExchangeIndex, InstrumentIndex};
-use markets::Side;
+use tucano_markets::Side;
 use rust_decimal::Decimal;
 use trader::AlgoStrategy;
 
