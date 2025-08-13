@@ -35,6 +35,35 @@ git clone https://github.com/brbtavares/tucano.git
 cd tucano
 ```
 
+### Adicionar dependência (façade)
+
+No seu `Cargo.toml` adicione a crate unificada (re-export) — recomendado para começar:
+
+```toml
+[dependencies]
+tucano = { version = "0.1", features = ["full" ] }
+```
+
+Ou, se quiser granularidade / compilar menos coisas, use crates individuais:
+
+```toml
+[dependencies]
+tucano-core = "0.12"
+tucano-markets = "0.3"
+tucano-data = "0.10"
+tucano-execution = "0.5"
+tucano-trader = "0.1"
+tucano-risk = "0.1"
+tucano-strategies = "0.1"
+tucano-analytics = "0.1"
+```
+
+Depois importe via façade:
+
+```rust
+use tucano::prelude::*; // Engine, ExchangeId, Side, etc.
+```
+
 ### Compilação
 
 ```bash
@@ -127,7 +156,7 @@ Somente os componentes de dados (streaming vs histórico) e de execução (clien
 ### Configuração Windows
 
 ```rust
-use toucan::markets::profit_dll::ProfitDLLClient;
+use tucano::markets::profit_dll::ProfitDLLClient;
 
 // Configurar ProfitDLL
 let client = ProfitDLLClient::new()
@@ -147,7 +176,7 @@ client.send_order(order).await?;
 ### Instrumentos Suportados
 
 ```rust
-use toucan::markets::b3::{B3Stock, B3Option, B3Future};
+use tucano::markets::b3::{B3Stock, B3Option, B3Future};
 
 // Ações
 let petr4 = B3Stock::new("PETR4");
@@ -165,7 +194,7 @@ let dol_future = B3Future::new("DOLM24", "USD", "2024-12-31");
 ### Métricas Disponíveis
 
 ```rust
-use toucan::analytics::metric::*;
+use tucano::analytics::metric::*;
 
 // Sharpe Ratio
 let sharpe = SharpeRatio::calculate(&returns, risk_free_rate)?;
@@ -186,7 +215,7 @@ let pf = ProfitFactor::calculate(&trades)?;
 ### Relatórios Automatizados
 
 ```rust
-use toucan::analytics::summary::TradingSummary;
+use tucano::analytics::summary::TradingSummary;
 
 let summary = TradingSummary::generate(&trades, &positions)?;
 println!("{}", summary.display_table());
@@ -207,7 +236,7 @@ println!("{}", summary.display_table());
 ### Implementação Básica
 
 ```rust
-use toucan::risk::{RiskManager, RiskCheck};
+use tucano::risk::{RiskManager, RiskApproved, RiskRefused};
 
 struct MyRiskManager {
     max_position_size: f64,
