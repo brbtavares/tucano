@@ -90,7 +90,7 @@ impl ExchangeId {
     }
 
     // kept for backward compatibility (deprecated)
-    #[deprecated(note = "Use std::str::FromStr implementation instead")] 
+    #[deprecated(note = "Use std::str::FromStr implementation instead")]
     pub fn parse(s: &str) -> Option<Self> { <Self as FromStr>::from_str(s).ok() }
 }
 
