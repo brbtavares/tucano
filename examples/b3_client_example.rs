@@ -23,7 +23,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let assets = vec![
         AssetNameExchange::new("BRL".to_string()),
     ];
-    
+
     let instruments = vec![
         InstrumentNameExchange::new("PETR4".to_string()),
         InstrumentNameExchange::new("VALE3".to_string()),
