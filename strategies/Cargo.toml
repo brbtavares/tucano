@@ -21,7 +21,7 @@ options = []
 "tucano-trader" = "0.1.0"
 "tucano-execution" = "0.5.3"
 "tucano-markets" = "0.3.1"
-"tucano-analytics" = { workspace = true, optional = true }
+"tucano-analytics" = { version = "0.1.0", optional = true }
 chrono = { workspace = true, features = ["serde"] }
 serde = { workspace = true, features = ["derive"] }
 tracing = { workspace = true }
