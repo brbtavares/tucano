@@ -6,7 +6,6 @@
 // 3. Subscribe to market data for B3 instruments
 // 4. Handle incoming market events
 
-use tokio;
 use tucano_markets::{
     b3::{B3AssetFactory, B3Stock, B3ETF, B3REIT},
     broker::{Broker, ProfitDLLBroker},
@@ -31,26 +30,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create REITs
     let hglg11 = B3REIT::new("HGLG11".to_string(), "CSHG Logística".to_string());
 
-    println!(
-        "  • Stock: {} ({})",
-        petr4.symbol(),
-        petr4.asset_type().to_string()
-    );
-    println!(
-        "  • Stock: {} ({})",
-        vale3.symbol(),
-        vale3.asset_type().to_string()
-    );
-    println!(
-        "  • ETF: {} ({})",
-        bova11.symbol(),
-        bova11.asset_type().to_string()
-    );
-    println!(
-        "  • REIT: {} ({})",
-        hglg11.symbol(),
-        hglg11.asset_type().to_string()
-    );
+    println!("  • Stock: {} ({})", petr4.symbol(), petr4.asset_type());
+    println!("  • Stock: {} ({})", vale3.symbol(), vale3.asset_type());
+    println!("  • ETF: {} ({})", bova11.symbol(), bova11.asset_type());
+    println!("  • REIT: {} ({})", hglg11.symbol(), hglg11.asset_type());
 
     // Test asset factory
     println!("\n🏭 Testing Asset Factory:");
@@ -59,15 +42,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for symbol in factory_assets {
         match B3AssetFactory::from_symbol(symbol) {
             Ok(asset) => {
-                println!(
-                    "  • {}: {} -> {}",
-                    symbol,
-                    asset.asset_type().to_string(),
-                    asset.symbol()
-                );
+                println!("  • {}: {} -> {}", symbol, asset.asset_type(), asset.symbol());
             }
             Err(e) => {
-                println!("  • {}: Error - {}", symbol, e);
+                println!("  • {symbol}: Error - {e}");
             }
         }
     }
@@ -100,7 +78,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let symbols = vec!["PETR4", "VALE3", "BOVA11", "HGLG11"];
     for symbol in symbols {
         if let Ok(asset) = B3AssetFactory::from_symbol(symbol) {
-            println!("  • {}: {}", symbol, asset.asset_type().to_string());
+            println!("  • {}: {}", symbol, asset.asset_type());
         }
     }
 

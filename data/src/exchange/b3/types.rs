@@ -75,11 +75,11 @@ impl Display for B3Asset {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             B3Asset::BRL => write!(f, "BRL"),
-            B3Asset::Stock(s) => write!(f, "STOCK:{}", s),
-            B3Asset::Fund(s) => write!(f, "FUND:{}", s),
-            B3Asset::Future(s) => write!(f, "FUTURE:{}", s),
-            B3Asset::Option(s) => write!(f, "OPTION:{}", s),
-            B3Asset::Other(s) => write!(f, "OTHER:{}", s),
+            B3Asset::Stock(s) => write!(f, "STOCK:{s}"),
+            B3Asset::Fund(s) => write!(f, "FUND:{s}"),
+            B3Asset::Future(s) => write!(f, "FUTURE:{s}"),
+            B3Asset::Option(s) => write!(f, "OPTION:{s}"),
+            B3Asset::Other(s) => write!(f, "OTHER:{s}"),
         }
     }
 }

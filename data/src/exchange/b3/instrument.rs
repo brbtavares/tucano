@@ -276,9 +276,9 @@ pub mod utils {
     pub fn infer_security_type(ticker: &str) -> B3SecurityType {
         if ticker.ends_with("11") {
             B3SecurityType::Reit
-        } else if ticker.len() > 5 && ticker.chars().nth_back(0).map_or(false, |c| c.is_numeric()) {
+        } else if ticker.len() > 5 && ticker.chars().nth_back(0).is_some_and(|c| c.is_numeric()) {
             B3SecurityType::Option
-        } else if ticker.len() <= 4 || (ticker.len() == 5 && ticker.chars().last() == Some('4')) {
+        } else if ticker.len() <= 4 || (ticker.len() == 5 && ticker.ends_with('4')) {
             B3SecurityType::Stock
         } else {
             B3SecurityType::Other

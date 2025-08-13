@@ -226,11 +226,11 @@ impl ProfitDLLTransport {
         let mut guard = self.connector.lock().await;
         if guard.is_none() {
             let connector = ProfitConnector::new(self.dll_path.as_deref())
-                .map_err(|e| TransportError::Connectivity(e))?;
+                .map_err(TransportError::Connectivity)?;
             let rx = connector
                 .initialize_login(&self.activation_key, &self.user, &self.password)
                 .await
-                .map_err(|e| TransportError::Connectivity(e))?;
+                .map_err(TransportError::Connectivity)?;
             self.spawn_event_loop(rx);
             *guard = Some(connector);
         }

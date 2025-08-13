@@ -5,6 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
+use std::str::FromStr;
 
 /// Identifies different exchanges/trading venues supported by Toucan
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize)]
@@ -88,24 +89,30 @@ impl ExchangeId {
         }
     }
 
-    /// Parse ExchangeId from string (case insensitive)
-    pub fn from_str(s: &str) -> Option<Self> {
+    // kept for backward compatibility (deprecated)
+    #[deprecated(note = "Use std::str::FromStr implementation instead")] 
+    pub fn parse(s: &str) -> Option<Self> { <Self as FromStr>::from_str(s).ok() }
+}
+
+impl FromStr for ExchangeId {
+    type Err = (); // simple error for now
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_uppercase().as_str() {
-            "B3" => Some(ExchangeId::B3),
-            "MOCK" => Some(ExchangeId::Mock),
-            "SIMULATED" => Some(ExchangeId::Simulated),
-            "BINANCE" => Some(ExchangeId::Binance),
-            "COINBASE" => Some(ExchangeId::Coinbase),
-            "FTX" => Some(ExchangeId::Ftx),
-            "OKX" => Some(ExchangeId::Okx),
-            "BYBIT" => Some(ExchangeId::Bybit),
-            "BITMEX" => Some(ExchangeId::Bitmex),
-            "KRAKEN" => Some(ExchangeId::Kraken),
-            "HUOBI" => Some(ExchangeId::Huobi),
-            "KUCOIN" => Some(ExchangeId::Kucoin),
-            "GATEIO" | "GATE.IO" => Some(ExchangeId::GateIo),
-            "BITFINEX" => Some(ExchangeId::Bitfinex),
-            _ => None,
+            "B3" => Ok(ExchangeId::B3),
+            "MOCK" => Ok(ExchangeId::Mock),
+            "SIMULATED" => Ok(ExchangeId::Simulated),
+            "BINANCE" => Ok(ExchangeId::Binance),
+            "COINBASE" => Ok(ExchangeId::Coinbase),
+            "FTX" => Ok(ExchangeId::Ftx),
+            "OKX" => Ok(ExchangeId::Okx),
+            "BYBIT" => Ok(ExchangeId::Bybit),
+            "BITMEX" => Ok(ExchangeId::Bitmex),
+            "KRAKEN" => Ok(ExchangeId::Kraken),
+            "HUOBI" => Ok(ExchangeId::Huobi),
+            "KUCOIN" => Ok(ExchangeId::Kucoin),
+            "GATEIO" | "GATE.IO" => Ok(ExchangeId::GateIo),
+            "BITFINEX" => Ok(ExchangeId::Bitfinex),
+            _ => Err(()),
         }
     }
 }
@@ -117,9 +124,7 @@ impl Display for ExchangeId {
 }
 
 impl From<&str> for ExchangeId {
-    fn from(s: &str) -> Self {
-        Self::from_str(s).unwrap_or(ExchangeId::Mock)
-    }
+    fn from(s: &str) -> Self { s.parse().unwrap_or(ExchangeId::Mock) }
 }
 
 /// Core exchange trait providing metadata and capabilities
