@@ -40,7 +40,7 @@
 //! - Retorna erro descritivo em caso de incompatibilidade
 //! - Usa a constante `ID` do tipo para validação
 //!
-//! ### SerExchange  
+//! ### SerExchange
 //! Gera implementação de `Serialize` que converte para string:
 //! - Serializa usando o ID único do exchange
 //! - Garante consistência entre serialização e deserialização
