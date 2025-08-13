@@ -19,7 +19,7 @@ fnv = "1.0"
 uuid = { version = "1.0", features = ["serde"] }
 smol_str = { workspace = true }
 prettytable = "0.10"
-"tucano-execution" = { workspace = true }
-"tucano-markets" = { workspace = true }
-"tucano-integration" = { workspace = true }
+"tucano-execution" = "0.5.3"
+"tucano-markets" = "0.3.1"
+"tucano-integration" = "0.9.1"
 rust_decimal_macros= { version = "1", workspace = true }
