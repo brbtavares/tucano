@@ -1,5 +1,5 @@
 #!/bin/bash
-# Toucan Project - Format script
+# Tucano Project (formerly Toucan) - Format script
 # Uses rustfmt with standard config in project root
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"

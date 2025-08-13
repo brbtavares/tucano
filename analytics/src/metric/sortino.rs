@@ -3,11 +3,11 @@ use rust_decimal::{Decimal, MathematicalOps};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 
-/// Represents a Sortino Ratio value over a specific [`TimeInterval`].
+/// Representa um valor de Sortino Ratio em um [`TimeInterval`] específico.
 ///
-/// Similar to the Sharpe Ratio, but only considers downside volatility (standard deviation of
-/// negative returns) rather than total volatility. This makes it a better metric for portfolios
-/// with non-normal return distributions.
+/// Semelhante ao Sharpe Ratio, porém considera apenas a volatilidade negativa (desvio padrão dos
+/// retornos negativos) em vez da volatilidade total. É mais adequado para portfólios com
+/// distribuição de retornos não normal.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Deserialize, Serialize)]
 pub struct SortinoRatio<Interval> {
     pub value: Decimal,
@@ -18,7 +18,7 @@ impl<Interval> SortinoRatio<Interval>
 where
     Interval: TimeInterval,
 {
-    /// Calculate the [`SortinoRatio`] over the provided [`TimeInterval`].
+    /// Calcula o [`SortinoRatio`] para o [`TimeInterval`] fornecido.
     pub fn calculate(
         risk_free_return: Decimal,
         mean_return: Decimal,
@@ -47,10 +47,9 @@ where
         }
     }
 
-    /// Scale the [`SortinoRatio`] from the current [`TimeInterval`] to the provided [`TimeInterval`].
+    /// Escala o [`SortinoRatio`] do intervalo atual para o intervalo alvo.
     ///
-    /// This scaling assumed the returns are independently and identically distributed (IID).
-    /// However, this assumption may be less appropriate for downside deviation.
+    /// Assume retornos IID (independentes), embora para downside deviation isso possa ser menos apropriado.
     pub fn scale<TargetInterval>(self, target: TargetInterval) -> SortinoRatio<TargetInterval>
     where
         TargetInterval: TimeInterval,

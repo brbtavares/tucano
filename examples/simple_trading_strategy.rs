@@ -228,7 +228,7 @@ pub struct SimpleStrategy {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("🤖 Estratégia de Trading Simples - Toucan B3");
+    println!("🤖 Estratégia de Trading Simples - Tucano B3");
     println!("===========================================");
 
     let mut strategy = SimpleStrategy::new();

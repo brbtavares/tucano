@@ -1,33 +1,33 @@
-//! # Core Error Types
+//! # Tipos de Erro do Core
 //!
-//! This module defines the primary error types used throughout the Tucano trading framework's core module.
-//! It provides a centralized error handling system that aggregates errors from various subsystems including
-//! execution, market data, and indexing.
+//! Este módulo define os principais tipos de erro usados no módulo core do framework Tucano.
+//! Fornece um sistema centralizado de tratamento agregando erros de vários subsistemas:
+//! execução, dados de mercado e indexação.
 //!
-//! ## Error Hierarchy
+//! ## Hierarquia de Erros
 //!
-//! The main error type `TucanoError` encompasses:
-//! - **IndexError**: Errors related to asset/instrument/exchange indexing
-//! - **ExecutionBuilder**: Errors during execution system initialization
-//! - **ExecutionRxDropped**: Communication channel errors when receivers are dropped
-//! - **MarketData**: Errors from the data module (market data streaming, parsing, etc.)
-//! - **Execution**: Errors from the execution module (order management, balance tracking, etc.)
-//! - **JoinError**: Async task join errors in concurrent operations
+//! O tipo principal `TucanoError` engloba:
+//! - **IndexError**: Erros de indexação de ativo / instrumento / exchange
+//! - **ExecutionBuilder**: Erros durante inicialização do subsistema de execução
+//! - **ExecutionRxDropped**: Canal de comunicação cujo receiver foi descartado
+//! - **MarketData**: Erros do módulo de dados (streaming, parsing, assinatura)
+//! - **Execution**: Erros de execução (ordens, saldos, liquidações)
+//! - **JoinError**: Falhas ao aguardar tasks assíncronas (join)
 //!
-//! ## Usage
+//! ## Uso
 //!
 //! ```rust
 //! use core::error::TucanoError;
 //!
-//! fn handle_trading_error(error: TucanoError) {
+//! fn tratar_erro_trading(error: TucanoError) {
 //!     match error {
 //!         TucanoError::MarketData(data_err) => {
-//!             eprintln!("Market data issue: {}", data_err);
+//!             eprintln!("Problema de dados de mercado: {}", data_err);
 //!         }
 //!         TucanoError::Execution(exec_err) => {
-//!             eprintln!("Execution issue: {}", exec_err);
+//!             eprintln!("Problema de execução: {}", exec_err);
 //!         }
-//!         _ => eprintln!("Other error: {}", error),
+//!         _ => eprintln!("Outro erro: {}", error),
 //!     }
 //! }
 //! ```
@@ -38,42 +38,42 @@ use execution::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-/// Central error type for the Tucano trading framework's core module.
+/// Tipo central de erro do módulo core do framework Tucano.
 ///
-/// This enum aggregates all possible errors that can occur within the core trading system,
-/// providing a unified interface for error handling across different subsystems.
+/// Enum que agrega todos os erros possíveis do sistema de trading core,
+/// fornecendo uma interface unificada de tratamento entre subsistemas.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]
 pub enum TucanoError {
-    /// Asset, instrument, or exchange indexing errors
+    /// Erros de indexação de ativo, instrumento ou exchange
     #[error("IndexError: {0}")]
     IndexError(#[from] IndexError),
 
-    /// Errors during execution system builder configuration
+    /// Erros na configuração (builder) do sistema de execução
     #[error("ExecutionBuilder: {0}")]
     ExecutionBuilder(String),
 
-    /// Communication channel receiver was dropped unexpectedly
+    /// Receiver de canal de comunicação foi descartado inesperadamente
     #[error("ExchangeManager dropped it's ExecutionRequest receiver")]
     ExecutionRxDropped(#[from] RxDropped),
 
-    /// Market data streaming, parsing, or subscription errors
+    /// Erros de streaming, parsing ou assinatura de dados de mercado
     #[error("market data: {0}")]
     MarketData(#[from] DataError),
 
-    /// Order execution, balance tracking, or trade settlement errors
+    /// Erros de execução de ordens, rastreamento de saldo ou liquidação de trades
     #[error("execution: {0}")]
     Execution(#[from] ExecutionError),
 
-    /// Async task join failures in concurrent operations
+    /// Falhas ao fazer join de tasks assíncronas
     #[error("JoinError: {0}")]
     JoinError(String),
 }
-/// Error indicating that a receiver end of a communication channel was dropped.
+/// Indica que o lado receiver de um canal de comunicação foi descartado.
 ///
-/// This typically occurs when:
-/// - An ExchangeManager's ExecutionRequest receiver is dropped
-/// - Communication channels between engine components are severed
-/// - Async tasks terminate unexpectedly, dropping their receivers
+/// Típicos cenários:
+/// - Receiver de ExecutionRequest do ExchangeManager caiu
+/// - Canais entre componentes do engine foram encerrados
+/// - Tasks assíncronas terminaram inesperadamente descartando receivers
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]
 #[error("RxDropped")]
 pub struct RxDropped;

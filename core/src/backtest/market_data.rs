@@ -49,7 +49,7 @@ where
         &self,
     ) -> Result<
         impl Stream<Item = MarketStreamEvent<InstrumentIndex, Self::Kind>> + Send + 'static,
-    TucanoError,
+        TucanoError,
     > {
         let events = Arc::clone(&self.events);
         let lazy_clone_iter = (0..events.len()).map(move |index| events[index].clone());

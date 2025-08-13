@@ -1,20 +1,20 @@
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
-/// Represents a win rate ratio between 0 and 1, calculated as `wins/total`.
+/// Representa a taxa de acerto (win rate) entre 0 e 1, calculada como `wins/total`.
 ///
-/// The win rate is calculated as the absolute ratio of winning trades to total trades.
+/// Calculada como a razão absoluta de trades vencedores sobre o total.
 ///
-/// Returns None if there are no trades (total = 0) or if the division operation overflows.
+/// Retorna None se não há trades (total = 0) ou se a divisão overflow.
 ///
-/// See docs: <https://www.investopedia.com/terms/w/win-loss-ratio.asp>
+/// Referência: <https://www.investopedia.com/terms/w/win-loss-ratio.asp>
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Deserialize, Serialize)]
 pub struct WinRate {
     pub value: Decimal,
 }
 
 impl WinRate {
-    /// Calculate the [`WinRate`] given the provided number of wins and total positions.
+    /// Calcula o [`WinRate`] a partir do número de vitórias e total de posições.
     pub fn calculate(wins: Decimal, total: Decimal) -> Option<Self> {
         if total == Decimal::ZERO {
             None

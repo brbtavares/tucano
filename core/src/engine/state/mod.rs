@@ -1,3 +1,4 @@
+use crate::engine::state::asset::AssetState;
 use crate::engine::{
     state::{
         asset::{filter::AssetFilter, AssetStates},
@@ -12,6 +13,7 @@ use crate::engine::{
     },
     Processor,
 };
+use analytics::summary::asset::TearSheetAssetGenerator;
 use data::event::MarketEvent;
 use derive_more::Constructor;
 use execution::{
@@ -20,11 +22,9 @@ use execution::{
 };
 use fnv::FnvHashMap;
 use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
-use markets::{exchange::ExchangeId, Keyed, ConcreteInstrument}; // ExchangeId still used in connectivity
+use markets::{exchange::ExchangeId, ConcreteInstrument, Keyed}; // ExchangeId still used in connectivity
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use analytics::summary::asset::TearSheetAssetGenerator;
-use crate::engine::state::asset::AssetState;
 
 /// Placeholder for IndexedInstruments
 pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
@@ -39,7 +39,7 @@ impl IndexedInstrumentsExt for IndexedInstruments {
         Box::new(self.iter().map(|k| k.value.exchange))
     }
     fn instruments_iter(&self) -> Box<dyn Iterator<Item = InstrumentIndex> + '_> {
-    Box::new(self.iter().map(|k| k.key.clone()))
+        Box::new(self.iter().map(|k| k.key.clone()))
     }
 }
 
@@ -99,7 +99,7 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         instrument_data_init: FnInstrumentData,
     ) -> EngineStateBuilder<'_, GlobalData, FnInstrumentData>
     where
-    FnInstrumentData: Fn(&Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
+        FnInstrumentData: Fn(&Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         EngineStateBuilder::new(instruments, global, instrument_data_init)
     }
@@ -121,8 +121,8 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         GlobalData: for<'a> Processor<&'a AccountEvent>,
         InstrumentData: for<'a> Processor<&'a AccountEvent>,
     {
-    // Set exchange account connectivity to Healthy if it was Reconnecting
-    self.connectivity.update_from_account_event(&event.exchange);
+        // Set exchange account connectivity to Healthy if it was Reconnecting
+        self.connectivity.update_from_account_event(&event.exchange);
 
         let output = match &event.kind {
             AccountEventKind::Snapshot(snapshot) => {
@@ -138,8 +138,7 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
                             },
                         );
                     }
-                    self
-                        .assets
+                    self.assets
                         .asset_index_mut(&balance.asset)
                         .update_from_balance(Snapshot(balance))
                 }
@@ -154,7 +153,9 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
                 None
             }
             AccountEventKind::BalanceSnapshot(balance) => {
-                self.assets.asset_index_mut(&balance.0.asset).update_from_balance(balance.as_ref());
+                self.assets
+                    .asset_index_mut(&balance.0.asset)
+                    .update_from_balance(balance.as_ref());
                 None
             }
             AccountEventKind::OrderSnapshot(order) => {
@@ -207,9 +208,7 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         // Set exchange market data connectivity to Healthy if it was Reconnecting
         // Convert ExchangeId to external ExchangeIndex (String) interface
         let exchange_index = event.exchange.to_string();
-        self
-            .connectivity
-            .update_from_market_event(&exchange_index);
+        self.connectivity.update_from_market_event(&exchange_index);
 
         let instrument_state = self.instruments.instrument_index_mut(&event.instrument);
 

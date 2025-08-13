@@ -1,6 +1,6 @@
+use execution::ExchangeIndex; // rollback path B: external String key interface
 use indexmap::IndexMap;
 use markets::exchange::ExchangeId;
-use execution::ExchangeIndex; // rollback path B: external String key interface
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 

@@ -11,6 +11,7 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 🏛️ Markets - Abstrações Simplificadas de Mercado
 //!
 //! Traits e tipos fundamentais para exchanges, instrumentos e ativos financeiros.

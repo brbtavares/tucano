@@ -3,9 +3,9 @@ name = "data"
 version = "0.10.1"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-repository = "https://github.com/brbtavares/toucan"
+repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "High performance & normalised WebSocket intergration for leading cryptocurrency exchanges - batteries included."
+description = "Ingestão WebSocket de alta performance e normalizada para venues financeiros (foco B3) - baterias incluídas."
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["accessibility", "simulation"]
 
@@ -14,7 +14,7 @@ tracing-subscriber = { workspace = true, features = ["env-filter", "json"] }
 rust_decimal_macros = { workspace = true }
 
 [dependencies]
-# Toucan Ecosystem
+# Tucano Ecosystem
 integration = { workspace = true }
 markets = { workspace = true }
 macros = { workspace = true }

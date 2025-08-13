@@ -99,7 +99,7 @@ impl B3ProfitConnector {
 
     /// Get asset category from symbol
     pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
-    let _asset = B3AssetFactory::from_symbol(symbol)?;
+        let _asset = B3AssetFactory::from_symbol(symbol)?;
 
         // This requires implementing a method to get category from the trait object
         // For now, we'll use pattern matching on the symbol

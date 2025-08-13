@@ -1,3 +1,4 @@
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 📊 Analytics - Módulo de Análise Financeira
 //!
 //! Este módulo fornece ferramentas abrangentes para análise quantitativa de dados financeiros,
@@ -11,6 +12,8 @@
 //! - **Relatórios Automatizados**: Geração de sumários e tear sheets
 //! - **Intervalos Temporais**: Suporte a diferentes períodos de análise
 //!
+//! ## 🏗️ Estrutura (simplificada)
+//! Arquivos principais: `algorithm.rs`, diretório `metric/`, diretório `summary/`, `time.rs`.
 //! ## 🏗️ Estrutura do Módulo
 //!
 //! (Diagrama ilustrativo – não é código executável)
@@ -27,6 +30,22 @@
 //!
 //! Cálculo de Sharpe Ratio com valores hipotéticos (retornos já agregados).
 //!
+//! Cálculo simples do Sharpe Ratio usando estatísticas pré-computadas de uma série de retornos:
+//!
+//! ```rust
+//! use analytics::metric::sharpe::SharpeRatio;
+//! use rust_decimal::Decimal;
+//! use rust_decimal_macros::dec;
+//! use chrono::TimeDelta;
+//!
+//! // Estatísticas de retornos (exemplo fictício)
+//! let risk_free_return = dec!(0.0015);    // 0.15%
+//! let mean_return      = dec!(0.0025);    // 0.25%
+//! let std_dev_returns  = dec!(0.02);      // 2%
+//! let interval = TimeDelta::hours(2);     // período analisado
+//!
+//! let sharpe = SharpeRatio::calculate(risk_free_return, mean_return, std_dev_returns, interval);
+//! assert!(sharpe.value != rust_decimal::Decimal::ZERO);
 //! ```rust
 //! use analytics::metric::sharpe::SharpeRatio;
 //! use analytics::time::Daily;
@@ -45,7 +64,7 @@
 //! ## 🔍 Métricas Disponíveis
 //!
 //! - **Sharpe Ratio**: Retorno ajustado ao risco
-//! - **Sortino Ratio**: Sharpe considerando apenas downside risk  
+//! - **Sortino Ratio**: Sharpe considerando apenas downside risk
 //! - **Calmar Ratio**: Retorno anualizado / máximo drawdown
 //! - **Win Rate**: Percentual de trades vencedores
 //! - **Profit Factor**: Lucro bruto / prejuízo bruto

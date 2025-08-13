@@ -120,8 +120,8 @@ use execution::{
     AccountEvent, AccountEventKind, AccountSnapshot,
 };
 
-use markets::{ExchangeId, Side};
-use core::engine::state::IndexedInstruments; // instrument list alias
+use core::engine::state::IndexedInstruments;
+use markets::{ExchangeId, Side}; // instrument list alias
 
 use risk::DefaultRiskManager;
 
@@ -718,8 +718,16 @@ fn test_engine_process_engine_event_with_audit() {
         .map(|ts| ts.pnl_returns.pnl_raw)
         .collect();
     pnls.sort();
-    assert!(pnls.contains(&dec!(7000.0)), "Missing primary instrument PnL 7000.0: {:?}", pnls);
-    assert!(pnls.contains(&dec!(-0.065)), "Missing secondary instrument PnL -0.065: {:?}", pnls);
+    assert!(
+        pnls.contains(&dec!(7000.0)),
+        "Missing primary instrument PnL 7000.0: {:?}",
+        pnls
+    );
+    assert!(
+        pnls.contains(&dec!(-0.065)),
+        "Missing secondary instrument PnL -0.065: {:?}",
+        pnls
+    );
 
     // Todo: Additional assertions + TradingSummary assertions once generated (to test TimeInterval)
 }
@@ -752,10 +760,18 @@ impl AlgoStrategy for TestBuyAndHoldStrategy {
             .instruments
             .instruments(&InstrumentFilter::None)
             .filter_map(|state| {
-                if state.position.current.is_some() { return None; }
-                if !state.orders.0.is_empty() { return None; }
+                if state.position.current.is_some() {
+                    return None;
+                }
+                if !state.orders.0.is_empty() {
+                    return None;
+                }
                 let price = state.data.price()?;
-                let cid = if state.key == "inst0" { gen_cid(0) } else { gen_cid(1) };
+                let cid = if state.key == "inst0" {
+                    gen_cid(0)
+                } else {
+                    gen_cid(1)
+                };
                 Some(OrderRequestOpen {
                     key: OrderKey {
                         exchange: state.instrument.exchange.to_string().to_lowercase(),
@@ -763,7 +779,13 @@ impl AlgoStrategy for TestBuyAndHoldStrategy {
                         strategy: self.id.clone(),
                         cid,
                     },
-                    state: RequestOpen { side: Side::Buy, kind: OrderKind::Market, time_in_force: TimeInForce::ImmediateOrCancel, price, quantity: dec!(1) },
+                    state: RequestOpen {
+                        side: Side::Buy,
+                        kind: OrderKind::Market,
+                        time_in_force: TimeInForce::ImmediateOrCancel,
+                        price,
+                        quantity: dec!(1),
+                    },
                 })
             });
         (std::iter::empty(), opens)
@@ -812,7 +834,9 @@ impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
             InstrumentFilter::Instruments(OneOrMany::One("inst0".to_string()))
         } else if filter_str.contains("inst1") {
             InstrumentFilter::Instruments(OneOrMany::One("inst1".to_string()))
-        } else { InstrumentFilter::None };
+        } else {
+            InstrumentFilter::None
+        };
 
         let opens: Vec<_> = state
             .instruments
@@ -820,9 +844,30 @@ impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
             .filter_map(|state| {
                 let position = state.position.current.as_ref()?;
                 let price = state.data.price()?;
-                let side = match position.side { Side::Buy => Side::Sell, Side::Sell => Side::Buy };
-                let cid = if state.key == "inst0" { gen_cid(0) } else { gen_cid(1) };
-                Some(OrderRequestOpen { key: OrderKey { exchange: state.instrument.exchange.to_string().to_lowercase(), instrument: state.key.clone(), strategy: self.id.clone(), cid }, state: RequestOpen { side, kind: OrderKind::Market, time_in_force: TimeInForce::ImmediateOrCancel, price, quantity: position.quantity_abs } })
+                let side = match position.side {
+                    Side::Buy => Side::Sell,
+                    Side::Sell => Side::Buy,
+                };
+                let cid = if state.key == "inst0" {
+                    gen_cid(0)
+                } else {
+                    gen_cid(1)
+                };
+                Some(OrderRequestOpen {
+                    key: OrderKey {
+                        exchange: state.instrument.exchange.to_string().to_lowercase(),
+                        instrument: state.key.clone(),
+                        strategy: self.id.clone(),
+                        cid,
+                    },
+                    state: RequestOpen {
+                        side,
+                        kind: OrderKind::Market,
+                        time_in_force: TimeInForce::ImmediateOrCancel,
+                        price,
+                        quantity: position.quantity_abs,
+                    },
+                })
             })
             .collect();
         (std::iter::empty(), opens)
@@ -885,8 +930,26 @@ fn build_engine(
 > {
     // Simplified instrument list using placeholder keys inst0/inst1
     let instruments: IndexedInstruments = vec![
-        markets::Keyed::new("inst0".to_string(), markets::ConcreteInstrument { symbol: "BASE".into(), market: "spot".into(), exchange: ExchangeId::Mock, underlying: Some("base_quote".into()), name_exchange: "BASEQUOTE".into() }),
-        markets::Keyed::new("inst1".to_string(), markets::ConcreteInstrument { symbol: "ALT".into(), market: "spot".into(), exchange: ExchangeId::Mock, underlying: Some("alt_base".into()), name_exchange: "ALTBASE".into() }),
+        markets::Keyed::new(
+            "inst0".to_string(),
+            markets::ConcreteInstrument {
+                symbol: "BASE".into(),
+                market: "spot".into(),
+                exchange: ExchangeId::Mock,
+                underlying: Some("base_quote".into()),
+                name_exchange: "BASEQUOTE".into(),
+            },
+        ),
+        markets::Keyed::new(
+            "inst1".to_string(),
+            markets::ConcreteInstrument {
+                symbol: "ALT".into(),
+                market: "spot".into(),
+                exchange: ExchangeId::Mock,
+                underlying: Some("alt_base".into()),
+                name_exchange: "ALTBASE".into(),
+            },
+        ),
     ];
 
     let clock = HistoricalClock::new(STARTING_TIMESTAMP);
@@ -991,10 +1054,20 @@ fn account_event_order_response(
     }))
 }
 
-fn account_event_balance(asset: usize, time_plus: u64, total: f64, free: f64) -> EngineEvent<DataKind> {
+fn account_event_balance(
+    asset: usize,
+    time_plus: u64,
+    total: f64,
+    free: f64,
+) -> EngineEvent<DataKind> {
     // Map legacy numeric asset indices to string keys
     fn asset_key(i: usize) -> &'static str {
-        match i { 0 => "base", 1 => "alt", 2 => "quote", _ => panic!("unknown asset index {i}"), }
+        match i {
+            0 => "base",
+            1 => "alt",
+            2 => "quote",
+            _ => panic!("unknown asset index {i}"),
+        }
     }
     EngineEvent::Account(AccountStreamEvent::Item(AccountEvent {
         exchange: "mock".to_string(),

@@ -1,3 +1,4 @@
+use crate::engine::state::IndexedInstruments;
 use crate::{
     engine::{
         audit::{context::EngineContext, Auditor},
@@ -23,7 +24,6 @@ use integration::{
     FeedEnded, Terminal,
 };
 use markets::{ConcreteInstrument, Keyed};
-use crate::engine::state::IndexedInstruments;
 
 /// Placeholder types
 pub type AssetNameInternal = String;
@@ -33,68 +33,66 @@ use futures::Stream;
 use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, marker::PhantomData};
 
-/// Defines how the `Engine` processes input events.
+/// Define como o `Engine` processa eventos de entrada.
 ///
-/// Use this to control whether the `Engine` runs in a synchronous blocking thread
-/// with an `Iterator` or asynchronously with a `Stream`.
+/// Controla se o `Engine` roda de forma síncrona (thread bloqueante com `Iterator`)
+/// ou assíncrona (via `Stream` em tasks tokio).
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Default)]
 pub enum EngineFeedMode {
-    /// Process events synchronously with an `Iterator` in a blocking thread (default).
+    /// Processa eventos de forma síncrona com `Iterator` em thread bloqueante (padrão).
     #[default]
     Iterator,
 
-    /// Process events asynchronously with a `Stream` and tokio tasks.
+    /// Processa eventos de forma assíncrona com `Stream` em tasks tokio.
     ///
-    /// Useful when running concurrent backtests at scale.
+    /// Útil para múltiplos backtests concorrentes em escala.
     Stream,
 }
 
-/// Defines if the `Engine` sends the audit events it produces on the audit channel.
+/// Define se o `Engine` envia eventos de auditoria produzidos no canal de auditoria.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Default)]
 pub enum AuditMode {
-    /// Enable audit event sending.
+    /// Habilita envio de eventos de auditoria.
     Enabled,
 
-    /// Disable audit event sending (default).
+    /// Desabilita envio de auditoria (padrão).
     #[default]
     Disabled,
 }
 
-/// Arguments required for building a full Toucan trading system.
+/// Argumentos necessários para construir um sistema de trading completo Tucano.
 ///
-/// Contains all the required components to build and initialise a full Toucan trading system,
-/// including the `Engine` and all supporting infrastructure.
+/// Contém todos os componentes para montar e inicializar o sistema (Engine + infraestrutura).
 #[derive(Debug, Clone, PartialEq, Constructor)]
 pub struct SystemArgs<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData> {
-    /// Indexed collection of instruments the system will track.
+    /// Coleção indexada de instrumentos que o sistema rastreará.
     pub instruments: &'a IndexedInstruments,
 
-    /// Execution configurations for exchange execution links.
+    /// Configurações de execução para conexões de exchanges.
     pub executions: Vec<ExecutionConfig>,
 
-    /// `EngineClock` implementation for time keeping.
+    /// Implementação de `EngineClock` para marcação de tempo.
     ///
-    /// For example, `HistoricalClock` for backtesting and `LiveClock` for live/paper trading.
+    /// Ex: `HistoricalClock` (backtest) ou `LiveClock` (live/paper).
     pub clock: Clock,
 
-    /// Engine `Strategy` implementation.
+    /// Implementação de `Strategy` do engine.
     pub strategy: Strategy,
 
-    /// Engine `RiskManager` implementation.
+    /// Implementação de `RiskManager` do engine.
     pub risk: Risk,
 
-    /// `Stream` of `MarketStreamEvent`s.
+    /// `Stream` de `MarketStreamEvent`s.
     pub market_stream: MarketStream,
 
-    /// `EngineState` `GlobalData`
+    /// `GlobalData` do `EngineState`.
     pub global_data: GlobalData,
 
-    /// Closure used when building the `EngineState` to initialise every
-    /// instrument's `InstrumentDataState`.
+    /// Closure usada na construção do `EngineState` para inicializar cada `InstrumentDataState`.
     pub instrument_data_init: FnInstrumentData,
 }
 
-/// Builder for constructing a full Toucan trading system.
+/// Builder para construir um sistema de trading completo Tucano.
 #[derive(Debug)]
 pub struct SystemBuilder<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData> {
     args: SystemArgs<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>,
@@ -107,9 +105,9 @@ pub struct SystemBuilder<'a, Clock, Strategy, Risk, MarketStream, GlobalData, Fn
 impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     SystemBuilder<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
 {
-    /// Create a new `SystemBuilder` with the provided `SystemArguments`.
+    /// Cria novo `SystemBuilder` com os `SystemArguments` fornecidos.
     ///
-    /// Initialises a builder with default values for optional configurations.
+    /// Inicializa com valores padrão para configurações opcionais.
     pub fn new(
         config: SystemArgs<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>,
     ) -> Self {
@@ -122,16 +120,19 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
         }
     }
 
-    /// Optionally configure the [`EngineFeedMode`] (`Iterator` or `Stream`).
+    /// Configura opcionalmente o [`EngineFeedMode`] (`Iterator` ou `Stream`).
     ///
-    /// Controls whether the engine processes events synchronously or asynchronously.
+    /// Controla se o engine processa eventos de forma síncrona ou assíncrona.
     pub fn engine_feed_mode(self, value: EngineFeedMode) -> Self {
-        Self { engine_feed_mode: Some(value), ..self }
+        Self {
+            engine_feed_mode: Some(value),
+            ..self
+        }
     }
 
-    /// Optionally configure the [`AuditMode`] (enabled or disabled).
+    /// Configura opcionalmente o [`AuditMode`] (habilitado ou desabilitado).
     ///
-    /// Controls whether the engine sends the audit events it produces.
+    /// Controla se o engine envia os eventos de auditoria que produz.
     pub fn audit_mode(self, value: AuditMode) -> Self {
         Self {
             audit_mode: Some(value),
@@ -139,9 +140,9 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
         }
     }
 
-    /// Optionally configure the initial [`TradingState`] (enabled or disabled).
+    /// Configura opcionalmente o [`TradingState`] inicial (habilitado ou desabilitado).
     ///
-    /// Sets whether algorithmic trading is initially enabled when the system starts.
+    /// Define se o trading algorítmico inicia habilitado quando o sistema sobe.
     pub fn trading_state(self, value: TradingState) -> Self {
         Self {
             trading_state: Some(value),
@@ -149,13 +150,12 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
         }
     }
 
-    /// Optionally provide initial exchange asset `Balance`s.
+    /// Fornece opcionalmente `Balance`s iniciais de ativos da exchange.
     ///
-    /// Useful for back-test scenarios where seeding EngineState with initial `Balance`s is
-    /// required.
+    /// Útil em cenários de backtest onde é necessário semear o `EngineState` com saldos iniciais.
     ///
-    /// Note the internal implementation uses a `HashMap`, so duplicate
-    /// `ExchangeAsset<AssetNameInternal>` keys are overwritten.
+    /// Observação: internamente usa um `HashMap`, então chaves duplicadas de
+    /// `ExchangeAsset<AssetNameInternal>` sobrescrevem valores anteriores.
     pub fn balances<BalanceIter>(mut self, balances: BalanceIter) -> Self
     where
         BalanceIter: IntoIterator<Item = (AssetNameInternal, Balance)>,
@@ -164,11 +164,11 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
         self
     }
 
-    /// Build the [`SystemBuild`] with the configured builder settings.
+    /// Constrói o [`SystemBuild`] com as configurações aplicadas ao builder.
     ///
-    /// This constructs all the system components but does not start any tasks or streams.
+    /// Constrói todos os componentes do sistema mas não inicia tasks ou streams.
     ///
-    /// Initialise the `SystemBuild` instance to start the system.
+    /// Inicialize a instância de `SystemBuild` para iniciar o sistema.
     pub fn build<Event, InstrumentData>(
         self,
     ) -> Result<
@@ -183,11 +183,11 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
             Event,
             MarketStream,
         >,
-    TucanoError,
+        TucanoError,
     >
     where
         Clock: EngineClock + Clone + Send + Sync + 'static,
-    FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
+        FnInstrumentData: Fn(&'a Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
     {
         let Self {
             args:
@@ -247,9 +247,9 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
     }
 }
 
-/// Fully constructed `SystemBuild` ready to be initialised.
+/// `SystemBuild` totalmente construído e pronto para ser inicializado.
 ///
-/// This is an intermediate step before spawning tasks and running the system.
+/// Passo intermediário antes de spawnar tasks e rodar o sistema.
 #[allow(missing_debug_implementations)]
 pub struct SystemBuild<Engine, Event, MarketStream> {
     /// Constructed `Engine` instance.
@@ -284,7 +284,7 @@ where
     Event: From<MarketStream::Item> + From<AccountStreamEvent> + Debug + Clone + Send + 'static,
     MarketStream: Stream + Send + 'static,
 {
-    /// Construct a new `SystemBuild` from the provided components.
+    /// Cria um novo `SystemBuild` a partir dos componentes fornecidos.
     pub fn new(
         engine: Engine,
         engine_feed_mode: EngineFeedMode,
@@ -304,16 +304,16 @@ where
         }
     }
 
-    /// Initialise the system using the current tokio runtime.
+    /// Inicializa o sistema usando o runtime tokio atual.
     ///
-    /// Spawns all necessary tasks and returns the running `System` instance.
+    /// Spawn de todas as tasks necessárias e retorna a instância `System` em execução.
     pub async fn init(self) -> Result<System<Engine, Event>, TucanoError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
-    /// Initialise the system using the provided tokio runtime.
+    /// Inicializa o sistema usando um runtime tokio específico.
     ///
-    /// Allows specifying a custom runtime for spawning tasks.
+    /// Permite especificar um runtime customizado para spawn das tasks.
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,

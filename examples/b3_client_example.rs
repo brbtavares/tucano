@@ -23,7 +23,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let assets = vec![
         AssetNameExchange::new("BRL".to_string()),
     ];
-    
+
     let instruments = vec![
         InstrumentNameExchange::new("PETR4".to_string()),
         InstrumentNameExchange::new("VALE3".to_string()),
@@ -80,7 +80,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    println!("\n✅ Cliente B3 integrado com sucesso ao framework Toucan!");
+    println!("\n✅ Cliente B3 integrado com sucesso ao framework Tucano!");
     println!("🔧 Implementação básica funcional - pronta para desenvolvimento completo");
 
     Ok(())

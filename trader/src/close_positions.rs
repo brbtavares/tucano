@@ -14,7 +14,8 @@ pub trait ClosePositionsStrategy<
     ExchangeKey = ExchangeIndex,
     AssetKey = AssetIndex,
     InstrumentKey = InstrumentIndex,
-> {
+>
+{
     type State;
     fn close_positions_requests<'a>(
         &'a self,

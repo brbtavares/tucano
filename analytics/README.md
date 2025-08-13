@@ -1,9 +1,9 @@
-# Toucan Analytics
+# Tucano Analytics
 
 > Camada de métricas, estatísticas e sumarização de performance para estratégias e backtests na B3.
 
 ## 🎯 Papel na Plataforma
-A crate **analytics** fornece cálculos de retorno, risco e eficiência operacional consumidos por `core` (auditoria), `risk` (limites dinâmicos) e interfaces externas (dashboards / relatórios). Ela transforma eventos (trades, posições, PnL acumulado) em indicadores consolidados.
+A crate **analytics** fornece cálculos de retorno, risco e eficiência operacional consumidos por `core` (auditoria), `risk` (limites dinâmicos) e interfaces externas (dashboards / relatórios). Ela transforma eventos (trades, posições, PnL acumulado) em indicadores consolidados dentro do ecossistema Tucano.
 
 | Responsabilidade | Descrição |
 |------------------|-----------|

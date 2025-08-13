@@ -3,7 +3,7 @@ name = "execution"
 version = "0.5.3"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-repository = "https://github.com/brbtavares/toucan"
+repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 description = "Stream private account data from financial venues, and execute (live or mock) orders."
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
@@ -15,7 +15,7 @@ typed_indices = []
 
 
 [dependencies]
-# Toucan Ecosystem
+# Tucano Ecosystem
 data = { workspace = true }
 integration = { workspace = true }
 markets = { workspace = true }

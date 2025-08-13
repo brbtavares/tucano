@@ -21,7 +21,7 @@ use fnv::FnvHashMap;
 use futures::stream::BoxStream;
 use integration::snapshot::Snapshot;
 use itertools::Itertools;
-use markets::{ExchangeId, Side, ConcreteInstrument};
+use markets::{ConcreteInstrument, ExchangeId, Side};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;
@@ -50,7 +50,7 @@ impl MockExchange {
         config: MockExecutionConfig,
         request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
         event_tx: broadcast::Sender<UnindexedAccountEvent>,
-    instruments: FnvHashMap<InstrumentNameExchange, ConcreteInstrument>,
+        instruments: FnvHashMap<InstrumentNameExchange, ConcreteInstrument>,
     ) -> Self {
         Self {
             exchange: config.mocked_exchange,

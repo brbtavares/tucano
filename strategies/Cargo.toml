@@ -3,9 +3,9 @@ name = "strategies"
 version = "0.1.0"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
-repository = "https://github.com/brbtavares/toucan"
+repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Coleção de estratégias concretas para o ecossistema Toucan"
+description = "Coleção de estratégias concretas para o ecossistema Tucano"
 keywords = ["trading", "strategies", "algo"]
 categories = ["algorithms", "finance"]
 

@@ -52,12 +52,24 @@ pub mod typed {
             impl std::ops::Deref for $Name { type Target = str; fn deref(&self) -> &Self::Target { self.as_str() } }
         }
     }
-    string_newtype!(pub struct AssetIndex;);
-    string_newtype!(pub struct InstrumentIndex;);
-    string_newtype!(pub struct AssetNameExchange;);
-    string_newtype!(pub struct InstrumentNameExchange;);
-    string_newtype!(pub struct ExchangeIndex;);
-    string_newtype!(pub struct QuoteAsset;);
+    string_newtype!(
+        pub struct AssetIndex;
+    );
+    string_newtype!(
+        pub struct InstrumentIndex;
+    );
+    string_newtype!(
+        pub struct AssetNameExchange;
+    );
+    string_newtype!(
+        pub struct InstrumentNameExchange;
+    );
+    string_newtype!(
+        pub struct ExchangeIndex;
+    );
+    string_newtype!(
+        pub struct QuoteAsset;
+    );
 }
 
 // Re-export do markets - mantendo ExchangeId como enum original
@@ -93,9 +105,15 @@ pub enum IndexError {
 
 // Conversions de &str/String -> IndexError helpers (ergonomia futura)
 impl IndexError {
-    pub fn asset<S: Into<String>>(s: S) -> Self { Self::AssetIndex(s.into()) }
-    pub fn instrument<S: Into<String>>(s: S) -> Self { Self::InstrumentIndex(s.into()) }
-    pub fn exchange<S: Into<String>>(s: S) -> Self { Self::ExchangeIndex(s.into()) }
+    pub fn asset<S: Into<String>>(s: S) -> Self {
+        Self::AssetIndex(s.into())
+    }
+    pub fn instrument<S: Into<String>>(s: S) -> Self {
+        Self::InstrumentIndex(s.into())
+    }
+    pub fn exchange<S: Into<String>>(s: S) -> Self {
+        Self::ExchangeIndex(s.into())
+    }
 }
 
 // -----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # brokers
 
-Camada de abstração para corretoras (brokers) integrada ao ecossistema Toucan.
+Camada de abstração para corretoras (brokers) integrada ao ecossistema Tucano.
 
 ## Objetivos
 - Identificação padronizada de corretoras (código operacional + nome oficial)

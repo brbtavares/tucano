@@ -1,15 +1,22 @@
+use crate::model::*;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
-use crate::model::*;
 
 /// Helper to build a PQO certification record valid from `now` (open-ended)
 fn pqo(now: DateTime<Utc>) -> CertificationRecord {
-    CertificationRecord { certification: BrokerCertification::PqoB3, valid_from: now, valid_to: None }
+    CertificationRecord {
+        certification: BrokerCertification::PqoB3,
+        valid_from: now,
+        valid_to: None,
+    }
 }
 
 /// Canonical slug generator (very naive: lowercase alnum)
 fn slug(name: &str) -> String {
-    name.chars().filter(|c| c.is_ascii_alphanumeric()).map(|c| c.to_ascii_lowercase()).collect()
+    name.chars()
+        .filter(|c| c.is_ascii_alphanumeric())
+        .map(|c| c.to_ascii_lowercase())
+        .collect()
 }
 
 /// Conjunto inicial de corretoras certificadas (lista parcial; pode ser expandida).
@@ -68,10 +75,18 @@ pub fn certified_b3_brokers(now: DateTime<Utc>) -> BrokerRegistry {
             "SANTANDER CCVM S/A" => Some("SAN"),
             "SAFRA DTVM LTDA" => Some("SAFRA"),
             _ => None,
-        }.map(|c| c.to_string());
+        }
+        .map(|c| c.to_string());
         let meta = BrokerMetadata::new(id, code_hint, BrokerName(name.to_string()))
             .add_certification(pqo(now))
-            .with_cost_model(CostModel { default: CostFormula { fixed: Decimal::ZERO, rate_gross: Decimal::ZERO, per_contract: Decimal::ZERO }, instrument_overrides: Default::default() });
+            .with_cost_model(CostModel {
+                default: CostFormula {
+                    fixed: Decimal::ZERO,
+                    rate_gross: Decimal::ZERO,
+                    per_contract: Decimal::ZERO,
+                },
+                instrument_overrides: Default::default(),
+            });
         reg.insert(meta);
     }
     reg
@@ -85,10 +100,16 @@ mod tests {
         let now = Utc::now();
         let reg = certified_b3_brokers(now);
         assert!(reg.iter().count() > 10, "expected many certified brokers");
-        assert!(reg.get("xpinvestimentoscctvmsa").is_some(), "XP slug missing");
+        assert!(
+            reg.get("xpinvestimentoscctvmsa").is_some(),
+            "XP slug missing"
+        );
         for (_id, meta) in reg.iter() {
             assert!(!meta.name.as_ref().is_empty());
-            assert!(!meta.certifications.is_empty(), "broker missing certification record");
+            assert!(
+                !meta.certifications.is_empty(),
+                "broker missing certification record"
+            );
         }
     }
 }

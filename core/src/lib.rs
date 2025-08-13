@@ -11,6 +11,7 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
+//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
 //! # 🧠 Core - Engine Principal do Framework Toucan
 //!
 //! Framework Rust para construção de sistemas profissionais de trading ao vivo,

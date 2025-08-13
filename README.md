@@ -1,9 +1,11 @@
-# 🇧🇷 Toucan - Framework de Trading Algorítmico para B3
+# 🇧🇷 Tucano - Framework de Trading Algorítmico para B3 (anteriormente Toucan)
 
-[![Rust](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
+[![Rust Version](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
+[![CI](https://github.com/brbtavares/tucano/actions/workflows/ci.yml/badge.svg)](https://github.com/brbtavares/tucano/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
 
-Framework moderno de trading algorítmico desenvolvido em Rust, especializado no mercado brasileiro (B3).
+Framework moderno de trading algorítmico em Rust para o mercado brasileiro (B3). Rebranding: Toucan → Tucano. Foco em performance, clareza de arquitetura e extensibilidade.
 
 ## 🎯 Características Principais
 
@@ -13,31 +15,8 @@ Framework moderno de trading algorítmico desenvolvido em Rust, especializado no
 - **🛡️ Type Safety**: Sistema de tipos que previne erros em tempo de compilação
 - **🔄 Modular**: Arquitetura extensível e componentes reutilizáveis
 
-## 🏗️ Arquitetura do Sistema
-
-```
-toucan/
-├── 🧠 core/              # Engine principal (processamento de eventos, backtest & live)
-├── 📊 analytics/         # Métricas financeiras e resumos
-├── 📈 data/              # Eventos & streaming de dados (livros, trades, assinaturas)
-├── 🏛️ markets/           # Modelos de instrumentos, exchange catalog & tipos B3
-├── 🤝 brokers/           # Registro/carregamento de brokers & modelos de conta
-├── ⚡ execution/         # Camada de execução (ordens, clientes, transporte, mapping)
-├── 🔌 integration/       # Protocolos externos (canal, stream, serialização)
-├── 🛡️ risk/              # Gestão de risco (checks/validações)
-├── 🧩 trader/            # Abstrações (traits + tipos) para estratégias
-├── 📦 strategies/        # Implementações concretas de estratégias (features)
-├── 🔧 macros/            # Macros Rust para geração de código
-├── 📝 examples/          # Exemplos práticos de uso
-└── 🛠️ scripts/           # Scripts utilitários (format, automações)
-```
-
-### Filosofia de Design
-
-O Toucan implementa uma **arquitetura híbrida** que combina:
-- **Abstrações Reutilizáveis**: Traits genéricos para máxima flexibilidade
-- **Implementações B3**: Tipos brasileiros com terminologia nativa
-- **Conectividade Modular**: Fácil extensão para novos exchanges
+## 🏗️ Arquitetura do Sistema (Visão Rápida)
+`core/` (engine), `execution/` (ordens), `data/` (streams), `markets/` (instrumentos B3), `analytics/` (métricas), `risk/`, `trader/` (traits), `strategies/`, `integration/` (protocolos) e `examples/`.
 
 ## 🚀 Início Rápido
 
@@ -47,9 +26,9 @@ O Toucan implementa uma **arquitetura híbrida** que combina:
 # Instalar Rust (versão 1.75 ou superior)
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# Clonar o repositório
-git clone https://github.com/brbtavares/toucan.git
-cd toucan
+# Clonar o repositório (novo nome)
+git clone https://github.com/brbtavares/tucano.git
+cd tucano
 ```
 
 ### Compilação
@@ -139,7 +118,7 @@ let engine_bt = BacktestEngine::new(bt_config, bt_state, bt_exec_txs, strategy_b
 
 Somente os componentes de dados (streaming vs histórico) e de execução (cliente real vs simulado) mudam; a estratégia permanece idêntica.
 
-## 🇧🇷 Integração B3 via ProfitDLL
+## 🇧🇷 Integração B3 via ProfitDLL (conceitual)
 
 ### Configuração Windows
 
@@ -177,7 +156,7 @@ let petr_call = B3Option::call("PETRJ45", "PETR4", 45.0, "2024-01-15");
 let dol_future = B3Future::new("DOLM24", "USD", "2024-12-31");
 ```
 
-## 📊 Métricas e Analytics
+## 📊 Métricas & Analytics
 
 ### Métricas Disponíveis
 
@@ -219,7 +198,7 @@ println!("{}", summary.display_table());
 // └─────────────────┴──────────────┘
 ```
 
-## 🛡️ Gestão de Risco
+## 🛡️ Gestão de Risco (exemplo simplificado)
 
 ### Implementação Básica
 
@@ -285,7 +264,7 @@ cargo fmt --check
 cargo fmt
 ```
 
-### Estrutura de Testes
+### Estrutura de Testes (exemplo)
 
 ```rust
 #[cfg(test)]
@@ -311,7 +290,7 @@ use tracing::{info, warn, error, debug};
 
 // Setup de logging
 tracing_subscriber::fmt()
-    .with_env_filter("toucan=debug")
+    .with_env_filter("tucano=debug")
     .init();
 
 // Logs em código
@@ -319,38 +298,6 @@ debug!("Processando ordem: {:?}", order);
 info!("Posição atualizada: {}", position);
 warn!("Limite de risco próximo: {}", exposure);
 ```
-
-## 📈 Análise de Implementação ProfitDLL
-
-### Status Atual (~30% de Cobertura)
-
-**✅ Implementadas (15 funções)**
-- Inicialização e autenticação
-- Subscrições básicas de market data
-- Ordens básicas (buy/sell/cancel)
-- Callbacks principais
-
-**🔴 Ausentes (35 funções)**
-- Ordens avançadas (market, stop, modificação)
-- Gestão avançada de posições
-- Análise técnica integrada
-- Configurações de sessão
-
-### Prioridades de Desenvolvimento
-
-1. **🔥 Alta Prioridade**
-   - `SendMarketBuyOrder/SellOrder`
-   - `SendStopBuyOrder/SellOrder`
-   - `SendChangeOrder`
-
-2. **🔶 Média Prioridade**
-   - `GetCurrentPosition`
-   - `GetDayTrades`
-   - `SubscribeIndicator`
-
-3. **🔵 Baixa Prioridade**
-   - Análise técnica avançada
-   - Configurações específicas
 
 ## 🚀 Deployment
 
@@ -375,8 +322,9 @@ RUN cargo build --release
 
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates
-COPY --from=builder /app/target/release/toucan /usr/local/bin/
-CMD ["toucan"]
+# (Após renomear binário no futuro)
+COPY --from=builder /app/target/release/tucano /usr/local/bin/
+CMD ["tucano"]
 ```
 
 ### Variáveis de Ambiente
@@ -387,35 +335,22 @@ export RUST_ENV=production
 export RUST_LOG=info
 export B3_USERNAME=usuario_producao
 export B3_PASSWORD=senha_producao
-export DATABASE_URL=postgresql://user:pass@localhost/toucan
+export DATABASE_URL=postgresql://user:pass@localhost/tucano
 export REDIS_URL=redis://localhost:6379
 ```
 
-## 📋 Roadmap
+---
 
-### Versão 1.0 (Atual)
-- ✅ Core engine funcional
-- ✅ Integração B3 básica
-- ✅ Estratégias algorítmicas
-- ✅ Métricas financeiras
-- ✅ Backtesting
+## ⚠️ Disclaimer
 
-### Versão 1.1
-- 🔄 Ordens avançadas ProfitDLL
-- 🔄 WebSocket para dados real-time
-- 🔄 Dashboard web
-- 🔄 Alertas automáticos
+Este projeto é fornecido "NO ESTADO EM QUE SE ENCONTRA", sem garantias de qualquer tipo. Não constitui recomendação de investimento, aconselhamento financeiro, legal ou fiscal. Trading envolve risco elevado e pode gerar perdas superiores ao capital investido. O usuário é o único responsável por configuração, testes (backtest/simulação), conformidade regulatória e resultados obtidos. Os autores não se responsabilizam por perdas diretas, indiretas, incidentais, especiais ou consequenciais decorrentes do uso ou incapacidade de uso deste software. Se você não concorda com estes termos, não utilize o projeto.
 
-### Versão 1.2
-- 📋 Machine Learning integrado
-- 📋 Multi-threading otimizado
-- 📋 Métricas avançadas de risco
-- 📋 API REST para controle externo
+Resumo curto: uso educacional/experimental; valide tudo em ambiente controlado antes de produção.
 
 ---
 
-**Toucan** - Trading algorítmico moderno para o mercado brasileiro 🇧🇷  
-*Desenvolvido com ❤️ em Rust*
+**Tucano** – Trading algorítmico moderno para o mercado brasileiro 🇧🇷  \
+*MIT License* – ver [LICENSE](LICENSE) | [DISCLAIMER](DISCLAIMER.md)
 
 ## 🧭 Roadmap de Arquitetura (Exchange vs Broker vs Transporte)
 
@@ -425,34 +360,34 @@ Objetivo: separar claramente três camadas hoje parcialmente acopladas.
     - Representado por `ExchangeId` (enum).
     - Responsável por catálogo de instrumentos, normalização de símbolos, calendários.
 2. Broker / Account (corretora)
-    - Nova identificação: `BrokerId`, `AccountId`.
-    - Responsável por saldos, posições, envio de ordens (semântica de conta), limites e permissões.
+    - `BrokerId`, `AccountId`.
+    - Saldos, posições, envio de ordens, limites e permissões.
 3. Transporte / Adapter
-    - Abstrai meio físico/protocolo (DLL Profit, WebSocket, FIX, REST).
-    - Exposto via trait (futuro) `TransportAdapter` (connect, subscribe, send, shutdown).
+    - Abstrai meio físico/protocolo (ProfitDLL, WebSocket, FIX, REST).
+    - Trait futuro `TransportAdapter` (connect, subscribe, send, shutdown).
 
-### Estado Atual (antes da refatoração)
-`ExchangeId` é usado como chave para tudo. Código da Profit DLL mistura: lógica de broker (account events), lógica de exchange (símbolos) e transporte (chamadas FFI) no mesmo módulo.
+### Estado Atual
+`ExchangeId` usado como chave única; código ProfitDLL mistura broker, exchange e transporte.
 
 ### Fases Planejadas
-Fase 1 (iniciada): Introduzir aliases `BrokerId` e `AccountId` para permitir evolução sem quebra.
-Fase 2: Extrair módulo `transport::profit_dll` contendo somente IO/FFI; deixar conversões em adapter.
-Fase 3: Criar trait `BrokerAccount` para operações de conta/ordem (usa internamente um `TransportAdapter`).
-Fase 4: Criar trait `ExchangeCatalogue` em `markets` para resolução de instrumentos e metadados.
-Fase 5: Atualizar `ExecutionClient` para compor `BrokerAccount + ExchangeCatalogue` em vez de implementar tudo.
-Fase 6: Revisar mapas de instrumentos para escopo `(ExchangeId, BrokerId)` evitando colisões multi-conta.
-Fase 7: Estratificar erros: `TransportError`, `BrokerError`, `ExchangeRuleError`, mantendo `ClientError` como envelope.
-Fase 8: Otimizações (índices numéricos, caching, normalização consistente B3).
+1. (Feito/parcial) Introduzir aliases `BrokerId` / `AccountId`.
+2. Extrair `transport::profit_dll` contendo apenas IO/FFI.
+3. Trait `BrokerAccount` sobre `TransportAdapter`.
+4. Trait `ExchangeCatalogue` em `markets`.
+5. `ExecutionClient` compõe `BrokerAccount + ExchangeCatalogue`.
+6. Mapas de instrumentos chaveados por `(ExchangeId, BrokerId)`.
+7. Estratificar erros (`TransportError`, `BrokerError`, `ExchangeRuleError`).
+8. Otimizações (índices numéricos, caching, normalização B3).
 
 ### Benefícios
-- Multi-conta e multi-broker sem refactor profundo futuro.
-- Testes mais isolados (mock de transporte sem simular exchange inteira).
-- Evolução de protocolos (ex: adicionar FIX) sem tocar em lógica de ordens.
-- Claridade semântica → menos risco de confusões entre camadas.
+- Multi-conta & multi-broker evolutivo.
+- Testes isolados (mock transporte).
+- Novos protocolos sem tocar lógica de ordens.
+- Semântica clara entre camadas.
 
-### Métrica de Conclusão da Fase 1
-- `BrokerId` e `AccountId` disponíveis em `execution::compat`.
-- Documentação deste roadmap publicada (este bloco).
-- Nenhuma quebra de build.
+### Métrica da Fase 1
+- Aliases presentes.
+- Roadmap documentado (este bloco).
+- Build íntegro.
 
-Próximos passos imediatos: propagar `BrokerId` (Option) em eventos de conta e depois extrair transporte ProfitDLL.
+Próximo: propagar `BrokerId` em eventos de conta e extrair transporte ProfitDLL.
