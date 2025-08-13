@@ -2,13 +2,14 @@
 #![warn(
     unused,
     clippy::cognitive_complexity,
-    unused_crate_dependencies,
     unused_extern_crates,
     clippy::unused_self,
     clippy::useless_let_if_seq,
     missing_debug_implementations,
     rust_2018_idioms
 )]
+// Dependências são usadas por crates downstream via tipos genéricos; suprimir para evitar falso positivo
+#![allow(unused_crate_dependencies)]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
 //! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.

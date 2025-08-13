@@ -123,8 +123,8 @@ impl<'a> ExecutionBuilder<'a> {
             event_rx,
         };
 
-        // Register MockExchange init Future
-        let mock_exchange_future = self.init_mock_exchange(config, request_rx, event_tx);
+    // Register MockExchange init Future
+    let mock_exchange_future = Self::init_mock_exchange(config, request_rx, event_tx);
         self.mock_exchange_futures.push(mock_exchange_future);
 
         self.add_execution::<MockExecution<_>>(
@@ -135,7 +135,6 @@ impl<'a> ExecutionBuilder<'a> {
     }
 
     fn init_mock_exchange(
-        &self,
         config: MockExecutionConfig,
         request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
         event_tx: broadcast::Sender<UnindexedAccountEvent>,

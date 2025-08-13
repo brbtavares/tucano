@@ -136,8 +136,8 @@ impl TearSheetGenerator {
             )
             .unwrap_or_default(),
             win_rate: WinRate::calculate(
-                (self.pnl_returns.total.count - self.pnl_returns.losses.count).into(),
-                self.pnl_returns.total.count.into(),
+                self.pnl_returns.total.count - self.pnl_returns.losses.count,
+                self.pnl_returns.total.count,
             )
             .unwrap_or_default(),
             drawdown: self

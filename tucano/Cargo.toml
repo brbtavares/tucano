@@ -1,0 +1,31 @@
+[package]
+name = "tucano"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Façade unificada do ecossistema Tucano (trading algorítmico B3)"
+repository = "https://github.com/brbtavares/tucano"
+documentation = "https://docs.rs/tucano"
+readme = "../README.md"
+keywords = ["trading","b3","algoritmico","finance","rust"]
+categories = ["finance","algorithms"]
+authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
+
+[dependencies]
+# Re-export targets
+"tucano-core" = { path = "../core", version = "0.12.2" }
+"tucano-markets" = { path = "../markets", version = "0.3.1" }
+"tucano-data" = { path = "../data", version = "0.10.1" }
+"tucano-execution" = { path = "../execution", version = "0.5.3" }
+"tucano-risk" = { path = "../risk", version = "0.1.0" }
+"tucano-trader" = { path = "../trader", version = "0.1.0" }
+"tucano-strategies" = { path = "../strategies", version = "0.1.0" }
+"tucano-analytics" = { path = "../analytics", version = "0.1.0" }
+"tucano-integration" = { path = "../integration", version = "0.9.1" }
+
+[features]
+# Feature agregadora para conveniência
+full = []
+
+[package.metadata.docs.rs]
+all-features = true
