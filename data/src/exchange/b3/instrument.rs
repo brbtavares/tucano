@@ -173,38 +173,37 @@ pub mod utils {
 
     /// Parse a ticker symbol to extract underlying asset for derivatives
     pub fn parse_underlying(ticker: &str) -> Option<String> {
-        // For options: PETR4P250 -> PETR4
-        // For futures: WINV24 -> WIN
-        if ticker.len() > 5 {
-            // Check if it's an option (ends with call/put indicator)
-            if ticker
-                .chars()
-                .nth_back(2)
-                .map_or(false, |c| c.is_alphabetic())
-            {
-                return Some(ticker[..ticker.len() - 3].to_string());
-            }
-
-            // Check if it's a future (month/year code)
-            if ticker.chars().nth_back(1).map_or(false, |c| c.is_numeric())
-                && ticker
-                    .chars()
-                    .nth_back(2)
-                    .map_or(false, |c| c.is_alphabetic())
-            {
-                // Find where the underlying ends and month code begins
-                let mut underlying_len = ticker.len() - 3;
-                for (i, c) in ticker.char_indices().rev() {
-                    if c.is_alphabetic() && i < ticker.len() - 3 {
-                        underlying_len = i + 1;
-                        break;
-                    }
-                }
-                return Some(ticker[..underlying_len].to_string());
-            }
+        // Padrões suportados (heurísticos simples):
+        //  - Opções:  <UNDERLYING><LETRA><DIGITOS{2,}>   ex: PETR4P250 -> PETR4
+        //  - Futuros: <UNDERLYING><LETRA><DIGITOS{2}>     ex: WINV24   -> WIN
+        // Heurística: contar dígitos finais (>=2), pegar letra imediatamente anterior
+        // e retornar prefixo antes dessa letra.
+        let chars: Vec<char> = ticker.chars().collect();
+        if chars.len() < 6 { // mínimo razoável para derivativo (ex: WINV24 tem 6)
+            return None;
         }
 
-        None
+        // Contar dígitos consecutivos no fim
+        let mut idx = chars.len();
+        while idx > 0 && chars[idx - 1].is_ascii_digit() {
+            idx -= 1;
+        }
+        let digits_start = idx;
+        let digits_len = chars.len() - digits_start;
+        if digits_len < 2 { // precisa de pelo menos 2 dígitos para ano / strike
+            return None;
+        }
+        if digits_start == 0 { return None; }
+        let letter_pos = digits_start - 1;
+        let letter = chars[letter_pos];
+        if !letter.is_ascii_alphabetic() {
+            return None;
+        }
+        if letter_pos < 3 { // subjacente muito curto, provavelmente não derivativo
+            return None;
+        }
+        let underlying = &ticker[..letter_pos];
+        Some(underlying.to_string())
     }
 
     /// Determine security type from ticker pattern

@@ -11,27 +11,22 @@
 //! - **Relatórios Automatizados**: Geração de sumários e tear sheets
 //! - **Intervalos Temporais**: Suporte a diferentes períodos de análise
 //!
-//! ## 🏗️ Estrutura do Módulo
-//!
-//! ```
-//! analytics/
-//! ├── algorithm.rs     # Algoritmos estatísticos para análise de datasets
-//! ├── metric/          # Métricas financeiras (Sharpe, Sortino, etc.)
-//! ├── summary/         # Relatórios e sumários financeiros
-//! └── time.rs          # Definições de intervalos temporais
-//! ```
+//! ## 🏗️ Estrutura (simplificada)
+//! Arquivos principais: `algorithm.rs`, diretório `metric/`, diretório `summary/`, `time.rs`.
 //!
 //! ## 📈 Exemplo de Uso
 //!
-//! ```rust,no_run
-//! use analytics::{metric::SharpeRatio, summary::TradingSummary, time::Annual252};
-//! use chrono::{DateTime, Utc};
+//! ```rust
+//! use analytics::metric::sharpe::SharpeRatio;
+//! use rust_decimal::Decimal;
+//! use analytics::time::Annual252;
 //!
-//! // Calcular Sharpe Ratio
-//! let sharpe = SharpeRatio::calculate(&returns, &Annual252, risk_free_rate);
-//!
-//! // Gerar sumário de trading
-//! let summary = TradingSummary::generate(&trades, start_time, end_time);
+//! // Série de retornos (exemplo)
+//! let returns = vec![Decimal::from_f64_retain(0.01), Decimal::from_f64_retain(-0.005)];
+//! let risk_free_daily = Decimal::from_f64_retain(0.0001);
+//! let risk_free_annual = risk_free_daily * Decimal::from(252u32);
+//! let result = SharpeRatio::calculate(&returns, risk_free_annual, Decimal::ZERO, &Annual252);
+//! assert!(result.value().is_finite());
 //! ```
 //!
 //! ## 🔍 Métricas Disponíveis
