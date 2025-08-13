@@ -6,7 +6,7 @@
 // 3. Subscribe to market data for B3 instruments
 // 4. Handle incoming market events
 
-use markets::{
+use tucano_markets::{
     b3::{B3AssetFactory, B3Stock, B3ETF, B3REIT},
     broker::{Broker, ProfitDLLBroker},
     Asset,

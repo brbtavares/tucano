@@ -3,7 +3,7 @@
 // Este exemplo demonstra como configurar e usar a ProfitDLL real
 // em um ambiente Windows com a DLL da Nelógica instalada.
 
-use markets::{
+use tucano_markets::{
     b3::{B3AssetFactory, B3Stock},
     profit_dll::ProfitConnector,
     Asset,

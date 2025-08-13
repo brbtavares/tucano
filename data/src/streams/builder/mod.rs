@@ -11,7 +11,7 @@ use crate::{
     Identifier,
 };
 use integration::{channel::Channel, Validator};
-use markets::exchange::ExchangeId;
+use tucano_markets::exchange::ExchangeId;
 use std::{
     collections::HashMap,
     fmt::{Debug, Display},

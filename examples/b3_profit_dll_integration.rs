@@ -6,7 +6,7 @@
 // - Broker abstraction layer
 // - Market data streaming
 
-use markets::{
+use tucano_markets::{
     b3::{B3AssetFactory, B3AssetCategory, B3Stock, B3ETF, B3REIT, OptionType},
     broker::{ProfitDLLBroker, MarketDataProvider, OrderExecutor, AccountProvider},
     ExchangeId, Asset,
@@ -198,7 +198,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use markets::b3::*;
+    use tucano_markets::b3::*;
 
     #[test]
     fn test_asset_factory() {

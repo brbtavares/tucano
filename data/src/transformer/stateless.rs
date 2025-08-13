@@ -8,7 +8,7 @@ use crate::{
 };
 use async_trait::async_trait;
 use integration::{protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer};
-use markets::exchange::ExchangeId;
+use tucano_markets::exchange::ExchangeId;
 use serde::Deserialize;
 use std::marker::PhantomData;
 use tokio::sync::mpsc;

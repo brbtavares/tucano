@@ -1,4 +1,4 @@
-use markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
+use tucano_markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
 
 // B3Asset implementando a trait Asset
 #[derive(Debug, Clone)]

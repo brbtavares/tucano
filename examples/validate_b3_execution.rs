@@ -1,4 +1,4 @@
-use markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
+use tucano_markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
 
 // Implementações B3 do híbrido
 #[derive(Debug, Clone)]
