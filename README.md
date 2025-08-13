@@ -7,6 +7,10 @@
 
 Framework moderno de trading algorítmico em Rust para o mercado brasileiro (B3). Rebranding: Toucan → Tucano. Foco em performance, clareza de arquitetura e extensibilidade.
 
+## 🙏 Inspiração & Agradecimentos
+
+Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](https://github.com/barter-rs/barter-rs)**, cuja estrutura inicial serviu como ponto de partida para organizar módulos, traits centrais e a abordagem de streaming/normalização. Nosso sincero agradecimento ao seu criador e a todos os demais desenvolvedores e contribuidores do ecossistema barter-rs – o trabalho de vocês facilitou acelerar a fase inicial deste framework.
+
 ## 🎯 Características Principais
 
 - **🧠 Engine Unificado**: Mesmo código para backtest e execução (real ou simulada) ao vivo
