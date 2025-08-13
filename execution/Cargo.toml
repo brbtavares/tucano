@@ -7,7 +7,8 @@ repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 description = "Stream private account data from financial venues, and execute (live or mock) orders."
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
-categories = ["accessibility", "simulation"]
+categories = ["finance", "algorithms"]
+license = "MIT"
 
 [features]
 # Habilita newtypes experimentais para indices/nomes (map.rs usa cfg(feature = "typed_indices")).

@@ -2,6 +2,11 @@
 name = "tucano-risk"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+repository = "https://github.com/brbtavares/tucano"
+description = "Interfaces e implementações de gestão de risco para o ecossistema Tucano"
+keywords = ["trading","risk","risk-management","finance"]
+categories = ["finance","algorithms"]
 
 [dependencies]
 "tucano-execution" = { workspace = true }

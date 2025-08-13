@@ -7,7 +7,8 @@ repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 description = "Estruturas centrais de Exchange, Instrument e Asset do Tucano e utilidades associadas."
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
-categories = ["accessibility", "simulation"]
+categories = ["finance", "algorithms"]
+license = "MIT"
 
 [features]
 default = []

@@ -8,6 +8,7 @@ readme = "README.md"
 description = "Coleção de estratégias concretas para o ecossistema Tucano"
 keywords = ["trading", "strategies", "algo"]
 categories = ["algorithms", "finance"]
+license = "MIT"
 
 [features]
 default = []
