@@ -1,15 +1,9 @@
-# 🇧🇷 Tucano - Framework de Trading Algorítmico para B3 (anteriormente Toucan)
+# 🇧🇷 Tucano - Framework de Trading Algorítmico para B3
 
 [![Rust Version](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
 [![CI](https://github.com/brbtavares/tucano/actions/workflows/ci.yml/badge.svg)](https://github.com/brbtavares/tucano/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
-
-Framework moderno de trading algorítmico em Rust para o mercado brasileiro (B3). Rebranding: Toucan → Tucano. Foco em performance, clareza de arquitetura e extensibilidade.
-
-## 🙏 Inspiração & Agradecimentos
-
-Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](https://github.com/barter-rs/barter-rs)**, cuja estrutura inicial serviu como ponto de partida para organizar módulos, traits centrais e a abordagem de streaming/normalização. Nosso sincero agradecimento ao seu criador e a todos os demais desenvolvedores e contribuidores do ecossistema barter-rs – o trabalho de vocês facilitou acelerar a fase inicial deste framework.
 
 ## 🎯 Características Principais
 
@@ -110,13 +104,13 @@ export RUST_LOG=info
 Uma estratégia simples que observa o desequilíbrio entre volumes BID e ASK no melhor nível do livro. A mesma implementação pode ser plugada tanto em um motor live quanto em um motor de backtest sem alterar a lógica.
 
 ```rust
-use trader::AlgoStrategy;
-use strategies::{
+use tucano_trader::AlgoStrategy;
+use tucano_strategies::{
     order_book_imbalance::OrderBookImbalanceStrategy,
     shared::NoOpState,
 };
-use execution::{ExchangeIndex, InstrumentIndex};
-use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
+use tucano_execution::{ExchangeIndex, InstrumentIndex};
+use tucano_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
 
 // Wrapper leve para demonstrar o trait (delegaria internamente para a estratégia real).
 struct MyImbalance(OrderBookImbalanceStrategy);
@@ -156,7 +150,7 @@ Somente os componentes de dados (streaming vs histórico) e de execução (clien
 ### Configuração Windows
 
 ```rust
-use tucano::markets::profit_dll::ProfitDLLClient;
+use tucano::tucano_markets::profit_dll::ProfitDLLClient;
 
 // Configurar ProfitDLL
 let client = ProfitDLLClient::new()
@@ -176,7 +170,7 @@ client.send_order(order).await?;
 ### Instrumentos Suportados
 
 ```rust
-use tucano::markets::b3::{B3Stock, B3Option, B3Future};
+use tucano::tucano_markets::b3::{B3Stock, B3Option, B3Future};
 
 // Ações
 let petr4 = B3Stock::new("PETR4");
@@ -194,7 +188,7 @@ let dol_future = B3Future::new("DOLM24", "USD", "2024-12-31");
 ### Métricas Disponíveis
 
 ```rust
-use tucano::analytics::metric::*;
+use tucano::tucano_analytics::metric::*;
 
 // Sharpe Ratio
 let sharpe = SharpeRatio::calculate(&returns, risk_free_rate)?;
@@ -215,7 +209,7 @@ let pf = ProfitFactor::calculate(&trades)?;
 ### Relatórios Automatizados
 
 ```rust
-use tucano::analytics::summary::TradingSummary;
+use tucano::tucano_analytics::summary::TradingSummary;
 
 let summary = TradingSummary::generate(&trades, &positions)?;
 println!("{}", summary.display_table());
@@ -236,7 +230,7 @@ println!("{}", summary.display_table());
 ### Implementação Básica
 
 ```rust
-use tucano::risk::{RiskManager, RiskApproved, RiskRefused};
+use tucano::tucano_risk::{RiskManager, RiskApproved, RiskRefused};
 
 struct MyRiskManager {
     max_position_size: f64,
@@ -372,6 +366,10 @@ export DATABASE_URL=postgresql://user:pass@localhost/tucano
 export REDIS_URL=redis://localhost:6379
 ```
 
+## 🙏 Inspiração & Agradecimentos
+
+Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](https://github.com/barter-rs/barter-rs)**, cuja estrutura inicial serviu como ponto de partida para organizar módulos, traits centrais e a abordagem de streaming/normalização. Nosso sincero agradecimento ao seu criador e a todos os demais desenvolvedores e contribuidores do ecossistema barter-rs – o trabalho de vocês facilitou acelerar a fase inicial deste framework.
+
 ---
 
 ## ⚠️ Disclaimer
@@ -384,43 +382,3 @@ Resumo curto: uso educacional/experimental; valide tudo em ambiente controlado a
 
 **Tucano** – Trading algorítmico moderno para o mercado brasileiro 🇧🇷  \
 *MIT License* – ver [LICENSE](LICENSE) | [DISCLAIMER](DISCLAIMER.md)
-
-## 🧭 Roadmap de Arquitetura (Exchange vs Broker vs Transporte)
-
-Objetivo: separar claramente três camadas hoje parcialmente acopladas.
-
-1. Exchange (mercado)
-    - Representado por `ExchangeId` (enum).
-    - Responsável por catálogo de instrumentos, normalização de símbolos, calendários.
-2. Broker / Account (corretora)
-    - `BrokerId`, `AccountId`.
-    - Saldos, posições, envio de ordens, limites e permissões.
-3. Transporte / Adapter
-    - Abstrai meio físico/protocolo (ProfitDLL, WebSocket, FIX, REST).
-    - Trait futuro `TransportAdapter` (connect, subscribe, send, shutdown).
-
-### Estado Atual
-`ExchangeId` usado como chave única; código ProfitDLL mistura broker, exchange e transporte.
-
-### Fases Planejadas
-1. (Feito/parcial) Introduzir aliases `BrokerId` / `AccountId`.
-2. Extrair `transport::profit_dll` contendo apenas IO/FFI.
-3. Trait `BrokerAccount` sobre `TransportAdapter`.
-4. Trait `ExchangeCatalogue` em `markets`.
-5. `ExecutionClient` compõe `BrokerAccount + ExchangeCatalogue`.
-6. Mapas de instrumentos chaveados por `(ExchangeId, BrokerId)`.
-7. Estratificar erros (`TransportError`, `BrokerError`, `ExchangeRuleError`).
-8. Otimizações (índices numéricos, caching, normalização B3).
-
-### Benefícios
-- Multi-conta & multi-broker evolutivo.
-- Testes isolados (mock transporte).
-- Novos protocolos sem tocar lógica de ordens.
-- Semântica clara entre camadas.
-
-### Métrica da Fase 1
-- Aliases presentes.
-- Roadmap documentado (este bloco).
-- Build íntegro.
-
-Próximo: propagar `BrokerId` em eventos de conta e extrair transporte ProfitDLL.
