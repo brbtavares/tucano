@@ -1,4 +1,5 @@
 //! Ported from former `strategy` crate: ClosePositionsStrategy and helpers.
+use rust_decimal::Decimal;
 use tucano_execution::{
     order::{
         id::{ClientOrderId, StrategyId},
@@ -8,7 +9,6 @@ use tucano_execution::{
     AssetIndex, ExchangeIndex, InstrumentIndex,
 };
 use tucano_markets::Side;
-use rust_decimal::Decimal;
 
 pub trait ClosePositionsStrategy<
     ExchangeKey = ExchangeIndex,

@@ -3,10 +3,10 @@
 //! Reutilizável tanto em modo live quanto em backtest.
 //! Não depende de indicadores técnicos; apenas compara volume agregado de bids vs asks.
 
+use rust_decimal::Decimal;
 use tucano_execution::order::request::OrderRequestOpen;
 use tucano_execution::{ExchangeIndex, InstrumentIndex};
 use tucano_markets::Side;
-use rust_decimal::Decimal;
 use tucano_trader::AlgoStrategy;
 
 /// Configuração para a estratégia de desequilíbrio.
@@ -65,7 +65,10 @@ impl<C: AsRef<OrderBookImbalanceConfig>> AlgoStrategy<ExchangeIndex, InstrumentI
         _state: &Self::State,
     ) -> (
         impl IntoIterator<
-            Item = tucano_execution::order::request::OrderRequestCancel<ExchangeIndex, InstrumentIndex>,
+            Item = tucano_execution::order::request::OrderRequestCancel<
+                ExchangeIndex,
+                InstrumentIndex,
+            >,
         >,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>>,
     ) {

@@ -2,6 +2,10 @@ use crate::engine::state::order::{
     in_flight_recorder::InFlightRequestRecorder, manager::OrderManager,
 };
 use derive_more::Constructor;
+use fnv::FnvHashMap;
+use serde::{Deserialize, Serialize};
+use std::{collections::hash_map::Entry, fmt::Debug};
+use tracing::{debug, error, warn};
 use tucano_execution::{
     order::{
         id::ClientOrderId,
@@ -11,11 +15,7 @@ use tucano_execution::{
     },
     ExchangeIndex, InstrumentIndex,
 };
-use fnv::FnvHashMap;
 use tucano_integration::snapshot::Snapshot;
-use serde::{Deserialize, Serialize};
-use std::{collections::hash_map::Entry, fmt::Debug};
-use tracing::{debug, error, warn};
 
 pub mod in_flight_recorder;
 pub mod manager;
@@ -399,6 +399,8 @@ mod tests {
     use super::*;
     use crate::{engine::state::order::Orders, test_utils::time_plus_secs};
     use chrono::{DateTime, Utc};
+    use rust_decimal_macros::dec;
+    use smol_str::SmolStr;
     use tucano_execution::{
         error::{ConnectivityError, OrderError},
         order::{
@@ -409,8 +411,6 @@ mod tests {
         },
     };
     use tucano_markets::{exchange::ExchangeId, Side};
-    use rust_decimal_macros::dec;
-    use smol_str::SmolStr;
 
     fn orders(
         orders: impl IntoIterator<Item = Order<ExchangeId, u64, ActiveOrderState>>,

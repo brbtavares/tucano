@@ -10,13 +10,13 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures::SinkExt;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+use tracing::debug;
 use tucano_integration::{
     error::SocketError,
     protocol::websocket::{connect, WebSocket, WsMessage},
 };
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
-use tracing::debug;
 
 /// [`SubscriptionMapper`] implementations defining how to map a
 /// collection of Toucan [`Subscription`]s into exchange specific [`SubscriptionMeta`].

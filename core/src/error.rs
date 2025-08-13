@@ -33,10 +33,10 @@
 //! ```
 
 use crate::execution::error::ExecutionError;
-use tucano_data::error::DataError;
-use tucano_execution::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use tucano_data::error::DataError;
+use tucano_execution::IndexError;
 
 /// Tipo central de erro do módulo core do framework Tucano.
 ///

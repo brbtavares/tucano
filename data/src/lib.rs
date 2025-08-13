@@ -57,19 +57,19 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures::{SinkExt, Stream, StreamExt};
+use std::{collections::VecDeque, future::Future};
+use tokio::sync::mpsc;
+use tracing::{debug, error, warn};
 use tucano_integration::{
     error::SocketError,
     protocol::{
-        websocket::{WebSocketParser, WsMessage, WsSink, WsStream, self},
+        websocket::{self, WebSocketParser, WsMessage, WsSink, WsStream},
         StreamParser,
     },
     stream::ExchangeStream,
     Transformer,
 };
 use tucano_markets::exchange::ExchangeId;
-use std::{collections::VecDeque, future::Future};
-use tokio::sync::mpsc;
-use tracing::{debug, error, warn};
 #[allow(unused_imports)]
 use {itertools as _, reqwest as _, serde_json as _, vecmap as _};
 

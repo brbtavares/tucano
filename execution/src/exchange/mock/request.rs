@@ -11,8 +11,8 @@ use crate::{
 };
 use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
-use tucano_markets::ExchangeId;
 use tokio::sync::oneshot;
+use tucano_markets::ExchangeId;
 
 #[derive(Debug)]
 pub struct MockExchangeRequest {

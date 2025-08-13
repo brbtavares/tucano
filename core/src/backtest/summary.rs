@@ -1,7 +1,7 @@
-use tucano_analytics::summary::TradingSummary;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::time::Duration;
+use tucano_analytics::summary::TradingSummary;
 
 /// Container for multiple [`BacktestSummary`]s and associated multi backtest metadata.
 #[derive(Debug)]

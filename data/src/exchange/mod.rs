@@ -5,10 +5,10 @@ use crate::{
     subscription::{Map, SubscriptionKind},
     MarketStream, SnapshotFetcher,
 };
-use tucano_integration::{error::SocketError, protocol::websocket::WsMessage, Validator};
-use tucano_markets::exchange::ExchangeId;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{fmt::Debug, time::Duration};
+use tucano_integration::{error::SocketError, protocol::websocket::WsMessage, Validator};
+use tucano_markets::exchange::ExchangeId;
 use url::Url;
 
 /// `B3` [`Connector`] and [`StreamSelector`] implementations for Brazilian stock exchange.

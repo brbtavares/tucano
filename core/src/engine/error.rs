@@ -1,6 +1,6 @@
-use tucano_integration::Unrecoverable;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use tucano_integration::Unrecoverable;
 
 /// Placeholder for index-related errors
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]

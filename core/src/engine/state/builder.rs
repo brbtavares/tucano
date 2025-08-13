@@ -5,14 +5,14 @@ use crate::engine::state::{
     trading::TradingState, EngineState,
 };
 use chrono::{DateTime, Utc};
+use fnv::FnvHashMap;
+use tracing::debug;
 use tucano_execution::{
     balance::{AssetBalance, Balance},
     InstrumentIndex,
 };
-use fnv::FnvHashMap;
 use tucano_integration::snapshot::Snapshot;
 use tucano_markets::{ConcreteInstrument, Keyed};
-use tracing::debug;
 
 /// Placeholder types
 use super::asset::AssetNameInternal;

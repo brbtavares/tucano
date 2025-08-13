@@ -107,12 +107,12 @@ pub mod check;
 pub use check::*;
 
 use derive_more::{Constructor, Display, From};
+use serde::{Deserialize, Serialize};
+use std::{fmt::Debug, hash::Hash, marker::PhantomData};
 use tucano_execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},
     ExchangeIndex, InstrumentIndex,
 };
-use serde::{Deserialize, Serialize};
-use std::{fmt::Debug, hash::Hash, marker::PhantomData};
 
 /// Resultado aprovado de uma verificação do [`RiskManager`].
 ///

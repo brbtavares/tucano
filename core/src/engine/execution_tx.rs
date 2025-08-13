@@ -2,13 +2,13 @@ use crate::{
     engine::error::{IndexError, UnrecoverableEngineError},
     execution::request::ExecutionRequest,
 };
+use std::fmt::Debug;
 use tucano_execution::{ExchangeIndex, InstrumentIndex};
 use tucano_integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
 };
 use tucano_markets::exchange::ExchangeId;
-use std::fmt::Debug;
 
 /// Collection of [`ExecutionRequest`] [`Tx`]s for each
 /// exchange [`ExecutionManager`](crate::execution::manager::ExecutionManager).

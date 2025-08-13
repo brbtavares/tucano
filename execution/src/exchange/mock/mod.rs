@@ -19,15 +19,15 @@ use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, TimeDelta, Utc};
 use fnv::FnvHashMap;
 use futures::stream::BoxStream;
-use tucano_integration::snapshot::Snapshot;
 use itertools::Itertools;
-use tucano_markets::{ConcreteInstrument, ExchangeId, Side};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;
 use tokio::sync::{broadcast, mpsc, oneshot};
 use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::{error, info};
+use tucano_integration::snapshot::Snapshot;
+use tucano_markets::{ConcreteInstrument, ExchangeId, Side};
 
 pub mod account;
 pub mod request;

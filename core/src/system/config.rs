@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
 use tucano_execution::client::mock::MockExecutionConfig;
 /// Configuration module for trading system components.
 ///
@@ -5,8 +7,6 @@ use tucano_execution::client::mock::MockExecutionConfig;
 /// including instruments and execution components.
 use tucano_markets::ConcreteInstrument; // updated import for shared instrument
 use tucano_markets::{exchange::ExchangeId, Underlying};
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
 
 /// Placeholder types for configuration
 pub type AssetNameExchange = String;

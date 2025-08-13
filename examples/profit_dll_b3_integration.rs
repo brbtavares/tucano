@@ -6,12 +6,12 @@
 // 3. Subscribe to market data for B3 instruments
 // 4. Handle incoming market events
 
+use tokio;
 use tucano_markets::{
     b3::{B3AssetFactory, B3Stock, B3ETF, B3REIT},
     broker::{Broker, ProfitDLLBroker},
     Asset,
 };
-use tokio;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -119,14 +119,14 @@ mod tests {
     fn test_b3_stock_creation() {
         let stock = B3Stock::new("PETR4".to_string(), "Petrobras PN".to_string());
         assert_eq!(stock.symbol(), "PETR4");
-    assert_eq!(stock.asset_type(), AssetType::Stock);
+        assert_eq!(stock.asset_type(), AssetType::Stock);
     }
 
     #[test]
     fn test_b3_etf_creation() {
         let etf = B3ETF::new("BOVA11".to_string(), "iShares BOVESPA".to_string());
         assert_eq!(etf.symbol(), "BOVA11");
-    assert_eq!(etf.asset_type(), AssetType::ETF);
+        assert_eq!(etf.asset_type(), AssetType::ETF);
     }
 
     #[test]
@@ -134,12 +134,12 @@ mod tests {
         // Test stock recognition
         let asset = B3AssetFactory::from_symbol("PETR4").unwrap();
         assert_eq!(asset.symbol(), "PETR4");
-    assert_eq!(asset.asset_type(), AssetType::Stock);
+        assert_eq!(asset.asset_type(), AssetType::Stock);
 
         // Test ETF recognition
         let asset = B3AssetFactory::from_symbol("BOVA11").unwrap();
         assert_eq!(asset.symbol(), "BOVA11");
-    assert_eq!(asset.asset_type(), AssetType::ETF);
+        assert_eq!(asset.asset_type(), AssetType::ETF);
     }
 
     #[test]

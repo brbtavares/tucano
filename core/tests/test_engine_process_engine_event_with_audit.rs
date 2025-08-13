@@ -132,13 +132,13 @@ use tucano_trader::{
 
 use chrono::{DateTime, Utc};
 use fnv::FnvHashMap;
+use rust_decimal::Decimal;
+use rust_decimal_macros::dec;
 use tucano_integration::{
     channel::{mpsc_unbounded, UnboundedTx},
     collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany},
     snapshot::Snapshot,
 };
-use rust_decimal::Decimal;
-use rust_decimal_macros::dec;
 
 // Test configuration constants
 const STARTING_TIMESTAMP: DateTime<Utc> = DateTime::<Utc>::MIN_UTC;

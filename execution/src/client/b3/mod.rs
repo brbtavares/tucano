@@ -25,12 +25,12 @@ use crate::{
     InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
-use tucano_markets::{ExchangeId, ProfitError, Side};
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
+use tucano_markets::{ExchangeId, ProfitError, Side};
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {
@@ -620,10 +620,10 @@ mod tests {
     use crate::transport::TransportOrderId;
     use futures::future::BoxFuture;
     use futures::StreamExt;
-    use tucano_integration::snapshot::Snapshot;
-    use tucano_markets::ExchangeId;
     use rust_decimal_macros::dec;
     use tokio::sync::mpsc;
+    use tucano_integration::snapshot::Snapshot;
+    use tucano_markets::ExchangeId;
 
     #[derive(Debug)]
     struct DummyTransport {
@@ -882,8 +882,9 @@ mod tests {
         } else {
             panic!("expected trade event");
         }
-    if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(order)) =
-            snapshot_evt.kind
+        if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(
+            order,
+        )) = snapshot_evt.kind
         {
             use crate::order::state::{ActiveOrderState, OrderState};
             if let OrderState::Active(ActiveOrderState::Open(open)) = order.state {
@@ -956,8 +957,9 @@ mod tests {
         fn extract_filled(
             evt: &crate::AccountEvent<ExchangeId, String, String>,
         ) -> Option<Decimal> {
-            if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(order)) =
-                &evt.kind
+            if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(
+                order,
+            )) = &evt.kind
             {
                 if let OrderState::Active(ActiveOrderState::Open(open)) = &order.state {
                     return Some(open.filled_quantity);

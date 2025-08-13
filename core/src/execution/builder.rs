@@ -8,7 +8,16 @@ use crate::{
     },
     shutdown::AsyncShutdown,
 };
-use tucano_data::streams::{consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream};
+use fnv::FnvHashMap;
+use futures::{future::try_join_all, FutureExt};
+use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
+use tokio::{
+    sync::{broadcast, mpsc},
+    task::{JoinError, JoinHandle},
+};
+use tucano_data::streams::{
+    consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream,
+};
 use tucano_execution::{
     client::{
         mock::{MockExecution, MockExecutionClientConfig, MockExecutionConfig},
@@ -20,15 +29,8 @@ use tucano_execution::{
     UnindexedAccountEvent,
 };
 use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex}; // already tucano prefixed
-use fnv::FnvHashMap;
-use futures::{future::try_join_all, FutureExt};
 use tucano_integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
 use tucano_markets::exchange::ExchangeId;
-use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
-use tokio::{
-    sync::{broadcast, mpsc},
-    task::{JoinError, JoinHandle},
-};
 
 /// Placeholder types
 pub type AssetNameExchange = String;

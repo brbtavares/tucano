@@ -1,6 +1,6 @@
-use tucano_markets::{InstrumentKind, Keyed, MarketDataInstrument};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
+use tucano_markets::{InstrumentKind, Keyed, MarketDataInstrument};
 
 /// Instrument related data that defines an associated unique `Id`.
 ///

@@ -11,8 +11,8 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use futures::Stream;
-use tucano_markets::ExchangeId;
 use std::future::Future;
+use tucano_markets::ExchangeId;
 
 // Tipos temporários para compatibilidade
 pub type AssetNameExchange = String;

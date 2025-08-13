@@ -6,12 +6,12 @@ use crate::{
     shutdown::SyncShutdown,
 };
 use futures::{Stream, StreamExt};
+use std::fmt::Debug;
+use tracing::info;
 use tucano_integration::{
     channel::{ChannelTxDroppable, Tx},
     FeedEnded, Terminal,
 };
-use std::fmt::Debug;
-use tracing::info;
 
 /// Synchronous `Engine` runner that processes input `Events`.
 ///

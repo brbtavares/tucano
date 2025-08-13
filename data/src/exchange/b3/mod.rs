@@ -17,9 +17,9 @@ pub mod instrument;
 pub mod types;
 
 pub use exchange::B3Exchange;
+use tokio::sync::mpsc;
 use tucano_markets::b3::{B3AssetCategory, B3AssetFactory};
 use tucano_markets::profit_dll::{CallbackEvent, ProfitConnector};
-use tokio::sync::mpsc;
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;
 

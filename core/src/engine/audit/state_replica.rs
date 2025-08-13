@@ -7,12 +7,12 @@ use crate::{
     execution::AccountStreamEvent,
     EngineEvent,
 };
-use tucano_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use tucano_execution::{AccountEvent, InstrumentIndex};
-use tucano_integration::Terminal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::{info, info_span};
+use tucano_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use tucano_execution::{AccountEvent, InstrumentIndex};
+use tucano_integration::Terminal;
 
 pub const AUDIT_REPLICA_STATE_UPDATE_SPAN_NAME: &str = "audit_replica_state_update_span";
 

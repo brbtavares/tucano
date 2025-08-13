@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 use tucano_integration::collection::one_or_many::OneOrMany;
 use tucano_markets::exchange::ExchangeId;
-use serde::{Deserialize, Serialize};
 
 /// Asset filter.
 ///

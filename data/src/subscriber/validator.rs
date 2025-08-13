@@ -4,6 +4,8 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use tracing::debug;
 use tucano_integration::{
     error::SocketError,
     protocol::{
@@ -12,8 +14,6 @@ use tucano_integration::{
     },
     Validator,
 };
-use serde::{Deserialize, Serialize};
-use tracing::debug;
 
 /// Defines how to validate that actioned market data
 /// [`Subscription`](crate::subscription::Subscription)s were accepted by the exchange.

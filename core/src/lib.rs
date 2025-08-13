@@ -77,16 +77,16 @@ use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
 };
-use tucano_execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
 use chrono::{DateTime, Utc};
+use derive_more::{Constructor, From};
+use serde::{Deserialize, Serialize};
+use shutdown::Shutdown;
 use tucano_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use derive_more::{Constructor, From};
+use tucano_execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
 use tucano_integration::Terminal;
-use serde::{Deserialize, Serialize};
-use shutdown::Shutdown;
 
 // Suppress unused extern crate warnings
 use prettytable as _;

@@ -7,6 +7,10 @@ use crate::{
     execution::request::ExecutionRequest,
 };
 use derive_more::Constructor;
+use itertools::Itertools;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+use tracing::error;
 use tucano_execution::{
     order::{
         request::{RequestCancel, RequestOpen},
@@ -15,10 +19,6 @@ use tucano_execution::{
     ExchangeIndex, InstrumentIndex,
 };
 use tucano_integration::{channel::Tx, collection::none_one_or_many::NoneOneOrMany, Unrecoverable};
-use itertools::Itertools;
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
-use tracing::error;
 
 /// Trait that defines how the [`Engine`] sends order requests.
 ///

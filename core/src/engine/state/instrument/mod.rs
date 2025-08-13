@@ -3,10 +3,13 @@ use crate::engine::state::{
     order::{manager::OrderManager, Orders},
     position::{PositionExited, PositionManager},
 };
-use tucano_data::event::MarketEvent;
-use tucano_analytics::summary::{self, instrument::TearSheetGenerator};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
+use itertools::Either;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+use tucano_analytics::summary::{self, instrument::TearSheetGenerator};
+use tucano_data::event::MarketEvent;
 use tucano_execution::{
     order::{
         request::OrderResponseCancel,
@@ -17,10 +20,7 @@ use tucano_execution::{
     AssetIndex, ExchangeIndex, InstrumentAccountSnapshot, InstrumentIndex, QuoteAsset,
 };
 use tucano_integration::{collection::FnvIndexMap, snapshot::Snapshot};
-use itertools::Either;
 use tucano_markets::{exchange::ExchangeId, ConcreteInstrument, Keyed};
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
 
 // ConcreteInstrument now defined in markets crate
 

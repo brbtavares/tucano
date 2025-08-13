@@ -1,13 +1,13 @@
 use crate::{exchange::Connector, instrument::InstrumentData};
 use derive_more::Display;
 use fnv::FnvHashMap;
+use serde::{Deserialize, Serialize};
+use smol_str::{format_smolstr, ToSmolStr};
+use std::{borrow::Borrow, fmt::Debug, hash::Hash};
 use tucano_integration::{
     error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId, Validator,
 };
 use tucano_markets::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
-use serde::{Deserialize, Serialize};
-use smol_str::{format_smolstr, ToSmolStr};
-use std::{borrow::Borrow, fmt::Debug, hash::Hash};
 
 /// OrderBook [`SubscriptionKind`]s and the associated Toucan output data models.
 pub mod book;
@@ -285,9 +285,9 @@ mod tests {
     use super::*;
 
     mod subscription {
-    use super::*; // brings Map, SubscriptionId, InstrumentKind
-    use crate::subscription::trade::PublicTrades;
-    use tucano_markets::MarketDataInstrument;
+        use super::*; // brings Map, SubscriptionId, InstrumentKind
+        use crate::subscription::trade::PublicTrades;
+        use tucano_markets::MarketDataInstrument;
 
         mod de {
             use super::*; // inherits MarketDataInstrument

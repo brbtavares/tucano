@@ -7,11 +7,13 @@ use crate::{
     Identifier,
 };
 use async_trait::async_trait;
-use tucano_integration::{protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer};
-use tucano_markets::exchange::ExchangeId;
 use serde::Deserialize;
 use std::marker::PhantomData;
 use tokio::sync::mpsc;
+use tucano_integration::{
+    protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer,
+};
+use tucano_markets::exchange::ExchangeId;
 
 /// Standard generic stateless [`ExchangeTransformer`] to translate exchange specific types into
 /// normalised Toucan types. Often used with

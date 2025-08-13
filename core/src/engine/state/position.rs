@@ -1,14 +1,14 @@
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
+use rust_decimal::Decimal;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+use tracing::error;
 use tucano_execution::{
     trade::{AssetFees, Trade, TradeId},
     AssetIndex, InstrumentIndex, QuoteAsset,
 };
 use tucano_markets::Side;
-use rust_decimal::Decimal;
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
-use tracing::error;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Constructor)]
 pub struct PositionManager<InstrumentKey = InstrumentIndex> {

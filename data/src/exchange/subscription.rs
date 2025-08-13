@@ -1,6 +1,6 @@
 use crate::{subscription::Subscription, Identifier};
-use tucano_integration::subscription::SubscriptionId;
 use serde::Deserialize;
+use tucano_integration::subscription::SubscriptionId;
 
 /// Defines an exchange specific market and channel combination used by an exchange
 /// [`Connector`](super::Connector) to build the

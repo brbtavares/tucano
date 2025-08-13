@@ -5,8 +5,8 @@ use crate::{
     Identifier,
 };
 use fnv::FnvHashMap;
-use tucano_integration::subscription::SubscriptionId;
 use serde::{Deserialize, Serialize};
+use tucano_integration::subscription::SubscriptionId;
 
 /// Defines how to map a collection of Toucan [`Subscription`]s into exchange specific
 /// [`SubscriptionMeta`], containing subscription payloads that are sent to the exchange.

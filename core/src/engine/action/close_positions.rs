@@ -6,8 +6,8 @@ use crate::engine::{
     },
     Engine,
 };
-use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use std::fmt::Debug;
+use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use tucano_trader::ClosePositionsStrategy;
 
 /// Trait that defines how the [`Engine`] generates & sends order requests for closing open
