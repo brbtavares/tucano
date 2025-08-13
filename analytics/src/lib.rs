@@ -17,17 +17,22 @@
 //!
 //! ## 📈 Exemplo de Uso
 //!
+//! Cálculo simples do Sharpe Ratio usando estatísticas pré-computadas de uma série de retornos:
+//!
 //! ```rust
 //! use analytics::metric::sharpe::SharpeRatio;
 //! use rust_decimal::Decimal;
-//! use analytics::time::Annual252;
+//! use rust_decimal_macros::dec;
+//! use chrono::TimeDelta;
 //!
-//! // Série de retornos (exemplo)
-//! let returns = vec![Decimal::from_f64_retain(0.01), Decimal::from_f64_retain(-0.005)];
-//! let risk_free_daily = Decimal::from_f64_retain(0.0001);
-//! let risk_free_annual = risk_free_daily * Decimal::from(252u32);
-//! let result = SharpeRatio::calculate(&returns, risk_free_annual, Decimal::ZERO, &Annual252);
-//! assert!(result.value().is_finite());
+//! // Estatísticas de retornos (exemplo fictício)
+//! let risk_free_return = dec!(0.0015);    // 0.15%
+//! let mean_return      = dec!(0.0025);    // 0.25%
+//! let std_dev_returns  = dec!(0.02);      // 2%
+//! let interval = TimeDelta::hours(2);     // período analisado
+//!
+//! let sharpe = SharpeRatio::calculate(risk_free_return, mean_return, std_dev_returns, interval);
+//! assert!(sharpe.value != rust_decimal::Decimal::ZERO);
 //! ```
 //!
 //! ## 🔍 Métricas Disponíveis
