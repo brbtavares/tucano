@@ -90,7 +90,7 @@ mod tests {
     use super::*;
     use crate::test_utils::time_plus_days;
     use chrono::{DateTime, Utc};
-    use execution::AssetIndex;
+    use tucano_execution::AssetIndex;
     use rust_decimal_macros::dec;
 
     fn balance(balance: Balance, time: DateTime<Utc>) -> AssetBalance<AssetIndex> {
