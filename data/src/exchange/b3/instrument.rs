@@ -102,7 +102,7 @@ impl B3Instrument {
         Self::new(ticker.into(), "BOVESPA".to_string(), B3SecurityType::Stock)
     }
 
-    /// Create a BMF futures instrument  
+    /// Create a BMF futures instrument
     pub fn bmf(ticker: impl Into<String>) -> Self {
         Self::new(ticker.into(), "BMF".to_string(), B3SecurityType::Future)
     }

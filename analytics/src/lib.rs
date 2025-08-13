@@ -32,7 +32,7 @@
 //! ## 🔍 Métricas Disponíveis
 //!
 //! - **Sharpe Ratio**: Retorno ajustado ao risco
-//! - **Sortino Ratio**: Sharpe considerando apenas downside risk  
+//! - **Sortino Ratio**: Sharpe considerando apenas downside risk
 //! - **Calmar Ratio**: Retorno anualizado / máximo drawdown
 //! - **Win Rate**: Percentual de trades vencedores
 //! - **Profit Factor**: Lucro bruto / prejuízo bruto
