@@ -1,4 +1,4 @@
-# Toucan Risk
+# Tucano Risk
 
 > Camada de validação e controle de risco antes de ordens chegarem ao venue (B3 inicialmente).
 

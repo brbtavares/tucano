@@ -1,4 +1,4 @@
-# Toucan Data
+# Tucano Data
 
 > Camada de ingestão, normalização e distribuição de eventos de mercado para a B3 (e futuras fontes).
 

@@ -1,4 +1,4 @@
-# Toucan Execution
+# Tucano Execution
 
 > Camada de execução de ordens e sincronização de conta (B3 via ProfitDLL inicialmente).
 

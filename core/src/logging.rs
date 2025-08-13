@@ -1,53 +1,52 @@
-//! # Logging Configuration
+//! # Configuração de Logging
 //!
-//! This module provides standardized logging configuration for the Toucan trading framework.
-//! It sets up structured logging with proper filtering to avoid noise from internal audit operations.
+//! Módulo de configuração padronizada de logging do framework Tucano (ex-Toucan).
+//! Fornece logs estruturados com filtros para reduzir ruído de auditoria interna.
 //!
-//! ## Features
+//! ## Funcionalidades
 //!
-//! - **Configurable Output**: Supports both human-readable and JSON log formats
-//! - **Environment-based Filtering**: Uses `RUST_LOG` environment variable for log level control
-//! - **Audit Noise Filtering**: Automatically filters out verbose audit replica state updates
-//! - **Default INFO Level**: Provides sensible defaults while allowing customization
+//! - **Saída Configurável**: Formato humano ou JSON
+//! - **Filtro por Ambiente**: Usa variável `RUST_LOG` para níveis
+//! - **Filtro de Ruído de Auditoria**: Remove atualizações verbosas de réplica de estado
+//! - **Nível INFO Padrão**: Ajustável conforme necessidade
 //!
-//! ## Usage
+//! ## Uso
 //!
-//! ### Standard Logging (Human-readable)
+//! ### Logging Padrão (legível humano)
 //! ```rust
 //! use core::logging::init_logging;
 //!
 //! fn main() {
 //!     init_logging();
-//!     tracing::info!("Trading system started");
+//!     tracing::info!("Sistema de trading iniciado");
 //! }
 //! ```
 //!
-//! ### JSON Logging (For log aggregation systems)
+//! ### Logging JSON (agregadores / observabilidade)
 //! ```rust
 //! use core::logging::init_json_logging;
 //!
 //! fn main() {
 //!     init_json_logging();
-//!     tracing::info!("Trading system started");
+//!     tracing::info!("Sistema de trading iniciado");
 //! }
 //! ```
 //!
-//! ### Environment Configuration
+//! ### Configuração via Ambiente
 //! ```bash
-//! # Set log level to debug for all modules
+//! # Nível debug para todos os módulos
 //! export RUST_LOG=debug
 //!
-//! # Set specific log levels per module
+//! # Níveis específicos por módulo
 //! export RUST_LOG=core=info,execution=debug,data=warn
 //! ```
 
 use crate::engine::audit::state_replica::AUDIT_REPLICA_STATE_UPDATE_SPAN_NAME;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-/// Initialise default non-JSON `Toucan` logging.
+/// Inicializa logging padrão não‑JSON do `Tucano`.
 ///
-/// Note that this filters out duplicate logs produced by the `AuditManager` updating its replica
-/// `EngineState`.
+/// Filtra logs duplicados gerados pelo `AuditManager` ao atualizar sua réplica de `EngineState`.
 pub fn init_logging() {
     tracing_subscriber::registry()
         .with(
@@ -60,10 +59,9 @@ pub fn init_logging() {
         .init()
 }
 
-/// Initialise default JSON `Toucan` logging.
+/// Inicializa logging JSON do `Tucano`.
 ///
-/// Note that this filters out duplicate logs produced by the `AuditManager` updating its replica
-/// `EngineState`.
+/// Filtra logs duplicados gerados pelo `AuditManager` ao atualizar sua réplica de `EngineState`.
 pub fn init_json_logging() {
     tracing_subscriber::registry()
         .with(

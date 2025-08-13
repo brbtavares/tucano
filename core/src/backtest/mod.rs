@@ -1,30 +1,30 @@
-//! # Backtesting Framework
+//! # Framework de Backtesting
 //!
-//! This module provides a comprehensive backtesting framework for algorithmic trading strategies.
-//! It enables historical simulation of trading strategies using market data and provides detailed
-//! performance analysis and reporting capabilities.
+//! Este módulo fornece um framework abrangente de backtesting para estratégias de trading algorítmico.
+//! Permite simular historicamente estratégias usando dados de mercado e gerar análises detalhadas
+//! de performance e relatórios estruturados.
 //!
-//! ## Key Features
+//! ## Principais Funcionalidades
 //!
-//! ### Historical Simulation
-//! - **Market Data Replay**: Process historical market data chronologically
-//! - **Strategy Execution**: Run trading strategies against historical data
-//! - **Order Simulation**: Simulate order execution without real market impact
-//! - **Multi-timeframe Support**: Backtest across different time intervals
+//! ### Simulação Histórica
+//! - **Reprodução de Dados**: Processa eventos históricos em ordem cronológica
+//! - **Execução de Estratégias**: Roda estratégias sobre dados históricos normalizados
+//! - **Simulação de Ordens**: Emula execução sem impacto real de mercado
+//! - **Suporte Multi‑Janela**: Testes em múltiplos intervalos de tempo
 //!
-//! ### Performance Analysis
-//! - **Comprehensive Metrics**: Calculate Sharpe ratio, Sortino ratio, max drawdown, etc.
-//! - **Risk Analytics**: Analyze risk-adjusted returns and portfolio volatility
-//! - **Trade Analysis**: Detailed breakdown of individual trade performance
-//! - **Timeline Analysis**: Performance evolution over time
+//! ### Análise de Performance
+//! - **Métricas Abrangentes**: Sharpe, Sortino, Máx Drawdown, etc.
+//! - **Risco**: Avaliação risco‑retorno e volatilidade de portfólio
+//! - **Análise de Trades**: Quebra detalhada de cada operação
+//! - **Linha do Tempo**: Evolução temporal de resultados
 //!
-//! ### Multi-Strategy Testing
-//! - **Parallel Execution**: Run multiple strategy variations simultaneously
-//! - **Comparative Analysis**: Compare performance across different strategies
-//! - **Parameter Optimization**: Test strategy parameter combinations
-//! - **Portfolio Simulation**: Multi-asset and multi-strategy portfolios
+//! ### Teste Multi‑Estratégia
+//! - **Execução Paralela**: Variações de parâmetros simultâneas
+//! - **Comparação**: Benchmark entre estratégias
+//! - **Otimização**: Exploração de combinações de parâmetros
+//! - **Portfólio**: Composição multi‑ativo / multi‑estratégia
 //!
-//! ## Architecture
+//! ## Arquitetura
 //!
 //! ```text
 //! ┌─────────────────────────────────────────────────────────┐
@@ -45,32 +45,32 @@
 //! └─────────────────────────────┴─────────────────────────────┘
 //! ```
 //!
-//! ## Usage Example
+//! ## Exemplo de Uso
 //!
 //! ```rust
 //! use core::backtest::{BacktestSummary, market_data::BacktestMarketData};
 //! use analytics::time::TimeInterval;
 //!
-//! // Setup backtest configuration
+//! // Configuração do backtest
 //! let market_data = BacktestMarketData::load_from_csv("historical_data.csv").await?;
 //! let strategy = MyTradingStrategy::new();
 //!
-//! // Run backtest
+//! // Executa backtest
 //! let summary = run_backtest(
 //!     strategy,
 //!     market_data,
 //!     TimeInterval::days(365), // 1 year backtest
 //! ).await?;
 //!
-//! // Analyze results
-//! println!("Sharpe Ratio: {:.2}", summary.sharpe_ratio());
+//! // Analisa resultados
+//! println!("Sharpe: {:.2}", summary.sharpe_ratio());
 //! println!("Max Drawdown: {:.2}%", summary.max_drawdown() * 100.0);
-//! println!("Total Return: {:.2}%", summary.total_return() * 100.0);
+//! println!("Retorno Total: {:.2}%", summary.total_return() * 100.0);
 //! ```
-/// Backtesting utilities for algorithmic trading strategies.
+/// Utilitários de backtesting para estratégias algorítmicas.
 ///
-/// This module provides tools for running historical simulations of trading strategies
-/// using market data, and analyzing the performance of these simulations.
+/// Fornece ferramentas para executar simulações históricas de estratégias usando
+/// dados de mercado e analisar a performance dessas simulações.
 use crate::{
     backtest::{
         market_data::BacktestMarketData,

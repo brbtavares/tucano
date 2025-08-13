@@ -2,12 +2,12 @@ use crate::time::TimeInterval;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
-/// Represents a Rate of Return value over a specific [`TimeInterval`].
+/// Representa um valor de Taxa de Retorno (Rate of Return) em um [`TimeInterval`] específico.
 ///
-/// Rate of Return measures the percentage change in value over a time period.
-/// Unlike risk-adjusted metrics, returns scale linearly with time.
+/// Mede a variação percentual de valor em um período. Diferente de métricas ajustadas a risco,
+/// retornos escalam linearmente com o tempo.
 ///
-/// See docs: <https://www.investopedia.com/terms/r/rateofreturn.asp>
+/// Referência: <https://www.investopedia.com/terms/r/rateofreturn.asp>
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Deserialize, Serialize)]
 pub struct RateOfReturn<Interval> {
     pub value: Decimal,
@@ -18,7 +18,7 @@ impl<Interval> RateOfReturn<Interval>
 where
     Interval: TimeInterval,
 {
-    /// Calculate the [`RateOfReturn`] over the provided [`TimeInterval`].
+    /// Calcula o [`RateOfReturn`] para o [`TimeInterval`] fornecido.
     pub fn calculate(mean_return: Decimal, returns_period: Interval) -> Self {
         Self {
             value: mean_return,
@@ -26,15 +26,10 @@ where
         }
     }
 
-    /// Scale the [`RateOfReturn`] from the current [`TimeInterval`] to the provided
-    /// [`TimeInterval`].
+    /// Escala o [`RateOfReturn`] do intervalo atual para o intervalo alvo.
     ///
-    /// Unlike risk metrics which use square root scaling, [`RateOfReturn`] scales linearly
-    /// with time.
-    ///
-    /// For example, a 1% daily return scales to approximately 252% annual return (not √252%).
-    ///
-    /// This assumes simple interest rather than compound interest.
+    /// Diferente de métricas de risco (escala raiz quadrada), retorna escala linear no tempo.
+    /// Ex: 1% diário → ~252% anual (não √252%). Assume juros simples (não composto).
     pub fn scale<TargetInterval>(self, target: TargetInterval) -> RateOfReturn<TargetInterval>
     where
         TargetInterval: TimeInterval,

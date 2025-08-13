@@ -1,9 +1,9 @@
-# 🇧🇷 Toucan - Framework de Trading Algorítmico para B3
+# 🇧🇷 Tucano - Framework de Trading Algorítmico para B3 (anteriormente Toucan)
 
 [![Rust](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
 
-Framework moderno de trading algorítmico desenvolvido em Rust, especializado no mercado brasileiro (B3).
+Framework moderno de trading algorítmico desenvolvido em Rust, especializado no mercado brasileiro (B3). Rebranding: Toucan → Tucano.
 
 ## 🎯 Características Principais
 
@@ -16,7 +16,7 @@ Framework moderno de trading algorítmico desenvolvido em Rust, especializado no
 ## 🏗️ Arquitetura do Sistema
 
 ```
-toucan/
+tucano/  # diretório original "toucan/" permanece até renomear repo
 ├── 🧠 core/              # Engine principal (processamento de eventos, backtest & live)
 ├── 📊 analytics/         # Métricas financeiras e resumos
 ├── 📈 data/              # Eventos & streaming de dados (livros, trades, assinaturas)
@@ -34,7 +34,7 @@ toucan/
 
 ### Filosofia de Design
 
-O Toucan implementa uma **arquitetura híbrida** que combina:
+O Tucano (ex-Toucan) implementa uma **arquitetura híbrida** que combina:
 - **Abstrações Reutilizáveis**: Traits genéricos para máxima flexibilidade
 - **Implementações B3**: Tipos brasileiros com terminologia nativa
 - **Conectividade Modular**: Fácil extensão para novos exchanges
@@ -311,7 +311,7 @@ use tracing::{info, warn, error, debug};
 
 // Setup de logging
 tracing_subscriber::fmt()
-    .with_env_filter("toucan=debug")
+    .with_env_filter("tucano=debug")
     .init();
 
 // Logs em código
@@ -375,8 +375,9 @@ RUN cargo build --release
 
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates
-COPY --from=builder /app/target/release/toucan /usr/local/bin/
-CMD ["toucan"]
+# (Após renomear binário no futuro)
+COPY --from=builder /app/target/release/tucano /usr/local/bin/
+CMD ["tucano"]
 ```
 
 ### Variáveis de Ambiente
@@ -387,7 +388,7 @@ export RUST_ENV=production
 export RUST_LOG=info
 export B3_USERNAME=usuario_producao
 export B3_PASSWORD=senha_producao
-export DATABASE_URL=postgresql://user:pass@localhost/toucan
+export DATABASE_URL=postgresql://user:pass@localhost/tucano
 export REDIS_URL=redis://localhost:6379
 ```
 
@@ -414,7 +415,7 @@ export REDIS_URL=redis://localhost:6379
 
 ---
 
-**Toucan** - Trading algorítmico moderno para o mercado brasileiro 🇧🇷  
+**Tucano** (anteriormente Toucan) - Trading algorítmico moderno para o mercado brasileiro 🇧🇷  
 *Desenvolvido com ❤️ em Rust*
 
 ## 🧭 Roadmap de Arquitetura (Exchange vs Broker vs Transporte)

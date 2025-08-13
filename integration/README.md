@@ -1,4 +1,4 @@
-# Toucan Integration
+# Tucano Integration
 
 > Abstrações de comunicação (canais, protocolos) e transformação para conectar fontes externas (WebSocket, HTTP, FIX futuro) ao ecossistema.
 
