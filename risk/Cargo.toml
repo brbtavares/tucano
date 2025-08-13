@@ -9,4 +9,4 @@ markets = { workspace = true }
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
 derive_more = { version = "1", features = ["constructor", "display", "from"] }
-thiserror = "1"
+thiserror = "2"
