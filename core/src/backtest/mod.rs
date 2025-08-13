@@ -49,7 +49,7 @@
 //!
 //! ```rust
 //! use core::backtest::{BacktestSummary, market_data::BacktestMarketData};
-//! use analytics::time::TimeInterval;
+//! use tucano_analytics::time::TimeInterval;
 //!
 //! // Configuração do backtest
 //! let market_data = BacktestMarketData::load_from_csv("historical_data.csv").await?;
@@ -91,7 +91,7 @@ use crate::{
     execution::builder::{ExecutionBuild, ExecutionBuilder},
     system::builder::{AuditMode, SystemBuild},
 };
-use analytics::time::TimeInterval;
+use tucano_analytics::time::TimeInterval;
 use data::event::MarketEvent;
 use execution::{AccountEvent, InstrumentIndex};
 use futures::future::try_join_all;
@@ -101,7 +101,7 @@ use std::{fmt::Debug, sync::Arc};
 use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Placeholder for IndexedInstruments
-use markets::{ConcreteInstrument, Keyed};
+use tucano_markets::{ConcreteInstrument, Keyed};
 pub type IndexedInstruments = Vec<Keyed<String, ConcreteInstrument>>;
 
 /// Defines the interface and implementations for different types of market data sources

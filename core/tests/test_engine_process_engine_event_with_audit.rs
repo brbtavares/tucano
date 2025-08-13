@@ -121,7 +121,7 @@ use execution::{
 };
 
 use core::engine::state::IndexedInstruments;
-use markets::{ExchangeId, Side}; // instrument list alias
+use tucano_markets::{ExchangeId, Side}; // instrument list alias
 
 use risk::DefaultRiskManager;
 

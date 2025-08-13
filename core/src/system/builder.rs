@@ -23,7 +23,7 @@ use integration::{
     snapshot::SnapUpdates,
     FeedEnded, Terminal,
 };
-use markets::{ConcreteInstrument, Keyed};
+use tucano_markets::{ConcreteInstrument, Keyed};
 
 /// Placeholder types
 pub type AssetNameInternal = String;

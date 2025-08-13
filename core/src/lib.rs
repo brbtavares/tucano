@@ -114,7 +114,7 @@ pub use trader as strategy; // temporary alias for backward compatibility
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
-pub use analytics;
+pub use tucano_analytics as analytics; // transitional re-export
 
 /// Strategy interfaces for generating algorithmic orders, closing positions, and performing
 /// `Engine` actions on disconnect / trading disabled.
@@ -225,13 +225,13 @@ impl Sequence {
 /// Core test utilities.
 pub mod test_utils {
     use crate::{engine::state::asset::AssetState, Timed};
-    use analytics::summary::asset::TearSheetAssetGenerator;
+    use tucano_analytics::summary::asset::TearSheetAssetGenerator;
     use execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
-    use markets::Side;
+    use tucano_markets::Side;
 
     // Placeholder type for integration
     type InstrumentNameInternal = String;

@@ -13,16 +13,16 @@ use crate::engine::{
     },
     Processor,
 };
-use analytics::summary::asset::TearSheetAssetGenerator;
-use data::event::MarketEvent;
+use tucano_analytics::summary::asset::TearSheetAssetGenerator;
+use tucano_data::event::MarketEvent;
 use derive_more::Constructor;
-use execution::{
+use tucano_execution::{
     balance::AssetBalance, AccountEvent, AccountEventKind, ExchangeIndex, InstrumentIndex,
     QuoteAsset, UnindexedAccountSnapshot,
 };
 use fnv::FnvHashMap;
-use integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
-use markets::{exchange::ExchangeId, ConcreteInstrument, Keyed}; // ExchangeId still used in connectivity
+use tucano_integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
+use tucano_markets::{exchange::ExchangeId, ConcreteInstrument, Keyed}; // ExchangeId still used in connectivity
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 

@@ -5,13 +5,13 @@ use crate::engine::state::{
     trading::TradingState, EngineState,
 };
 use chrono::{DateTime, Utc};
-use execution::{
+use tucano_execution::{
     balance::{AssetBalance, Balance},
     InstrumentIndex,
 };
 use fnv::FnvHashMap;
-use integration::snapshot::Snapshot;
-use markets::{ConcreteInstrument, Keyed};
+use tucano_integration::snapshot::Snapshot;
+use tucano_markets::{ConcreteInstrument, Keyed};
 use tracing::debug;
 
 /// Placeholder types
@@ -124,7 +124,7 @@ impl<'a, GlobalData, FnInstrumentData> EngineStateBuilder<'a, GlobalData, FnInst
                     asset_name.clone(),
                     crate::engine::state::asset::AssetState::new(
                         asset_name.clone(),
-                        analytics::summary::asset::TearSheetAssetGenerator::default(),
+                        tucano_analytics::summary::asset::TearSheetAssetGenerator::default(),
                         None,
                     ),
                 );

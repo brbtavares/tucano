@@ -27,7 +27,7 @@ use integration::{
     snapshot::Snapshot,
     stream::merge::merge,
 };
-use markets::exchange::ExchangeId;
+use tucano_markets::exchange::ExchangeId;
 
 /// Placeholder types for name compatibility
 pub type AssetNameExchange = String;

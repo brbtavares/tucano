@@ -4,7 +4,7 @@ use execution::{
     trade::{AssetFees, Trade, TradeId},
     AssetIndex, InstrumentIndex, QuoteAsset,
 };
-use markets::Side;
+use tucano_markets::Side;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

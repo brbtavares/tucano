@@ -408,7 +408,7 @@ mod tests {
             Order, OrderKey, OrderKind, TimeInForce,
         },
     };
-    use markets::{exchange::ExchangeId, Side};
+    use tucano_markets::{exchange::ExchangeId, Side};
     use rust_decimal_macros::dec;
     use smol_str::SmolStr;
 

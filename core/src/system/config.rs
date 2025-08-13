@@ -3,8 +3,8 @@ use execution::client::mock::MockExecutionConfig;
 ///
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
-use markets::ConcreteInstrument; // updated import for shared instrument
-use markets::{exchange::ExchangeId, Underlying};
+use tucano_markets::ConcreteInstrument; // updated import for shared instrument
+use tucano_markets::{exchange::ExchangeId, Underlying};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 

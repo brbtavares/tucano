@@ -7,7 +7,7 @@ use integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
 };
-use markets::exchange::ExchangeId;
+use tucano_markets::exchange::ExchangeId;
 use std::fmt::Debug;
 
 /// Collection of [`ExecutionRequest`] [`Tx`]s for each

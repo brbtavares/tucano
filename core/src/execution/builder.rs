@@ -23,7 +23,7 @@ use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use fnv::FnvHashMap;
 use futures::{future::try_join_all, FutureExt};
 use integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
-use markets::exchange::ExchangeId;
+use tucano_markets::exchange::ExchangeId;
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{
     sync::{broadcast, mpsc},
