@@ -3,32 +3,36 @@
 [![Rust](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
 
-Framework moderno de trading algorítmico desenvolvido em Rust, especializado no mercado brasileiro (B3) com integração nativa via ProfitDLL da Nelógica.
+Framework moderno de trading algorítmico desenvolvido em Rust, especializado no mercado brasileiro (B3).
 
 ## 🎯 Características Principais
 
-- **🧠 Engine Unificado**: Mesmo código para backtesting e execução ao vivo
-- **🇧🇷 Mercado Brasileiro**: Integração nativa com B3 via ProfitDLL
+- **🧠 Engine Unificado**: Mesmo código para backtest e execução (real ou simulada) ao vivo
+- **🇧🇷 Mercado Brasileiro**: Integração nativa com B3 já implementada via ProfitDLL
 - **⚡ Alta Performance**: Desenvolvido em Rust para máxima eficiência
 - **🛡️ Type Safety**: Sistema de tipos que previne erros em tempo de compilação
-- **📊 Analytics**: Métricas financeiras abrangentes (Sharpe, Sortino, Drawdown)
 - **🔄 Modular**: Arquitetura extensível e componentes reutilizáveis
 
 ## 🏗️ Arquitetura do Sistema
 
 ```
 toucan/
-├── 🧠 core/              # Engine principal - backtesting e execução
-├── 📊 analytics/         # Métricas de performance e análise quantitativa
-├── 📈 data/              # Streaming de dados de mercado em tempo real
-├── 🏛️ markets/           # Abstrações de exchanges e instrumentos
-├── ⚡ execution/         # Execução de ordens em exchanges
-├── 🔄 integration/       # Protocolos de comunicação (HTTP, WebSocket)
-├── 🛡️ risk/              # Gestão de risco e validações
-├── 🧩 strategy/          # Framework de estratégias algorítmicas
+├── 🧠 core/              # Engine principal (processamento de eventos, backtest & live)
+├── 📊 analytics/         # Métricas financeiras e resumos
+├── 📈 data/              # Eventos & streaming de dados (livros, trades, assinaturas)
+├── 🏛️ markets/           # Modelos de instrumentos, exchange catalog & tipos B3
+├── 🤝 brokers/           # Registro/carregamento de brokers & modelos de conta
+├── ⚡ execution/         # Camada de execução (ordens, clientes, transporte, mapping)
+├── 🔌 integration/       # Protocolos externos (canal, stream, serialização)
+├── 🛡️ risk/              # Gestão de risco (checks/validações)
+├── 🧩 trader/            # Abstrações (traits + tipos) para estratégias
+├── 📦 strategies/        # Implementações concretas de estratégias (features)
 ├── 🔧 macros/            # Macros Rust para geração de código
-└── 📝 examples/          # Exemplos práticos de uso
+├── 📝 examples/          # Exemplos práticos de uso
+└── 🛠️ scripts/           # Scripts utilitários (format, automações)
 ```
+
+> Migração: a crate `strategy` foi renomeada para `trader` (abstrações). Implementações concretas agora residem em `strategies`.
 
 ### Filosofia de Design
 
@@ -96,7 +100,7 @@ export RUST_LOG=info
 ```rust
 use toucan::{
     core::engine::Engine,
-    strategy::algo::AlgoStrategy,
+    trader::algo::AlgoStrategy,
     execution::client::b3::B3Client,
     analytics::metric::sharpe::SharpeRatio,
 };

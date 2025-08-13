@@ -1,12 +1,12 @@
 [package]
-name = "strategy"
+name = "trader"
 version = "0.1.0"
 edition = "2021"
 authors = ["JustAStream <justastream.code@gmail.com>"]
 repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-description = "Strategy interfaces and implementations for the Toucan trading ecosystem"
-keywords = ["trading", "strategies", "algo", "crypto", "investment"]
+description = "Core strategy abstractions (traits, types) for the Toucan trading ecosystem"
+keywords = ["trading", "strategies", "algo", "framework"]
 categories = ["algorithms", "finance"]
 
 [dependencies]

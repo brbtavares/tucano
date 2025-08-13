@@ -8,7 +8,7 @@ use crate::engine::{
 };
 use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use std::fmt::Debug;
-use strategy::ClosePositionsStrategy;
+use trader::ClosePositionsStrategy;
 
 /// Trait that defines how the [`Engine`] generates & sends order requests for closing open
 /// positions.

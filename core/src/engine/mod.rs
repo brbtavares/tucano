@@ -145,7 +145,7 @@ use integration::channel::Tx;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use strategy::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
+use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 use tracing::info;
 
 /// Defines how the [`Engine`] actions a [`Command`], and the associated outputs.

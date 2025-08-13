@@ -186,7 +186,7 @@ impl<T, Reason> RiskRefused<T, Reason> {
 }
 
 /// Interface do RiskManager para revisar e opcionalmente filtrar ordens de
-/// cancelamento e abertura geradas por uma [`AlgoStrategy`](strategy::AlgoStrategy).
+/// cancelamento e abertura geradas por uma [`AlgoStrategy`](trader::AlgoStrategy).
 ///
 /// ## Responsabilidades Principais
 ///

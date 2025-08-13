@@ -125,7 +125,7 @@ use core::engine::state::IndexedInstruments; // instrument list alias
 
 use risk::DefaultRiskManager;
 
-use strategy::{
+use trader::{
     algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
     on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
 };

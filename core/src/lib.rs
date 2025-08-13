@@ -108,7 +108,7 @@ pub mod logging;
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
 pub use risk;
-pub use strategy;
+pub use trader as strategy; // temporary alias for backward compatibility
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
@@ -119,7 +119,7 @@ pub use analytics;
 /// `Engine` actions on disconnect / trading disabled.
 ///
 /// **Note**: Strategy interfaces have been moved to the `strategy` crate.
-/// Import them with: `use strategy::{AlgoStrategy, ClosePositionsStrategy, ...};`
+/// Import them with: `use trader::{AlgoStrategy, ClosePositionsStrategy, ...};`
 // Remove the strategy module as it's now a separate crate
 // pub mod strategy;
 

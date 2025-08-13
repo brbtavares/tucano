@@ -5,7 +5,7 @@ use crate::engine::{
 use derive_more::Constructor;
 use integration::{collection::none_one_or_many::NoneOneOrMany, FeedEnded, Terminal};
 use serde::{Deserialize, Serialize};
-use strategy::{OnDisconnectStrategy, OnTradingDisabled};
+use trader::{OnDisconnectStrategy, OnTradingDisabled};
 
 /// Defines data structures that represent the context an `Engine` [`AuditTick`] was generated.
 pub mod context;

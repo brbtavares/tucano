@@ -22,7 +22,7 @@ integration = { workspace = true }
 markets = { workspace = true }
 data = { workspace = true }
 execution = { workspace = true }
-strategy = { workspace = true }
+trader = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

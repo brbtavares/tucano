@@ -10,7 +10,8 @@ members = [
     "macros",
     "markets",
     "risk",
-    "strategy",
+    "trader",
+    "strategies",
     "examples"
 ]
 
@@ -24,7 +25,8 @@ data = { path = "./data", version = "0.10.1" }
 execution = { path = "./execution", version = "0.5.3" }
 macros = { path = "./macros", version = "0.2.0" }
 risk = { path = "./risk", version = "0.1.0" }
-strategy = { path = "./strategy", version = "0.1.0" }
+trader = { path = "./trader", version = "0.1.0" }
+strategies = { path = "./strategies", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }

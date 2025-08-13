@@ -15,7 +15,7 @@ use execution::{
 use integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use strategy::AlgoStrategy;
+use trader::AlgoStrategy;
 
 /// Trait that defines how the [`Engine`] generates and sends algorithmic order requests.
 ///
