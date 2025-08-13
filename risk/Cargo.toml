@@ -9,8 +9,8 @@ keywords = ["trading","risk","risk-management","finance"]
 categories = ["finance","algorithms"]
 
 [dependencies]
-"tucano-execution" = { workspace = true }
-"tucano-markets" = { workspace = true }
+"tucano-execution" = "0.5.3"
+"tucano-markets" = "0.3.1"
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
 derive_more = { version = "1", features = ["constructor", "display", "from"] }
