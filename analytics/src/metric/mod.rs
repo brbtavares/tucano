@@ -20,15 +20,19 @@
 //!
 //! ## 💡 Exemplo de Uso
 //!
-//! ```rust,no_run
-//! use analytics::metric::{sharpe::SharpeRatio, drawdown::MaxDrawdown};
-//! use analytics::time::Annual252;
+//! Cálculo simples do Sharpe Ratio com estatísticas agregadas do período (valores hipotéticos).
 //!
-//! // Calcular Sharpe Ratio
-//! let sharpe = SharpeRatio::calculate(&returns, &Annual252, 0.02)?;
+//! ```rust
+//! use analytics::metric::sharpe::SharpeRatio;
+//! use analytics::time::Daily;
+//! use rust_decimal_macros::dec;
 //!
-//! // Calcular Maximum Drawdown
-//! let max_dd = MaxDrawdown::calculate(&portfolio_values)?;
+//! let risk_free = dec!(0.0015); // 0.15%
+//! let mean_ret  = dec!(0.0025); // 0.25%
+//! let std_dev   = dec!(0.0200); // 2.00%
+//!
+//! let sharpe = SharpeRatio::calculate(risk_free, mean_ret, std_dev, Daily);
+//! assert_eq!(sharpe.value, dec!(0.05));
 //! ```
 
 /// Lógica de cálculo do Calmar Ratio.

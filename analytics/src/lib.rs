@@ -13,25 +13,33 @@
 //!
 //! ## 🏗️ Estrutura do Módulo
 //!
-//! ```
+//! (Diagrama ilustrativo – não é código executável)
+//!
+//! ```text
 //! analytics/
-//! ├── algorithm.rs     # Algoritmos estatísticos para análise de datasets
-//! ├── metric/          # Métricas financeiras (Sharpe, Sortino, etc.)
-//! ├── summary/         # Relatórios e sumários financeiros
-//! └── time.rs          # Definições de intervalos temporais
+//!  ├─ algorithm.rs     # Algoritmos estatísticos para análise de datasets
+//!  ├─ metric/          # Métricas financeiras (Sharpe, Sortino, etc.)
+//!  ├─ summary/         # Relatórios e sumários financeiros
+//!  └─ time.rs          # Definições de intervalos temporais
 //! ```
 //!
-//! ## 📈 Exemplo de Uso
+//! ## 📈 Exemplo de Uso Simplificado
 //!
-//! ```rust,no_run
-//! use analytics::{metric::SharpeRatio, summary::TradingSummary, time::Annual252};
-//! use chrono::{DateTime, Utc};
+//! Cálculo de Sharpe Ratio com valores hipotéticos (retornos já agregados).
 //!
-//! // Calcular Sharpe Ratio
-//! let sharpe = SharpeRatio::calculate(&returns, &Annual252, risk_free_rate);
+//! ```rust
+//! use analytics::metric::sharpe::SharpeRatio;
+//! use analytics::time::Daily;
+//! use rust_decimal::Decimal;
+//! use rust_decimal_macros::dec;
 //!
-//! // Gerar sumário de trading
-//! let summary = TradingSummary::generate(&trades, start_time, end_time);
+//! // Retorno livre de risco, retorno médio e desvio padrão (todos no mesmo período)
+//! let risk_free = dec!(0.0015);    // 0.15%
+//! let mean_ret  = dec!(0.0025);    // 0.25%
+//! let std_dev   = dec!(0.0200);    // 2.00%
+//!
+//! let sharpe = SharpeRatio::calculate(risk_free, mean_ret, std_dev, Daily);
+//! assert_eq!(sharpe.value, dec!(0.05));
 //! ```
 //!
 //! ## 🔍 Métricas Disponíveis
@@ -93,8 +101,8 @@ pub trait Timed {
 /// use analytics::{TimedValue, Timed};
 /// use chrono::Utc;
 ///
-/// let price = TimedValue::new(100.50, Utc::now());
-/// println!("Preço: {} em {}", price.value, price.timestamp());
+/// let price = TimedValue::new(100.50_f64, Utc::now());
+/// assert!(price.timestamp() <= Utc::now());
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct TimedValue<T> {
