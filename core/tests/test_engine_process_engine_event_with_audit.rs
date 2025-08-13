@@ -97,7 +97,7 @@ use tucano_core::{
         },
         Engine, EngineOutput,
     },
-    tucano_execution::{request::ExecutionRequest, AccountStreamEvent},
+    execution::{request::ExecutionRequest, AccountStreamEvent},
     test_utils::time_plus_days,
     EngineEvent, Sequence, Timed,
 };
