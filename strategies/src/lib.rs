@@ -2,6 +2,8 @@
 
 pub mod shared;
 
+pub mod order_book_imbalance; // sempre disponível: exemplo simples reutilizável
+
 #[cfg(feature = "momentum")]
 pub mod momentum;
 

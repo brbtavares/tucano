@@ -26,6 +26,7 @@ serde = { workspace = true, features = ["derive"] }
 tracing = { workspace = true }
 thiserror = { workspace = true }
 rand = { workspace = true }
+rust_decimal = { workspace = true }
 
 [package.metadata.docs.rs]
 all-features = true

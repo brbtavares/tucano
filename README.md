@@ -32,8 +32,6 @@ toucan/
 └── 🛠️ scripts/           # Scripts utilitários (format, automações)
 ```
 
-> Migração: a crate `strategy` foi renomeada para `trader` (abstrações). Implementações concretas agora residem em `strategies`.
-
 ### Filosofia de Design
 
 O Toucan implementa uma **arquitetura híbrida** que combina:
@@ -95,107 +93,51 @@ export RUST_LOG=info
 
 ## 💡 Exemplo de Uso
 
-### Estratégia Básica de Médias Móveis
+### Estratégia Reutilizável: Order Book Imbalance
+
+Uma estratégia simples que observa o desequilíbrio entre volumes BID e ASK no melhor nível do livro. A mesma implementação pode ser plugada tanto em um motor live quanto em um motor de backtest sem alterar a lógica.
 
 ```rust
-use toucan::{
-    core::engine::Engine,
-    trader::algo::AlgoStrategy,
-    execution::client::b3::B3Client,
-    analytics::metric::sharpe::SharpeRatio,
+use trader::AlgoStrategy;
+use strategies::{
+    order_book_imbalance::OrderBookImbalanceStrategy,
+    shared::NoOpState,
 };
+use execution::{ExchangeIndex, InstrumentIndex};
+use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
 
-// Definir estratégia
-struct MovingAverageStrategy {
-    short_period: usize,
-    long_period: usize,
-}
+// Wrapper leve para demonstrar o trait (delegaria internamente para a estratégia real).
+struct MyImbalance(OrderBookImbalanceStrategy);
 
-impl AlgoStrategy for MovingAverageStrategy {
-    type State = EngineState<GlobalData, InstrumentData>;
-    
-    fn generate_algo_orders(&self, state: &Self::State) -> (Vec<CancelOrder>, Vec<OpenOrder>) {
-        let mut orders = Vec::new();
-        
-        for (instrument, data) in state.market_data.iter() {
-            let short_ma = calculate_ma(&data.prices, self.short_period);
-            let long_ma = calculate_ma(&data.prices, self.long_period);
-            
-            if short_ma > long_ma {
-                orders.push(Order::market_buy(instrument, 100.0));
-            }
-        }
-        
-        (vec![], orders)
-    }
-}
+impl AlgoStrategy for MyImbalance {
+    type State = NoOpState; // estado do engine (placeholder)
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Configurar cliente B3
-    let b3_client = B3Client::new()
-        .with_credentials(&env::var("B3_USERNAME")?, &env::var("B3_PASSWORD")?)
-        .connect().await?;
-    
-    // Configurar estratégia
-    let strategy = MovingAverageStrategy {
-        short_period: 10,
-        long_period: 30,
-    };
-    
-    // Criar engine
-    let mut engine = Engine::new(
-        UTCClock::new(),
-        EngineState::new(),
-        vec![b3_client.execution_tx()],
-        strategy,
-        RiskManager::default(),
-    );
-    
-    // Loop principal de trading
-    loop {
-        // Processar eventos de mercado
-        if let Some(market_event) = market_stream.next().await {
-            let audit = engine.process(EngineEvent::Market(market_event));
-            println!("Processado: {:?}", audit);
-        }
+    fn generate_algo_orders(
+        &self,
+        _state: &Self::State,
+    ) -> (
+        impl IntoIterator<Item = OrderRequestCancel<ExchangeIndex, InstrumentIndex>>,
+        impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>>,
+    ) {
+        // Aqui chamaríamos self.0.generate_algo_orders(...) quando integrado ao estado real
+        (Vec::<OrderRequestCancel<_, _>>::new(), Vec::<OrderRequestOpen<_, _>>::new())
     }
 }
 ```
 
-### Backtesting
+### Uso em Live vs Backtest (mesma estratégia)
 
 ```rust
-use toucan::{
-    core::backtest::BacktestEngine,
-    analytics::summary::TradingSummary,
-    data::historical::HistoricalDataProvider,
-};
+// Live
+let strategy = MyImbalance(OrderBookImbalanceStrategy::new(Default::default()));
+let engine_live = Engine::new(clock, live_state, live_exec_txs, strategy, risk_manager);
 
-async fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
-    // Dados históricos
-    let data_provider = HistoricalDataProvider::new()
-        .with_instruments(vec!["PETR4", "VALE3", "ITUB4"])
-        .with_period("2023-01-01", "2023-12-31");
-    
-    // Configurar backtest
-    let config = BacktestConfig::new()
-        .with_initial_capital(100_000.0)
-        .with_commission_rate(0.001);
-    
-    // Executar
-    let mut engine = BacktestEngine::new(config, strategy);
-    let results = engine.run(data_provider).await?;
-    
-    // Analisar resultados
-    println!("Retorno Total: {:.2}%", results.total_return * 100.0);
-    println!("Sharpe Ratio: {:.2}", results.sharpe_ratio);
-    println!("Max Drawdown: {:.2}%", results.max_drawdown * 100.0);
-    println!("Win Rate: {:.2}%", results.win_rate * 100.0);
-    
-    Ok(())
-}
+// Backtest
+let strategy_bt = MyImbalance(OrderBookImbalanceStrategy::new(Default::default()));
+let engine_bt = BacktestEngine::new(bt_config, bt_state, bt_exec_txs, strategy_bt, risk_manager_bt);
 ```
+
+Somente os componentes de dados (streaming vs histórico) e de execução (cliente real vs simulado) mudam; a estratégia permanece idêntica.
 
 ## 🇧🇷 Integração B3 via ProfitDLL
 
