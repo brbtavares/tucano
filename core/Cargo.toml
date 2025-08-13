@@ -17,7 +17,7 @@ tokio = { workspace = true, features = ["fs"]}
 
 [dependencies]
 "tucano-analytics" = "0.1.0"
-"tucano-risk" = { workspace = true }
+"tucano-risk" = "0.1.0"
 # Tucano Ecosystem
 "tucano-integration" = "0.9.1"
 "tucano-markets" = "0.3.1"
