@@ -285,23 +285,17 @@ mod tests {
     use super::*;
 
     mod subscription {
-        use super::*;
-        use crate::subscription::trade::PublicTrades;
-        use markets::MarketDataInstrument;
+    use super::*; // brings Map, SubscriptionId, InstrumentKind
+    use crate::subscription::trade::PublicTrades;
+    use tucano_markets::MarketDataInstrument;
 
         mod de {
-            use super::*;
+            use super::*; // inherits MarketDataInstrument
             use crate::{
                 exchange::b3::B3Exchange,
                 subscription::{book::OrderBooksL2, trade::PublicTrades},
             };
-            use markets::MarketDataInstrument;
         }
-    }
-
-    mod instrument_map {
-        use super::*;
-        use markets::MarketDataInstrument;
 
         #[test]
         fn test_find_instrument() {

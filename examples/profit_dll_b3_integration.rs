@@ -113,20 +113,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use markets::{Asset, ExchangeId};
+    use tucano_markets::{Asset, AssetType, ExchangeId};
 
     #[test]
     fn test_b3_stock_creation() {
         let stock = B3Stock::new("PETR4".to_string(), "Petrobras PN".to_string());
         assert_eq!(stock.symbol(), "PETR4");
-        assert_eq!(stock.asset_type(), markets::AssetType::Stock);
+    assert_eq!(stock.asset_type(), AssetType::Stock);
     }
 
     #[test]
     fn test_b3_etf_creation() {
         let etf = B3ETF::new("BOVA11".to_string(), "iShares BOVESPA".to_string());
         assert_eq!(etf.symbol(), "BOVA11");
-        assert_eq!(etf.asset_type(), markets::AssetType::ETF);
+    assert_eq!(etf.asset_type(), AssetType::ETF);
     }
 
     #[test]
@@ -134,12 +134,12 @@ mod tests {
         // Test stock recognition
         let asset = B3AssetFactory::from_symbol("PETR4").unwrap();
         assert_eq!(asset.symbol(), "PETR4");
-        assert_eq!(asset.asset_type(), markets::AssetType::Stock);
+    assert_eq!(asset.asset_type(), AssetType::Stock);
 
         // Test ETF recognition
         let asset = B3AssetFactory::from_symbol("BOVA11").unwrap();
         assert_eq!(asset.symbol(), "BOVA11");
-        assert_eq!(asset.asset_type(), markets::AssetType::ETF);
+    assert_eq!(asset.asset_type(), AssetType::ETF);
     }
 
     #[test]
