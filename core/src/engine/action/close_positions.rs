@@ -6,7 +6,7 @@ use crate::engine::{
     },
     Engine,
 };
-use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use std::fmt::Debug;
 use trader::ClosePositionsStrategy;
 

@@ -1,4 +1,4 @@
-use analytics::summary::TradingSummary;
+use tucano_analytics::summary::TradingSummary;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::time::Duration;

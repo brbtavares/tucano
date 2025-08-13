@@ -1,5 +1,5 @@
 use crate::{engine::state::asset::filter::AssetFilter, Timed};
-use analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
+use tucano_analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
 use chrono::Utc;
 use derive_more::Constructor;
 use execution::{

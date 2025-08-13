@@ -137,7 +137,7 @@ use crate::{
     shutdown::SyncShutdown,
     EngineEvent, Sequence,
 };
-use analytics::summary::TradingSummaryGenerator;
+use tucano_analytics::summary::TradingSummaryGenerator;
 use chrono::{DateTime, Utc};
 use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
 use execution::{AccountEvent, ExchangeIndex, InstrumentIndex, QuoteAsset};
@@ -620,7 +620,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-        use analytics::summary::InstrumentNameInternal;
+    use tucano_analytics::summary::InstrumentNameInternal;
         use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
         use integration::collection::FnvIndexMap;
 

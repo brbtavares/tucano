@@ -3,8 +3,8 @@
 //! Reutilizável tanto em modo live quanto em backtest.
 //! Não depende de indicadores técnicos; apenas compara volume agregado de bids vs asks.
 
-use execution::order::request::OrderRequestOpen;
-use execution::{ExchangeIndex, InstrumentIndex};
+use tucano_execution::order::request::OrderRequestOpen;
+use tucano_execution::{ExchangeIndex, InstrumentIndex};
 use tucano_markets::Side;
 use rust_decimal::Decimal;
 use trader::AlgoStrategy;
