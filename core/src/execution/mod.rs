@@ -1,27 +1,27 @@
-//! # Execution Management
+//! # Gestão de Execução
 //!
-//! This module provides high-level execution request routing and account management for the Toucan trading framework.
-//! It orchestrates order execution across multiple exchanges while maintaining centralized account state and balance tracking.
+//! Módulo de roteamento de requisições de execução e gestão de conta em alto nível.
+//! Orquestra execução de ordens em múltiplas exchanges mantendo estado e saldos centralizados.
 //!
-//! ## Key Components
+//! ## Componentes Principais
 //!
 //! ### ExecutionManager
-//! - Routes execution requests to appropriate exchanges
-//! - Manages per-exchange execution links
-//! - Handles account event processing and state updates
-//! - Provides unified interface for multi-exchange trading
+//! - Roteia requisições de execução para a exchange apropriada
+//! - Gerencia links de execução por exchange
+//! - Processa eventos de conta e atualiza estado
+//! - Interface unificada para trading multi‑exchange
 //!
 //! ### ExecutionBuilder
-//! - Ergonomic configuration for multi-exchange execution setup
-//! - Supports both live and mock exchange connections
-//! - Handles initialization of execution links and communication channels
+//! - Configuração ergonômica para montagem multi‑exchange
+//! - Suporta conexões live e mock
+//! - Inicializa links de execução e canais de comunicação
 //!
-//! ### Request Routing
-//! - Centralized request distribution based on exchange and instrument
-//! - Order lifecycle management across different exchange protocols
-//! - Error handling and retry logic for execution failures
+//! ### Roteamento de Requisições
+//! - Distribuição central baseada em exchange e instrumento
+//! - Gerência ciclo de vida de ordens entre protocolos distintos
+//! - Tratamento de erros e retries para falhas de execução
 //!
-//! ## Architecture
+//! ## Arquitetura
 //!
 //! ```text
 //! ┌─────────────────────────────────────────────────────────────┐
@@ -42,19 +42,19 @@
 //! └─────────────────────────────┴─────────────────────────────┘
 //! ```
 //!
-//! ## Usage Example
+//! ## Exemplo de Uso
 //!
 //! ```rust
 //! use core::execution::{builder::ExecutionBuilder, request::ExecutionRequest};
 //!
-//! // Build multi-exchange execution system
+//! // Monta sistema de execução multi-exchange
 //! let execution = ExecutionBuilder::new()
 //!     .add_exchange("binance", binance_config)
 //!     .add_exchange("kraken", kraken_config)
 //!     .build()
 //!     .await?;
 //!
-//! // Process execution requests
+//! // Processa requisição de execução
 //! let request = ExecutionRequest::OpenOrder(order_request);
 //! execution.send(request).await?;
 //! ```

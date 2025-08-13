@@ -66,20 +66,19 @@ type ExecutionInitFuture =
     Pin<Box<dyn Future<Output = Result<(RunFuture, RunFuture), ExecutionError>> + Send>>;
 type RunFuture = Pin<Box<dyn Future<Output = ()> + Send + 'static>>;
 
-/// Full execution infrastructure builder.
+/// Builder completo da infraestrutura de execução.
 ///
-/// Add Mock and Live [`ExecutionClient`] configurations and let the builder set up the required
-/// infrastructure.
+/// Adicione configurações de [`ExecutionClient`] Mock e Live e o builder monta a infraestrutura.
 ///
-/// Once you have added all the configurations, call [`ExecutionBuilder::build`] to return the
-/// full [`ExecutionBuild`]. Then calling [`ExecutionBuild::init`] will then initialise
-/// the built infrastructure.
+/// Após adicionar as configurações, chame [`ExecutionBuilder::build`] para obter o
+/// [`ExecutionBuild`]. Em seguida chame [`ExecutionBuild::init`] para inicializar
+/// toda a infraestrutura construída.
 ///
-/// Handles:
-/// - Building mock execution managers (mocks a specific exchange internally via the [`MockExchange`]).
-/// - Building live execution managers, setting up an external connection to each exchange.
-/// - Constructs a [`MultiExchangeTxMap`] with an entry for each mock/live execution manager.
-/// - Combines all exchange account streams into a unified [`AccountStreamEvent`] `Stream`.
+/// Responsabilidades:
+/// - Construir managers de execução mock (simula internamente uma exchange via [`MockExchange`]).
+/// - Construir managers live conectando-se externamente a cada exchange.
+/// - Montar um [`MultiExchangeTxMap`] com entrada para cada manager mock/live.
+/// - Unificar todos os streams de conta de exchanges em um único `Stream` de [`AccountStreamEvent`].
 #[allow(missing_debug_implementations)]
 pub struct ExecutionBuilder<'a> {
     instruments: &'a IndexedInstruments,
@@ -89,7 +88,7 @@ pub struct ExecutionBuilder<'a> {
     execution_init_futures: Vec<ExecutionInitFuture>,
 }
 impl<'a> ExecutionBuilder<'a> {
-    /// Construct a new `ExecutionBuilder` using the provided `IndexedInstruments`.
+    /// Constrói novo `ExecutionBuilder` usando os `IndexedInstruments` fornecidos.
     pub fn new(instruments: &'a IndexedInstruments) -> Self {
         Self {
             instruments,
@@ -100,11 +99,9 @@ impl<'a> ExecutionBuilder<'a> {
         }
     }
 
-    /// Adds an [`ExecutionManager`] for a mocked exchange, setting up a [`MockExchange`]
-    /// internally.
+    /// Adiciona um [`ExecutionManager`] para uma exchange mock, montando internamente um [`MockExchange`].
     ///
-    /// The provided [`MockExecutionConfig`] is used to configure the [`MockExchange`] and provide
-    /// the initial account state.
+    /// O [`MockExecutionConfig`] configura a [`MockExchange`] e provê estado inicial de conta.
     pub fn add_mock<Clock>(
         mut self,
         config: MockExecutionConfig,
@@ -148,7 +145,7 @@ impl<'a> ExecutionBuilder<'a> {
         Box::pin(MockExchange::new(config, request_rx, event_tx, instruments).run())
     }
 
-    /// Adds an [`ExecutionManager`] for a live exchange.
+    /// Adiciona um [`ExecutionManager`] para uma exchange live.
     pub fn add_live<Client>(
         self,
         config: Client::Config,
@@ -213,13 +210,13 @@ impl<'a> ExecutionBuilder<'a> {
         Ok(self)
     }
 
-    /// Consume this `ExecutionBuilder` and build a full [`ExecutionBuild`] containing all the
-    /// [`ExecutionManager`] (mock & live) and [`MockExchange`] futures.
+    /// Consome este `ExecutionBuilder` e constrói um [`ExecutionBuild`] contendo todos os
+    /// futures de [`ExecutionManager`] (mock & live) e [`MockExchange`].
     ///
-    /// **For most users, calling [`ExecutionBuild::init`] after this is satisfactory.**
+    /// **Para a maioria dos usuários, chamar [`ExecutionBuild::init`] após isto é suficiente.**
     ///
-    /// If you want more control over what runtime drives the futures to completion, you can
-    /// call [`ExecutionBuild::init_with_runtime`].
+    /// Se você quiser mais controle sobre qual runtime dirige os futures até a conclusão,
+    /// chame [`ExecutionBuild::init_with_runtime`].
     pub fn build(mut self) -> ExecutionBuild {
         // Construct indexed ExecutionTx map
         let execution_tx_map = self
@@ -248,8 +245,9 @@ impl<'a> ExecutionBuilder<'a> {
 
 /// Container holding execution infrastructure components ready to be initialised.
 ///
-/// Call [`ExecutionBuild::init`] to run all the required execution component futures on tokio
-/// tasks - returns the [`MultiExchangeTxMap`] and multi-exchange [`AccountStreamEvent`] stream.
+/// Chame [`ExecutionBuild::init`] para rodar todos os futures necessários dos componentes
+/// de execução em tasks tokio - retorna o [`MultiExchangeTxMap`] e o stream multi‑exchange de
+/// [`AccountStreamEvent`].
 #[allow(missing_debug_implementations)]
 pub struct ExecutionBuild {
     pub execution_tx_map: MultiExchangeTxMap,
@@ -258,25 +256,24 @@ pub struct ExecutionBuild {
 }
 
 impl ExecutionBuild {
-    /// Initialises all execution components on the current tokio runtime.
+    /// Inicializa todos os componentes de execução no runtime tokio atual.
     ///
-    /// This method:
-    /// - Spawns [`MockExchange`] runners tokio tasks.
-    /// - Initialises all [`ExecutionManager`]s and their AccountStreams.
-    /// - Returns the `MultiExchangeTxMap` and multi-exchange AccountStream.
+    /// Este método:
+    /// - Faz spawn de tasks tokio com os runners de [`MockExchange`].
+    /// - Inicializa todos os [`ExecutionManager`] e seus AccountStreams.
+    /// - Retorna o `MultiExchangeTxMap` e o AccountStream multi‑exchange.
     pub async fn init(self) -> Result<Execution, TucanoError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
-    /// Initialises all execution components on the provided tokio runtime.
+    /// Inicializa todos os componentes de execução em um runtime tokio fornecido.
     ///
-    /// Use this method if you want more control over which tokio runtime handles running
-    /// execution components.
+    /// Use quando quiser controlar qual runtime executa os componentes de execução.
     ///
-    /// This method:
-    /// - Spawns [`MockExchange`] runners tokio tasks.
-    /// - Initialises all [`ExecutionManager`]s and their AccountStreams.
-    /// - Returns the `MultiExchangeTxMap` and multi-exchange AccountStream.
+    /// Este método:
+    /// - Faz spawn de tasks tokio com os runners de [`MockExchange`].
+    /// - Inicializa todos os [`ExecutionManager`] e seus AccountStreams.
+    /// - Retorna o `MultiExchangeTxMap` e o AccountStream multi‑exchange.
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,
@@ -305,25 +302,24 @@ pub struct ExecutionBuildFutures {
 }
 
 impl ExecutionBuildFutures {
-    /// Initialises all execution components on the current tokio runtime.
+    /// Inicializa todos os componentes de execução no runtime tokio atual.
     ///
-    /// This method:
-    /// - Spawns [`MockExchange`] runner tokio tasks.
-    /// - Initialises all [`ExecutionManager`]s and their AccountStreams.
-    /// - Spawns tokio tasks to forward AccountStreams to multi-exchange AccountStream
+    /// Este método:
+    /// - Faz spawn de tasks tokio com os runners de [`MockExchange`].
+    /// - Inicializa todos os [`ExecutionManager`] e seus AccountStreams.
+    /// - Faz spawn de tasks para encaminhar AccountStreams para o AccountStream multi‑exchange
     pub async fn init(self) -> Result<ExecutionHandles, TucanoError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
-    /// Initialises all execution components on the provided tokio runtime.
+    /// Inicializa todos os componentes de execução em um runtime tokio fornecido.
     ///
-    /// Use this method if you want more control over which tokio runtime handles running
-    /// execution components.
+    /// Use quando quiser mais controle sobre qual runtime executa os componentes.
     ///
-    /// This method:
-    /// - Spawns [`MockExchange`] runner tokio tasks.
-    /// - Initialises all [`ExecutionManager`]s and their AccountStreams.
-    /// - Spawns tokio tasks to forward AccountStreams to multi-exchange AccountStream
+    /// Este método:
+    /// - Faz spawn de tasks tokio com os runners de [`MockExchange`].
+    /// - Inicializa todos os [`ExecutionManager`] e seus AccountStreams.
+    /// - Faz spawn de tasks para encaminhar AccountStreams para o AccountStream multi‑exchange
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,

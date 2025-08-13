@@ -1,4 +1,4 @@
-# Toucan Markets
+# Tucano Markets
 
 > Modela entidades de mercado (Exchange, Asset, Instrument, Side, OrderType) com especialização para a B3.
 

@@ -1,23 +1,22 @@
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
-/// ProfitFactor is a performance metric that divides the absolute value of gross profits
-/// by the absolute value of gross losses. A profit factor greater than 1 indicates a profitable
-/// strategy.
+/// ProfitFactor é uma métrica de performance que divide o valor absoluto dos lucros brutos
+/// pelo valor absoluto das perdas brutas. Valor > 1 indica estratégia lucrativa.
 ///
-/// Special cases:
-/// - Returns 1.0 when both profits and losses are zero (neutral performance)
-/// - Returns INFINITY when there are profits but no losses (perfect performance)
-/// - Returns NEG_INFINITY when there are losses but no profits (worst performance)
+/// Casos especiais:
+/// - Retorna 1.0 quando lucros e perdas são zero (neutro)
+/// - Retorna INFINITO quando há lucros e nenhuma perda (perfeito)
+/// - Retorna -INFINITO quando há perdas e nenhum lucro (pior caso)
 ///
-/// See docs: <https://www.investopedia.com/articles/fundamental-analysis/10/strategy-performance-reports.asp#toc-profit-factor>
+/// Referência: <https://www.investopedia.com/articles/fundamental-analysis/10/strategy-performance-reports.asp#toc-profit-factor>
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Deserialize, Serialize)]
 pub struct ProfitFactor {
     pub value: Decimal,
 }
 
 impl ProfitFactor {
-    /// Calculate the [`ProfitFactor`] given the provided gross profits and losses.
+    /// Calcula o [`ProfitFactor`] a partir dos lucros e perdas brutos (valores absolutos).
     pub fn calculate(profits_gross_abs: Decimal, losses_gross_abs: Decimal) -> Option<Self> {
         if profits_gross_abs.is_zero() && losses_gross_abs.is_zero() {
             return None;

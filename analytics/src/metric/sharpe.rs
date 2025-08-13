@@ -2,12 +2,12 @@ use crate::time::TimeInterval;
 use rust_decimal::{Decimal, MathematicalOps};
 use serde::{Deserialize, Serialize};
 
-/// Represents a Sharpe Ratio value over a specific [`TimeInterval`].
+/// Representa um valor de Sharpe Ratio sobre um [`TimeInterval`] específico.
 ///
-/// Sharpe Ratio measures the risk-adjusted return of an investment by comparing
-/// its excess returns (over risk-free rate) to its standard deviation.
+/// O Sharpe Ratio mede o retorno ajustado ao risco comparando o retorno em
+/// excesso (acima da taxa livre de risco) com o desvio padrão dos retornos.
 ///
-/// See docs: <https://www.investopedia.com/articles/07/sharpe_ratio.asp>
+/// Referência: <https://www.investopedia.com/articles/07/sharpe_ratio.asp>
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Deserialize, Serialize)]
 pub struct SharpeRatio<Interval> {
     pub value: Decimal,
@@ -18,7 +18,7 @@ impl<Interval> SharpeRatio<Interval>
 where
     Interval: TimeInterval,
 {
-    /// Calculate the [`SharpeRatio`] over the provided [`TimeInterval`].
+    /// Calcula o [`SharpeRatio`] para o [`TimeInterval`] fornecido.
     pub fn calculate(
         risk_free_return: Decimal,
         mean_return: Decimal,
@@ -40,9 +40,9 @@ where
         }
     }
 
-    /// Scale the [`SharpeRatio`] from the current [`TimeInterval`] to the provided [`TimeInterval`].
+    /// Escala o [`SharpeRatio`] do intervalo atual para o [`TimeInterval`] alvo.
     ///
-    /// This scaling assumed the returns are independently and identically distributed (IID).
+    /// Assume retornos IID (independentes e identicamente distribuídos).
     pub fn scale<TargetInterval>(self, target: TargetInterval) -> SharpeRatio<TargetInterval>
     where
         TargetInterval: TimeInterval,

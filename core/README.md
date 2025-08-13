@@ -1,9 +1,9 @@
-# Toucan Core Module
+# Tucano Core Module
 
 > Esta seção inicial foi adicionada para contextualizar o escopo brasileiro (B3 / ProfitDLL) e o status atual de implementação. O conteúdo original em inglês permanece abaixo como documentação abrangente.
 
 ## 🇧🇷 Visão Geral (B3 / Mercado Brasileiro)
-O módulo **Core** é o "cérebro" da plataforma Toucan. Ele coordena estado, eventos e orquestra a interação entre Estratégia, Risco, Execução, Dados, Métricas e Mercados. É aqui que a negociação algorítmica de ações e derivativos da B3 (stocks, índice, mini‑índice, dólar, mini‑dólar, futuros de bitcoin, ouro etc.) será consolidada de forma unificada.
+O módulo **Core** é o "cérebro" da plataforma Tucano. Ele coordena estado, eventos e orquestra a interação entre Estratégia, Risco, Execução, Dados, Métricas e Mercados. É aqui que a negociação algorítmica de ações e derivativos da B3 (stocks, índice, mini‑índice, dólar, mini‑dólar, futuros de bitcoin, ouro etc.) será consolidada de forma unificada.
 
 ## 🎯 Papel na Arquitetura
 | Responsabilidade | Descrição |
@@ -62,7 +62,7 @@ Esta seção resume o estado atual focado no mercado brasileiro. O restante do R
 
 ---
 
-The **Core** module is the central orchestration layer of the Toucan algorithmic trading framework. It provides the main trading engine, system coordination, execution management, and foundational components that enable professional-grade live trading, paper trading, and backtesting capabilities.
+The **Core** module is the central orchestration layer of the Tucano algorithmic trading framework. It provides the main trading engine, system coordination, execution management, and foundational components that enable professional-grade live trading, paper trading, and backtesting capabilities.
 
 ## 🏗️ Architecture Overview
 
@@ -491,7 +491,7 @@ When contributing to the core module:
 
 ## 📄 License
 
-This module is part of the Toucan trading framework and follows the same licensing terms.
+This module is part of the Tucano trading framework and follows the same licensing terms.
 - **`audit/`** - Comprehensive audit trail and state replication
 - **`clock.rs`** - Time management for live trading and backtesting
 - **`command.rs`** - External command interface (CloseAllPositions, etc.)
@@ -743,4 +743,4 @@ When contributing to the core module:
 
 ## 📄 License
 
-This module is part of the Toucan trading framework. See the main project license for details.
+This module is part of the Tucano trading framework. See the main project license for details.
