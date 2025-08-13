@@ -4,7 +4,7 @@ use crate::metric::drawdown::{
     mean::{MeanDrawdown, MeanDrawdownGenerator},
     Drawdown, DrawdownGenerator,
 };
-use execution::balance::{AssetBalance, Balance};
+use tucano_execution::balance::{AssetBalance, Balance};
 use serde::{Deserialize, Serialize};
 
 /// TearSheet summarising the trading session changes for an Asset.

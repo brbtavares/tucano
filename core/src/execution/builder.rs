@@ -8,8 +8,8 @@ use crate::{
     },
     shutdown::AsyncShutdown,
 };
-use data::streams::{consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream};
-use execution::{
+use tucano_data::streams::{consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream};
+use tucano_execution::{
     client::{
         mock::{MockExecution, MockExecutionClientConfig, MockExecutionConfig},
         ExecutionClient,
@@ -19,10 +19,10 @@ use execution::{
     map::generate_execution_instrument_map,
     UnindexedAccountEvent,
 };
-use execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex}; // already tucano prefixed
 use fnv::FnvHashMap;
 use futures::{future::try_join_all, FutureExt};
-use integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
+use tucano_integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
 use tucano_markets::exchange::ExchangeId;
 use std::{future::Future, pin::Pin, sync::Arc, time::Duration};
 use tokio::{

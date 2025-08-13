@@ -3,9 +3,9 @@ use crate::engine::{
     EngineOutput, UpdateFromAccountOutput, UpdateFromMarketOutput,
 };
 use derive_more::Constructor;
-use integration::{collection::none_one_or_many::NoneOneOrMany, FeedEnded, Terminal};
+use tucano_integration::{collection::none_one_or_many::NoneOneOrMany, FeedEnded, Terminal};
 use serde::{Deserialize, Serialize};
-use trader::{OnDisconnectStrategy, OnTradingDisabled};
+use tucano_trader::{OnDisconnectStrategy, OnTradingDisabled};
 
 /// Defines data structures that represent the context an `Engine` [`AuditTick`] was generated.
 pub mod context;

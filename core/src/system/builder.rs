@@ -16,9 +16,9 @@ use crate::{
     shutdown::SyncShutdown,
     system::{config::ExecutionConfig, System, SystemAuxillaryHandles},
 };
-use data::streams::reconnect::stream::ReconnectingStream;
-use execution::{balance::Balance, InstrumentIndex};
-use integration::{
+use tucano_data::streams::reconnect::stream::ReconnectingStream;
+use tucano_execution::{balance::Balance, InstrumentIndex};
+use tucano_integration::{
     channel::{mpsc_unbounded, Channel, ChannelTxDroppable},
     snapshot::SnapUpdates,
     FeedEnded, Terminal,

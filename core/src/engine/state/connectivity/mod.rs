@@ -1,4 +1,4 @@
-use execution::ExchangeIndex; // rollback path B: external String key interface
+use tucano_execution::ExchangeIndex; // rollback path B: external String key interface
 use indexmap::IndexMap;
 use tucano_markets::exchange::ExchangeId;
 use serde::{Deserialize, Serialize};

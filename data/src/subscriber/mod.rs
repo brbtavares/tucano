@@ -10,7 +10,7 @@ use crate::{
 };
 use async_trait::async_trait;
 use futures::SinkExt;
-use integration::{
+use tucano_integration::{
     error::SocketError,
     protocol::websocket::{connect, WebSocket, WsMessage},
 };

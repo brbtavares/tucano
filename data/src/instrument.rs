@@ -1,4 +1,4 @@
-use markets::{InstrumentKind, Keyed, MarketDataInstrument};
+use tucano_markets::{InstrumentKind, Keyed, MarketDataInstrument};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 

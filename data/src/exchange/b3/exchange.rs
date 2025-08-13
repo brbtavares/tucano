@@ -1,6 +1,6 @@
 //! B3 Exchange implementation
 
-use markets::{Exchange, ExchangeId};
+use tucano_markets::{Exchange, ExchangeId};
 use serde::{Deserialize, Serialize};
 
 /// B3 Exchange struct

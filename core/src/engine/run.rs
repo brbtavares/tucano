@@ -6,7 +6,7 @@ use crate::{
     shutdown::SyncShutdown,
 };
 use futures::{Stream, StreamExt};
-use integration::{
+use tucano_integration::{
     channel::{ChannelTxDroppable, Tx},
     FeedEnded, Terminal,
 };

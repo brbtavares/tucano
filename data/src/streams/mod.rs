@@ -2,7 +2,7 @@ use self::builder::{multi::MultiStreamBuilder, StreamBuilder};
 use crate::subscription::SubscriptionKind;
 use fnv::FnvHashMap;
 use futures::Stream;
-use integration::channel::UnboundedRx;
+use tucano_integration::channel::UnboundedRx;
 use tucano_markets::exchange::ExchangeId;
 
 /// Defines the [`StreamBuilder`] and [`MultiStreamBuilder`] APIs for ergonomically initialising

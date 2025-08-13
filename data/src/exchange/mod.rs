@@ -5,8 +5,8 @@ use crate::{
     subscription::{Map, SubscriptionKind},
     MarketStream, SnapshotFetcher,
 };
-use integration::{error::SocketError, protocol::websocket::WsMessage, Validator};
-use markets::exchange::ExchangeId;
+use tucano_integration::{error::SocketError, protocol::websocket::WsMessage, Validator};
+use tucano_markets::exchange::ExchangeId;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{fmt::Debug, time::Duration};
 use url::Url;
@@ -70,7 +70,7 @@ where
 
     /// Deserialisable type that the [`Self::SubValidator`] expects to receive from the exchange server in
     /// response to the `Subscription` [`Self::requests`]
-    /// sent over the [`WebSocket`](integration::protocol::websocket::WebSocket). Implements
+    /// sent over the [`WebSocket`](tucano_integration::protocol::websocket::WebSocket). Implements
     /// [`Validator`] in order to determine if [`Self`]
     /// communicates a successful `Subscription` outcome.
     type SubResponse: Validator + Debug + DeserializeOwned;
@@ -79,7 +79,7 @@ where
     fn url() -> Result<Url, SocketError>;
 
     /// Defines [`PingInterval`] of custom application-level
-    /// [`WebSocket`](integration::protocol::websocket::WebSocket) pings for the exchange
+    /// [`WebSocket`](tucano_integration::protocol::websocket::WebSocket) pings for the exchange
     /// server being connected with.
     ///
     /// Defaults to `None`, meaning that no custom pings are sent.
@@ -114,7 +114,7 @@ pub trait ExchangeServer: Default + Debug + Clone + Send {
 }
 
 /// Defines the frequency and construction function for custom
-/// [`WebSocket`](integration::protocol::websocket::WebSocket) pings - used for exchanges
+/// [`WebSocket`](tucano_integration::protocol::websocket::WebSocket) pings - used for exchanges
 /// that require additional application-level pings.
 #[derive(Debug)]
 pub struct PingInterval {

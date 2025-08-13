@@ -3,11 +3,11 @@ use crate::execution::{
     request::{ExecutionRequest, RequestFuture},
     AccountStreamEvent,
 };
-use data::streams::{
+use tucano_data::streams::{
     consumer::StreamKey,
     reconnect::stream::{init_reconnecting_stream, ReconnectingStream, ReconnectionBackoffPolicy},
 };
-use execution::{
+use tucano_execution::{
     client::ExecutionClient,
     error::{ConnectivityError, OrderError, UnindexedOrderError},
     indexer::{AccountEventIndexer, IndexedAccountStream},
@@ -21,8 +21,8 @@ use execution::{
     },
     AccountEvent, AccountEventKind,
 };
-use execution::{AssetIndex, ExchangeIndex, IndexError, InstrumentIndex};
-use integration::{
+use tucano_execution::{AssetIndex, ExchangeIndex, IndexError, InstrumentIndex};
+use tucano_integration::{
     channel::{mpsc_unbounded, Tx, UnboundedTx},
     snapshot::Snapshot,
     stream::merge::merge,

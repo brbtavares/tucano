@@ -73,7 +73,7 @@ pub mod typed {
 }
 
 // Re-export do markets - mantendo ExchangeId como enum original
-pub use markets::{ExchangeId, Side};
+pub use tucano_markets::{ExchangeId, Side};
 
 // Import dos tipos de order necessários
 use crate::order::OrderKey;

@@ -7,7 +7,7 @@ use tucano_execution::order::request::OrderRequestOpen;
 use tucano_execution::{ExchangeIndex, InstrumentIndex};
 use tucano_markets::Side;
 use rust_decimal::Decimal;
-use trader::AlgoStrategy;
+use tucano_trader::AlgoStrategy;
 
 /// Configuração para a estratégia de desequilíbrio.
 #[derive(Debug, Clone)]
@@ -65,7 +65,7 @@ impl<C: AsRef<OrderBookImbalanceConfig>> AlgoStrategy<ExchangeIndex, InstrumentI
         _state: &Self::State,
     ) -> (
         impl IntoIterator<
-            Item = execution::order::request::OrderRequestCancel<ExchangeIndex, InstrumentIndex>,
+            Item = tucano_execution::order::request::OrderRequestCancel<ExchangeIndex, InstrumentIndex>,
         >,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>>,
     ) {

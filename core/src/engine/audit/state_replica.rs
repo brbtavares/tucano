@@ -7,9 +7,9 @@ use crate::{
     execution::AccountStreamEvent,
     EngineEvent,
 };
-use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use execution::{AccountEvent, InstrumentIndex};
-use integration::Terminal;
+use tucano_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use tucano_execution::{AccountEvent, InstrumentIndex};
+use tucano_integration::Terminal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::{info, info_span};

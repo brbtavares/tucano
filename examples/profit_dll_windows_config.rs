@@ -84,18 +84,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tokio::select! {
             Some(event) = events.recv() => {
                 match event {
-                    markets::profit_dll::CallbackEvent::StateChanged { connection_type, result } => {
+                    tucano_markets::profit_dll::CallbackEvent::StateChanged { connection_type, result } => {
                         println!("🔌 Estado da conexão: {:?} - Resultado: {}", connection_type, result);
                     }
-                    markets::profit_dll::CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
+                    tucano_markets::profit_dll::CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
                         println!("💹 Novo negócio: {} @ {} - Preço: {} Volume: {}",
                                 ticker, exchange, price, volume);
                     }
-                    markets::profit_dll::CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
+                    tucano_markets::profit_dll::CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
                         println!("📊 Resumo diário {}: O:{} H:{} L:{} C:{}",
                                 ticker, open, high, low, close);
                     }
-                    markets::profit_dll::CallbackEvent::ProgressChanged { ticker, progress, .. } => {
+                    tucano_markets::profit_dll::CallbackEvent::ProgressChanged { ticker, progress, .. } => {
                         println!("⏳ Progresso subscrição {}: {}%", ticker, progress);
                     }
                     _ => {

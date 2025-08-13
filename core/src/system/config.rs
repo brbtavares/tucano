@@ -1,4 +1,4 @@
-use execution::client::mock::MockExecutionConfig;
+use tucano_execution::client::mock::MockExecutionConfig;
 /// Configuration module for trading system components.
 ///
 /// Provides data structures for configuring various aspects of a trading system,

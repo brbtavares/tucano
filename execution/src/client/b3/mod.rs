@@ -304,7 +304,7 @@ impl B3ExecutionClient {
         tokio::spawn(async move {
             use crate::order::{id::ClientOrderId, state::Open};
             use crate::trade::{AssetFees, Trade, TradeId};
-            use integration::snapshot::Snapshot; // needed for constructing OrderSnapshot events
+            use tucano_integration::snapshot::Snapshot; // needed for constructing OrderSnapshot events
             while let Some(evt) = rx.recv().await {
                 match evt {
                     TransportEvent::OrderAccepted { client_cid, id } => {
@@ -620,7 +620,7 @@ mod tests {
     use crate::transport::TransportOrderId;
     use futures::future::BoxFuture;
     use futures::StreamExt;
-    use integration::snapshot::Snapshot;
+    use tucano_integration::snapshot::Snapshot;
     use tucano_markets::ExchangeId;
     use rust_decimal_macros::dec;
     use tokio::sync::mpsc;
@@ -882,7 +882,7 @@ mod tests {
         } else {
             panic!("expected trade event");
         }
-        if let crate::AccountEventKind::OrderSnapshot(integration::snapshot::Snapshot(order)) =
+    if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(order)) =
             snapshot_evt.kind
         {
             use crate::order::state::{ActiveOrderState, OrderState};
@@ -956,7 +956,7 @@ mod tests {
         fn extract_filled(
             evt: &crate::AccountEvent<ExchangeId, String, String>,
         ) -> Option<Decimal> {
-            if let crate::AccountEventKind::OrderSnapshot(integration::snapshot::Snapshot(order)) =
+            if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(order)) =
                 &evt.kind
             {
                 if let OrderState::Active(ActiveOrderState::Open(open)) = &order.state {

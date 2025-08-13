@@ -92,13 +92,13 @@ use crate::{
     system::builder::{AuditMode, SystemBuild},
 };
 use tucano_analytics::time::TimeInterval;
-use data::event::MarketEvent;
-use execution::{AccountEvent, InstrumentIndex};
+use tucano_data::event::MarketEvent;
+use tucano_execution::{AccountEvent, InstrumentIndex};
 use futures::future::try_join_all;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{fmt::Debug, sync::Arc};
-use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
+use tucano_trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Placeholder for IndexedInstruments
 use tucano_markets::{ConcreteInstrument, Keyed};

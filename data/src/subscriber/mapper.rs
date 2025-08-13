@@ -5,7 +5,7 @@ use crate::{
     Identifier,
 };
 use fnv::FnvHashMap;
-use integration::subscription::SubscriptionId;
+use tucano_integration::subscription::SubscriptionId;
 use serde::{Deserialize, Serialize};
 
 /// Defines how to map a collection of Toucan [`Subscription`]s into exchange specific

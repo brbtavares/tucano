@@ -33,8 +33,8 @@
 //! ```
 
 use crate::execution::error::ExecutionError;
-use data::error::DataError;
-use execution::IndexError;
+use tucano_data::error::DataError;
+use tucano_execution::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

@@ -1,10 +1,10 @@
 use crate::{exchange::Connector, instrument::InstrumentData};
 use derive_more::Display;
 use fnv::FnvHashMap;
-use integration::{
+use tucano_integration::{
     error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId, Validator,
 };
-use markets::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
+use tucano_markets::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
 use serde::{Deserialize, Serialize};
 use smol_str::{format_smolstr, ToSmolStr};
 use std::{borrow::Borrow, fmt::Debug, hash::Hash};

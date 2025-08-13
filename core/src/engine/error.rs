@@ -1,4 +1,4 @@
-use integration::Unrecoverable;
+use tucano_integration::Unrecoverable;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

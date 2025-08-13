@@ -188,7 +188,7 @@ impl Transport for MockTransport {
 // -----------------------------------------------------------------------------
 // ProfitDLL transport (thin wrapper) - experimental
 // -----------------------------------------------------------------------------
-use markets::profit_dll::{CallbackEvent, ProfitConnector};
+use tucano_markets::profit_dll::{CallbackEvent, ProfitConnector};
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc::UnboundedSender, Mutex};
 

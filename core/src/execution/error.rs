@@ -1,4 +1,4 @@
-use execution::{error::ClientError, IndexError};
+use tucano_execution::{error::ClientError, IndexError};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

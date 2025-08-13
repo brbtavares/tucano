@@ -4,7 +4,7 @@ use crate::engine::state::{
     position::{PositionExited, PositionManager},
 };
 use tucano_data::event::MarketEvent;
-use tucano_analytics::summary::instrument::TearSheetGenerator;
+use tucano_analytics::summary::{self, instrument::TearSheetGenerator};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use tucano_execution::{
@@ -17,7 +17,7 @@ use tucano_execution::{
     AssetIndex, ExchangeIndex, InstrumentAccountSnapshot, InstrumentIndex, QuoteAsset,
 };
 use tucano_integration::{collection::FnvIndexMap, snapshot::Snapshot};
-use itertools::Either; // Itertools unused
+use itertools::Either;
 use tucano_markets::{exchange::ExchangeId, ConcreteInstrument, Keyed};
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
@@ -320,7 +320,7 @@ impl<InstrumentData, ExchangeKey, InstrumentKey>
     {
         self.position.update_from_trade(trade).inspect(|closed| {
             // Convert core PositionExited to analytics PositionExited
-            let analytics_position = analytics::summary::PositionExited {
+            let analytics_position = summary::PositionExited {
                 timestamp: closed.time_exit,
                 pnl_realised: closed.pnl_realised,
                 time_exit: closed.time_exit,

@@ -2,7 +2,7 @@ use super::SubscriptionKind;
 use crate::books::{mid_price, volume_weighted_mid_price, Level, OrderBook};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
-use macros::{DeSubKind, SerSubKind};
+use tucano_macros::{DeSubKind, SerSubKind};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 

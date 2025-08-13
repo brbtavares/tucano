@@ -2,7 +2,7 @@ use crate::engine::state::order::{
     in_flight_recorder::InFlightRequestRecorder, manager::OrderManager,
 };
 use derive_more::Constructor;
-use execution::{
+use tucano_execution::{
     order::{
         id::ClientOrderId,
         request::{OrderRequestCancel, OrderRequestOpen, OrderResponseCancel},
@@ -12,7 +12,7 @@ use execution::{
     ExchangeIndex, InstrumentIndex,
 };
 use fnv::FnvHashMap;
-use integration::snapshot::Snapshot;
+use tucano_integration::snapshot::Snapshot;
 use serde::{Deserialize, Serialize};
 use std::{collections::hash_map::Entry, fmt::Debug};
 use tracing::{debug, error, warn};
@@ -399,7 +399,7 @@ mod tests {
     use super::*;
     use crate::{engine::state::order::Orders, test_utils::time_plus_secs};
     use chrono::{DateTime, Utc};
-    use execution::{
+    use tucano_execution::{
         error::{ConnectivityError, OrderError},
         order::{
             id::{ClientOrderId, OrderId, StrategyId},

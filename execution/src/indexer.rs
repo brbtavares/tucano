@@ -16,7 +16,7 @@ use crate::{
     UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use derive_more::Constructor;
-use integration::{
+use tucano_integration::{
     snapshot::Snapshot,
     stream::indexed::{IndexedStream, Indexer},
 };

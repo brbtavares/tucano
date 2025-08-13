@@ -2,11 +2,11 @@ use crate::{engine::state::asset::filter::AssetFilter, Timed};
 use tucano_analytics::summary::{asset::TearSheetAssetGenerator, LocalSnapshot};
 use chrono::Utc;
 use derive_more::Constructor;
-use execution::{
+use tucano_execution::{
     balance::{AssetBalance, Balance},
     AssetIndex,
 };
-use integration::{collection::FnvIndexMap, snapshot::Snapshot};
+use tucano_integration::{collection::FnvIndexMap, snapshot::Snapshot};
 use itertools::Either;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

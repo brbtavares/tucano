@@ -95,7 +95,7 @@
 
 // Silence transitional unused deps (must appear after inner crate docs)
 #[allow(unused_imports)]
-use {data as _, serde_json as _};
+use {tucano_data as _, serde_json as _};
 
 use crate::{
     balance::AssetBalance,
@@ -104,7 +104,7 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
-use integration::snapshot::Snapshot;
+use tucano_integration::snapshot::Snapshot;
 use order::state::OrderState;
 use serde::{Deserialize, Serialize};
 

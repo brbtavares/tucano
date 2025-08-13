@@ -1,6 +1,6 @@
 use crate::subscription::SubKind;
-use integration::{error::SocketError, subscription::SubscriptionId};
-use markets::{
+use tucano_integration::{error::SocketError, subscription::SubscriptionId};
+use tucano_markets::{
     exchange::ExchangeId,
     // index::error::IndexError,
 };

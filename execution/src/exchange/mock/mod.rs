@@ -19,9 +19,9 @@ use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, TimeDelta, Utc};
 use fnv::FnvHashMap;
 use futures::stream::BoxStream;
-use integration::snapshot::Snapshot;
+use tucano_integration::snapshot::Snapshot;
 use itertools::Itertools;
-use markets::{ConcreteInstrument, ExchangeId, Side};
+use tucano_markets::{ConcreteInstrument, ExchangeId, Side};
 use rust_decimal::Decimal;
 use smol_str::ToSmolStr;
 use std::fmt::Debug;
@@ -262,7 +262,7 @@ impl MockExchange {
         let underlying = match self.find_instrument_data(&request.key.instrument) {
             Ok(_instrument) => {
                 // TODO: Implementar corretamente para nova arquitetura
-                use markets::Underlying;
+                use tucano_markets::Underlying;
                 Underlying::new("MOCK_BASE".to_string(), "MOCK_QUOTE".to_string())
             }
             Err(error) => return (build_open_order_err_response(request, error), None),

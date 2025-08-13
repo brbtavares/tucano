@@ -2,8 +2,8 @@ use crate::{
     engine::error::{IndexError, UnrecoverableEngineError},
     execution::request::ExecutionRequest,
 };
-use execution::{ExchangeIndex, InstrumentIndex};
-use integration::{
+use tucano_execution::{ExchangeIndex, InstrumentIndex};
+use tucano_integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
 };

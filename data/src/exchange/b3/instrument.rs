@@ -1,7 +1,7 @@
 //! B3 instrument definitions and utilities
 
 use crate::instrument::InstrumentData;
-use markets::{
+use tucano_markets::{
     Instrument,
     InstrumentKind, // Import trait from simplified markets
 };
@@ -134,7 +134,7 @@ impl B3Instrument {
     }
 }
 
-/// Implement markets::Instrument trait for B3Instrument
+/// Implement tucano_markets::Instrument trait for B3Instrument
 impl Instrument for B3Instrument {
     type Symbol = String;
 
@@ -182,6 +182,7 @@ pub mod utils {
         if chars.len() < 6 {
             // mínimo razoável para derivativo (ex: WINV24 tem 6)
             return None;
+        }
         // Heurísticas simples para B3:
         // Opções: subjacente + letra(s) + dígitos (ex: PETR4P250 => PETR4)
         // Futuros: código base + letra mês + dois dígitos ano (ex: WINV24 => WIN)

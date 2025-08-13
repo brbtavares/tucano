@@ -139,14 +139,14 @@ use crate::{
 };
 use tucano_analytics::summary::TradingSummaryGenerator;
 use chrono::{DateTime, Utc};
-use data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use execution::{AccountEvent, ExchangeIndex, InstrumentIndex, QuoteAsset};
-use integration::channel::Tx;
+use tucano_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use tucano_execution::{AccountEvent, ExchangeIndex, InstrumentIndex, QuoteAsset};
+use tucano_integration::channel::Tx;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::info;
-use trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
+use tucano_trader::{AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled};
 
 /// Defines how the [`Engine`] actions a [`Command`], and the associated outputs.
 ///
@@ -621,8 +621,8 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
         Clock: EngineClock,
     {
     use tucano_analytics::summary::InstrumentNameInternal;
-        use execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
-        use integration::collection::FnvIndexMap;
+    use tucano_execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
+    use tucano_integration::collection::FnvIndexMap;
 
         // Populate instruments map using engine state's instrument keys
         let instruments: FnvIndexMap<InstrumentIndex, ()> = self

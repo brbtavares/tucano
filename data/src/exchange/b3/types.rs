@@ -5,8 +5,8 @@
 //! while maintaining Brazilian market terminology.
 
 use chrono::{DateTime, Utc};
-use markets::profit_dll::OrderSide;
-use markets::{Asset, AssetType};
+use tucano_markets::profit_dll::OrderSide;
+use tucano_markets::{Asset, AssetType};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;

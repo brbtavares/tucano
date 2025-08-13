@@ -1,6 +1,6 @@
 use crate::{compat::*, error::KeyError};
 use fnv::FnvHashMap;
-use integration::collection::{FnvIndexMap, FnvIndexSet};
+use tucano_integration::collection::{FnvIndexMap, FnvIndexSet};
 use tucano_markets::Keyed;
 
 // Use the core representation of IndexedInstruments (Vec<Keyed<InstrumentIndex, ConcreteInstrument>>)

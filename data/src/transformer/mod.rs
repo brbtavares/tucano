@@ -4,7 +4,7 @@ use crate::{
     subscription::{Map, SubscriptionKind},
 };
 use async_trait::async_trait;
-use integration::{protocol::websocket::WsMessage, Transformer};
+use tucano_integration::{protocol::websocket::WsMessage, Transformer};
 use tokio::sync::mpsc;
 
 /// Generic stateless [`ExchangeTransformer`] often used for transforming

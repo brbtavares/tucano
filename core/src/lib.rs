@@ -77,14 +77,14 @@ use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
 };
-use ::execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
+use tucano_execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
 use chrono::{DateTime, Utc};
-use data::{
+use tucano_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
 use derive_more::{Constructor, From};
-use integration::Terminal;
+use tucano_integration::Terminal;
 use serde::{Deserialize, Serialize};
 use shutdown::Shutdown;
 
@@ -108,8 +108,8 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
-pub use risk;
-pub use trader as strategy; // temporary alias for backward compatibility
+pub use tucano_risk as risk;
+pub use tucano_trader as strategy; // temporary alias for backward compatibility
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
@@ -226,7 +226,7 @@ impl Sequence {
 pub mod test_utils {
     use crate::{engine::state::asset::AssetState, Timed};
     use tucano_analytics::summary::asset::TearSheetAssetGenerator;
-    use execution::{
+    use tucano_execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},

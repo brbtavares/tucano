@@ -14,7 +14,7 @@ use tucano_execution::{
     },
     ExchangeIndex, InstrumentIndex,
 };
-use integration::{channel::Tx, collection::none_one_or_many::NoneOneOrMany, Unrecoverable};
+use tucano_integration::{channel::Tx, collection::none_one_or_many::NoneOneOrMany, Unrecoverable};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;

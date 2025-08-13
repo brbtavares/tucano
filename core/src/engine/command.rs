@@ -3,7 +3,7 @@ use tucano_execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},
     AssetIndex, ExchangeIndex, InstrumentIndex,
 };
-use integration::collection::one_or_many::OneOrMany;
+use tucano_integration::collection::one_or_many::OneOrMany;
 use serde::{Deserialize, Serialize};
 
 /// Trading related commands for the [`Engine`](super::Engine) to action, sent from an

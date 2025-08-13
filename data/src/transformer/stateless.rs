@@ -7,7 +7,7 @@ use crate::{
     Identifier,
 };
 use async_trait::async_trait;
-use integration::{protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer};
+use tucano_integration::{protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer};
 use tucano_markets::exchange::ExchangeId;
 use serde::Deserialize;
 use std::marker::PhantomData;

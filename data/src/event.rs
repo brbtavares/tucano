@@ -10,7 +10,7 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use derive_more::From;
-use markets::{exchange::ExchangeId, MarketDataInstrument};
+use tucano_markets::{exchange::ExchangeId, MarketDataInstrument};
 use serde::{Deserialize, Serialize};
 
 /// Convenient new type containing a collection of [`MarketEvent<T>`](MarketEvent)s.

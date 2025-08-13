@@ -5,7 +5,7 @@ use crate::{
     subscription::SubscriptionKind,
 };
 use futures_util::StreamExt;
-use integration::channel::Channel;
+use tucano_integration::channel::Channel;
 use tucano_markets::exchange::ExchangeId;
 use std::{collections::HashMap, fmt::Debug, future::Future, pin::Pin};
 

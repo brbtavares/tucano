@@ -14,8 +14,8 @@ use crate::{
     execution::builder::ExecutionHandles,
     shutdown::{AsyncShutdown, Shutdown},
 };
-use execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use integration::{
+use tucano_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
+use tucano_integration::{
     channel::{Tx, UnboundedRx, UnboundedTx},
     collection::one_or_many::OneOrMany,
     snapshot::SnapUpdates,
