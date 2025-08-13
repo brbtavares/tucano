@@ -7,7 +7,7 @@ use crate::{
         state::{builder::EngineStateBuilder, trading::TradingState, EngineState},
         Engine, Processor,
     },
-    error::ToucanError,
+    error::TucanoError,
     execution::{
         builder::{ExecutionBuildFutures, ExecutionBuilder},
         AccountStreamEvent,
@@ -183,7 +183,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
             Event,
             MarketStream,
         >,
-        ToucanError,
+    TucanoError,
     >
     where
         Clock: EngineClock + Clone + Send + Sync + 'static,
@@ -307,7 +307,7 @@ where
     /// Initialise the system using the current tokio runtime.
     ///
     /// Spawns all necessary tasks and returns the running `System` instance.
-    pub async fn init(self) -> Result<System<Engine, Event>, ToucanError> {
+    pub async fn init(self) -> Result<System<Engine, Event>, TucanoError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
@@ -317,14 +317,14 @@ where
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<System<Engine, Event>, ToucanError> {
+    ) -> Result<System<Engine, Event>, TucanoError> {
         self.init_internal(runtime).await
     }
 
     async fn init_internal(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<System<Engine, Event>, ToucanError> {
+    ) -> Result<System<Engine, Event>, TucanoError> {
         let Self {
             mut engine,
             engine_feed_mode,

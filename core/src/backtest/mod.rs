@@ -82,7 +82,7 @@ use crate::{
         state::{instrument::data::InstrumentDataState, EngineState},
         Processor,
     },
-    error::ToucanError,
+    error::TucanoError,
     risk::RiskManager,
     system::{builder::EngineFeedMode, config::ExecutionConfig},
 };
@@ -159,7 +159,7 @@ pub async fn run_backtests<
         BacktestArgsConstant<MarketData, SummaryInterval, EngineState<GlobalData, InstrumentData>>,
     >,
     args_dynamic_iter: impl IntoIterator<Item = BacktestArgsDynamic<Strategy, Risk>>,
-) -> Result<MultiBacktestSummary<SummaryInterval>, ToucanError>
+) -> Result<MultiBacktestSummary<SummaryInterval>, TucanoError>
 where
     MarketData: BacktestMarketData<Kind = InstrumentData::MarketEventKind>,
     SummaryInterval: TimeInterval,
@@ -222,7 +222,7 @@ pub async fn backtest<MarketData, SummaryInterval, Strategy, Risk, GlobalData, I
         BacktestArgsConstant<MarketData, SummaryInterval, EngineState<GlobalData, InstrumentData>>,
     >,
     args_dynamic: BacktestArgsDynamic<Strategy, Risk>,
-) -> Result<BacktestSummary<SummaryInterval>, ToucanError>
+) -> Result<BacktestSummary<SummaryInterval>, TucanoError>
 where
     MarketData: BacktestMarketData<Kind = InstrumentData::MarketEventKind>,
     SummaryInterval: TimeInterval,

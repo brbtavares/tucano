@@ -448,22 +448,22 @@ audit_filter = true
 
 ## 🛡️ Error Handling
 
-The core module provides comprehensive error handling through the `ToucanError` type:
+The core module provides comprehensive error handling through the `TucanoError` type:
 
 ```rust
-use core::error::ToucanError;
+use core::error::TucanoError;
 
 match trading_result {
     Ok(success) => println!("Trade executed: {:?}", success),
-    Err(ToucanError::MarketData(data_err)) => {
+    Err(TucanoError::MarketData(data_err)) => {
         eprintln!("Market data issue: {}", data_err);
         // Handle data connectivity issues
     },
-    Err(ToucanError::Execution(exec_err)) => {
+    Err(TucanoError::Execution(exec_err)) => {
         eprintln!("Execution failed: {}", exec_err);
         // Handle order execution failures
     },
-    Err(ToucanError::IndexError(index_err)) => {
+    Err(TucanoError::IndexError(index_err)) => {
         eprintln!("Invalid instrument/exchange: {}", index_err);
         // Handle configuration issues
     },
@@ -717,7 +717,7 @@ The core module includes extensive test utilities:
 - `Engine<T>` - Main trading engine
 - `EngineEvent<T>` - Universal event type
 - `EngineState` - Complete system state
-- `ToucanError` - Comprehensive error type
+- `TucanoError` - Comprehensive error type
 - `Sequence` - Event sequence tracking
 
 ### Key Traits

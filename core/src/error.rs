@@ -1,12 +1,12 @@
 //! # Core Error Types
 //!
-//! This module defines the primary error types used throughout the Toucan trading framework's core module.
+//! This module defines the primary error types used throughout the Tucano trading framework's core module.
 //! It provides a centralized error handling system that aggregates errors from various subsystems including
 //! execution, market data, and indexing.
 //!
 //! ## Error Hierarchy
 //!
-//! The main error type `ToucanError` encompasses:
+//! The main error type `TucanoError` encompasses:
 //! - **IndexError**: Errors related to asset/instrument/exchange indexing
 //! - **ExecutionBuilder**: Errors during execution system initialization
 //! - **ExecutionRxDropped**: Communication channel errors when receivers are dropped
@@ -17,14 +17,14 @@
 //! ## Usage
 //!
 //! ```rust
-//! use core::error::ToucanError;
+//! use core::error::TucanoError;
 //!
-//! fn handle_trading_error(error: ToucanError) {
+//! fn handle_trading_error(error: TucanoError) {
 //!     match error {
-//!         ToucanError::MarketData(data_err) => {
+//!         TucanoError::MarketData(data_err) => {
 //!             eprintln!("Market data issue: {}", data_err);
 //!         }
-//!         ToucanError::Execution(exec_err) => {
+//!         TucanoError::Execution(exec_err) => {
 //!             eprintln!("Execution issue: {}", exec_err);
 //!         }
 //!         _ => eprintln!("Other error: {}", error),
@@ -38,12 +38,12 @@ use execution::IndexError;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-/// Central error type for the Toucan trading framework's core module.
+/// Central error type for the Tucano trading framework's core module.
 ///
 /// This enum aggregates all possible errors that can occur within the core trading system,
 /// providing a unified interface for error handling across different subsystems.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]
-pub enum ToucanError {
+pub enum TucanoError {
     /// Asset, instrument, or exchange indexing errors
     #[error("IndexError: {0}")]
     IndexError(#[from] IndexError),
@@ -84,13 +84,13 @@ impl<T> From<tokio::sync::mpsc::error::SendError<T>> for RxDropped {
     }
 }
 
-impl<T> From<tokio::sync::mpsc::error::SendError<T>> for ToucanError {
+impl<T> From<tokio::sync::mpsc::error::SendError<T>> for TucanoError {
     fn from(_: tokio::sync::mpsc::error::SendError<T>) -> Self {
         Self::ExecutionRxDropped(RxDropped)
     }
 }
 
-impl From<tokio::task::JoinError> for ToucanError {
+impl From<tokio::task::JoinError> for TucanoError {
     fn from(value: tokio::task::JoinError) -> Self {
         Self::JoinError(format!("{value:?}"))
     }
