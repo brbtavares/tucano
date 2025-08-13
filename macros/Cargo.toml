@@ -3,8 +3,8 @@ name = "macros"
 version = "0.2.0"
 authors = ["JustAStream"]
 edition = "2021"
-repository = "https://github.com/brbtavares/toucan"
-description = "Toucan ecosystem macros"
+repository = "https://github.com/brbtavares/tucano"
+description = "Macros do ecossistema Tucano"
 keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["accessibility", "simulation"]
 
