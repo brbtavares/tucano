@@ -1,6 +1,6 @@
 [package]
 name = "tucano"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 description = "Façade unificada do ecossistema Tucano (trading algorítmico B3)"
@@ -29,3 +29,4 @@ full = []
 
 [package.metadata.docs.rs]
 all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
