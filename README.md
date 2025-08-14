@@ -1,6 +1,8 @@
 # 🇧🇷 Tucano - Framework de Trading Algorítmico para B3
 
 [![Rust Version](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
+[![Crate](https://img.shields.io/crates/v/tucano.svg)](https://crates.io/crates/tucano)
+[![Docs](https://img.shields.io/docsrs/tucano)](https://docs.rs/tucano)
 [![CI](https://github.com/brbtavares/tucano/actions/workflows/ci.yml/badge.svg)](https://github.com/brbtavares/tucano/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
