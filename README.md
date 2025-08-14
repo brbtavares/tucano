@@ -167,11 +167,11 @@ Somente os componentes de dados (streaming vs histórico) e de execução (clien
 
 ## 🇧🇷 Integração B3 via ProfitDLL (conceitual)
 
-A integração com a ProfitDLL foi extraída para a crate dedicada `tucano-profitdll`.
+A integração com a ProfitDLL foi extraída para a crate dedicada `profitdll` (anteriormente `tucano-profitdll`).
 O exemplo abaixo mostra uso direto do conector mock atualmente disponível:
 
 ```rust
-use tucano_profitdll::{ProfitConnector, CallbackEvent};
+use profitdll::{ProfitConnector, CallbackEvent};
 
 let connector = ProfitConnector::new(None)?;
 let mut events = connector

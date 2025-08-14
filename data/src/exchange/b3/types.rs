@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
 use tucano_markets::{Asset, AssetType};
-use tucano_profitdll::OrderSide;
+use profitdll::OrderSide;
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -233,6 +233,7 @@ impl From<OrderSide> for B3Side {
         match side {
             OrderSide::Buy => B3Side::Buy,
             OrderSide::Sell => B3Side::Sell,
+            _ => B3Side::Buy, // fallback for future variants
         }
     }
 }

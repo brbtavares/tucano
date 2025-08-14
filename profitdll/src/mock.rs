@@ -4,6 +4,8 @@ use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use crate::error::*;
+use tokio::sync::mpsc::{UnboundedSender, UnboundedReceiver, unbounded_channel};
+use std::sync::Mutex;
 
 #[non_exhaustive]
 #[derive(Debug, Clone)]
@@ -109,26 +111,33 @@ pub enum BookAction {
 #[derive(Debug)]
 pub struct ProfitConnector {
     _connected: bool,
+    sender: Mutex<Option<UnboundedSender<CallbackEvent>>>,
 }
 impl ProfitConnector {
-    pub fn new(_dll_path: Option<&str>) -> Result<Self, String> {
-        Ok(Self { _connected: false })
+    pub fn new(_dll_path: Option<&str>) -> Result<Self, ProfitError> { Ok(Self { _connected: false, sender: Mutex::new(None) }) }
+    pub async fn initialize_login(&self, _activation_key: &str, _user: &str, _password: &str)
+        -> Result<UnboundedReceiver<CallbackEvent>, ProfitError>
+    {
+        let (tx, rx) = unbounded_channel();
+        *self.sender.lock().unwrap() = Some(tx);
+        Ok(rx)
     }
-    pub async fn initialize_login(
-        &self,
-        _activation_key: &str,
-        _user: &str,
-        _password: &str,
-    ) -> Result<tokio::sync::mpsc::UnboundedReceiver<CallbackEvent>, String> {
-        let (_s, r) = tokio::sync::mpsc::unbounded_channel();
-        Ok(r)
-    }
-    pub fn subscribe_ticker(&self, _ticker: &str, _exchange: &str) -> Result<(), String> {
+    pub fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> {
+        if let Some(tx) = self.sender.lock().unwrap().as_ref() {
+            let _ = tx.send(CallbackEvent::ProgressChanged { ticker: ticker.to_string(), exchange: exchange.to_string(), feed_type: 0, progress: 100 });
+            let _ = tx.send(CallbackEvent::PriceBookOffer { ticker: ticker.to_string(), exchange: exchange.to_string(), action: BookAction::New, price: Decimal::from(10), position: 0 });
+        }
         Ok(())
     }
-    pub fn unsubscribe_ticker(&self, _ticker: &str, _exchange: &str) -> Result<(), String> {
+    pub fn unsubscribe_ticker(&self, _ticker: &str, _exchange: &str) -> Result<(), ProfitError> { Ok(()) }
+    pub fn send_order(&self, _order: &SendOrder) -> Result<(), ProfitError> {
+        if let Some(tx) = self.sender.lock().unwrap().as_ref() {
+            let _ = tx.send(CallbackEvent::OrderUpdated { order_id: 1 });
+        }
         Ok(())
     }
+    pub fn cancel_order(&self, _order_id: i64) -> Result<(), ProfitError> { Ok(()) }
+    pub fn change_order(&self, _order_id: i64, _new_price: Option<Decimal>, _new_qty: Option<Decimal>) -> Result<(), ProfitError> { Ok(()) }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

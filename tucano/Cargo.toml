@@ -22,7 +22,7 @@ authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
 "tucano-strategies" = { workspace = true }
 "tucano-analytics" = { workspace = true }
 "tucano-integration" = { workspace = true }
-"tucano-profitdll" = { workspace = true }
+profitdll = { workspace = true }
 
 [features]
 # Feature agregadora para conveniência

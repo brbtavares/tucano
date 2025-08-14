@@ -188,7 +188,7 @@ impl Transport for MockTransport {
 // -----------------------------------------------------------------------------
 // ProfitDLL transport (thin wrapper) - experimental
 // -----------------------------------------------------------------------------
-// ProfitDLL integration extracted to external crate `tucano-profitdll`.
+// ProfitDLL integration extracted to external crate `profitdll`.
 // When reintroducing a concrete transport, implement it in that crate and depend on it here.
 
 // NOTE: Previous inline ProfitDLLTransport removed. See external crate for future implementation.

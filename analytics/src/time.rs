@@ -10,7 +10,7 @@ use std::fmt::Debug;
 ///
 /// # Examples
 /// ```rust
-/// use analytics::time::{TimeInterval, Daily, Annual252, Annual365};
+/// use tucano_analytics::time::{TimeInterval, Daily, Annual252, Annual365};
 ///
 /// // Daily TimeInterval
 /// let daily = Daily;

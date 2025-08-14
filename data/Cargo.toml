@@ -20,7 +20,7 @@ rust_decimal_macros = { workspace = true }
 # Tucano Ecosystem
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
-tucano-profitdll = { workspace = true }
+profitdll = { workspace = true }
 tucano-macros = "0.2.0"
 
 # Logging

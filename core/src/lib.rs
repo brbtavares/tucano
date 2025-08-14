@@ -67,6 +67,10 @@
 //! - **RiskManager**: Validação e controle de risco
 //! - **ExecutionClients**: Conectividade com exchanges
 //! - **AuditTrail**: Rastreamento completo de operações
+//!
+//! > Nota: Exemplos completos de uso foram removidos temporariamente dos doctests
+//! > até estabilização das APIs públicas. Para exemplos, consulte o diretório
+//! > `examples/` no repositório.
 
 /// Core é um framework Rust para construção de sistemas profissionais de live-trading,
 /// paper-trading e back-testing. O Engine central facilita execução em muitos exchanges

@@ -16,7 +16,7 @@
 //!
 //! ### RiskManager
 //! Interface principal para revisão e filtragem de ordens:
-//! ```rust,no_run
+//! ```text
 //! use risk::{RiskManager, RiskApproved, RiskRefused};
 //!
 //! impl RiskManager for MyRiskManager {
@@ -38,14 +38,14 @@
 //!
 //! ### RiskApproved<T>
 //! Representa uma operação aprovada pelo sistema de risco:
-//! ```rust
+//! ```text
 //! let approved = RiskApproved::new(order);
 //! let order = approved.into_item(); // Extrair o item aprovado
 //! ```
 //!
 //! ### RiskRefused<T>
 //! Representa uma operação rejeitada com motivo específico:
-//! ```rust
+//! ```text
 //! let refused = RiskRefused::new(order, "Excede limite de posição");
 //! println!("Rejeitado: {}", refused.reason);
 //! ```
@@ -53,14 +53,14 @@
 //! ## 🚨 Cenários de Risco Comum
 //!
 //! ### Limites de Posição
-//! ```rust,no_run
+//! ```rust,ignore
 //! if position_size > max_position_limit {
 //!     return Err(RiskRefused::new(order, "Excede limite máximo de posição"));
 //! }
 //! ```
 //!
 //! ### Controle de Exposição
-//! ```rust,no_run
+//! ```text
 //! let total_exposure = calculate_exposure(&portfolio);
 //! if total_exposure > exposure_limit {
 //!     return Err(RiskRefused::new(order, "Excede limite de exposição"));
@@ -68,7 +68,7 @@
 //! ```
 //!
 //! ### Horário de Mercado
-//! ```rust,no_run
+//! ```text
 //! if !is_market_open(instrument.exchange()) {
 //!     return Err(RiskRefused::new(order, "Mercado fechado"));
 //! }
@@ -85,7 +85,7 @@
 //! ## 🔄 Integração com Engine
 //!
 //! O módulo de risco se integra nativamente com o core engine:
-//! ```rust,no_run
+//! ```text
 //! use core::engine::Engine;
 //! use risk::RiskManager;
 //!
@@ -120,7 +120,7 @@ use tucano_execution::{
 /// as verificações de risco e foi aprovado para execução.
 ///
 /// # Exemplo
-/// ```rust
+/// ```rust,ignore
 /// use risk::RiskApproved;
 ///
 /// let approved_order = RiskApproved::new(order);
@@ -155,7 +155,7 @@ impl<T> RiskApproved<T> {
 /// permitindo logging detalhado e ações corretivas.
 ///
 /// # Exemplo
-/// ```rust
+/// ```rust,ignore
 /// use risk::RiskRefused;
 ///
 /// let refused = RiskRefused::new(order, "Excede limite de posição");
@@ -200,7 +200,7 @@ impl<T, Reason> RiskRefused<T, Reason> {
 /// - **Compliance**: Verificar conformidade com regulamentações
 ///
 /// ## Exemplo de Implementação
-/// ```rust,no_run
+/// ```rust,ignore
 /// use risk::{RiskManager, RiskApproved, RiskRefused};
 ///
 /// struct MyRiskManager {

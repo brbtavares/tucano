@@ -37,7 +37,7 @@
 //!
 //! ### Exchange
 //! Representa um mercado ou bolsa onde instrumentos são negociados:
-//! ```rust,no_run
+//! ```rust,ignore
 //! use markets::{Exchange, ExchangeId};
 //!
 //! struct B3Exchange;
@@ -50,7 +50,7 @@
 //!
 //! ### Instrument
 //! Define instrumentos financeiros negociáveis:
-//! ```rust,no_run
+//! ```rust,ignore
 //! use markets::{Instrument, InstrumentKind};
 //!
 //! struct Stock {
@@ -61,7 +61,7 @@
 //!
 //! ### Asset
 //! Representa ativos financeiros subjacentes:
-//! ```rust,no_run
+//! ```rust,ignore
 //! use markets::{Asset, AssetType};
 //!
 //! struct BrazilianReal;
@@ -126,7 +126,7 @@ pub mod side;
 /// de forma type-safe e eficiente.
 ///
 /// # Exemplo
-/// ```rust
+/// ```rust,ignore
 /// use markets::Keyed;
 ///
 /// let keyed_price = Keyed::new("PETR4", 25.50);

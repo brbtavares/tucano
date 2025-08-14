@@ -14,7 +14,7 @@ members = [
     "strategies",
     "examples",
     "tucano",
-    "tucano-profitdll"
+    "profitdll"
 ]
 
 [workspace.dependencies]
@@ -29,7 +29,7 @@ tucano-macros = { path = "./macros", version = "0.2.0" }
 tucano-risk = { path = "./risk", version = "0.1.0" }
 tucano-trader = { path = "./trader", version = "0.1.0" }
 tucano-strategies = { path = "./strategies", version = "0.1.0" }
-tucano-profitdll = { path = "./tucano-profitdll", version = "0.1.0" }
+profitdll = { path = "./profitdll", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }

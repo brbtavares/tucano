@@ -7,7 +7,7 @@ use tucano_markets::{
     b3::{B3AssetFactory, B3Stock},
     Asset,
 };
-use tucano_profitdll::{CallbackEvent, ProfitConnector};
+use profitdll::{CallbackEvent, ProfitConnector};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

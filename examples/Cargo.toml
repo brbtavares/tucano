@@ -9,7 +9,7 @@ real_dll = []
 
 [dependencies]
 "tucano-markets" = { path = "../markets" }
-"tucano-profitdll" = { path = "../tucano-profitdll" }
+profitdll = { path = "../profitdll" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tokio-stream = { workspace = true }
 rust_decimal = { workspace = true }

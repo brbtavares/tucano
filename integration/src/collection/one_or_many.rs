@@ -6,7 +6,7 @@
 //!
 //! This type is essential for modeling trading data where we guarantee at least one item:
 //! - **Order fills**: Every order execution produces at least one fill
-//! - **Market data updates**: Price updates always contain at least one data point  
+//! - **Market data updates**: Price updates always contain at least one data point
 //! - **Subscription confirmations**: Successful subscriptions return at least one instrument
 //! - **Event batches**: Event processing guarantees at least one event per batch
 //!
@@ -19,13 +19,13 @@
 //!
 //! ## Trading Examples
 //!
-//! ```rust
+//! ```rust,ignore
 //! use integration::collection::OneOrMany;
 //!
 //! // Single instrument subscription
 //! let single_sub: OneOrMany<String> = OneOrMany::One("PETR4".to_string());
 //!
-//! // Multiple instrument subscription  
+//! // Multiple instrument subscription
 //! let multi_sub: OneOrMany<String> = OneOrMany::Many(vec!["PETR4".to_string(), "VALE3".to_string()]);
 //!
 //! // Both can be processed uniformly

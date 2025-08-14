@@ -2,7 +2,7 @@
 //! This file remains temporarily to avoid breaking external imports; it re-exports
 //! the new locations. Will be removed in a future major release.
 
-pub use tucano_profitdll::*;
+pub use profitdll::*;
 
 // All previous definitions re-exported; no inline code retained.
 

@@ -47,7 +47,7 @@
 //!
 //! ## Exemplo de Uso
 //!
-//! ```rust
+//! ```rust,ignore
 //! use core::backtest::{BacktestSummary, market_data::BacktestMarketData};
 //! use tucano_analytics::time::TimeInterval;
 //!

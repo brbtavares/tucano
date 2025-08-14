@@ -54,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    println!("\n🔌 ProfitDLL broker implementation extracted to crate 'tucano-profitdll'. This example now focuses on B3 asset categorization.");
+    println!("\n🔌 ProfitDLL broker implementation extracted to dedicated crate 'profitdll'. This example now focuses on B3 asset categorization.");
 
     // Show asset categorization
     println!("\n📊 B3 Asset Categories:");
@@ -66,7 +66,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("\n✅ Integration example completed!");
-    println!("   For connectivity use the 'tucano-profitdll' crate's connector APIs.");
+    println!("   For connectivity use the 'profitdll' crate's connector APIs.");
 
     Ok(())
 }

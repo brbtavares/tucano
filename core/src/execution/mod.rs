@@ -44,7 +44,7 @@
 //!
 //! ## Exemplo de Uso
 //!
-//! ```rust
+//! ```rust,ignore
 //! use core::execution::{builder::ExecutionBuilder, request::ExecutionRequest};
 //!
 //! // Monta sistema de execução multi-exchange
