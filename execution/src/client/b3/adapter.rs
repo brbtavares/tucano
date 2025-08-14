@@ -1,8 +1,8 @@
 //! Event adapter for converting ProfitDLL events to Toucan AccountEvents
 
 use crate::{balance::AssetBalance, error::AssetNameExchange, UnindexedAccountEvent};
-use tucano_markets::profit_dll::{CallbackEvent, OrderSide};
 use tucano_markets::Side;
+use tucano_profitdll::{CallbackEvent, OrderSide};
 
 /// Convert ProfitDLL CallbackEvent to Toucan UnindexedAccountEvent
 pub fn convert_callback_event(event: CallbackEvent) -> Option<UnindexedAccountEvent> {

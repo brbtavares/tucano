@@ -19,7 +19,8 @@ pub mod types;
 pub use exchange::B3Exchange;
 use tokio::sync::mpsc;
 use tucano_markets::b3::{B3AssetCategory, B3AssetFactory};
-use tucano_markets::profit_dll::{CallbackEvent, ProfitConnector};
+// ProfitDLL concrete connectivity moved to `tucano-profitdll` crate.
+use tucano_profitdll::{CallbackEvent, ProfitConnector};
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;
 
@@ -38,7 +39,9 @@ pub struct B3ProfitConnector {
 }
 
 impl Default for B3ProfitConnector {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl std::fmt::Debug for B3ProfitConnector {

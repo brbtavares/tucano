@@ -91,7 +91,9 @@ impl ExchangeId {
 
     // kept for backward compatibility (deprecated)
     #[deprecated(note = "Use std::str::FromStr implementation instead")]
-    pub fn parse(s: &str) -> Option<Self> { <Self as FromStr>::from_str(s).ok() }
+    pub fn parse(s: &str) -> Option<Self> {
+        <Self as FromStr>::from_str(s).ok()
+    }
 }
 
 impl FromStr for ExchangeId {
@@ -124,7 +126,9 @@ impl Display for ExchangeId {
 }
 
 impl From<&str> for ExchangeId {
-    fn from(s: &str) -> Self { s.parse().unwrap_or(ExchangeId::Mock) }
+    fn from(s: &str) -> Self {
+        s.parse().unwrap_or(ExchangeId::Mock)
+    }
 }
 
 /// Core exchange trait providing metadata and capabilities
@@ -233,9 +237,9 @@ mod tests {
         assert_eq!(ExchangeId::B3.as_str(), "B3");
         assert_eq!(ExchangeId::B3.to_string(), "B3");
 
-        assert_eq!(ExchangeId::from_str("b3"), Some(ExchangeId::B3));
-        assert_eq!(ExchangeId::from_str("BINANCE"), Some(ExchangeId::Binance));
-        assert_eq!(ExchangeId::from_str("invalid"), None);
+    assert_eq!(ExchangeId::from_str("b3").unwrap(), ExchangeId::B3);
+    assert_eq!(ExchangeId::from_str("BINANCE").unwrap(), ExchangeId::Binance);
+    assert!(ExchangeId::from_str("invalid").is_err());
     }
 
     #[test]

@@ -31,8 +31,7 @@
 //! - `instrument`: Abstrações de instrumentos financeiros
 //! - `side`: Enumeração de lados de operação (Buy/Sell)
 //! - `b3`: Definições específicas da Bolsa Brasileira (B3)
-//! - `profit_dll`: Integração com ProfitDLL (real no Windows, mock em outros)
-//! - `broker`: Camada de abstração de corretoras
+//! - `broker`: Camada de abstração de corretoras (abstrata – integrações externas em crates próprias)
 //!
 //! ## 💡 Conceitos Fundamentais
 //!
@@ -83,6 +82,7 @@
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
+// Silence unused_crate_dependencies for transitional re-export of tucano-profitdll
 
 /// Re-exporta traits principais para conveniência de uso.
 ///
@@ -180,38 +180,8 @@ impl<AssetKey> Underlying<AssetKey> {
 pub mod b3;
 pub mod broker;
 
-// ProfitDLL integration - conditional compilation
-#[cfg(all(target_os = "windows", feature = "real_dll"))]
-pub mod profit_dll_complete;
-#[cfg(all(target_os = "windows", feature = "real_dll"))]
-pub use profit_dll_complete as profit_dll;
-
-#[cfg(not(all(target_os = "windows", feature = "real_dll")))]
-pub mod profit_dll;
-
 // Re-exports
 pub use b3::*;
 pub use broker::*;
-// Re-export profit_dll types selectively to avoid conflicts
-pub use profit_dll::{
-    AccountIdentifier,
-    AssetIdentifier,
-    BookAction,
-    CallbackEvent,
-    ConnectionState,
-    NResult,
-    OrderValidity,
-    ProfitConnector,
-    ProfitError,
-    // Note: OrderSide is already re-exported from broker
-    SendOrder,
-};
-
 // Re-export commonly used instrument struct
 pub use crate::instrument::ConcreteInstrument;
-
-// Constants
-pub use profit_dll::{
-    NL_INTERNAL_ERROR, NL_INVALID_ARGS, NL_NOT_INITIALIZED, NL_NO_LICENSE, NL_NO_LOGIN, NL_OK,
-    NL_WAITING_SERVER,
-};

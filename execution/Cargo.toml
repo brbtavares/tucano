@@ -23,6 +23,7 @@ typed_indices = []
 "tucano-data" = { workspace = true }
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
+"tucano-profitdll" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

@@ -9,8 +9,8 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
-use tucano_markets::profit_dll::OrderSide;
 use tucano_markets::{Asset, AssetType};
+use tucano_profitdll::OrderSide;
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

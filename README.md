@@ -167,24 +167,23 @@ Somente os componentes de dados (streaming vs histórico) e de execução (clien
 
 ## 🇧🇷 Integração B3 via ProfitDLL (conceitual)
 
-### Configuração Windows
+A integração com a ProfitDLL foi extraída para a crate dedicada `tucano-profitdll`.
+O exemplo abaixo mostra uso direto do conector mock atualmente disponível:
 
 ```rust
-use tucano::tucano_markets::profit_dll::ProfitDLLClient;
+use tucano_profitdll::{ProfitConnector, CallbackEvent};
 
-// Configurar ProfitDLL
-let client = ProfitDLLClient::new()
-    .with_dll_path("C:/Program Files/Nelogica/ProfitDLL.dll")
-    .with_credentials(username, password)
-    .initialize().await?;
+let connector = ProfitConnector::new(None)?;
+let mut events = connector
+    .initialize_login("ACTIVATION_KEY", "user", "pass")
+    .await?;
 
-// Subscrever dados
-client.subscribe_ticker("PETR4").await?;
-client.subscribe_price_book("PETR4").await?;
+// Exemplo de subscription (mock)
+connector.subscribe_ticker("PETR4", "B")?;
 
-// Enviar ordem
-let order = Order::limit_buy("PETR4", 25.50, 100);
-client.send_order(order).await?;
+while let Ok(event) = events.try_recv() {
+    println!("Evento: {:?}", event);
+}
 ```
 
 ### Instrumentos Suportados

@@ -3,8 +3,13 @@ name = "tucano-examples"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+# Placeholder feature to allow conditional compilation in examples
+real_dll = []
+
 [dependencies]
 "tucano-markets" = { path = "../markets" }
+"tucano-profitdll" = { path = "../tucano-profitdll" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tokio-stream = { workspace = true }
 rust_decimal = { workspace = true }

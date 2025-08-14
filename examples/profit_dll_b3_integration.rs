@@ -8,7 +8,6 @@
 
 use tucano_markets::{
     b3::{B3AssetFactory, B3Stock, B3ETF, B3REIT},
-    broker::{Broker, ProfitDLLBroker},
     Asset,
 };
 
@@ -42,7 +41,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for symbol in factory_assets {
         match B3AssetFactory::from_symbol(symbol) {
             Ok(asset) => {
-                println!("  • {}: {} -> {}", symbol, asset.asset_type(), asset.symbol());
+                println!(
+                    "  • {}: {} -> {}",
+                    symbol,
+                    asset.asset_type(),
+                    asset.symbol()
+                );
             }
             Err(e) => {
                 println!("  • {symbol}: Error - {e}");
@@ -50,28 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // Initialize ProfitDLL broker
-    println!("\n🔌 Initializing ProfitDLL Broker:");
-
-    let broker = ProfitDLLBroker::new();
-    println!("  • Broker ID: {:?}", broker.id());
-    println!("  • Broker Name: {}", broker.name());
-    println!(
-        "  • Supported Exchanges: {:?}",
-        broker.supported_exchanges()
-    );
-
-    // Note: Real authentication would require valid credentials
-    println!("\n⚠️  Note: Broker initialization requires valid ProfitDLL credentials");
-    println!("   In a real scenario, you would call:");
-    println!("   broker.initialize(\"activation_key\", \"user\", \"password\").await?;");
-
-    // Demonstrate broker capabilities without actual connection
-    println!("\n🎯 Broker Capabilities:");
-    println!("  • Market Data Provider: ✅");
-    println!("  • Order Executor: ✅");
-    println!("  • Account Provider: ✅");
-    println!("  • Full Broker Implementation: ✅");
+    println!("\n🔌 ProfitDLL broker implementation extracted to crate 'tucano-profitdll'. This example now focuses on B3 asset categorization.");
 
     // Show asset categorization
     println!("\n📊 B3 Asset Categories:");
@@ -83,7 +66,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("\n✅ Integration example completed!");
-    println!("   The ProfitDLL broker is ready for B3 trading with proper asset categorization.");
+    println!("   For connectivity use the 'tucano-profitdll' crate's connector APIs.");
 
     Ok(())
 }
@@ -91,7 +74,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tucano_markets::{Asset, AssetType, ExchangeId};
+    use tucano_markets::{Asset, AssetType};
 
     #[test]
     fn test_b3_stock_creation() {
@@ -120,10 +103,5 @@ mod tests {
         assert_eq!(asset.asset_type(), AssetType::ETF);
     }
 
-    #[test]
-    fn test_broker_creation() {
-        let broker = ProfitDLLBroker::new();
-        assert_eq!(broker.name(), "ProfitDLL");
-        assert!(broker.supported_exchanges().contains(&ExchangeId::B3));
-    }
+    // Broker creation test removed (implementation extracted)
 }

@@ -11,7 +11,7 @@
 use tucano_markets::{
     ExchangeId,
     broker::{ProfitDLLBroker, MarketDataProvider, OrderExecutor, OrderRequest},
-    profit_dll::OrderSide,
+    tucano_profitdll::OrderSide,
 };
 use std::collections::HashMap;
 use tokio::time::Duration;

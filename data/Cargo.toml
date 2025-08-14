@@ -14,13 +14,13 @@ license = "MIT"
 all-features = true
 
 [dev-dependencies]
-tracing-subscriber = { workspace = true, features = ["env-filter", "json"] }
 rust_decimal_macros = { workspace = true }
 
 [dependencies]
 # Tucano Ecosystem
-"tucano-integration" = "0.9.1"
-"tucano-markets" = "0.3.1"
+"tucano-integration" = { workspace = true }
+"tucano-markets" = { workspace = true }
+tucano-profitdll = { workspace = true }
 tucano-macros = "0.2.0"
 
 # Logging
