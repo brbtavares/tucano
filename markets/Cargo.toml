@@ -10,6 +10,9 @@ keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["finance", "algorithms"]
 license = "MIT"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 default = []
 real_dll = []  # Feature para usar DLL real em Windows

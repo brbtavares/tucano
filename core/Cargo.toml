@@ -10,6 +10,9 @@ keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["finance", "algorithms"]
 license = "MIT"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dev-dependencies]
 rust_decimal_macros = { workspace = true }
 spin_sleep = { workspace = true }

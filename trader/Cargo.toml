@@ -10,6 +10,9 @@ keywords = ["trading", "strategies", "algo", "framework"]
 categories = ["algorithms", "finance"]
 license = "MIT"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dependencies]
 # Tucano Ecosystem
 "tucano-execution" = "0.5.3"

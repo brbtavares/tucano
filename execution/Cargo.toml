@@ -10,6 +10,9 @@ keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["finance", "algorithms"]
 license = "MIT"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 # Habilita newtypes experimentais para indices/nomes (map.rs usa cfg(feature = "typed_indices")).
 typed_indices = []

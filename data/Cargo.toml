@@ -10,6 +10,9 @@ keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
 categories = ["finance", "algorithms"]
 license = "MIT"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dev-dependencies]
 tracing-subscriber = { workspace = true, features = ["env-filter", "json"] }
 rust_decimal_macros = { workspace = true }
