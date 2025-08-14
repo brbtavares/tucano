@@ -1,7 +1,3 @@
-<!--
-	NOTA: Este arquivo foi reorganizado por tópicos funcionais a partir da versão linear auto‑convertida.
-	O conteúdo bruto completo original foi preservado no final (Apêndice B) para auditoria.
--->
 
 # Manual ProfitDLL (Reorganizado por Tópicos)
 
@@ -198,10 +194,14 @@ Ver Apêndice B para definição completa linear (Delphi-like). Exemplos: `TAsse
 | Cancelar tudo | `TConnectorCancelAllOrders` | `AccountID` (+ senha). |
 | Zerar posição | `TConnectorZeroPosition` | Gera ordem(s) compensatórias. |
 
+### 14.5.1 Evento Enriquecido (Planejado)
+`OrderSnapshot` (Rust) agrega campos (simplificados) de `TConnectorOrderOut`: identificadores, preços (limite/stop), quantidades total/filled, status (`OrderStatus`), side, order type, validade, texto de broker. Se símbolo `GetOrderDetails` existir no carregamento da DLL, o callback de ordem já tenta emitir `OrderSnapshot`; caso contrário cai em `OrderUpdated { order_id }` como fallback.
+
 ### 14.6 Callbacks (Catálogo Consolidado)
 | Categoria | Callback | Assinatura (simplificada) | Versão / Notas |
 |-----------|----------|---------------------------|----------------|
 | Posições (ativos) | `SetAssetPositionListCallback` | `(AccountID, AssetID, EventID)` | 4.0.0.28 |
+| Ordem status | `SetOrderCallback` | `(OrderID)` | Emite eventos incrementais de ordem (mapeado em `CallbackEvent::OrderUpdated`). |
 | Ordens stream | `SetOrderCallback` | `(OrderID)` | Eventos individuais (se `OrderHistoryCallback` definido, apenas diffs). |
 | Histórico ordens | `SetOrderHistoryCallback` | `(AccountID)` | Completa carregamento; 4.0.0.20. |
 | Trades tempo real | `SetTradeCallbackV2` | `(AssetID, pTrade)` | 4.0.0.20 substitui V1. |
@@ -385,3 +385,54 @@ Ver Apêndice B para definição completa linear (Delphi-like). Exemplos: `TAsse
 - Verificar dependência de campos adicionados (AccountType, EventID).
 - Atualizar assinatura de callbacks para V2 onde disponível (trades, book, order history).
 - Adotar enumeração programática (orders / assets) ao invés de paginação manual.
+
+## 22. Notas de Implementação Rust (Crate `tucano-profitdll`)
+### 22.1 Camadas
+1. Mock (`mock.rs`): fornece eventos e tipos para desenvolvimento e testes sem DLL.
+2. FFI (`ffi.rs`, feature `real_dll` + `target_os=windows`): carrega a DLL dinamicamente (`libloading`), registra callbacks e traduz para `CallbackEvent` via canal async.
+3. Erros (`error.rs`): enum único `ProfitError` cobrindo todos códigos NL_* + condições de carregamento.
+
+### 22.2 Estratégia de Callbacks
+- Preferência por versões V2 baseadas em structs (`ProfitTrade`, `ProfitBookUpdate`, `ProfitDailySummary`).
+- Fallback automático para versões primitivas se símbolos V2 ausentes.
+- Conversão imediata para tipos seguros e enfileiramento; callbacks mantêm trabalho mínimo (copiam e retornam).
+
+### 22.3 Segurança & Threading
+- Singleton global da DLL (`OnceCell`) assume API process-wide (restrição típica de libs proprietárias).
+- `Mutex` protege apenas troca de `Sender` e evita race em callbacks; eventos direcionados a canal unbounded.
+- Dados de ponteiros C são copiados imediatamente para `String` / `Decimal`; nenhum ponteiro cru é exposto externamente.
+
+### 22.4 Decimais & Precisão
+- Convertidos de `f64` via `Decimal::from_f64_retain`; se DLL fornecer escala futura, substituir por conversão explícita evitando binário->decimal ambíguo.
+
+### 22.5 Tratamento de Erros
+- `ProfitError::from_nresult` mapeia todos NL_*; códigos desconhecidos preservados como `Unknown(i32)` para log.
+- Erros de carregamento/símbolos apenas presentes quando feature FFI ativa.
+
+### 22.6 Extensões Futuras
+- Ordens: adicionar structs #[repr(C)] (send/cancel/modify) + callbacks de status.
+- Tradução de histórico (enumeration) e posições.
+- Configuração de escala decimal (ex: via função de capability da DLL) reduzindo arredondamento.
+
+Atualização parcial: wrappers `send_order`, `cancel_order`, `change_order` implementados com layout simplificado (`CSendOrder`, `CCancelOrder`, `CChangeOrder`) e callback de status básico (`OrderUpdated`). Estruturas completas serão adicionadas posteriormente conforme manual detalhado.
+
+Nota provisória ordem simplificada:
+| Campo Rust | Campo C simplificado | Semântica |
+|------------|---------------------|-----------|
+| `price=None` | `price = -1.0` | Market order (substituir por OrderType quando struct completa) |
+| `validity` | `validity (int)` | 0=DAY,1=GTC,2=IOC,3=FOK |
+| `side` | `side (int)` | 0=Buy,1=Sell |
+
+### 22.7 Testes
+- Teste de integração condicional (Windows + `real_dll`) validará: carregamento, registro de callbacks e subscribe básico.
+- Em plataformas não-Windows/feature ausente, testes usam apenas mock.
+
+### 22.8 Motivação do Carregamento Dinâmico
+- Evita falhas de build cross (Linux CI) sem DLL.
+- Permite fallback transparente ao mock quando feature desativada.
+
+### 22.9 Boas Práticas Internas
+- Não bloquear dentro de callbacks; manter lógica pesada em consumidores do canal.
+- Logar primeira ocorrência de `Unknown` para facilitar atualização da tabela NL_*.
+- Documentar invariantes de struct #[repr(C)] (alinhamento, tamanho) ao introduzir ordens.
+

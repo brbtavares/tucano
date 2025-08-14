@@ -3,6 +3,7 @@
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
+use crate::error::*;
 
 #[derive(Debug, Clone)]
 pub enum CallbackEvent {
@@ -66,6 +67,24 @@ pub enum CallbackEvent {
         exchange: String,
         feed_type: i32,
     },
+    OrderUpdated {
+        order_id: i64,
+    },
+    OrderSnapshot {
+        order_id: i64,
+        account_id: String,
+        ticker: String,
+        exchange: String,
+        side: OrderSide,
+        order_type: OrderType,
+        status: OrderStatus,
+        quantity: Decimal,
+        filled: Decimal,
+        price: Option<Decimal>,
+        stop_price: Option<Decimal>,
+        validity: OrderValidity,
+        text: Option<String>,
+    },
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -83,14 +102,6 @@ pub enum BookAction {
     Delete = 2,
 }
 
-pub type NResult = i32;
-pub const NL_OK: NResult = 0;
-pub const NL_INTERNAL_ERROR: NResult = -2147483647;
-pub const NL_NOT_INITIALIZED: NResult = -2147483646;
-pub const NL_INVALID_ARGS: NResult = -2147483645;
-pub const NL_WAITING_SERVER: NResult = -2147483644;
-pub const NL_NO_LOGIN: NResult = -2147483643;
-pub const NL_NO_LICENSE: NResult = -2147483642;
 
 #[derive(Debug)]
 pub struct ProfitConnector {
@@ -196,18 +207,46 @@ pub enum OrderValidity {
     FillOrKill,
 }
 
-#[derive(Debug, thiserror::Error)]
-pub enum ProfitError {
-    #[error("Conexão falhou: {0}")]
-    ConnectionFailed(String),
-    #[error("Erro interno: {0}")]
-    InternalError(String),
-    #[error("Argumentos inválidos: {0}")]
-    InvalidArgs(String),
-    #[error("Não inicializado")]
-    NotInitialized,
-    #[error("Sem login")]
-    NoLogin,
-    #[error("Sem licença")]
-    NoLicense,
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum OrderType {
+    Market = 1,
+    Limit = 2,
+    StopLimit = 4,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum OrderStatus {
+    New = 0,
+    PartiallyFilled = 1,
+    Filled = 2,
+    DoneForDay = 3,
+    Canceled = 4,
+    Replaced = 5,
+    PendingCancel = 6,
+    Stopped = 7,
+    Rejected = 8,
+    Suspended = 9,
+    PendingNew = 10,
+    Calculated = 11,
+    Expired = 12,
+    AcceptedForBidding = 13,
+    PendingReplace = 14,
+    PartiallyFilledCanceled = 15,
+    Received = 16,
+    PartiallyFilledExpired = 17,
+    PartiallyFilledRejected = 18,
+    Unknown = 200,
+    HadesCreated = 201,
+    BrokerSent = 202,
+    ClientCreated = 203,
+    OrderNotCreated = 204,
+    CanceledByAdmin = 205,
+    DelayFixGateway = 206,
+    ScheduledOrder = 207,
+}
+
+impl OrderStatus {
+    pub fn from_i32(v: i32) -> Self { use OrderStatus::*; match v {0=>New,1=>PartiallyFilled,2=>Filled,3=>DoneForDay,4=>Canceled,5=>Replaced,6=>PendingCancel,7=>Stopped,8=>Rejected,9=>Suspended,10=>PendingNew,11=>Calculated,12=>Expired,13=>AcceptedForBidding,14=>PendingReplace,15=>PartiallyFilledCanceled,16=>Received,17=>PartiallyFilledExpired,18=>PartiallyFilledRejected,200=>Unknown,201=>HadesCreated,202=>BrokerSent,203=>ClientCreated,204=>OrderNotCreated,205=>CanceledByAdmin,206=>DelayFixGateway,207=>ScheduledOrder,_=>Unknown} }
+}
+
+// Usa ProfitError unificado de crate::error
