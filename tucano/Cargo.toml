@@ -13,15 +13,15 @@ authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
 
 [dependencies]
 # Re-export targets
-"tucano-core" = { path = "../core", version = "0.12.2" }
-"tucano-markets" = { path = "../markets", version = "0.3.1" }
-"tucano-data" = { path = "../data", version = "0.10.1" }
-"tucano-execution" = { path = "../execution", version = "0.5.3" }
-"tucano-risk" = { path = "../risk", version = "0.1.0" }
-"tucano-trader" = { path = "../trader", version = "0.1.0" }
-"tucano-strategies" = { path = "../strategies", version = "0.1.0" }
-"tucano-analytics" = { path = "../analytics", version = "0.1.0" }
-"tucano-integration" = { path = "../integration", version = "0.9.1" }
+"tucano-core" = "0.12.2"
+"tucano-markets" = "0.3.1"
+"tucano-data" = "0.10.1"
+"tucano-execution" = "0.5.3"
+"tucano-risk" = "0.1.0"
+"tucano-trader" = "0.1.0"
+"tucano-strategies" = "0.1.0"
+"tucano-analytics" = "0.1.0"
+"tucano-integration" = "0.9.1"
 
 [features]
 # Feature agregadora para conveniência
