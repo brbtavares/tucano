@@ -1,4 +1,50 @@
-name: "Toucan CI"
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: clippy, rustfmt
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Format check
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --all --all-targets -- -D warnings
+      - name: Tests
+        run: cargo test --all --all-features --no-fail-fast
+      - name: Deny yanked deps
+        run: |
+          cargo install cargo-deny --locked
+          cargo deny check bans
+
+  deny-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+      - name: cargo-deny (bans, advisories, licenses)
+        run: cargo deny check --disable-fetch advisories licenses bansname: "Toucan CI"
 
 on:
   push:
