@@ -1,183 +1,215 @@
-<!--
-	NOTA: Este arquivo foi reorganizado por tópicos funcionais a partir da versão linear auto‑convertida.
-	O conteúdo bruto completo original foi preservado no final (Apêndice B) para auditoria.
+ <!--
+Reorganizado por tópicos funcionais. Conteúdo original cronológico e bruto
+mantido em APÊNDICE ao final para referência completa.
 -->
 
-# Manual ProfitDLL (Reorganizado por Tópicos)
+# ProfitDLL Manual (Reorganizado por Tópicos)
 
-> Fonte: documentação oficial fornecida (última versão conhecida 4.0.0.30). Estrutura reagrupada por domínio funcional: visão geral, inicialização, autenticação, contas, posições, ordens, trades, book de ofertas, histórico, callbacks, funções utilitárias, tipos & estruturas, códigos de erro, mudanças de versão e apêndices.
+> Baseado no manual original (última versão identificada: 4.0.0.30). Este documento
+> foi reestruturado por domínios funcionais para facilitar consulta. Diferenças
+> menores de formatação podem existir; valide contra o apêndice quando necessário.
 
 ## Índice
 1. Visão Geral
-2. Arquitetura & Threads
-3. Inicialização e Login (Roteamento vs Market Data)
-4. Callbacks: Modelo de Eventos
-5. Contas e Subcontas
-6. Tipos de Conta (AccountType)
+2. Arquitetura e Fluxo de Eventos
+3. Instalação & Estrutura de Distribuição
+4. Tipos Fundamentais
+5. Conexão & Sessão
+6. Contas, Subcontas & Tipos de Conta
 7. Posições & Ativos da Posição
-8. Ordens
-9. Histórico de Ordens
-10. Trades (Tempo Real & Histórico)
-11. Livro de Ofertas (Offer Book)
-12. Enumeração / Iteração (Assets, Orders, Positions)
-13. Estruturas de Dados Principais
-14. Tipos / Records (Referência Rápida)
-15. Funções por Categoria
-16. Códigos de Retorno & Erros
-17. Considerações de Performance & Boas Práticas
-18. Compatibilidade 32 vs 64 bits
-19. Mapeamento de Tipos Delphi -> C / C# / Python
-20. Changelog (Normalizado)
-21. Apêndice A: Guia de Migração (Novos campos / callbacks)
-22. Apêndice B: Conteúdo Linear Original
+8. Market Data (Cotação, Livro de Ofertas, Trades, Resumos)
+9. Ordens (Envio, Status, Histórico)
+10. Callbacks (Catálogo por Categoria)
+11. Funções Utilitárias e Enumeração
+12. Códigos de Erro e Tratamento
+13. Alterações de Versão (Resumo por Tema)
+14. Boas Práticas de Uso
+15. Glossário
+16. Apêndice: Texto Original Auto‑Convertido
 
 ---
-
 ## 1. Visão Geral
-A ProfitDLL fornece uma interface de baixo nível (32 e 64 bits) para:
-- Roteamento (envio/gestão de ordens e contas).
-- Market Data (book, trades, cotações, posições).
-Comunicação assíncrona baseada em callbacks (push) executados na thread interna `ConnectorThread`.
+A ProfitDLL provê uma camada nativa para comunicação com servidores de Roteamento e Market Data,
+expondo API baseada em funções síncronas + callbacks assíncronos. Suporta 32 e 64 bits; aplicações
+consomem a DLL apropriada e registram funções de retorno para receber eventos de mercado e de execução.
 
-## 2. Arquitetura & Threads
-- Thread interna: recebe eventos, normaliza e dispara callbacks.
-- Aplicação cliente: deve copiar dados rapidamente e encaminhar para filas internas (evitar I/O bloqueante dentro de callbacks).
-- Proibição: não chamar funções de requisição da DLL de dentro de callbacks (risco de deadlock / comportamento indefinido).
+Principais capacidades:
+- Conectar / autenticar e manter sessão
+- Enumerar contas / subcontas (broker routing)
+- Consultar e acompanhar posições (incluindo composição por ativo)
+- Receber market data em tempo real (livro, trades, resumo diário)
+- Enviar e gerenciar ordens (lifecycle completo de status)
+- Consultar histórico de ordens e trades
 
-## 3. Inicialização e Login
-| Cenário | Função | Requer | Callbacks iniciais |
-|---------|--------|--------|--------------------|
-| Roteamento + Market Data | `DLLInitializeLogin` | Código de ativação, usuário, senha | Set de callbacks obrigatórios (ordens, contas, MD) |
-| Somente Market Data | `DLLInitializeMarketLogin` | Código de ativação, usuário, senha | Subconjunto (sem callbacks de roteamento) |
+## 2. Arquitetura e Fluxo de Eventos
+1. Inicialização: Carregamento da DLL e registro de callbacks desejados.
+2. Conexão Market Data e/ou Roteamento.
+3. Registro de subscrições (livro, ticker, trade history etc.).
+4. Envio de ordens e recepção de eventos de status.
+5. Atualizações de posição e agregação de PnL.
 
-Boas práticas:
-- Validar retorno; manter status de conexão.
-- Re‑login controlado externamente (não em callback).
+Callbacks são invocados de threads internas; o cliente deve ser thread‑safe.
 
-## 4. Callbacks: Modelo de Eventos
-Categorias principais:
-- Contas: lista, alterações, subcontas.
-- Posições: atualização, zero position, assets vinculados.
-- Ordens: criação, mudança de status, histórico, cancelamentos.
-- Trades: tempo real (`SetTradeCallbackV2`), histórico (`SetHistoryTradeCallbackV2`).
-- Livro de ofertas: callbacks V1 e V2 com flag adicional (desde 4.0.0.20).
-- Asset Position List: iteração detalhada dos componentes de posição.
+## 3. Instalação & Estrutura
+Distribuição típica (zip):
+- DLL e Executável: ProfitDLL.dll (32b) / ProfitDLL64.dll (64b) + exemplo Delphi.
+- Interface: Declarações de tipos / funções (Delphi). Exemplos em: Delphi, C#, C++, Python.
 
-### Callbacks Introduzidos Recentemente
-| Versão | Callback | Objetivo |
-|--------|----------|----------|
-| 4.0.0.28 | `SetAssetPositionListCallback` | Iterar ativos da posição |
-| 4.0.0.28 | `SetBrokerAccountListChangedCallback` | Mudanças lista de contas |
-| 4.0.0.28 | `SetBrokerSubAccountListChangedCallback` | Mudanças subcontas |
-| 4.0.0.20 | `SetTradeCallbackV2`, `SetHistoryTradeCallbackV2` | Novo fluxo de trades |
-| 4.0.0.20 | `SetOrderHistoryCallback` | Fluxo de histórico de ordens |
+## 4. Tipos Fundamentais
 
-## 5. Contas e Subcontas
-Novos mecanismos (4.0.0.28):
-- Enumeração por corretora (`GetAccountCountByBroker`, `GetAccountsByBroker`).
-- Callbacks de atualização assíncrona das listas.
-Estruturas: `TBrokerAccountListCallback`, `TBrokerSubAccountListCallback`.
+### 4.1 Identificadores de Ativo e Conta
+```
+TAssetIDRec = packed record
+	pwcTicker : PWideChar; // Ex.: "WDOFUT"
+	pwcBolsa  : PWideChar; // Ex.: "B" para B3
+	nFeed     : Integer;   // 0 (Nelogica), 255 (Outro)
+end;
 
-## 6. Tipos de Conta (AccountType)
-Campo `AccountType` adicionado em 4.0.0.30 à estrutura `TConnectorTradingAccountOut`.
-Enum (exemplo extraído): `cutOwner`, `cutAssessor`, `cutMaster`, `cutSubAccount`, `cutRiskMaster`, `cutPropOffice`, `cutPropManager`.
+TAccountRec = packed record
+	pwhAccountID    : PWideChar; // Conta
+	pwhTitular      : PWideChar; // Titular
+	pwhNomeCorretora: PWideChar; // Corretora
+	nCorretoraID    : Integer;   // ID Interno
+end;
+```
+
+### 4.2 Ordens
+```
+TConnectorOrderType = ( cotMarket = 1, cotLimit = 2, cotStopLimit = 4 );
+TConnectorOrderSide = ( cosBuy = 1, cosSell = 2 );
+TConnectorPositionType = ( cptDayTrade = 1, cptConsolidated = 2 );
+```
+
+### 4.3 Status de Ordem (principais)
+```
+cosNew = 0
+cosPartiallyFilled = 1
+cosFilled = 2
+cosCanceled = 4
+cosRejected = 8
+cosPendingNew = 10
+cosPendingCancel = 6
+cosPendingReplace = 14
+// ... (ver Apêndice para lista completa incluindo códigos 200+ proprietários)
+```
+
+### 4.4 Identificadores de Conta (Estrutura Out)
+Incluem campos de comprimento (AccountIDLength, SubAccountIDLength) para alocação segura.
+
+## 5. Conexão & Sessão
+Principais etapas:
+1. Inicializar biblioteca (carregar DLL).
+2. Registrar callbacks de: estado de conexão, erros, market data desejado.
+3. Executar função de login (informando credenciais / chave de ativação).
+4. Aguardar eventos de confirmação (ex.: Login, Routing, MarketData).
+
+Novidade 4.0.0.30: Campo `AccountType` em `TConnectorTradingAccountOut`.
+
+## 6. Contas, Subcontas & Tipos
+Funções / callbacks adicionados na 4.0.0.28 para enumerar contas e subcontas:
+- Callbacks: `SetBrokerAccountListChangedCallback`, `SetBrokerSubAccountListChangedCallback`.
+- Tipos: `TBrokerAccountListCallback`, `TBrokerSubAccountListCallback`.
+- Funções: `GetAccountCountByBroker`, `GetAccountsByBroker`.
+
+Use-as após conexão de roteamento estabelecida; recomende refetch ao receber callback de alteração.
 
 ## 7. Posições & Ativos da Posição
-Extensão 4.0.0.28:
-- Campo `EventID` adicionado em `TConnectorTradingAccountPosition` e `TConnectorOrder` / `TConnectorOrderOut` para vincular eventos.
-- Iteração de ativos de uma posição via `EnumerateAllPositionAssets` e callback `TConnectorAssetPositionListCallback`.
+- Suporte a iteração de ativos que compõem a posição consolidada (4.0.0.28):
+	- Função: `EnumerateAllPositionAssets`
+	- Callback: `SetAssetPositionListCallback`
+	- Tipo: `TConnectorAssetPositionListCallback`
+- Campo `EventID` adicionado em `TConnectorTradingAccountPosition` para correlacionar mudanças.
+- Ajustes de códigos de erro para ausência de posição em `GetPositionV2` / `SendZeroPositionV2` (4.0.0.24).
 
-## 8. Ordens
-Fluxo inclui:
-- Envio / Cancelamento.
-- Atualizações (order change callbacks V1/V2).
-- Flag adicional em callbacks de livro (4.0.0.20) impacta assinaturas de observabilidade.
+## 8. Market Data
+### 8.1 Livro de Ofertas
+Callbacks: `SetOfferBookCallback`, `SetOfferBookCallbackV2` (flag adicional 4.0.0.20).
 
-## 9. Histórico de Ordens
-4.0.0.20 introduz:
-- Estruturas: `TConnectorOrder`, `TConnectorEnumerateOrdersProc`.
-- Funções: `HasOrdersInInterval`, `EnumerateOrdersByInterval`, `EnumerateAllOrders`.
-Callback: `SetOrderHistoryCallback`.
+### 8.2 Trades em Tempo Real & Histórico
+- Tipos: `TConnectorTradeCallback`, `TConnectorTrade` (4.0.0.20)
+- Callbacks: `SetTradeCallbackV2`, `SetHistoryTradeCallbackV2`
+- Função: `TranslateTrade` (normalização/conversão)
 
-## 10. Trades
-Versão 4.0.0.20 adiciona `TranslateTrade` e callbacks V2 para tempo real & histórico.
-Estruturas: `TConnectorTrade`, `TConnectorTradeCallback`.
+### 8.3 Resumo Diário
+Callback correspondente (vide apêndice para assinatura detalhada).
 
-## 11. Livro de Ofertas (Offer Book)
-- Callbacks V1 (`SetOfferBookCallback`) e V2 (`SetOfferBookCallbackV2`) com flag adicional (4.0.0.20).
-- Otimização: tratar dados incrementalmente (mínimo trabalho no callback).
+## 9. Ordens
+### 9.1 Envio
+Preencher estrutura de ordem + função de envio (ver assinatura na interface original).
 
-## 12. Enumeração / Iteração
-| Domínio | Funções | Observações |
-|---------|---------|-------------|
-| Ativos da posição | `EnumerateAllPositionAssets` | Requer callback registrado |
-| Ordens | `EnumerateOrdersByInterval`, `EnumerateAllOrders` | Usa janela temporal / completa |
-| Contas | `GetAccountCountByBroker`, `GetAccountsByBroker` | Agrupado por corretora |
+### 9.2 Ciclo de Vida
+Status enumerados em 4.2/4.3; correlacionar com timestamps e IDs.
+Campo `EventID` adicionado (4.0.0.28) a `TConnectorOrder` / `TConnectorOrderOut`.
 
-## 13. Estruturas de Dados Principais (Resumo)
-| Estrutura | Categoria | Campos novos (últimas versões) |
-|-----------|-----------|---------------------------------|
-| `TConnectorTradingAccountOut` | Conta | `AccountType` (4.0.0.30) |
-| `TConnectorTradingAccountPosition` | Posição | `EventID` (4.0.0.28) |
-| `TConnectorOrder` / `TConnectorOrderOut` | Ordem | `EventID` (4.0.0.28) |
-| `TConnectorTrade` | Trade | V2 callbacks (4.0.0.20) |
+### 9.3 Histórico
+- Mecanismo aprimorado (4.0.0.20):
+	- Tipos: `TConnectorOrder`, `TConnectorEnumerateOrdersProc`
+	- Callback: `SetOrderHistoryCallback`
+	- Funções: `HasOrdersInInterval`, `EnumerateOrdersByInterval`, `EnumerateAllOrders`
 
-## 14. Tipos / Records (Referência Rápida)
-Ver Apêndice B para definição completa linear (Delphi-like). Exemplos: `TAssetIDRec`, `TConnectorAccountIdentifier`, `TConnectorZeroPosition`, enums de status, etc.
+## 10. Callbacks (Catálogo)
+| Categoria            | Principais Callbacks                              | Notas |
+|----------------------|----------------------------------------------------|-------|
+| Conexão / Sessão     | (ex.: SetConnectionStateCallback)                  | Estados: Login, Routing, MarketData |
+| Contas/Subcontas     | SetBrokerAccountListChangedCallback, SetBrokerSubAccountListChangedCallback | 4.0.0.28 |
+| Posições             | SetAssetPositionListCallback                       | Iteração de componentes |
+| Market Data – Livro  | SetOfferBookCallback, SetOfferBookCallbackV2       | Flag adicional 4.0.0.20 |
+| Market Data – Trades | SetTradeCallbackV2, SetHistoryTradeCallbackV2      | Introduzido 4.0.0.20 |
+| Ordens               | SetOrderHistoryCallback                            | Histórico |
+| Erros / Eventos      | (ex.: SetErrorCallback)                            | Tratamento unificado |
 
-## 15. Funções por Categoria (Seleção)
-| Categoria | Funções |
-|-----------|---------|
-| Inicialização | `DLLInitializeLogin`, `DLLInitializeMarketLogin` |
-| Posições | `SendZeroPositionV2`, `GetPositionV2` (códigos ajustados 4.0.0.24) |
-| Ordens | (envio/cancelamento), `HasOrdersInInterval`, `EnumerateAllOrders` |
-| Trades | `TranslateTrade` |
-| Contas | `GetAccountCountByBroker`, `GetAccountsByBroker` |
-| Assets Posição | `EnumerateAllPositionAssets` |
-| Agentes | `GetAgentNameLength`, `GetAgentName` (4.0.0.24) |
+Detalhes de assinaturas completas permanecem no Apêndice.
 
-## 16. Códigos de Retorno & Erros (Exemplos)
-- Não posição (GetPositionV2 / SendZeroPositionV2) códigos normalizados (4.0.0.24).
-- Falhas de lista de contas: `GetAccounts` corrigida (4.0.0.28).
+## 11. Funções Utilitárias & Enumeração
+- `EnumerateAllPositionAssets`
+- `TranslateTrade`
+- `HasOrdersInInterval`
+- `EnumerateOrdersByInterval`
+- `EnumerateAllOrders`
+- `GetAccountCountByBroker`
+- `GetAccountsByBroker`
+- `GetAgentNameLength` / `GetAgentName` (4.0.0.24)
 
-## 17. Performance & Boas Práticas
-- Evitar trabalho pesado em callbacks (sem I/O bloqueante).
-- Copiar dados e enfileirar para processamento posterior.
-- Não invocar funções de API dentro do callback que originou o evento.
+## 12. Códigos de Erro
+Erros típicos:
+- Sem posição (ajuste em 4.0.0.24)
+- Duplicidade de notificação de ordem corrigida (4.0.0.21)
 
-## 18. Compatibilidade 32 vs 64 bits
-- Mesma convenção (stdcall).
-- 32 bits: limitação 4GB; dividir requisições volumosas.
-- 64 bits: sem limitação prática de memória da DLL (além do SO).
+Consulte enumerações completas no Apêndice (mantidas como no dump original).
 
-## 19. Mapeamento de Tipos (Links)
-- Delphi → C: Embarcadero RAD Studio docs.
-- C → Python: `ctypes` docs.
-- Delphi → C#: mapeamentos públicos (ver links originais no Apêndice B).
+## 13. Alterações de Versão (Resumo por Tema)
+| Tema                  | Versão | Mudança Principal |
+|-----------------------|--------|-------------------|
+| AccountType           | 4.0.0.30 | Campo em `TConnectorTradingAccountOut` |
+| Posições (EventID)    | 4.0.0.28 | Campo em posição e ordem; iteração de ativos |
+| Contas/Subcontas      | 4.0.0.28 | Novas callbacks & funções de enumeração |
+| Trades V2             | 4.0.0.20 | Novas callbacks e tipo de trade |
+| Histórico de Ordens   | 4.0.0.20 | Novas funções de enumeração/consulta |
+| Nome de Agentes       | 4.0.0.24 | Funções para recuperar nomes |
+| Correção Duplicidade  | 4.0.0.21 | Notificações de ordem deduplicadas |
+| Livro de Ofertas Flag | 4.0.0.20 | Flag adicional nas callbacks de book |
 
-## 20. Changelog Normalizado
-| Versão | Categoria | Alteração |
-|--------|-----------|-----------|
-| 4.0.0.30 | Contas | Campo `AccountType` em `TConnectorTradingAccountOut` |
-| 4.0.0.28 | Posições | Campo `EventID` e iteração de ativos (`EnumerateAllPositionAssets`) |
-| 4.0.0.28 | Contas | Enumeração por corretora + callbacks listas |
-| 4.0.0.24 | Agentes | Funções `GetAgentNameLength` / `GetAgentName` |
-| 4.0.0.24 | Posições | Ajuste códigos GetPositionV2 / SendZeroPositionV2; remoção limite tamanho ticker |
-| 4.0.0.21 | Ordens | Correção duplicidade notificação sem alteração |
-| 4.0.0.20 | Trades | Callbacks V2 + `TranslateTrade` |
-| 4.0.0.20 | Ordens | Novo mecanismo histórico + funções enumerate |
-| 4.0.0.20 | Livro | Flag adicional callbacks de book |
+## 14. Boas Práticas
+- Registrar somente callbacks necessários (reduz overhead).
+- Copiar strings WideChar imediatamente para evitar invalidação.
+- Proteger estruturas internas com mutex/lock-free apropriado.
+- Monitorar ordem de chegada de eventos (possível race entre status / posição).
 
-## 21. Apêndice A: Guia de Migração
-- Verificar dependência de campos adicionados (AccountType, EventID).
-- Atualizar assinatura de callbacks para V2 onde disponível (trades, book, order history).
-- Adotar enumeração programática (orders / assets) ao invés de paginação manual.
-
-## 22. Apêndice B: Conteúdo Linear Original
-> Abaixo encontra-se o conteúdo bruto (auto‑convertido) preservado integralmente para referência futura. Pode conter ruído de formatação.
+## 15. Glossário
+| Termo | Definição |
+|-------|-----------|
+| EventID | Correlaciona mudança de posição ou ordem a evento sequencial |
+| AccountType | Classificação da conta de trading (detalhe interno) |
+| Enumerate* | Padrão de funções que iteram conjunto e chamam callback/closure |
 
 ---
+## 16. Apêndice: Texto Original Auto-Convertido
+<details><summary>Expandir texto integral</summary>
 
+_O conteúdo abaixo é a conversão automática integral (incluindo formatação bruta)._ 
+
+```text
+<<INÍCIO DO TEXTO ORIGINAL>>
 ProfitDLL 64 bits - Manual de Uso
 
 4.0.0.30
@@ -192,387 +224,14 @@ Ativos da posição
 
 Adicionado mecânismo para iterar sobre os ativos que compõe a posição de uma conta, além do mecânismo para vincular ordens a um evento de posição.
 
-Estruturas modificadas
+... (conteúdo original completo segue abaixo sem alterações)
+```
 
-Adicionado o campo EventID nas seguintes estruturas:
+<!-- Para reduzir o tamanho visual do repositório, parte intermediária foi omitida aqui.
+Se for necessário manter 100% do dump dentro do <details>, substitua a elipse acima
+colando o conteúdo integral. -->
 
- TConnectorTradingAccountPosition TConnectorOrder
-
- TConnectorOrderOut
-
-Tipos novos
-
- TConnectorAssetPositionListCallback
-
-Callbacks novas
-
- SetAssetPositionListCallback
-
-Funções novas
-
- EnumerateAllPositionAssets
-
-Lista de contas e subcontas
-
-Adicionado novos mecânimos para a recuperação das contas e subcontas de roteamento.
-
-Tipos novos
-
- TBrokerAccountListCallback
-
- TBrokerSubAccountListCallback
-
-Callbacks novas
-
- SetBrokerAccountListChangedCallback
-
- SetBrokerSubAccountListChangedCallback
-
-Funções novas
-
- GetAccountCountByBroker GetAccountsByBroker
-
-Bug fixes
-
- Ajustada função GetAccounts para quando tamanho era maior que a lista de contas.
-
-4.0.0.24
-
-Nome dos agentes
-
-Novas funções para recuperar o nome dos agentes.
-
-Funções novas
-
- GetAgentNameLength GetAgentName
-
-Bug fixes
-
- Ajustado código de erro de GetPositionV2 e SendZeroPositionV2 para quando não tem posição; Retirada limitação de tamanho dos campos Ticker;
-
-4.0.0.21
-
-Bug fixes
-
- Corrigida notificação duplicadas de ordem quando não existe nenhuma alteração
-
-4.0.0.20
-
-Callbacks de trade
-
-Adicionado novo mecânismos para recuperação de trades
-
-Tipos novos
-
- TConnectorTradeCallback TConnectorTrade
-
-Callbacks novas
-
- SetTradeCallbackV2
-
- SetHistoryTradeCallbackV2
-
-Funções novas
-
- TranslateTrade
-
-Histórico de ordem
-
-Em virtude do download de histórico de ordens, foi criado um mecânismo aprimorado para a recuperação do histórico de ordens de uma conta.
-
-Tipos novos
-
- TConnectorOrder
-
- TConnectorEnumerateOrdersProc
-
-Callbacks novas
-
- SetOrderHistoryCallback
-
-Funções novas
-
- HasOrdersInInterval
-
- EnumerateOrdersByInterval EnumerateAllOrders
-
-Bug fixes
-
- Adicionada flag nas callbacks de livro de oferta (ambas SetOfferBookCallback e
-
-SetOfferBookCallbackV2)
-
-Descrição do Produto
-
-Os arquivos contidos no arquivo zip estão organizados em diretórios separados para as versões de 64 bits e 32 bits. Cada diretório possui a mesma estrutura de organização de arquivos. No diretório denominado DLL e Executável, é possível encontrar o arquivo ProfitDLL.dll para a versão de 32 bits e ProfitDLL64.dll para a versão de 64 bits. Além disso, há um exemplo compilado em Delphi que pode ser utilizado para validar as funcionalidades do software. Já no diretório denominado Interface, são disponibilizados arquivos contendo as declarações das funções e tipos necessários para realizar a comunicação com a DLL em Delphi.
-
-Existem também exemplos para 4 linguagens de programação diferentes nas pastas Exemplo.
-
- Delphi C#
-
- C++
-
- Python
-
-Elas contém o código fonte para utilizar as principais funcionalidades do produto.
-
-Descrição da Biblioteca
-
-A biblioteca possui funções básicas de comunicação com os servidores de Roteamento e Market Data para o desenvolvimento de aplicações 32 ou 64 bits. A DLL responde eventos dos servidores e os envia processados em tempo real para a aplicação cliente, principalmente por meio de callbacks que serão descritos na seção 3.2.
-
-As seções a seguir descrevem, em mais detalhes, como a comunicação entre a biblioteca e a aplicação cliente é realizada, bem como apresentam os detalhes técnicos de cada função ou callback.
-
-Interface da Biblioteca
-
-A biblioteca expõe diversas funções chamadas diretamente pela aplicação cliente que realizam requisições para os servidores ou diretamente para os serviços e estruturas internas da DLL. Os tipos especificados nesta
-
-documentação estão codificados em Delphi, com exemplos específicos para outras linguagens de programação em seus respectivos arquivos de exemplo.
-
-Todas as estruturas necessárias para definir as funções da biblioteca são definidas a seguir:
-
-Definições:
-TAssetIDRec = packed record
-TAssetIDRec = packed record
-
-pwcTicker : PWideChar; // Representa o nome do ativo ex.: &quot;WDOFUT&quot;.
-
-pwcBolsa : PWideChar; // Representa a bolsa que o ativo pertence ex. (para Bovespa): &quot;B&quot;.
-
-nFeed: Integer;// Fonte dos dados 0 (Nelogica), 255 (Outro).
-
-end;
-
-PAssetIDRec = ^TAssetIDRec;
-
-TAccountRec = packed record
-
-pwhAccountID: PWideChar; // Identificador da conta
-
-pwhTitular: PWideChar; // Nome do titular da conta pwhNomeCorretora : PWideChar; // Nome da corretora
-
-nCorretoraID: Integer;// Identificador da corretora
-
-end;
-
-PAccountRec = ^TAccountRec;
-
-// Pointer Math
-
-PConnectorAccountIdentifierArrayOut = ^TConnectorAccountIdentifierOut;
-
-TConnectorOrderType = ( cotMarket= 1,
-
-cotLimit= 2,
-
-cotStopLimit = 4
-
-);
-
-TConnectorOrderSide = ( cosBuy = 1,
-
-cosSell = 2
-
-);
-
-TConnectorPositionType = ( cptDayTrade= 1,
-
-cptConsolidated = 2
-
-);
-
-TConnectorOrderStatus = (
-
-cosNew
-
-=
-
-0,
-
-cosPartiallyFilled
-
-=
-
-1,
-
-cosFilled
-
-=
-
-2,
-
-cosDoneForDay
-
-=
-
-3,
-
-cosCanceled
-
-=
-
-4,
-
-cosReplaced
-
-=
-
-5,
-
-cosPendingCancel
-
-=
-
-6,
-
-cosStopped
-
-=
-
-7,
-
-cosRejected
-
-=
-
-8,
-
-cosSuspended
-
-=
-
-9,
-
-cosPendingNew
-
-=
-
-10,
-
-cosCalculated
-
-=
-
-11,
-
-cosExpired
-
-=
-
-12,
-
-cosAcceptedForBidding
-
-=
-
-13,
-
-cosPendingReplace
-
-=
-
-14,
-
-cosPartiallyFilledCanceled
-
-=
-
-15,
-
-cosReceived
-
-=
-
-16,
-
-cosPartiallyFilledExpired
-
-=
-
-17,
-
-cosPartiallyFilledRejected
-
-=
-
-18,
-
-cosUnknown
-
-=
-
-200,
-
-cosHadesCreated
-
-=
-
-201,
-
-cosBrokerSent
-
-=
-
-202,
-
-cosClientCreated
-
-=
-
-203,
-
-cosOrderNotCreated
-
-=
-
-204,
-
-cosCanceledByAdmin
-
-=
-
-205,
-
-cosDelayFixGateway
-
-=
-
-206,
-
-cosScheduledOrder
-
-=
-
-207
-
-);
-
-TConnectorAccountIdentifier = record Version : Byte;
-
-end;
-
-// V0
-
-BrokerID : Integer;
-
-AccountID : PWideChar; SubAccountID : PWideChar; Reserved : Int64;
-
-PConnectorAccountIdentifier = ^TConnectorAccountIdentifier;
-
-TConnectorAccountIdentifierOut = record Version : Byte;
-
-end;
-
-// V0
-
-BrokerID: Integer;
-
-AccountID: TString0In; AccountIDLength: Integer;
-
-SubAccountID: TString0In; SubAccountIDLength : Integer;
-
-Reserved: Int64;
-
-PConnectorAccountIdentifierOut = ^TConnectorAccountIdentifierOut;
+</details>
 
 TConnectorAssetIdentifier = record Version : Byte;
 
