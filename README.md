@@ -11,7 +11,25 @@
 - **🇧🇷 Mercado Brasileiro**: Integração nativa com B3 já implementada via ProfitDLL
 - **⚡ Alta Performance**: Desenvolvido em Rust para máxima eficiência
 - **🛡️ Type Safety**: Sistema de tipos que previne erros em tempo de compilação
-- **🔄 Modular**: Arquitetura extensível e componentes reutilizáveis
+ - **🔄 Modular**: Arquitetura extensível e componentes reutilizáveis
+
+## 📦 Crates Publicadas
+
+| Crate | Versão | Descrição | Docs |
+|-------|--------|-----------|------|
+| `tucano` | 0.1.x | Façade unificada (re-export) | [docs.rs](https://docs.rs/tucano) |
+| `tucano-core` | 0.12.x | Engine, execução/backtest unificado | [docs.rs](https://docs.rs/tucano-core) |
+| `tucano-markets` | 0.3.x | Instrumentos & exchanges (B3, etc) | [docs.rs](https://docs.rs/tucano-markets) |
+| `tucano-data` | 0.10.x | Eventos & pipeline de dados (streams, books, trades) | [docs.rs](https://docs.rs/tucano-data) |
+| `tucano-execution` | 0.5.x | Ordens, fills, roteamento & clientes | [docs.rs](https://docs.rs/tucano-execution) |
+| `tucano-trader` | 0.1.x | Traits centrais de estratégia & tipos | [docs.rs](https://docs.rs/tucano-trader) |
+| `tucano-risk` | 0.1.x | Gestão de risco (limites, validações) | [docs.rs](https://docs.rs/tucano-risk) |
+| `tucano-strategies` | 0.1.x | Estratégias de exemplo / referência | [docs.rs](https://docs.rs/tucano-strategies) |
+| `tucano-analytics` | 0.1.x | Métricas, summaries, performance & PnL | [docs.rs](https://docs.rs/tucano-analytics) |
+| `tucano-integration` | 0.9.x | Protocolos externos, canais & snapshots | [docs.rs](https://docs.rs/tucano-integration) |
+| `tucano-macros` | 0.2.x | Procedural macros internas | [docs.rs](https://docs.rs/tucano-macros) |
+
+Convenção: usar intervalo `major.minor.x` nas docs; indique patch específico se precisar de reprodutibilidade.
 
 ## 🏗️ Arquitetura do Sistema (Visão Rápida)
 `core/` (engine), `execution/` (ordens), `data/` (streams), `markets/` (instrumentos B3), `analytics/` (métricas), `risk/`, `trader/` (traits), `strategies/`, `integration/` (protocolos) e `examples/`.
