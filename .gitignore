@@ -1,5 +1,4 @@
 # Rust
-Cargo.lock
 /target
 
 # Native libraries (DLLs, SOs, etc.)
