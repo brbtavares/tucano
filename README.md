@@ -5,12 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
 
-Framework moderno de trading algorítmico em Rust para o mercado brasileiro (B3).
-
-## 🙏 Inspiração & Agradecimentos
-
-Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](https://github.com/barter-rs/barter-rs)**, cuja estrutura inicial serviu como ponto de partida para organizar módulos, traits centrais e a abordagem de streaming/normalização. Nosso sincero agradecimento ao seu criador e a todos os demais desenvolvedores e contribuidores do ecossistema barter-rs – o trabalho de vocês facilitou acelerar a fase inicial deste framework.
-
 ## 🎯 Características Principais
 
 - **🧠 Engine Unificado**: Mesmo código para backtest e execução (real ou simulada) ao vivo
@@ -33,6 +27,35 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # Clonar o repositório (novo nome)
 git clone https://github.com/brbtavares/tucano.git
 cd tucano
+```
+
+### Adicionar dependência (façade)
+
+No seu `Cargo.toml` adicione a crate unificada (re-export) — recomendado para começar:
+
+```toml
+[dependencies]
+tucano = { version = "0.1", features = ["full" ] }
+```
+
+Ou, se quiser granularidade / compilar menos coisas, use crates individuais:
+
+```toml
+[dependencies]
+tucano-core = "0.12"
+tucano-markets = "0.3"
+tucano-data = "0.10"
+tucano-execution = "0.5"
+tucano-trader = "0.1"
+tucano-risk = "0.1"
+tucano-strategies = "0.1"
+tucano-analytics = "0.1"
+```
+
+Depois importe via façade:
+
+```rust
+use tucano::prelude::*; // Engine, ExchangeId, Side, etc.
 ```
 
 ### Compilação
@@ -207,7 +230,7 @@ println!("{}", summary.display_table());
 ### Implementação Básica
 
 ```rust
-use tucano::tucano_risk::{RiskManager, RiskCheck};
+use tucano::tucano_risk::{RiskManager, RiskApproved, RiskRefused};
 
 struct MyRiskManager {
     max_position_size: f64,
@@ -342,6 +365,10 @@ export B3_PASSWORD=senha_producao
 export DATABASE_URL=postgresql://user:pass@localhost/tucano
 export REDIS_URL=redis://localhost:6379
 ```
+
+## 🙏 Inspiração & Agradecimentos
+
+Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](https://github.com/barter-rs/barter-rs)**, cuja estrutura inicial serviu como ponto de partida para organizar módulos, traits centrais e a abordagem de streaming/normalização. Nosso sincero agradecimento ao seu criador e a todos os demais desenvolvedores e contribuidores do ecossistema barter-rs – o trabalho de vocês facilitou acelerar a fase inicial deste framework.
 
 ---
 
