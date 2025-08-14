@@ -116,13 +116,8 @@ pub use tucano_trader as strategy; // temporary alias for backward compatibility
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
 pub use tucano_analytics as analytics; // transitional re-export
 
-/// Strategy interfaces for generating algorithmic orders, closing positions, and performing
-/// `Engine` actions on disconnect / trading disabled.
-///
-/// **Note**: Strategy interfaces have been moved to the `strategy` crate.
-/// Import them with: `use trader::{AlgoStrategy, ClosePositionsStrategy, ...};`
-// Remove the strategy module as it's now a separate crate
-// pub mod strategy;
+// Strategy interfaces foram movidas para a crate `tucano-trader`.
+// Importar via: `use tucano_trader::{AlgoStrategy, ClosePositionsStrategy, ...};`
 
 /// Utilities for initialising and interacting with a full trading system.
 pub mod system;

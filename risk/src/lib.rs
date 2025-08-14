@@ -228,6 +228,7 @@ impl<T, Reason> RiskRefused<T, Reason> {
 /// # Type Parameters
 /// * `ExchangeKey` - Type used to identify an exchange (defaults to [`ExchangeIndex`]).
 /// * `InstrumentKey` - Type used to identify an instrument (defaults to [`InstrumentIndex`]).
+#[allow(clippy::type_complexity)]
 pub trait RiskManager<ExchangeKey = ExchangeIndex, InstrumentKey = InstrumentIndex> {
     type State;
 
@@ -294,6 +295,7 @@ impl<State> Default for DefaultRiskManager<State> {
     }
 }
 
+#[allow(clippy::type_complexity)]
 impl<State, ExchangeKey, InstrumentKey> RiskManager<ExchangeKey, InstrumentKey>
     for DefaultRiskManager<State>
 {

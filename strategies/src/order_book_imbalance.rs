@@ -30,6 +30,7 @@ impl Default for OrderBookImbalanceConfig {
 /// Estado volátil opcional (ex: última direção acionada) para evitar over-trading.
 #[derive(Debug, Default, Clone)]
 pub struct OrderBookImbalanceState {
+    #[allow(dead_code)]
     last_side: Option<Side>,
 }
 

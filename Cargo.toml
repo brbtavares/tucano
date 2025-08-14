@@ -12,7 +12,8 @@ members = [
     "risk",
     "trader",
     "strategies",
-    "examples"
+    "examples",
+    "tucano"
 ]
 
 [workspace.dependencies]

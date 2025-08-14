@@ -8,23 +8,12 @@ use serde::{Deserialize, Serialize};
 use tucano_execution::balance::{AssetBalance, Balance};
 
 /// TearSheet summarising the trading session changes for an Asset.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Default)]
 pub struct TearSheetAsset {
     pub balance_end: Option<Balance>,
     pub drawdown: Option<Drawdown>,
     pub drawdown_mean: Option<MeanDrawdown>,
     pub drawdown_max: Option<MaxDrawdown>,
-}
-
-impl Default for TearSheetAsset {
-    fn default() -> Self {
-        Self {
-            balance_end: None,
-            drawdown: None,
-            drawdown_mean: None,
-            drawdown_max: None,
-        }
-    }
 }
 
 /// Generator for an [`TearSheetAsset`].
