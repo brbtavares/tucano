@@ -35,6 +35,7 @@ pub const NL_FILE_ALREADY_EXISTS: NResult = -2147483618;
 pub const NL_INVALID_TICKER: NResult = -2147483617;
 pub const NL_NOT_MASTER_ACCOUNT: NResult = -2147483616;
 
+#[non_exhaustive]
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
 pub enum ProfitError {
     #[error("Erro interno DLL")] Internal,

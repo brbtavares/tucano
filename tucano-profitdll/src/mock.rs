@@ -5,6 +5,7 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use crate::error::*;
 
+#[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum CallbackEvent {
     StateChanged {
@@ -87,6 +88,7 @@ pub enum CallbackEvent {
     },
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy)]
 pub enum ConnectionState {
     Login = 0,
@@ -95,6 +97,7 @@ pub enum ConnectionState {
     MarketLogin = 3,
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy)]
 pub enum BookAction {
     New = 0,
@@ -150,6 +153,7 @@ impl AccountIdentifier {
     }
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderSide {
     Buy = 0,
@@ -199,6 +203,7 @@ impl SendOrder {
     }
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderValidity {
     Day,
@@ -207,6 +212,7 @@ pub enum OrderValidity {
     FillOrKill,
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderType {
     Market = 1,
@@ -214,6 +220,7 @@ pub enum OrderType {
     StopLimit = 4,
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderStatus {
     New = 0,
