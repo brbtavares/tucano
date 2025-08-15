@@ -11,9 +11,13 @@ mod error;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 mod ffi;
 mod mock;
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
+mod ffi_types;
 
 pub use api::*;
 pub use error::*;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 pub use ffi::*;
-pub use mock::*;
+pub use mock::*; // inclui CallbackEvent, HistoryTradeSource etc.
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
+pub use ffi_types::*;

@@ -2,7 +2,7 @@
 //! Implementação mock & tipos compartilhados.
 
 use crate::error::*;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Utc, TimeZone};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -96,6 +96,47 @@ pub enum CallbackEvent {
         validity: OrderValidity,
         text: Option<String>,
     },
+    /// Trade histórico (pull ou callback incremental). Similar a NewTrade mas distinguido semanticamente.
+    HistoryTrade {
+        ticker: String,
+        exchange: String,
+        price: Decimal,
+        volume: Decimal,
+        timestamp: DateTime<Utc>,
+        qty: i32,
+        trade_id: i64,
+        source: HistoryTradeSource,
+    },
+    /// Ajustes corporativos (dividendos, splits, etc.) versão V2 (com flags e multiplier).
+    AdjustHistory {
+        ticker: String,
+        exchange: String,
+        value: Decimal,
+        adjust_type: String,
+        observation: String,
+        date_adjust: String,
+        date_deliberation: String,
+        date_payment: String,
+        flags: i32,
+        multiplier: Decimal,
+    },
+    /// Preço teórico (leilão / derivativos).
+    TheoreticalPrice {
+        ticker: String,
+        exchange: String,
+        theoretical_price: Decimal,
+        quantity: i64,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HistoryTradeSource {
+    /// Proveniente de stream em tempo real mas classificado como histórico (ex: backfill inicial curto)
+    RealtimeBackfill,
+    /// Resultado de chamada explícita a get_history_trades (pull)
+    Pull,
+    /// Recebido via callback incremental dedicado (caso DLL use canal separado)
+    IncrementalCallback,
 }
 
 #[non_exhaustive]
@@ -216,6 +257,37 @@ impl ProfitConnector {
                             position: 0,
                         });
                     }
+                    // Emite eventos históricos / teóricos / ajuste a cada 200 trades como placeholders
+                    if seq % 200 == 0 {
+                        let _ = tx_clone.send(CallbackEvent::HistoryTrade {
+                            ticker: ticker_s.clone(),
+                            exchange: exchange_s.clone(),
+                            price: base,
+                            volume: Decimal::from(250),
+                            timestamp: now,
+                            qty: 25,
+                            trade_id: seq,
+                            source: HistoryTradeSource::RealtimeBackfill,
+                        });
+                        let _ = tx_clone.send(CallbackEvent::TheoreticalPrice {
+                            ticker: ticker_s.clone(),
+                            exchange: exchange_s.clone(),
+                            theoretical_price: base + Decimal::from(1),
+                            quantity: 1000,
+                        });
+                        let _ = tx_clone.send(CallbackEvent::AdjustHistory {
+                            ticker: ticker_s.clone(),
+                            exchange: exchange_s.clone(),
+                            value: Decimal::from(1234) / Decimal::from(100),
+                            adjust_type: "DIV".into(),
+                            observation: "mock-adjust".into(),
+                            date_adjust: now.format("%Y-%m-%d").to_string(),
+                            date_deliberation: now.format("%Y-%m-%d").to_string(),
+                            date_payment: now.format("%Y-%m-%d").to_string(),
+                            flags: 0,
+                            multiplier: Decimal::from(1),
+                        });
+                    }
                     seq += 1;
                 }
             });
@@ -305,6 +377,42 @@ impl ProfitConnector {
         _new_price: Option<Decimal>,
         _new_qty: Option<Decimal>,
     ) -> Result<(), ProfitError> {
+        Ok(())
+    }
+
+    /// Mock: gera eventos HistoryTrade sintéticos no intervalo [from_ms, to_ms) a cada step_ms.
+    pub fn get_history_trades(
+        &self,
+        ticker: &str,
+        exchange: &str,
+        from_ms: i64,
+        to_ms: i64,
+        step_ms: i64,
+    ) -> Result<(), ProfitError> {
+        if from_ms >= to_ms || step_ms <= 0 {
+            return Ok(()); // nada a fazer
+        }
+        if let Some(tx) = self.sender.lock().unwrap().as_ref() {
+            let mut t = from_ms;
+            let mut seq: i64 = 1;
+            while t < to_ms {
+                let price = Decimal::from(10) + Decimal::from(seq % 20 - 10) / Decimal::from(100);
+                let volume = Decimal::from(100 + (seq % 5) * 10);
+                let ts = chrono::Utc.timestamp_millis_opt(t).single().unwrap_or_else(chrono::Utc::now);
+                let _ = tx.send(CallbackEvent::HistoryTrade {
+                    ticker: ticker.to_string(),
+                    exchange: exchange.to_string(),
+                    price,
+                    volume,
+                    timestamp: ts,
+                    qty: 1 + (seq % 50) as i32,
+                    trade_id: seq,
+                    source: HistoryTradeSource::Pull,
+                });
+                t += step_ms;
+                seq += 1;
+            }
+        }
         Ok(())
     }
 }

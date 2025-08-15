@@ -39,6 +39,29 @@ impl Credentials {
             activation_key,
         })
     }
+    
+    /// Conveniência: solicita histórico e aguarda coleção local via callbacks HistoryTrade.
+    /// Bloqueia assincronamente até que todos os eventos do intervalo cheguem ou timeout.
+    #[cfg(feature = "real_dll")]
+    pub async fn collect_history_trades(
+        &self,
+        ticker: &str,
+        exchange: &str,
+        from_ms: i64,
+        to_ms: i64,
+        timeout: std::time::Duration,
+    ) -> Result<Vec<crate::CallbackEvent>, ProfitError> {
+        use tokio::time::{Instant, sleep, Duration};
+        self.backend.request_history_trades(ticker, exchange, from_ms, to_ms)?;
+        let deadline = Instant::now() + timeout;
+        let mut collected = Vec::new();
+        loop {
+            while let Ok(ev) = self.rx.try_recv() { if matches!(ev, crate::CallbackEvent::HistoryTrade{..}) { collected.push(ev); } }
+            if Instant::now() >= deadline { break; }
+            sleep(Duration::from_millis(20)).await;
+        }
+        Ok(collected)
+    }
 }
 
 /// Contrato mínimo para uso genérico das capacidades necessárias nos exemplos.
@@ -58,6 +81,14 @@ pub trait ProfitBackend: Send + Sync + Any {
         new_price: Option<rust_decimal::Decimal>,
         new_qty: Option<rust_decimal::Decimal>,
     ) -> Result<(), ProfitError>;
+    /// Solicita histórico de trades (pull). Backend mock gera imediatamente; real encaminha à DLL.
+    fn request_history_trades(
+        &self,
+        _ticker: &str,
+        _exchange: &str,
+        _from_ms: i64,
+        _to_ms: i64,
+    ) -> Result<(), ProfitError> { Ok(()) }
     /// Solicita encerramento limpo de quaisquer tarefas internas (mock generators, etc.).
     fn shutdown(&self) {}
 }
@@ -92,6 +123,16 @@ impl ProfitBackend for mock::ProfitConnector {
         new_qty: Option<rust_decimal::Decimal>,
     ) -> Result<(), ProfitError> {
         self.change_order(order_id, new_price, new_qty)
+    }
+    fn request_history_trades(
+        &self,
+        ticker: &str,
+        exchange: &str,
+        from_ms: i64,
+        to_ms: i64,
+    ) -> Result<(), ProfitError> {
+        // passo de 1s para mock
+        self.get_history_trades(ticker, exchange, from_ms, to_ms, 1_000)
     }
     fn shutdown(&self) {
         self.shutdown_all();
@@ -130,6 +171,15 @@ impl ProfitBackend for crate::ffi::ProfitConnector {
     ) -> Result<(), ProfitError> {
         self.change_order(order_id, new_price, new_qty)
     }
+    fn request_history_trades(
+        &self,
+        ticker: &str,
+        exchange: &str,
+        from_ms: i64,
+        to_ms: i64,
+    ) -> Result<(), ProfitError> {
+        self.get_history_trades(ticker, exchange, from_ms, to_ms)
+    }
     fn shutdown(&self) {}
 }
 
@@ -148,9 +198,18 @@ pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
     {
         let path = env::var("PROFITDLL_PATH").ok();
         match crate::ffi::ProfitConnector::new(path.as_deref()) {
-            Ok(conn) => return Ok(Box::new(conn)),
+            Ok(conn) => {
+                if env::var("PROFITDLL_DIAG").map(|v| v=="1").unwrap_or(false) {
+                    eprintln!("[profitdll][DIAG] Backend real instanciado.");
+                }
+                return Ok(Box::new(conn));
+            }
             Err(e) => {
-                eprintln!("[profitdll] Falha carregando DLL real, caindo para mock: {e}");
+                if env::var("PROFITDLL_STRICT").map(|v| v=="1").unwrap_or(false) {
+                    return Err(e);
+                } else {
+                    eprintln!("[profitdll] Falha carregando DLL real, caindo para mock: {e}");
+                }
             }
         }
     }
