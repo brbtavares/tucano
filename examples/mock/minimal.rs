@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! Exemplo mínimo (mock) de uso do backend ProfitDLL unificado.
 use profitdll::{new_backend, Credentials, AssetIdentifier, AccountIdentifier, SendOrder, OrderSide};
 use rust_decimal::Decimal;

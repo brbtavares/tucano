@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 // Arquivo arquivado: versão original movida durante curadoria de exemplos.
 
 use tucano_markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};

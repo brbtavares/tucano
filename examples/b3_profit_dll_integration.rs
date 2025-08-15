@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 // B3 Integration Example
 //
 // Demonstrates the complete integration between:

@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};

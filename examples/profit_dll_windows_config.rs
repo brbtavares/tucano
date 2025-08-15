@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 // Arquivo arquivado: versão original movida durante curadoria de exemplos.
 //
 // Este exemplo demonstra como configurar e usar a ProfitDLL real

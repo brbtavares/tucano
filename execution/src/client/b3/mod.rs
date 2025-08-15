@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! B3 execution client implementation using ProfitDLL
 //!
 //! This module provides the B3ExecutionClient that integrates with the Brazilian

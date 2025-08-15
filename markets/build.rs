@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! Build script para configurar linkagem da ProfitDLL em Windows
 //!
 //! Este script configura automaticamente a linkagem da ProfitDLL.dll

@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! Exemplo mínimo (live) que usa credenciais reais via variáveis de ambiente.
 use profitdll::{new_backend, Credentials};
 #[tokio::main]

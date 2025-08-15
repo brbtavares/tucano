@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! B3 (Brasil Bolsa Balcão) exchange integration via ProfitDLL
 //!
 //! This module provides integration with the Brazilian stock exchange B3
