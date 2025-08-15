@@ -25,4 +25,4 @@ prettytable = "0.10"
 "tucano-execution" = { workspace = true }
 "tucano-markets" = { workspace = true }
 "tucano-integration" = { workspace = true }
-rust_decimal_macros= { version = "1", workspace = true }
+rust_decimal_macros = { version = "1" }

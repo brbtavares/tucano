@@ -721,13 +721,11 @@ fn test_engine_process_engine_event_with_audit() {
     pnls.sort();
     assert!(
         pnls.contains(&dec!(7000.0)),
-        "Missing primary instrument PnL 7000.0: {:?}",
-        pnls
+        "Missing primary instrument PnL 7000.0: {pnls:?}"
     );
     assert!(
         pnls.contains(&dec!(-0.065)),
-        "Missing secondary instrument PnL -0.065: {:?}",
-        pnls
+        "Missing secondary instrument PnL -0.065: {pnls:?}"
     );
 
     // Todo: Additional assertions + TradingSummary assertions once generated (to test TimeInterval)
@@ -800,21 +798,15 @@ fn strategy_id() -> StrategyId {
 
 /// Generates a client order ID based on the instrument index.
 /// This ensures unique order IDs for each instrument in the test.
-fn gen_cid(instrument: usize) -> ClientOrderId {
-    ClientOrderId::new(format!("inst{}", instrument))
-}
+fn gen_cid(instrument: usize) -> ClientOrderId { ClientOrderId::new(format!("inst{instrument}")) }
 
 /// Generates a trade ID based on the instrument index.
 /// Used for simulating trade events in the test scenarios.
-fn gen_trade_id(instrument: usize) -> TradeId {
-    TradeId::new(format!("trade_inst{}", instrument))
-}
+fn gen_trade_id(instrument: usize) -> TradeId { TradeId::new(format!("trade_inst{instrument}")) }
 
 /// Generates an order ID based on the instrument index.
 /// Used for simulating order acknowledgments from the exchange.
-fn gen_order_id(instrument: usize) -> OrderId {
-    OrderId::new(format!("order_inst{}", instrument))
-}
+fn gen_order_id(instrument: usize) -> OrderId { OrderId::new(format!("order_inst{instrument}")) }
 
 impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
     type State = EngineState<DefaultGlobalData, DefaultInstrumentMarketData>;
@@ -830,7 +822,7 @@ impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
     where
         String: 'a,
     {
-        let filter_str = format!("{:?}", filter);
+    let filter_str = format!("{filter:?}");
         let concrete_filter = if filter_str.contains("inst0") {
             InstrumentFilter::Instruments(OneOrMany::One("inst0".to_string()))
         } else if filter_str.contains("inst1") {
@@ -919,16 +911,19 @@ impl
     }
 }
 
-fn build_engine(
-    trading_state: TradingState,
-    execution_tx: UnboundedTx<ExecutionRequest>,
-) -> Engine<
+// Type alias to keep test function signatures readable and satisfy clippy::type_complexity
+type TestEngine = Engine<
     HistoricalClock,
     EngineState<DefaultGlobalData, DefaultInstrumentMarketData>,
     MultiExchangeTxMap<UnboundedTx<ExecutionRequest>>,
     TestBuyAndHoldStrategy,
     DefaultRiskManager<EngineState<DefaultGlobalData, DefaultInstrumentMarketData>>,
-> {
+>;
+
+fn build_engine(
+    trading_state: TradingState,
+    execution_tx: UnboundedTx<ExecutionRequest>,
+) -> TestEngine {
     // Simplified instrument list using placeholder keys inst0/inst1
     let instruments: IndexedInstruments = vec![
         tucano_markets::Keyed::new(
@@ -955,7 +950,7 @@ fn build_engine(
 
     let clock = HistoricalClock::new(STARTING_TIMESTAMP);
 
-    let state = EngineState::builder(&instruments, DefaultGlobalData::default(), |_| {
+    let state = EngineState::builder(&instruments, DefaultGlobalData, |_| {
         DefaultInstrumentMarketData::default()
     })
     .time_engine_start(STARTING_TIMESTAMP)
@@ -1006,7 +1001,7 @@ fn account_event_snapshot(assets: &AssetStates) -> EngineEvent<DataKind> {
 }
 
 fn market_event_trade(time_plus: u64, instrument: usize, price: f64) -> EngineEvent<DataKind> {
-    let instrument_key = format!("inst{}", instrument);
+    let instrument_key = format!("inst{instrument}");
     EngineEvent::Market(MarketStreamEvent::Item(MarketEvent {
         time_exchange: time_plus_days(STARTING_TIMESTAMP, time_plus),
         time_received: time_plus_days(STARTING_TIMESTAMP, time_plus),
@@ -1029,7 +1024,7 @@ fn account_event_order_response(
     quantity: f64,
     filled: f64,
 ) -> EngineEvent<DataKind> {
-    let instrument_key = format!("inst{}", instrument);
+    let instrument_key = format!("inst{instrument}");
     EngineEvent::Account(AccountStreamEvent::Item(AccountEvent {
         exchange: "mock".to_string(),
         broker: Some("mock-broker".into()),
@@ -1092,7 +1087,7 @@ fn account_event_trade(
     price: f64,
     quantity: f64,
 ) -> EngineEvent<DataKind> {
-    let instrument_key = format!("inst{}", instrument);
+    let instrument_key = format!("inst{instrument}");
     EngineEvent::Account(AccountStreamEvent::Item(AccountEvent {
         exchange: "mock".to_string(),
         broker: Some("mock-broker".into()),
@@ -1115,6 +1110,6 @@ fn account_event_trade(
 
 fn command_close_position(instrument: usize) -> EngineEvent<DataKind> {
     EngineEvent::Command(Command::ClosePositions(InstrumentFilter::Instruments(
-        OneOrMany::One(format!("inst{}", instrument)),
+    OneOrMany::One(format!("inst{instrument}")),
     )))
 }
