@@ -1,4 +1,25 @@
-# 🇧🇷 Tucano - Framework de Trading Algorítmico para B3
+<div align="center">
+
+# Tucano - Framework de Trading Algorítmico para B3
+
+
+<table>
+    <tr>
+        <td align="center" valign="middle" style="border: none;">
+            <img src="" alt="Logo Tucano" width="160" />
+        </td>
+        <td align="left" valign="middle" style="border: none; padding-left: 16px;">
+            <li><strong>Visão aguçada & alcance estratégico</strong>: monitora múltiplos mercados / books em tempo real para antecipar movimento.</li>
+            <li><strong>Precisão & eficiência</strong>: envia ordens enxutas, evita latência e reduz fricção operacional.</li>
+            <li><strong>Navegação em ambientes complexos</strong>: abstrai protocolos, streams e formatos heterogêneos.</li>
+            <li><strong>Inteligência adaptativa</strong>: ajusta parâmetros & estratégias conforme regime de mercado.</li>
+            <li><strong>Visão panorâmica</strong>: consolida dados multi‐fonte para decisão holística (preço, volume, risco, PnL).</li>
+            <li><strong>Velocidade de resposta</strong>: loop de eventos otimizado para reagir a micro variações antes da competição.</li>
+        </td>
+    </tr>
+</table>
+
+
 
 [![Rust Version](https://img.shields.io/badge/rust-1.75+-orange.svg)](https://www.rust-lang.org)
 [![Crate](https://img.shields.io/crates/v/tucano.svg)](https://crates.io/crates/tucano)
@@ -6,6 +27,8 @@
 [![CI](https://github.com/brbtavares/tucano/actions/workflows/ci.yml/badge.svg)](https://github.com/brbtavares/tucano/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
+
+</div>
 
 ## 🎯 Características Principais
 
