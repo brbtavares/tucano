@@ -6,7 +6,7 @@
 <table>
     <tr>
         <td align="center" valign="middle" style="border: none;">
-            <img src="" alt="Logo Tucano" width="160" />
+            <img src="logo.png" alt="Logo Tucano" width="160" />
         </td>
         <td align="left" valign="middle" style="border: none; padding-left: 16px;">
             <li><strong>Visão aguçada & alcance estratégico</strong>: monitora múltiplos mercados / books em tempo real para antecipar movimento.</li>
