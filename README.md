@@ -30,7 +30,7 @@
 | `tucano-analytics` | 0.1.x | Métricas, summaries, performance & PnL | [docs.rs](https://docs.rs/tucano-analytics) |
 | `tucano-integration` | 0.9.x | Protocolos externos, canais & snapshots | [docs.rs](https://docs.rs/tucano-integration) |
 | `tucano-macros` | 0.2.x | Procedural macros internas | [docs.rs](https://docs.rs/tucano-macros) |
-| `profitdll` | 0.1.x | Integração ProfitDLL (mock + FFI opcional) | [docs.rs](https://docs.rs/profitdll) |
+| `tucano-profitdll` | 0.1.x | Integração ProfitDLL (mock + FFI opcional) | [docs.rs](https://docs.rs/tucano-profitdll) |
 
 Convenção: usar intervalo `major.minor.x` nas docs; indique patch específico se precisar de reprodutibilidade.
 

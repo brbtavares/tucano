@@ -1,11 +1,11 @@
 <div align="center">
 
-# profitdll
+# tucano-profitdll
 
 Camada isolada de integração (tipos + abstrações + FFI opcional) com a **ProfitDLL** (Nelógica).
 
-[![Crates.io](https://img.shields.io/crates/v/profitdll.svg)](https://crates.io/crates/profitdll)
-[![Docs](https://img.shields.io/docsrs/profitdll)](https://docs.rs/profitdll)
+[![Crates.io](https://img.shields.io/crates/v/tucano-profitdll.svg)](https://crates.io/crates/tucano-profitdll)
+[![Docs](https://img.shields.io/docsrs/tucano-profitdll)](https://docs.rs/tucano-profitdll)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](../LICENSE)
 
 </div>
@@ -25,14 +25,14 @@ Fornece:
 
 ```toml
 [dependencies]
-profitdll = "0.1"
+profitdll = { package = "tucano-profitdll", version = "0.1" }
 ```
 
 Para usar a DLL real (Windows + DLL instalada/licenciada):
 
 ```toml
 [dependencies]
-profitdll = { version = "0.1", features = ["real_dll"] }
+profitdll = { package = "tucano-profitdll", version = "0.1", features = ["real_dll"] }
 ```
 
 ### Seleção Automática de Backend
@@ -52,13 +52,13 @@ PROFITDLL_FORCE_MOCK=1                        # força mock
 
 ## 🧪 Exemplo Rápido
 ```rust,no_run
-use profitdll::{new_backend, SendOrder};
+use profitdll::{new_backend, SendOrder}; // alias para tucano-profitdll
 use rust_decimal::Decimal;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let backend = new_backend()?; // mock ou real dependendo do ambiente
-	let creds = profitdll::api::Credentials::from_env()?;
+	let creds = profitdll::api::Credentials::from_env()?; // ainda acessível via alias
 	let mut events = backend.initialize_login(&creds).await?;
 	backend.subscribe_ticker("PETR4", "B")?;
 	backend.send_order(&SendOrder { /* campos */ ..Default::default() })?;
