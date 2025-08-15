@@ -16,3 +16,10 @@ repo_context.md
 
 # .env files
 .env
+
+# C++ files
+*.cpp
+*.h
+*.hpp
+*.cxx
+*.inl
