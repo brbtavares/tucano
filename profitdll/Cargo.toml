@@ -21,6 +21,7 @@ thiserror = { workspace = true }
 tokio = { workspace = true, features = ["sync"] }
 once_cell = { workspace = true }
 libloading = "0.8"
+async-trait = "0.1"
 
 [package.metadata.docs.rs]
 all-features = true
