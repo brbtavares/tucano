@@ -3,36 +3,24 @@ name = "tucano-examples"
 version = "0.1.0"
 edition = "2021"
 
-[features]
-# Placeholder feature to allow conditional compilation in examples
-real_dll = []
-
 [dependencies]
-"tucano-markets" = { path = "../markets" }
 profitdll = { path = "../profitdll" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
-tokio-stream = { workspace = true }
+dotenvy = "0.15"
 rust_decimal = { workspace = true }
-rust_decimal_macros = { workspace = true }
-rand = { workspace = true }
-chrono = { workspace = true }
+
+# Curadoria em andamento: exemplos antigos removidos.
+# Novo pipeline: adicionaremos gradualmente exemplos "live" e "mock" com convenções padronizadas.
 
 [[bin]]
-name = "validate_b3_execution"
-path = "validate_b3_execution.rs"
+name = "tucano-examples"
+path = "src/main.rs"
 
 [[bin]]
-name = "profit_dll_b3_integration"
-path = "profit_dll_b3_integration.rs"
+name = "mock_minimal"
+path = "mock/minimal.rs"
 
 [[bin]]
-name = "profit_dll_windows_config"
-path = "profit_dll_windows_config.rs"
+name = "live_minimal"
+path = "live/minimal.rs"
 
-# [[bin]]
-# name = "simple_trading_strategy"
-# path = "simple_trading_strategy.rs"
-
-[[bin]]
-name = "basic_b3_usage"
-path = "basic_b3_usage.rs"

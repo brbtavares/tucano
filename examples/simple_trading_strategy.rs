@@ -1,4 +1,4 @@
-// Exemplo de estratégia de trading simples usando a integração ProfitDLL
+// Arquivo arquivado: versão original movida durante curadoria de exemplos.
 //
 // NOTA: Este é um exemplo baseado no profit-dll original, agora adaptado
 // para usar a nova arquitetura de broker integrada no markets/broker.

@@ -1,4 +1,4 @@
-// Exemplo de configuração e uso da ProfitDLL em Windows
+// Arquivo arquivado: versão original movida durante curadoria de exemplos.
 //
 // Este exemplo demonstra como configurar e usar a ProfitDLL real
 // em um ambiente Windows com a DLL da Nelógica instalada.

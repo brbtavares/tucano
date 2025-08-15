@@ -1,7 +1,4 @@
-// Exemplo básico de uso das abstrações B3 do Tucano
-//
-// Este arquivo demonstra como usar as implementações B3 básicas
-// com as traits do markets. Baseado nos testes originais.
+// Arquivo arquivado: versão original movida durante curadoria de exemplos.
 
 use tucano_markets::{Asset, AssetType, Exchange, ExchangeId, Instrument};
 
