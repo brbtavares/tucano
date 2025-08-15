@@ -21,6 +21,6 @@ name = "mock_minimal"
 path = "mock/minimal.rs"
 
 [[bin]]
-name = "live_minimal"
-path = "live/minimal.rs"
+name = "live_login_single_ticker"
+path = "live/live_login_single_ticker.rs"
 

@@ -5,8 +5,15 @@ use crate::error::*;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
+use std::collections::HashMap;
+use std::sync::{
+    atomic::{AtomicBool, AtomicU64, Ordering},
+    Arc, Mutex,
+};
+use std::env;
+use std::time::Duration;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
+use tokio::task::JoinHandle;
 
 #[non_exhaustive]
 #[derive(Debug, Clone)]
@@ -109,15 +116,26 @@ pub enum BookAction {
 }
 
 #[derive(Debug)]
+struct GeneratorEntry {
+    handle: JoinHandle<()>,
+    stop: Arc<AtomicBool>,
+    events: Arc<AtomicU64>, // número de eventos NewTrade gerados
+}
+
 pub struct ProfitConnector {
     _connected: bool,
     sender: Mutex<Option<UnboundedSender<CallbackEvent>>>,
+    // Map chave: "ticker|exchange" -> gerador
+    generators: Mutex<HashMap<String, GeneratorEntry>>,
+    metrics: Mutex<HashMap<String, Arc<AtomicU64>>>,
 }
 impl ProfitConnector {
     pub fn new(_dll_path: Option<&str>) -> Result<Self, ProfitError> {
         Ok(Self {
             _connected: false,
             sender: Mutex::new(None),
+            generators: Mutex::new(HashMap::new()),
+            metrics: Mutex::new(HashMap::new()),
         })
     }
     pub async fn initialize_login(
@@ -145,11 +163,94 @@ impl ProfitConnector {
                 price: Decimal::from(10),
                 position: 0,
             });
+            // Inicia gerador sintético periódico para este ticker
+            let ticker_s = ticker.to_string();
+            let exchange_s = exchange.to_string();
+            let tx_clone = tx.clone();
+            let stop_flag = Arc::new(AtomicBool::new(false));
+            let stop_clone = Arc::clone(&stop_flag);
+            let events_counter = Arc::new(AtomicU64::new(0));
+            let events_clone = Arc::clone(&events_counter);
+            let handle = tokio::spawn(async move {
+                let mut seq: i64 = 1;
+                // Intervalo configurável (default 500ms)
+                let interval_ms: u64 = env::var("MOCK_INTERVAL_MS")
+                    .ok()
+                    .and_then(|v| v.parse().ok())
+                    .filter(|v| *v > 0 && *v <= 60_000)
+                    .unwrap_or(500);
+                while !stop_clone.load(Ordering::Relaxed) {
+                    tokio::time::sleep(Duration::from_millis(interval_ms)).await;
+                    if stop_clone.load(Ordering::Relaxed) { break; }
+                    let now = Utc::now();
+                    // Preço oscilando deterministicamente
+                    let base = Decimal::from(10) + Decimal::from(seq % 20 - 10) / Decimal::from(100);
+                    let _ = tx_clone.send(CallbackEvent::NewTrade {
+                        ticker: ticker_s.clone(),
+                        exchange: exchange_s.clone(),
+                        price: base,
+                        volume: Decimal::from(100 + (seq as i64 % 5) * 10),
+                        timestamp: now,
+                        buy_agent: "MOCKB".into(),
+                        sell_agent: "MOCKS".into(),
+                        trade_id: seq,
+                        is_edit: false,
+                    });
+                    events_clone.fetch_add(1, Ordering::Relaxed);
+                    // Livro: alterna ação edit/delete de posição 0 a cada 5 trades
+                    if seq % 5 == 0 {
+                        let action = if (seq / 5) % 2 == 0 { BookAction::Edit } else { BookAction::Delete };
+                        let _ = tx_clone.send(CallbackEvent::PriceBookOffer {
+                            ticker: ticker_s.clone(),
+                            exchange: exchange_s.clone(),
+                            action,
+                            price: base,
+                            position: 0,
+                        });
+                    }
+                    seq += 1;
+                }
+            });
+            let key = format!("{ticker}|{exchange}");
+            self.metrics.lock().unwrap().insert(key.clone(), Arc::clone(&events_counter));
+            self.generators.lock().unwrap().insert(key, GeneratorEntry { handle, stop: stop_flag, events: events_counter });
         }
         Ok(())
     }
     pub fn unsubscribe_ticker(&self, _ticker: &str, _exchange: &str) -> Result<(), ProfitError> {
+        let key = format!("{_ticker}|{_exchange}");
+        if let Some(entry) = self.generators.lock().unwrap().remove(&key) {
+            entry.stop.store(true, Ordering::Relaxed);
+            let handle = entry.handle;
+            // Aguardar término com timeout (best-effort)
+            tokio::spawn(async move {
+                if tokio::time::timeout(Duration::from_millis(250), handle).await.is_err() {
+                    eprintln!("[mock] Timeout aguardando join de gerador; abortando");
+                }
+            });
+            // Remove métrica associada
+            self.metrics.lock().unwrap().remove(&key);
+        }
         Ok(())
+    }
+    /// Sinaliza parada e aguarda (best-effort) término das tasks.
+    pub fn shutdown_all(&self) {
+        let mut map = self.generators.lock().unwrap();
+        if map.is_empty() { return; }
+        let entries: Vec<_> = map.drain().collect();
+        // Limpa métricas relacionadas
+        self.metrics.lock().unwrap().retain(|k, _| !entries.iter().any(|(ek, _)| ek == k));
+        // Sinaliza parada
+        for (_k, entry) in &entries { entry.stop.store(true, Ordering::Relaxed); }
+        // Agenda joins assíncronos (não bloqueia)
+        for (_k, entry) in entries {
+            let handle = entry.handle;
+            tokio::spawn(async move {
+                if tokio::time::timeout(Duration::from_millis(250), handle).await.is_err() {
+                    eprintln!("[mock] Timeout aguardando join de gerador (shutdown_all); abortando");
+                }
+            });
+        }
     }
     pub fn send_order(&self, _order: &SendOrder) -> Result<(), ProfitError> {
         if let Some(tx) = self.sender.lock().unwrap().as_ref() {
@@ -167,6 +268,29 @@ impl ProfitConnector {
         _new_qty: Option<Decimal>,
     ) -> Result<(), ProfitError> {
         Ok(())
+    }
+}
+
+impl Drop for ProfitConnector {
+    fn drop(&mut self) {
+        // Best-effort: sinaliza parada para qualquer gerador remanescente
+        let mut map = self.generators.lock().unwrap();
+        for (_k, entry) in map.drain() {
+            entry.stop.store(true, Ordering::Relaxed);
+            entry.handle.abort(); // abort no drop para encerrar rápido
+        }
+    }
+}
+
+impl ProfitConnector {
+    /// Retorna snapshot das métricas de eventos por ticker (apenas mock).
+    pub fn mock_metrics(&self) -> HashMap<String, u64> {
+        self.metrics
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|(k, v)| (k.clone(), v.load(Ordering::Relaxed)))
+            .collect()
     }
 }
 

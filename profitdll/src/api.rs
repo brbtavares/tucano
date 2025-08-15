@@ -6,6 +6,7 @@
 //! mock em Linux / builds sem a feature, sem precisar de `#[cfg]` espalhado.
 
 use crate::{error::ProfitError, mock, CallbackEvent, SendOrder};
+use core::any::{Any, TypeId};
 use std::env;
 use tokio::sync::mpsc::UnboundedReceiver;
 
@@ -42,7 +43,7 @@ impl Credentials {
 
 /// Contrato mínimo para uso genérico das capacidades necessárias nos exemplos.
 #[async_trait::async_trait]
-pub trait ProfitBackend: Send + Sync {
+pub trait ProfitBackend: Send + Sync + Any {
     async fn initialize_login(
         &self,
         creds: &Credentials,
@@ -57,6 +58,8 @@ pub trait ProfitBackend: Send + Sync {
         new_price: Option<rust_decimal::Decimal>,
         new_qty: Option<rust_decimal::Decimal>,
     ) -> Result<(), ProfitError>;
+    /// Solicita encerramento limpo de quaisquer tarefas internas (mock generators, etc.).
+    fn shutdown(&self) {}
 }
 
 // ------------------ Implementação para o mock ------------------
@@ -90,6 +93,7 @@ impl ProfitBackend for mock::ProfitConnector {
     ) -> Result<(), ProfitError> {
         self.change_order(order_id, new_price, new_qty)
     }
+    fn shutdown(&self) { self.shutdown_all(); }
 }
 
 // ------------------ Implementação para a DLL real ------------------
@@ -124,6 +128,7 @@ impl ProfitBackend for crate::ffi::ProfitConnector {
     ) -> Result<(), ProfitError> {
         self.change_order(order_id, new_price, new_qty)
     }
+    fn shutdown(&self) {}
 }
 
 /// Estratégia de seleção do backend:
@@ -148,4 +153,18 @@ pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
         }
     }
     Ok(Box::new(mock::ProfitConnector::new(None)?))
+}
+
+/// Retorna o tipo concreto do backend para fins de logging / diagnóstico.
+pub fn backend_kind(b: &dyn ProfitBackend) -> &'static str {
+    if b.type_id() == TypeId::of::<mock::ProfitConnector>() {
+        return "mock";
+    }
+    #[cfg(all(target_os = "windows", feature = "real_dll"))]
+    {
+        if b.type_id() == TypeId::of::<crate::ffi::ProfitConnector>() {
+            return "real_dll";
+        }
+    }
+    "unknown"
 }
