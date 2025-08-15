@@ -1,77 +1,10 @@
-//! Tipos e estruturas para integração com ProfitDLL
-//!
-//! Este módulo contém as definições de tipos essenciais que eram
-//! originalmente do profit-dll, agora incorporadas diretamente
-//! no markets para eliminar a dependência externa.
+//! (Deprecated) ProfitDLL types were moved to crate `tucano-profitdll`.
+//! This file remains temporarily to avoid breaking external imports; it re-exports
+//! the new locations. Will be removed in a future major release.
 
-use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
-use serde::{Deserialize, Serialize};
+pub use profitdll::*;
 
-/// Eventos que podem ser gerados pelos callbacks do ProfitDLL
-#[derive(Debug, Clone)]
-pub enum CallbackEvent {
-    StateChanged {
-        connection_type: ConnectionState,
-        result: i32,
-    },
-    ProgressChanged {
-        ticker: String,
-        exchange: String,
-        feed_type: i32,
-        progress: i32,
-    },
-    NewTrade {
-        ticker: String,
-        exchange: String,
-        price: Decimal,
-        volume: Decimal,
-        timestamp: DateTime<Utc>,
-        buy_agent: String,
-        sell_agent: String,
-        trade_id: i64,
-        is_edit: bool,
-    },
-    DailySummary {
-        ticker: String,
-        exchange: String,
-        open: Decimal,
-        high: Decimal,
-        low: Decimal,
-        close: Decimal,
-        volume: Decimal,
-        adjustment: Decimal,
-        max_limit: Decimal,
-        min_limit: Decimal,
-        trades_buyer: Decimal,
-        trades_seller: Decimal,
-    },
-    PriceBookOffer {
-        ticker: String,
-        exchange: String,
-        action: BookAction,
-        price: Decimal,
-        position: i32,
-    },
-    OfferBookBid {
-        ticker: String,
-        exchange: String,
-        action: BookAction,
-        price: Decimal,
-        position: i32,
-    },
-    AccountChanged {
-        account_id: String,
-        account_holder: String,
-        broker_name: String,
-        broker_id: i32,
-    },
-    InvalidTicker {
-        ticker: String,
-        exchange: String,
-        feed_type: i32,
-    },
-}
+// All previous definitions re-exported; no inline code retained.
 
 /// Estados de conexão do ProfitDLL
 #[derive(Debug, Clone, Copy)]

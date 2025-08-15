@@ -5,9 +5,9 @@
 
 use tucano_markets::{
     b3::{B3AssetFactory, B3Stock},
-    profit_dll::ProfitConnector,
     Asset,
 };
+use profitdll::{CallbackEvent, ProfitConnector};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -36,7 +36,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let vale3 = B3AssetFactory::from_symbol("VALE3")?;
 
     println!("\n📊 Assets criados:");
-    println!("  • {}: Petrobras PN ({})", petr4.symbol(), petr4.asset_type());
+    println!(
+        "  • {}: Petrobras PN ({})",
+        petr4.symbol(),
+        petr4.asset_type()
+    );
     println!("  • {}: Vale ON ({})", vale3.symbol(), vale3.asset_type());
 
     // Inicializar ProfitConnector
@@ -74,16 +78,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tokio::select! {
             Some(event) = events.recv() => {
                 match event {
-                    tucano_markets::profit_dll::CallbackEvent::StateChanged { connection_type, result } => {
+                    CallbackEvent::StateChanged { connection_type, result } => {
                         println!("🔌 Estado da conexão: {connection_type:?} - Resultado: {result}");
                     }
-                    tucano_markets::profit_dll::CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
+                    CallbackEvent::NewTrade { ticker, exchange, price, volume, .. } => {
                         println!("💹 Novo negócio: {ticker} @ {exchange} - Preço: {price} Volume: {volume}");
                     }
-                    tucano_markets::profit_dll::CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
+                    CallbackEvent::DailySummary { ticker, open, high, low, close, .. } => {
                         println!("📊 Resumo diário {ticker}: O:{open} H:{high} L:{low} C:{close}");
                     }
-                    tucano_markets::profit_dll::CallbackEvent::ProgressChanged { ticker, progress, .. } => {
+                    CallbackEvent::ProgressChanged { ticker, progress, .. } => {
                         println!("⏳ Progresso subscrição {ticker}: {progress}%");
                     }
                     _ => {

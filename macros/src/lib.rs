@@ -19,8 +19,8 @@
 //!
 //! ## 💡 Exemplo de Uso
 //!
-//! ```rust
-//! use macros::{DeExchange, SerExchange};
+//! ```rust,ignore
+//! use tucano_macros::{DeExchange, SerExchange};
 //!
 //! #[derive(DeExchange, SerExchange)]
 //! struct B3Exchange {

@@ -1,0 +1,27 @@
+[package]
+name = "profitdll"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Integração ProfitDLL (tipos + FFI opcional Windows) para o ecossistema Tucano"
+repository = "https://github.com/brbtavares/tucano"
+keywords = ["trading","b3","dll","profit","marketdata"]
+categories = ["finance","api-bindings"]
+readme = "README.md"
+
+[features]
+default = []
+real_dll = []
+
+[dependencies]
+chrono = { workspace = true }
+rust_decimal = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["sync"] }
+once_cell = { workspace = true }
+libloading = "0.8"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg","docsrs"]

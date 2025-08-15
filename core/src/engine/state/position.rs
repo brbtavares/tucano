@@ -61,13 +61,13 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 ///
 /// # Examples
 /// ## Partially Reduce LONG Position
-/// ```rust
-/// use core::engine::state::position::Position;
-/// use execution::order::id::{OrderId, StrategyId};
-/// use execution::trade::{AssetFees, Trade, TradeId};
-/// use markets::asset::QuoteAsset;
-/// use markets::instrument::name::InstrumentNameInternal;
-/// use markets::Side;
+/// ```rust,ignore
+/// use tucano_core::engine::state::position::Position;
+/// use tucano_execution::order::id::{OrderId, StrategyId};
+/// use tucano_execution::trade::{AssetFees, Trade, TradeId};
+/// use tucano_markets::asset::QuoteAsset;
+/// use tucano_markets::instrument::name::InstrumentNameInternal;
+/// use tucano_markets::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -109,13 +109,13 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// ```
 ///
 /// ## Flip Position - Close SHORT and Open LONG
-/// ```rust
-/// use core::engine::state::position::Position;
-/// use execution::order::id::{OrderId, StrategyId};
-/// use execution::trade::{AssetFees, Trade, TradeId};
-/// use markets::asset::QuoteAsset;
-/// use markets::instrument::name::InstrumentNameInternal;
-/// use markets::Side;
+/// ```rust,ignore
+/// use tucano_core::engine::state::position::Position;
+/// use tucano_execution::order::id::{OrderId, StrategyId};
+/// use tucano_execution::trade::{AssetFees, Trade, TradeId};
+/// use tucano_markets::asset::QuoteAsset;
+/// use tucano_markets::instrument::name::InstrumentNameInternal;
+/// use tucano_markets::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;

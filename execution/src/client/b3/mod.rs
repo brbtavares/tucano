@@ -19,7 +19,7 @@ use crate::{
     },
     trade::Trade,
     transport::{
-        ProfitDLLTransport, Transport, TransportAccountId, TransportEvent, TransportInstrument,
+        MockTransport, Transport, TransportAccountId, TransportEvent, TransportInstrument,
         TransportOrderKind, TransportSide, TransportTimeInForce,
     },
     InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
@@ -30,7 +30,8 @@ use smol_str::SmolStr;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
-use tucano_markets::{ExchangeId, ProfitError, Side};
+use tucano_markets::{ExchangeId, Side};
+use profitdll::ProfitError;
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {
@@ -136,13 +137,8 @@ impl ExecutionClient for B3ExecutionClient {
     type AccountStream = UnboundedReceiverStream<UnindexedAccountEvent>;
 
     fn new(config: Self::Config) -> Self {
-        // For now, always use ProfitDLLTransport; later allow injection
-        let transport = ProfitDLLTransport::new(
-            config.dll_path.clone(),
-            config.activation_key.clone(),
-            config.username.clone(),
-            config.password.clone(),
-        );
+        // ProfitDLL transport extracted; using MockTransport placeholder.
+        let transport = MockTransport::default();
         Self {
             config,
             transport: Arc::new(transport),

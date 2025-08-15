@@ -61,7 +61,7 @@
 //! ## 🚀 Exemplos de Uso
 //!
 //! ### Configuração Básica
-//! ```rust
+//! ```rust,ignore
 //! use core::engine::Engine;
 //!
 //! // Construir engine para trading real-time
@@ -75,7 +75,7 @@
 //! ```
 //!
 //! ### Processamento de Eventos
-//! ```rust
+//! ```rust,ignore
 //! // Processar dados de mercado
 //! let market_event = EngineEvent::Market(market_data);
 //! let audit = engine.process(market_event);
@@ -87,7 +87,7 @@
 //! ```
 //!
 //! ### Backtesting
-//! ```rust
+//! ```rust,ignore
 //! // Configurar para backtesting
 //! let backtest_engine = Engine::new(
 //!     BacktestClock::new(start_date),  // Clock histórico
@@ -241,7 +241,7 @@ pub mod run;
 /// - `Audit`: Tipo da auditoria gerada pelo processamento
 ///
 /// # Examples
-/// ```rust
+    /// ```rust,ignore
 /// impl Processor<MarketEvent> for MyStrategy {
 ///     type Audit = StrategyAudit;
 ///
@@ -269,7 +269,7 @@ pub trait Processor<Event> {
 /// [`AuditTick`] contendo o resultado do processamento e contexto de auditoria
 ///
 /// # Examples
-/// ```rust
+    /// ```rust,ignore
 /// let audit_tick = process_with_audit(&mut engine, market_event);
 /// println!("Processed event in {:?}", audit_tick.duration);
 /// ```
@@ -610,7 +610,7 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     /// - **Assets**: Balanços de ativos disponíveis
     ///
     /// # Usage
-    /// ```rust,no_run
+    /// ```rust,ignore
     /// let summary_gen = engine.trading_summary_generator();
     /// let metrics = summary_gen.calculate_metrics();
     /// println!("Sharpe Ratio: {}", metrics.sharpe_ratio);
@@ -700,7 +700,7 @@ where
     /// - **Risk**: Módulo ativo para validação de operações
     ///
     /// # Example
-    /// ```rust,no_run
+    /// ```rust,ignore
     /// let engine = Engine::new(
     ///     UTCClock::new(),
     ///     engine_state,

@@ -53,8 +53,8 @@ where
         // Bypass risk checks...
 
         // Send order requests
-    let cancels = self.send_requests(cancels);
-    let opens = self.send_requests(opens);
+        let cancels = self.send_requests(cancels);
+        let opens = self.send_requests(opens);
 
         // Record in flight order requests
         self.state.record_in_flight_cancels(&cancels.sent);

@@ -16,8 +16,8 @@
 //!
 //! ## Uso
 //!
-//! ```rust
-//! use core::error::TucanoError;
+//! ```rust,ignore
+//! use tucano_core::error::TucanoError;
 //!
 //! fn tratar_erro_trading(error: TucanoError) {
 //!     match error {

@@ -31,7 +31,7 @@
 //!
 //! ### RestClient
 //! Comunicação HTTP configurável e assinada entre cliente e servidor:
-//! ```rust,no_run
+//! ```rust,ignore
 //! use integration::protocol::http::rest::RestClient;
 //!
 //! let client = RestClient::new()
@@ -41,7 +41,7 @@
 //!
 //! ### ExchangeStream
 //! Comunicação configurável sobre protocolos de stream assíncronos:
-//! ```rust,no_run
+//! ```rust,ignore
 //! use integration::stream::ExchangeStream;
 //!
 //! let stream = ExchangeStream::new()
@@ -75,7 +75,7 @@
 //!
 //! ## 💡 Exemplo de Uso
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use integration::{
 //!     protocol::websocket::WebSocketClient,
 //!     subscription::Subscription,

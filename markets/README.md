@@ -10,7 +10,6 @@ A crate **markets** fornece a taxonomia e tipos semânticos que suportam execuç
 | Exchange Model | `exchange.rs` / `b3.rs` definem enum `ExchangeId` e características |
 | Asset Model | `asset.rs`, `asset_simplified.rs` e especializações B3 (Stocks, ETFs, REITs, Futuros) |
 | Instrument | Construção padronizada (nome, mercado, símbolo derivado) |
-| Profit DLL Bridge | `profit_dll.rs` / `profit_dll_complete.rs` suporte de interop |
 | Index | `index/` para coleções chaveadas eficientes |
 | Broker Abstractions | `broker/` esqueleto para unir múltiplas corretoras ProfitDLL |
 
@@ -19,7 +18,7 @@ A crate **markets** fornece a taxonomia e tipos semânticos que suportam execuç
 - `Asset` / `B3Asset*` – Implementações por categoria (stock, ETF, REIT, futuro). 
 - `Instrument` – Combinação de asset + mercado + semântica (ex: mini‑índice).
 - `Side`, `OrderType` – Direção e modalidade de ordens.
-- `ProfitConnector` / `ProfitDLLBroker` (via ponte com execution futura).
+  
 
 ## 🔗 Interdependências
 | Depende de | Motivo |
@@ -36,7 +35,7 @@ A crate **markets** fornece a taxonomia e tipos semânticos que suportam execuç
 
 ## ✅ Concluído
 - Enum de exchanges e tipos básicos B3.
-- Estruturas iniciais de Profit DLL wrapper.
+  
 - Instrumentos básicos listados como exemplos (stocks, alguns futuros administrativos).
 
 ## 🧪 Parcial

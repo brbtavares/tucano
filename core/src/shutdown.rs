@@ -7,14 +7,14 @@
 //!
 //! ### Synchronous Shutdown
 //! For components that can shut down immediately without async operations:
-//! ```rust
-//! use core::shutdown::SyncShutdown;
+//! ```rust,ignore
+//! use tucano_core::shutdown::SyncShutdown;
 //!
 //! struct SimpleComponent;
 //!
 //! impl SyncShutdown for SimpleComponent {
 //!     type Result = ();
-//!     
+//!
 //!     fn shutdown(&mut self) -> Self::Result {
 //!         // Cleanup resources synchronously
 //!         println!("Component shut down");
@@ -24,14 +24,14 @@
 //!
 //! ### Asynchronous Shutdown
 //! For components that need to perform async operations during shutdown:
-//! ```rust
-//! use core::shutdown::AsyncShutdown;
+//! ```rust,ignore
+//! use tucano_core::shutdown::AsyncShutdown;
 //!
 //! struct AsyncComponent;
 //!
 //! impl AsyncShutdown for AsyncComponent {
 //!     type Result = Result<(), String>;
-//!     
+//!
 //!     fn shutdown(&mut self) -> impl Future<Output = Self::Result> {
 //!         async move {
 //!             // Async cleanup operations
@@ -80,8 +80,8 @@ pub trait AsyncShutdown {
 /// that all components should begin their shutdown procedures.
 ///
 /// ## Usage
-/// ```rust
-/// use core::{EngineEvent, shutdown::Shutdown};
+/// ```rust,ignore
+/// use tucano_core::{EngineEvent, shutdown::Shutdown};
 ///
 /// // Create a shutdown event
 /// let shutdown_event = EngineEvent::shutdown();

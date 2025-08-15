@@ -23,8 +23,8 @@
 //! Cálculo do Sharpe Ratio (estatísticas fictícias) e geração de drawdown usando `DrawdownGenerator`:
 //!
 //! ```rust
-//! use analytics::metric::sharpe::SharpeRatio;
-//! use analytics::metric::drawdown::DrawdownGenerator;
+//! use tucano_analytics::metric::sharpe::SharpeRatio;
+//! use tucano_analytics::metric::drawdown::DrawdownGenerator;
 //! use rust_decimal_macros::dec;
 //! use chrono::{DateTime, Utc};
 //!
@@ -44,19 +44,17 @@
 //! // valor volta acima do pico → emite drawdown
 //! let dd = gen.update(dec!(120), t0 + chrono::TimeDelta::days(2));
 //! assert!(dd.is_some());
-//! Cálculo simples do Sharpe Ratio com estatísticas agregadas do período (valores hipotéticos).
-//!
-//! ```rust
-//! use analytics::metric::sharpe::SharpeRatio;
-//! use analytics::time::Daily;
+//! // Cálculo simples de Sharpe em base diária (valores hipotéticos)
+//! # {
+//! use tucano_analytics::metric::sharpe::SharpeRatio;
+//! use tucano_analytics::time::Daily;
 //! use rust_decimal_macros::dec;
-//!
 //! let risk_free = dec!(0.0015); // 0.15%
 //! let mean_ret  = dec!(0.0025); // 0.25%
 //! let std_dev   = dec!(0.0200); // 2.00%
-//!
 //! let sharpe = SharpeRatio::calculate(risk_free, mean_ret, std_dev, Daily);
 //! assert_eq!(sharpe.value, dec!(0.05));
+//! # }
 //! ```
 
 /// Lógica de cálculo do Calmar Ratio.

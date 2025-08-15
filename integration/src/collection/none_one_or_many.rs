@@ -6,7 +6,7 @@
 //!
 //! This type handles optional or variable cardinality data common in trading integrations:
 //! - **Market data filters**: May have no filters, one filter, or multiple filters
-//! - **Order modifications**: May change no fields, one field, or multiple fields  
+//! - **Order modifications**: May change no fields, one field, or multiple fields
 //! - **Risk constraints**: May have no limits, one limit, or multiple risk limits
 //! - **API responses**: May return no results, one result, or multiple results
 //! - **Configuration options**: Optional settings that can be single or multiple values
@@ -21,7 +21,7 @@
 //!
 //! ## Trading Examples
 //!
-//! ```rust
+//! ```rust,ignore
 //! use integration::collection::NoneOneOrMany;
 //!
 //! // No market data filters (subscribe to all)

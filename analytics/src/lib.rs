@@ -33,8 +33,7 @@
 //! Cálculo simples do Sharpe Ratio usando estatísticas pré-computadas de uma série de retornos:
 //!
 //! ```rust
-//! use analytics::metric::sharpe::SharpeRatio;
-//! use rust_decimal::Decimal;
+//! use tucano_analytics::metric::sharpe::SharpeRatio;
 //! use rust_decimal_macros::dec;
 //! use chrono::TimeDelta;
 //!
@@ -46,13 +45,15 @@
 //!
 //! let sharpe = SharpeRatio::calculate(risk_free_return, mean_return, std_dev_returns, interval);
 //! assert!(sharpe.value != rust_decimal::Decimal::ZERO);
+//! ```
+//!
+//! Outro exemplo calculando Sharpe em base diária:
+//!
 //! ```rust
-//! use analytics::metric::sharpe::SharpeRatio;
-//! use analytics::time::Daily;
-//! use rust_decimal::Decimal;
+//! use tucano_analytics::metric::sharpe::SharpeRatio;
+//! use tucano_analytics::time::Daily;
 //! use rust_decimal_macros::dec;
 //!
-//! // Retorno livre de risco, retorno médio e desvio padrão (todos no mesmo período)
 //! let risk_free = dec!(0.0015);    // 0.15%
 //! let mean_ret  = dec!(0.0025);    // 0.25%
 //! let std_dev   = dec!(0.0200);    // 2.00%
@@ -117,7 +118,7 @@ pub trait Timed {
 ///
 /// # Exemplo
 /// ```rust
-/// use analytics::{TimedValue, Timed};
+/// use tucano_analytics::{TimedValue, Timed};
 /// use chrono::Utc;
 ///
 /// let price = TimedValue::new(100.50_f64, Utc::now());

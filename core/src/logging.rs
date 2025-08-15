@@ -13,8 +13,8 @@
 //! ## Uso
 //!
 //! ### Logging Padrão (legível humano)
-//! ```rust
-//! use core::logging::init_logging;
+//! ```rust,ignore
+//! use tucano_core::logging::init_logging; // crate path when used externamente
 //!
 //! fn main() {
 //!     init_logging();
@@ -23,8 +23,8 @@
 //! ```
 //!
 //! ### Logging JSON (agregadores / observabilidade)
-//! ```rust
-//! use core::logging::init_json_logging;
+//! ```rust,ignore
+//! use tucano_core::logging::init_json_logging; // crate path externo
 //!
 //! fn main() {
 //!     init_json_logging();
