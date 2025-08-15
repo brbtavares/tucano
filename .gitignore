@@ -11,9 +11,6 @@ profit-dll/lib/*.dll
 profit-dll/lib/*.so
 profit-dll/lib/*.dylib
 
-# utils
-fix_markdown.py
-
 # Context file
 repo_context.md
 
