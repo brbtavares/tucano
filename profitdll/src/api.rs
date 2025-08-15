@@ -93,7 +93,9 @@ impl ProfitBackend for mock::ProfitConnector {
     ) -> Result<(), ProfitError> {
         self.change_order(order_id, new_price, new_qty)
     }
-    fn shutdown(&self) { self.shutdown_all(); }
+    fn shutdown(&self) {
+        self.shutdown_all();
+    }
 }
 
 // ------------------ Implementação para a DLL real ------------------

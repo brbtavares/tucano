@@ -1,0 +1,27 @@
+# Workspace cargo-deny configuration (root) so tool picks it up.
+
+[licenses]
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Unicode-3.0",
+  "CDLA-Permissive-2.0",
+]
+# Accept expressions composed only of allowed licenses.
+# (cargo-deny will validate each component is allowed.)
+# No copyleft licenses expected; keep default deny.
+
+[bans]
+multiple-versions = "warn"
+
+[sources]
+unknown-registry = "warn"
+unknown-git = "warn"
+
+[advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/RustSec/advisory-db"]

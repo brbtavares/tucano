@@ -6,11 +6,11 @@ use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::env;
 use std::sync::{
     atomic::{AtomicBool, AtomicU64, Ordering},
     Arc, Mutex,
 };
-use std::env;
 use std::time::Duration;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
 use tokio::task::JoinHandle;
@@ -181,15 +181,19 @@ impl ProfitConnector {
                     .unwrap_or(500);
                 while !stop_clone.load(Ordering::Relaxed) {
                     tokio::time::sleep(Duration::from_millis(interval_ms)).await;
-                    if stop_clone.load(Ordering::Relaxed) { break; }
+                    if stop_clone.load(Ordering::Relaxed) {
+                        break;
+                    }
                     let now = Utc::now();
                     // Preço oscilando deterministicamente
-                    let base = Decimal::from(10) + Decimal::from(seq % 20 - 10) / Decimal::from(100);
+                    let base =
+                        Decimal::from(10) + Decimal::from(seq % 20 - 10) / Decimal::from(100);
                     let _ = tx_clone.send(CallbackEvent::NewTrade {
                         ticker: ticker_s.clone(),
                         exchange: exchange_s.clone(),
                         price: base,
-                        volume: Decimal::from(100 + (seq as i64 % 5) * 10),
+                        // seq é i64; o cast anterior era redundante e gerava lint (unnecessary_cast)
+                        volume: Decimal::from(100 + (seq % 5) * 10),
                         timestamp: now,
                         buy_agent: "MOCKB".into(),
                         sell_agent: "MOCKS".into(),
@@ -199,7 +203,11 @@ impl ProfitConnector {
                     events_clone.fetch_add(1, Ordering::Relaxed);
                     // Livro: alterna ação edit/delete de posição 0 a cada 5 trades
                     if seq % 5 == 0 {
-                        let action = if (seq / 5) % 2 == 0 { BookAction::Edit } else { BookAction::Delete };
+                        let action = if (seq / 5) % 2 == 0 {
+                            BookAction::Edit
+                        } else {
+                            BookAction::Delete
+                        };
                         let _ = tx_clone.send(CallbackEvent::PriceBookOffer {
                             ticker: ticker_s.clone(),
                             exchange: exchange_s.clone(),
@@ -212,8 +220,18 @@ impl ProfitConnector {
                 }
             });
             let key = format!("{ticker}|{exchange}");
-            self.metrics.lock().unwrap().insert(key.clone(), Arc::clone(&events_counter));
-            self.generators.lock().unwrap().insert(key, GeneratorEntry { handle, stop: stop_flag, events: events_counter });
+            self.metrics
+                .lock()
+                .unwrap()
+                .insert(key.clone(), Arc::clone(&events_counter));
+            self.generators.lock().unwrap().insert(
+                key,
+                GeneratorEntry {
+                    handle,
+                    stop: stop_flag,
+                    events: events_counter,
+                },
+            );
         }
         Ok(())
     }
@@ -224,7 +242,10 @@ impl ProfitConnector {
             let handle = entry.handle;
             // Aguardar término com timeout (best-effort)
             tokio::spawn(async move {
-                if tokio::time::timeout(Duration::from_millis(250), handle).await.is_err() {
+                if tokio::time::timeout(Duration::from_millis(250), handle)
+                    .await
+                    .is_err()
+                {
                     eprintln!("[mock] Timeout aguardando join de gerador; abortando");
                 }
             });
@@ -236,18 +257,35 @@ impl ProfitConnector {
     /// Sinaliza parada e aguarda (best-effort) término das tasks.
     pub fn shutdown_all(&self) {
         let mut map = self.generators.lock().unwrap();
-        if map.is_empty() { return; }
+        if map.is_empty() {
+            return;
+        }
         let entries: Vec<_> = map.drain().collect();
         // Limpa métricas relacionadas
-        self.metrics.lock().unwrap().retain(|k, _| !entries.iter().any(|(ek, _)| ek == k));
+        self.metrics
+            .lock()
+            .unwrap()
+            .retain(|k, _| !entries.iter().any(|(ek, _)| ek == k));
+        // Loga contagem de eventos gerados por ticker antes de sinalizar parada
+        for (k, entry) in &entries {
+            let generated = entry.events.load(Ordering::Relaxed);
+            eprintln!("[mock] shutdown_all: {k} total_new_trades={generated}");
+        }
         // Sinaliza parada
-        for (_k, entry) in &entries { entry.stop.store(true, Ordering::Relaxed); }
+        for (_k, entry) in &entries {
+            entry.stop.store(true, Ordering::Relaxed);
+        }
         // Agenda joins assíncronos (não bloqueia)
         for (_k, entry) in entries {
             let handle = entry.handle;
             tokio::spawn(async move {
-                if tokio::time::timeout(Duration::from_millis(250), handle).await.is_err() {
-                    eprintln!("[mock] Timeout aguardando join de gerador (shutdown_all); abortando");
+                if tokio::time::timeout(Duration::from_millis(250), handle)
+                    .await
+                    .is_err()
+                {
+                    eprintln!(
+                        "[mock] Timeout aguardando join de gerador (shutdown_all); abortando"
+                    );
                 }
             });
         }

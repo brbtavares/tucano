@@ -27,7 +27,8 @@ use crate::{
     OrderValidity, SendOrder,
 };
 use chrono::{TimeZone, Utc};
-use rust_decimal::Decimal;
+use rust_decimal::prelude::ToPrimitive;
+use rust_decimal::Decimal; // para to_f64
 
 pub type NResult = i32; // re-export local para facilitar (mantém igual)
 
@@ -303,7 +304,8 @@ impl ProfitConnector {
             *guard = tx;
         }
         unsafe {
-            map(inst.raw.Initialize())?;
+            // Ponteiro de função: precisa de parênteses para invocação
+            map((inst.raw.Initialize)())?;
             // Registra state callback
             map((inst.raw.SetStateCallback)(
                 state_callback_trampoline,
@@ -460,7 +462,7 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
             }
         }};
     }
-    Ok(ProfitRaw {
+    let temp = ProfitRaw {
         Initialize: must!(Initialize: unsafe extern "system" fn() -> NResult),
         Finalize: must!(Finalize: unsafe extern "system" fn() -> NResult),
         SetStateCallback: must!(SetStateCallback: unsafe extern "system" fn(StateCallbackRaw, *mut c_void) -> NResult),
@@ -480,7 +482,11 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
         SendCancelOrderV2: opt!(SendCancelOrderV2: unsafe extern "system" fn(*const CCancelOrder) -> NResult),
         SendChangeOrderV2: opt!(SendChangeOrderV2: unsafe extern "system" fn(*const CChangeOrder) -> NResult),
         GetOrderDetails: opt!(GetOrderDetails: GetOrderDetailsFn),
-    })
+    };
+    // Elevamos lifetime para 'static pois a Library vive dentro de OnceCell enquanto o processo estiver ativo
+    Ok(std::mem::transmute::<ProfitRaw<'_>, ProfitRaw<'static>>(
+        temp,
+    ))
 }
 
 fn map(code: NResult) -> Result<(), ProfitError> {
