@@ -5,9 +5,9 @@
 //! disponível (Windows + feature `real_dll`) ou automaticamente caiam para o
 //! mock em Linux / builds sem a feature, sem precisar de `#[cfg]` espalhado.
 
-use crate::{error::ProfitError, mock, SendOrder, CallbackEvent};
-use tokio::sync::mpsc::UnboundedReceiver;
+use crate::{error::ProfitError, mock, CallbackEvent, SendOrder};
 use std::env;
+use tokio::sync::mpsc::UnboundedReceiver;
 
 /// Credenciais de login (obtidas preferencialmente via variáveis de ambiente).
 #[derive(Debug, Clone)]
@@ -26,38 +26,70 @@ impl Credentials {
     /// - PROFIT_PASSWORD
     /// - PROFIT_ACTIVATION_KEY (se ausente, usa string vazia)
     pub fn from_env() -> Result<Self, ProfitError> {
-        let user = env::var("PROFIT_USER").or_else(|_| env::var("USER"))
+        let user = env::var("PROFIT_USER")
+            .or_else(|_| env::var("USER"))
             .map_err(|_| ProfitError::ConnectionFailed("PROFIT_USER não definido".into()))?;
         let password = env::var("PROFIT_PASSWORD")
             .map_err(|_| ProfitError::ConnectionFailed("PROFIT_PASSWORD não definido".into()))?;
         let activation_key = env::var("PROFIT_ACTIVATION_KEY").unwrap_or_default();
-        Ok(Self { user, password, activation_key })
+        Ok(Self {
+            user,
+            password,
+            activation_key,
+        })
     }
 }
 
 /// Contrato mínimo para uso genérico das capacidades necessárias nos exemplos.
 #[async_trait::async_trait]
 pub trait ProfitBackend: Send + Sync {
-    async fn initialize_login(&self, creds: &Credentials) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError>;
+    async fn initialize_login(
+        &self,
+        creds: &Credentials,
+    ) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError>;
     fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError>;
     fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError>;
     fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError>;
     fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError>;
-    fn change_order(&self, order_id: i64, new_price: Option<rust_decimal::Decimal>, new_qty: Option<rust_decimal::Decimal>) -> Result<(), ProfitError>;
+    fn change_order(
+        &self,
+        order_id: i64,
+        new_price: Option<rust_decimal::Decimal>,
+        new_qty: Option<rust_decimal::Decimal>,
+    ) -> Result<(), ProfitError>;
 }
 
 // ------------------ Implementação para o mock ------------------
 
 #[async_trait::async_trait]
 impl ProfitBackend for mock::ProfitConnector {
-    async fn initialize_login(&self, creds: &Credentials) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError> {
-        self.initialize_login(&creds.activation_key, &creds.user, &creds.password).await
+    async fn initialize_login(
+        &self,
+        creds: &Credentials,
+    ) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError> {
+        self.initialize_login(&creds.activation_key, &creds.user, &creds.password)
+            .await
     }
-    fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> { self.subscribe_ticker(ticker, exchange) }
-    fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> { self.unsubscribe_ticker(ticker, exchange) }
-    fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError> { self.send_order(order) }
-    fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError> { self.cancel_order(order_id) }
-    fn change_order(&self, order_id: i64, new_price: Option<rust_decimal::Decimal>, new_qty: Option<rust_decimal::Decimal>) -> Result<(), ProfitError> { self.change_order(order_id, new_price, new_qty) }
+    fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> {
+        self.subscribe_ticker(ticker, exchange)
+    }
+    fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> {
+        self.unsubscribe_ticker(ticker, exchange)
+    }
+    fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError> {
+        self.send_order(order)
+    }
+    fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError> {
+        self.cancel_order(order_id)
+    }
+    fn change_order(
+        &self,
+        order_id: i64,
+        new_price: Option<rust_decimal::Decimal>,
+        new_qty: Option<rust_decimal::Decimal>,
+    ) -> Result<(), ProfitError> {
+        self.change_order(order_id, new_price, new_qty)
+    }
 }
 
 // ------------------ Implementação para a DLL real ------------------
@@ -65,14 +97,33 @@ impl ProfitBackend for mock::ProfitConnector {
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 #[async_trait::async_trait]
 impl ProfitBackend for crate::ffi::ProfitConnector {
-    async fn initialize_login(&self, creds: &Credentials) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError> {
-        self.initialize_login(&creds.activation_key, &creds.user, &creds.password).await
+    async fn initialize_login(
+        &self,
+        creds: &Credentials,
+    ) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError> {
+        self.initialize_login(&creds.activation_key, &creds.user, &creds.password)
+            .await
     }
-    fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> { self.subscribe_ticker(ticker, exchange) }
-    fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> { self.unsubscribe_ticker(ticker, exchange) }
-    fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError> { self.send_order(order) }
-    fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError> { self.cancel_order(order_id) }
-    fn change_order(&self, order_id: i64, new_price: Option<rust_decimal::Decimal>, new_qty: Option<rust_decimal::Decimal>) -> Result<(), ProfitError> { self.change_order(order_id, new_price, new_qty) }
+    fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> {
+        self.subscribe_ticker(ticker, exchange)
+    }
+    fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError> {
+        self.unsubscribe_ticker(ticker, exchange)
+    }
+    fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError> {
+        self.send_order(order)
+    }
+    fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError> {
+        self.cancel_order(order_id)
+    }
+    fn change_order(
+        &self,
+        order_id: i64,
+        new_price: Option<rust_decimal::Decimal>,
+        new_qty: Option<rust_decimal::Decimal>,
+    ) -> Result<(), ProfitError> {
+        self.change_order(order_id, new_price, new_qty)
+    }
 }
 
 /// Estratégia de seleção do backend:
@@ -80,7 +131,10 @@ impl ProfitBackend for crate::ffi::ProfitConnector {
 /// 2. Senão, em Windows + feature tenta DLL real (caminho de `PROFITDLL_PATH` se definido).
 /// 3. Fallback final: mock.
 pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
-    if env::var("PROFITDLL_FORCE_MOCK").map(|v| v == "1" || v.eq_ignore_ascii_case("true")).unwrap_or(false) {
+    if env::var("PROFITDLL_FORCE_MOCK")
+        .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
+        .unwrap_or(false)
+    {
         return Ok(Box::new(mock::ProfitConnector::new(None)?));
     }
     #[cfg(all(target_os = "windows", feature = "real_dll"))]

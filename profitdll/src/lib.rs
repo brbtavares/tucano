@@ -6,14 +6,14 @@
 //! Integração isolada com ProfitDLL. Fornece tipos, eventos e (opcionalmente)
 //! bindings FFI reais via feature `real_dll`.
 
+mod api;
+mod error;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 mod ffi;
 mod mock;
-mod error;
-mod api;
 
+pub use api::*;
+pub use error::*;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 pub use ffi::*;
 pub use mock::*;
-pub use error::*;
-pub use api::*;

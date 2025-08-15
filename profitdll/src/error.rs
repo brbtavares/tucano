@@ -39,42 +39,76 @@ pub const NL_NOT_MASTER_ACCOUNT: NResult = -2147483616;
 #[non_exhaustive]
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
 pub enum ProfitError {
-    #[error("Erro interno DLL")] Internal,
-    #[error("DLL não inicializada")] NotInitialized,
-    #[error("Argumentos inválidos")] InvalidArgs,
-    #[error("Aguardando servidor")] WaitingServer,
-    #[error("Sem login")] NoLogin,
-    #[error("Sem licença")] NoLicense,
-    #[error("Fora de faixa")] OutOfRange,
-    #[error("Função requer roteamento")] MarketOnly,
-    #[error("Posição inexistente")] NoPosition,
-    #[error("Recurso não encontrado")] NotFound,
-    #[error("Versão não suportada")] VersionNotSupported,
-    #[error("OCO sem regras")] OcoNoRules,
-    #[error("Bolsa desconhecida")] ExchangeUnknown,
-    #[error("OCO inexistente")] NoOcoDefined,
-    #[error("Série inválida")] InvalidSerie,
-    #[error("Recurso não liberado pela licença")] LicenseNotAllowed,
-    #[error("Não está em HardLogout")] NotHardLogout,
-    #[error("Série sem histórico")] SerieNoHistory,
-    #[error("Ativo sem dados")] AssetNoData,
-    #[error("Série sem dados")] SerieNoData,
-    #[error("Estratégia em execução")] HasStrategyRunning,
-    #[error("Sem mais histórico")] SerieNoMoreHistory,
-    #[error("Série atingiu limite")] SerieMaxCount,
-    #[error("Recurso duplicado")] DuplicateResource,
-    #[error("Contrato não assinado")] UnsignedContract,
-    #[error("Senha ausente")] NoPassword,
-    #[error("Usuário ausente")] NoUser,
-    #[error("Arquivo já existe")] FileAlreadyExists,
-    #[error("Ticker inválido")] InvalidTicker,
-    #[error("Conta não é master")] NotMasterAccount,
-    #[error("Resultado desconhecido: {0}")] Unknown(NResult),
+    #[error("Erro interno DLL")]
+    Internal,
+    #[error("DLL não inicializada")]
+    NotInitialized,
+    #[error("Argumentos inválidos")]
+    InvalidArgs,
+    #[error("Aguardando servidor")]
+    WaitingServer,
+    #[error("Sem login")]
+    NoLogin,
+    #[error("Sem licença")]
+    NoLicense,
+    #[error("Fora de faixa")]
+    OutOfRange,
+    #[error("Função requer roteamento")]
+    MarketOnly,
+    #[error("Posição inexistente")]
+    NoPosition,
+    #[error("Recurso não encontrado")]
+    NotFound,
+    #[error("Versão não suportada")]
+    VersionNotSupported,
+    #[error("OCO sem regras")]
+    OcoNoRules,
+    #[error("Bolsa desconhecida")]
+    ExchangeUnknown,
+    #[error("OCO inexistente")]
+    NoOcoDefined,
+    #[error("Série inválida")]
+    InvalidSerie,
+    #[error("Recurso não liberado pela licença")]
+    LicenseNotAllowed,
+    #[error("Não está em HardLogout")]
+    NotHardLogout,
+    #[error("Série sem histórico")]
+    SerieNoHistory,
+    #[error("Ativo sem dados")]
+    AssetNoData,
+    #[error("Série sem dados")]
+    SerieNoData,
+    #[error("Estratégia em execução")]
+    HasStrategyRunning,
+    #[error("Sem mais histórico")]
+    SerieNoMoreHistory,
+    #[error("Série atingiu limite")]
+    SerieMaxCount,
+    #[error("Recurso duplicado")]
+    DuplicateResource,
+    #[error("Contrato não assinado")]
+    UnsignedContract,
+    #[error("Senha ausente")]
+    NoPassword,
+    #[error("Usuário ausente")]
+    NoUser,
+    #[error("Arquivo já existe")]
+    FileAlreadyExists,
+    #[error("Ticker inválido")]
+    InvalidTicker,
+    #[error("Conta não é master")]
+    NotMasterAccount,
+    #[error("Resultado desconhecido: {0}")]
+    Unknown(NResult),
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
-    #[error("Falha carregando DLL: {0}")] Load(String),
+    #[error("Falha carregando DLL: {0}")]
+    Load(String),
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
-    #[error("Função não encontrada: {0}")] MissingSymbol(&'static str),
-    #[error("Conexão falhou: {0}")] ConnectionFailed(String),
+    #[error("Função não encontrada: {0}")]
+    MissingSymbol(&'static str),
+    #[error("Conexão falhou: {0}")]
+    ConnectionFailed(String),
 }
 
 impl ProfitError {

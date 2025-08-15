@@ -2,8 +2,8 @@
 //! Event adapter for converting ProfitDLL events to Toucan AccountEvents
 
 use crate::{balance::AssetBalance, error::AssetNameExchange, UnindexedAccountEvent};
-use tucano_markets::Side;
 use profitdll::{CallbackEvent, OrderSide};
+use tucano_markets::Side;
 
 /// Convert ProfitDLL CallbackEvent to Toucan UnindexedAccountEvent
 pub fn convert_callback_event(event: CallbackEvent) -> Option<UnindexedAccountEvent> {
@@ -30,7 +30,7 @@ pub fn convert_order_side(side: OrderSide) -> Side {
     match side {
         OrderSide::Buy => Side::Buy,
         OrderSide::Sell => Side::Sell,
-    _ => Side::Buy,
+        _ => Side::Buy,
     }
 }
 

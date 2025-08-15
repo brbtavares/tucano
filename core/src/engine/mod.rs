@@ -242,7 +242,7 @@ pub mod run;
 /// - `Audit`: Tipo da auditoria gerada pelo processamento
 ///
 /// # Examples
-    /// ```rust,ignore
+/// ```rust,ignore
 /// impl Processor<MarketEvent> for MyStrategy {
 ///     type Audit = StrategyAudit;
 ///
@@ -270,7 +270,7 @@ pub trait Processor<Event> {
 /// [`AuditTick`] contendo o resultado do processamento e contexto de auditoria
 ///
 /// # Examples
-    /// ```rust,ignore
+/// ```rust,ignore
 /// let audit_tick = process_with_audit(&mut engine, market_event);
 /// println!("Processed event in {:?}", audit_tick.duration);
 /// ```

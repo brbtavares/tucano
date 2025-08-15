@@ -238,9 +238,12 @@ mod tests {
         assert_eq!(ExchangeId::B3.as_str(), "B3");
         assert_eq!(ExchangeId::B3.to_string(), "B3");
 
-    assert_eq!(ExchangeId::from_str("b3").unwrap(), ExchangeId::B3);
-    assert_eq!(ExchangeId::from_str("BINANCE").unwrap(), ExchangeId::Binance);
-    assert!(ExchangeId::from_str("invalid").is_err());
+        assert_eq!(ExchangeId::from_str("b3").unwrap(), ExchangeId::B3);
+        assert_eq!(
+            ExchangeId::from_str("BINANCE").unwrap(),
+            ExchangeId::Binance
+        );
+        assert!(ExchangeId::from_str("invalid").is_err());
     }
 
     #[test]
