@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-profitdll = { path = "../profitdll" }
+profitdll = { package = "tucano-profitdll", path = "../profitdll" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 dotenvy = "0.15"
 rust_decimal = { workspace = true }

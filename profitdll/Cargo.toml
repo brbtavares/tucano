@@ -1,11 +1,12 @@
 [package]
-name = "profitdll"
-version = "0.1.1"
+name = "tucano-profitdll"
+# Reinicia versão para novo namespace de publicação
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-documentation = "https://docs.rs/profitdll"
+documentation = "https://docs.rs/tucano-profitdll"
 description = "Integração ProfitDLL (tipos + FFI opcional Windows / mock) para o ecossistema Tucano"
 keywords = ["trading","b3","dll","profit","marketdata"]
 categories = ["finance","api-bindings"]
@@ -24,4 +25,4 @@ once_cell = { workspace = true }
 libloading = "0.8"
 async-trait = "0.1"
 
- 
+
