@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 
+[features]
+default = []
+# Proxy para habilitar a feature real_dll do dependency tucano-profitdll
+real_dll = ["profitdll/real_dll"]
+
 [dependencies]
 profitdll = { package = "tucano-profitdll", path = "../profitdll" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

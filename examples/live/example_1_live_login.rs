@@ -21,6 +21,7 @@
 //! Erro genérico será exibido se a DLL não puder ser carregada / símbolos ausentes / credenciais inválidas.
 
 use profitdll::{backend_kind, new_backend, Credentials};
+use std::io::Write;
 
 fn fatal(msg: &str) -> ! {
     eprintln!("[example_1_live_login][ERRO] {msg}");
@@ -31,29 +32,40 @@ fn fatal(msg: &str) -> ! {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Carrega .env (ignora ausência)
     let _ = dotenvy::from_filename(".env");
+    eprintln!("[example_1_live_login][DEBUG] .env carregado (se existia)");
 
     // Credenciais
-    let creds =
-        Credentials::from_env().unwrap_or_else(|e| fatal(&format!("Falha lendo credenciais: {e}")));
+    eprintln!("[example_1_live_login][DEBUG] Lendo credenciais...");
+    let creds = Credentials::from_env()
+        .unwrap_or_else(|e| fatal(&format!("Falha lendo credenciais: {e}")));
+    eprintln!("[example_1_live_login][DEBUG] Credenciais obtidas para usuário='{}'", creds.user);
 
     // Instancia backend real. Se mock for retornado (ambiente sem Windows+feature), aborta.
-    let backend =
-        new_backend().unwrap_or_else(|e| fatal(&format!("Falha inicializando backend: {e}")));
+    eprintln!("[example_1_live_login][DEBUG] Criando backend...");
+    let backend = new_backend()
+        .unwrap_or_else(|e| fatal(&format!("Falha inicializando backend: {e}")));
+    eprintln!("[example_1_live_login][DEBUG] Backend criado.");
     let kind = backend_kind(&*backend);
+    eprintln!("[example_1_live_login][DEBUG] backend_kind={kind}");
     if kind != "real" {
         fatal("Backend não é real (DLL). Causas possíveis: 1) não compilou com --features real_dll 2) não está em Windows/Wine 3) faltou DLL no caminho indicado.");
     }
 
+    eprintln!("[example_1_live_login][DEBUG] Chamando initialize_login...");
+    std::io::stdout().flush().ok();
     let mut rx = backend.initialize_login(&creds).await.unwrap_or_else(|e| {
         fatal(&format!("Falha no login inicial: {e}. Causas possíveis: credenciais inválidas, DLL incompatível, símbolo faltante."));
     });
+    eprintln!("[example_1_live_login][DEBUG] initialize_login retornou canal.");
 
     let ticker = std::env::var("LIVE_TICKER").unwrap_or_else(|_| "PETR4".into());
     let exchange = std::env::var("LIVE_EXCHANGE").unwrap_or_else(|_| "B".into());
 
+    eprintln!("[example_1_live_login][DEBUG] Subscribing {ticker}@{exchange}...");
     backend.subscribe_ticker(&ticker, &exchange).unwrap_or_else(|e| {
         fatal(&format!("Falha ao subscrever {ticker}@{exchange}: {e}. Possíveis causas: ticker inválido, licença insuficiente."));
     });
+    eprintln!("[example_1_live_login][DEBUG] Subscribe ok.");
 
     println!(
         "[example_1_live_login] Conectado (backend real). Lendo eventos (10s ou 30 eventos)..."
