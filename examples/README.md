@@ -6,20 +6,19 @@ Organização:
 
 Exemplos atuais:
 - mock_minimal
-- live_minimal (flag opcional `--allow-order` para enviar 1 ordem de mercado)
+- live_login_single_ticker
 
 Executar:
 ```
 cargo run -p tucano-examples --bin mock_minimal
-cargo run -p tucano-examples --bin live_minimal
-cargo run -p tucano-examples --bin live_minimal -- --allow-order  # habilita envio
+cargo run -p tucano-examples --bin live_login_single_ticker
 ```
 
 Variáveis (live): PROFIT_USER, PROFIT_PASSWORD, opcional PROFIT_ACTIVATION_KEY, LIVE_TICKER, LIVE_EXCHANGE, LIVE_ACCOUNT_ID, LIVE_BROKER.
 
 Roadmap:
 - [x] mock mínimo
-- [x] live mínimo
+- [x] live login + 1 ticker
 - [ ] envio de ordem protegido
 - [ ] estratégia mock
 - [ ] estratégia híbrida

@@ -35,7 +35,7 @@ profitdll = { git = "https://github.com/<org>/tucano", package = "profitdll", fe
 |----------|-----------|
 | `ProfitConnector` | Fachada de alto nível para inicialização, login e operações de ordem. |
 | `CallbackEvent` | Enum de eventos emitidos via `tokio::sync::mpsc::UnboundedReceiver`. |
-| `AssetIdentifier` / `AccountIdentifier` | Identificadores de ativo e conta (ticker/exchange, account_id/broker). |
+| `AssetIdentifier` / `AccountIdentifier` | Identificadores de ativo e conta (ticker / exchange, account_id / broker). |
 | `SendOrder` | Descreve ordem a ser enviada (market ou limit). |
 | `OrderStatus` | Estados FIX + extensões proprietárias (mantidos como `#[non_exhaustive]`). |
 | `ProfitError` | Mapeamento dos códigos numéricos `NL_*` + erros de carregamento. |
@@ -52,12 +52,12 @@ use rust_decimal::Decimal;
 let connector = ProfitConnector::new(None)?; // ou Some("C:/caminho/ProfitDLL.dll")
 let mut rx = connector.initialize_login("activation_key", "usuario", "senha").await?;
 
-// subscrição
-connector.subscribe_ticker("PETR4", "BVMF")?;
+// subscrição (código de bolsa simplificado: "B"=Bovespa (ações), "F"=BM&F (derivativos))
+connector.subscribe_ticker("PETR4", "B")?;
 
 // envio de ordem
 let order = SendOrder::new_market_order(
-	AssetIdentifier::new("PETR4".into(), "BVMF".into()),
+	AssetIdentifier::new("PETR4".into(), "B".into()),
 	AccountIdentifier::new("ACC123".into(), "BRK".into()),
 	OrderSide::Buy,
 	Decimal::from(100)
@@ -83,7 +83,7 @@ while let Some(evt) = rx.recv().await {
 ## 4. Arquitetura Interna
 
 ### 4.1 Mock
-Implementação em `src/mock.rs`. Mantém a mesma superfície para permitir alternância transparente. Os métodos retornam `ProfitError` e não disparam eventos (ponto de extensão: gerar eventos sintéticos em testes futuros).
+Implementação em `src/mock.rs`. Mantém a mesma superfície para permitir alternância transparente. Gera eventos sintéticos (trades periódicos + atualizações simples de book) após `subscribe_ticker`. Usa os mesmos códigos de bolsa (`B` / `F`).
 
 ### 4.2 FFI Dinâmico
 `src/ffi.rs` (ativado via `cfg(all(target_os = "windows", feature = "real_dll"))`).
@@ -126,7 +126,7 @@ Categoria adicional de erros (feature `real_dll`): `Load`, `MissingSymbol`.
 |------|--------|-------|
 | Callbacks Trade/Book V2 | Pendente | Estrutura já preparada (tipos e placeholders). |
 | Account & InvalidTicker callbacks | Pendente | Necessário fila para eventos de conta. |
-| Eventos sintéticos no mock | Pendente | Útil para testes determinísticos. |
+| Eventos sintéticos no mock | Parcial | Geração básica implementada (trades + book). |
 | Sentinel constants | Pendente | Melhorar semântica (-1.0). |
 | Documentar mapeamento completo de `OrderStatus` | Parcial | Enum presente; descrição textual futura. |
 | Testes integração Windows com DLL real | Pendente | Requer ambiente e CI matrix. |
