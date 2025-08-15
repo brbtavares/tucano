@@ -2,13 +2,13 @@
 name = "tucano-execution"
 version = "0.5.3"
 edition = "2021"
-authors = ["JustAStream <justastream.code@gmail.com>"]
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Stream private account data from financial venues, and execute (live or mock) orders."
-keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
-categories = ["finance", "algorithms"]
-license = "MIT"
+documentation = "https://docs.rs/tucano-execution"
+description = "Ordem & account data: execução (mock/live) e streams privadas"
+keywords = ["trading","execution","orders","account"]
+categories = ["finance","api-bindings"]
 
 [package.metadata.docs.rs]
 all-features = true

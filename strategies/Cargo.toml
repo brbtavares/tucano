@@ -2,13 +2,13 @@
 name = "tucano-strategies"
 version = "0.1.0"
 edition = "2021"
-authors = ["JustAStream <justastream.code@gmail.com>"]
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Coleção de estratégias concretas para o ecossistema Tucano"
-keywords = ["trading", "strategies", "algo"]
-categories = ["algorithms", "finance"]
-license = "MIT"
+documentation = "https://docs.rs/tucano-strategies"
+description = "Estratégias de exemplo (placeholders) para o ecossistema Tucano"
+keywords = ["trading","strategies","algo"]
+categories = ["finance","algorithms"]
 
 [features]
 default = []

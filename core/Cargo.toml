@@ -1,17 +1,14 @@
 [package]
 name = "tucano-core"
-version = "0.12.2"
+version = "0.1.2"
 edition = "2021"
-authors = ["JustAStream <justastream.code@gmail.com>"]
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Framework for building high-performance live-trading, paper-trading and back-testing systems"
-keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
-categories = ["finance", "algorithms"]
-license = "MIT"
-
-[package.metadata.docs.rs]
-all-features = true
+documentation = "https://docs.rs/tucano-core"
+description = "Núcleo de engine: backtesting, live trading, orchestration e estado"
+keywords = ["trading","engine","backtesting","live","orchestration"]
+categories = ["finance","algorithms"]
 
 [dev-dependencies]
 rust_decimal_macros = { workspace = true }

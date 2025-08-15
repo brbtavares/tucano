@@ -2,13 +2,13 @@
 name = "tucano-data"
 version = "0.10.1"
 edition = "2021"
-authors = ["JustAStream <justastream.code@gmail.com>"]
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Ingestão WebSocket de alta performance e normalizada para venues financeiros (foco B3) - baterias incluídas."
-keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
-categories = ["finance", "algorithms"]
-license = "MIT"
+documentation = "https://docs.rs/tucano-data"
+description = "Ingestão WebSocket normalizada de dados públicos (foco B3)"
+keywords = ["trading","marketdata","websocket","b3"]
+categories = ["finance","api-bindings"]
 
 [package.metadata.docs.rs]
 all-features = true

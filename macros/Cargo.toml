@@ -1,13 +1,14 @@
 [package]
 name = "tucano-macros"
-version = "0.2.0"
-authors = ["JustAStream"]
+version = "0.1.1"
 edition = "2021"
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
-description = "Macros do ecossistema Tucano"
-keywords = ["trading", "backtesting", "crypto", "stocks", "investment"]
-categories = ["accessibility", "simulation"]
-license = "MIT"
+readme = "README.md"
+documentation = "https://docs.rs/tucano-macros"
+description = "Macros procedurais de suporte ao ecossistema Tucano"
+keywords = ["trading","macros","proc-macro"]
+categories = ["development-tools","finance"]
 
 [package.metadata.docs.rs]
 all-features = true

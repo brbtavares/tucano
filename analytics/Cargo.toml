@@ -2,12 +2,11 @@
 name = "tucano-analytics"
 version = "0.1.0"
 edition = "2021"
-license = "MIT"
-
-[package.metadata.docs.rs]
-all-features = true
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
-description = "Métricas e summaries (drawdown, Sharpe, TearSheet) para o ecossistema Tucano"
+readme = "README.md"
+documentation = "https://docs.rs/tucano-analytics"
+description = "Métricas, estatísticas e summaries (drawdown, Sharpe, TearSheet) do ecossistema Tucano"
 keywords = ["trading","analytics","metrics","finance"]
 categories = ["finance","algorithms"]
 

@@ -2,7 +2,13 @@
 name = "tucano-risk"
 version = "0.1.0"
 edition = "2021"
-license = "MIT"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/brbtavares/tucano"
+readme = "README.md"
+documentation = "https://docs.rs/tucano-risk"
+description = "Interfaces e implementações de gestão de risco"
+keywords = ["trading","risk","risk-management"]
+categories = ["finance","algorithms"]
 
 [package.metadata.docs.rs]
 all-features = true

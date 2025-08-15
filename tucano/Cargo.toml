@@ -2,7 +2,7 @@
 name = "tucano"
 version = "0.1.1"
 edition = "2021"
-license = "MIT"
+license = "Apache-2.0 OR MIT"
 description = "Façade unificada do ecossistema Tucano (trading algorítmico B3)"
 repository = "https://github.com/brbtavares/tucano"
 documentation = "https://docs.rs/tucano"

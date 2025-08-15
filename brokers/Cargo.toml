@@ -3,8 +3,12 @@ name = "tucano-brokers"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-description = "Broker abstraction layer: identification, cost models, certification metadata"
-authors = ["Tucano Contributors"]
+repository = "https://github.com/brbtavares/tucano"
+readme = "README.md"
+documentation = "https://docs.rs/tucano-brokers"
+description = "Abstrações de broker: identificação, custos, metadados de certificação"
+keywords = ["trading","broker","costs","fees"]
+categories = ["finance","api-bindings"]
 
 [dependencies]
 serde = { workspace = true, features = ["derive"] }

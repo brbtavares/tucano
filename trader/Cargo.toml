@@ -2,13 +2,13 @@
 name = "tucano-trader"
 version = "0.1.0"
 edition = "2021"
-authors = ["JustAStream <justastream.code@gmail.com>"]
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
-description = "Abstrações centrais de estratégia (traits, tipos) para o ecossistema de trading Tucano"
-keywords = ["trading", "strategies", "algo", "framework"]
-categories = ["algorithms", "finance"]
-license = "MIT"
+documentation = "https://docs.rs/tucano-trader"
+description = "Abstrações centrais de estratégia (traits e tipos)"
+keywords = ["trading","strategy","framework"]
+categories = ["finance","algorithms"]
 
 [package.metadata.docs.rs]
 all-features = true
