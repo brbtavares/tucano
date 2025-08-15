@@ -1170,7 +1170,7 @@ dependencies = [
 
 [[package]]
 name = "profitdll"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -2190,7 +2190,7 @@ dependencies = [
 
 [[package]]
 name = "tucano-core"
-version = "0.12.2"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "derive_more 2.0.1",
@@ -2243,7 +2243,7 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "tucano-integration",
- "tucano-macros 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tucano-macros 0.2.0",
  "tucano-markets",
  "url",
  "vecmap-rs",
@@ -2317,7 +2317,7 @@ dependencies = [
 
 [[package]]
 name = "tucano-macros"
-version = "0.2.0"
+version = "0.1.1"
 dependencies = [
  "convert_case",
  "proc-macro2",

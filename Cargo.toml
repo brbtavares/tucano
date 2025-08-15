@@ -20,7 +20,7 @@ members = [
 [workspace.dependencies]
 # Tucano Ecosystem (direct crate names with tucano- prefix)
 tucano-analytics = { path = "./analytics", version = "0.1.0" }
-tucano-core = { path = "./core", version = "0.12.2" }
+tucano-core = { path = "./core", version = "0.1.2" }
 tucano-integration = { path = "./integration", version = "0.9.1" }
 tucano-markets = { path = "./markets", version = "0.4.0" }
 tucano-data = { path = "./data", version = "0.10.1" }
@@ -29,7 +29,7 @@ tucano-macros = { path = "./macros", version = "0.2.0" }
 tucano-risk = { path = "./risk", version = "0.1.0" }
 tucano-trader = { path = "./trader", version = "0.1.0" }
 tucano-strategies = { path = "./strategies", version = "0.1.0" }
-profitdll = { path = "./profitdll", version = "0.1.0" }
+profitdll = { path = "./profitdll", version = "0.1.1" }
 
 # Logging
 tracing = { version = "0.1.41" }
