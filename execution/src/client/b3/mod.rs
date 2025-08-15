@@ -139,7 +139,7 @@ impl ExecutionClient for B3ExecutionClient {
 
     fn new(config: Self::Config) -> Self {
         // ProfitDLL transport extracted; using MockTransport placeholder.
-        let transport = MockTransport::default();
+    let transport = MockTransport; // unit-like struct; avoid default()
         Self {
             config,
             transport: Arc::new(transport),
@@ -762,7 +762,7 @@ mod tests {
                 assert_eq!(order.key.instrument, "PETR4");
                 assert_eq!(order.side, Side::Buy);
             }
-            other => panic!("unexpected event: {:?}", other),
+            other => panic!("unexpected event: {other:?}"),
         }
     }
     #[tokio::test]
@@ -810,15 +810,15 @@ mod tests {
                     use crate::order::state::InactiveOrderState;
                     match inactive {
                         InactiveOrderState::OpenFailed(err) => {
-                            assert!(format!("{}", err).contains("PRICE_OUT_OF_RANGE"));
+                            assert!(format!("{err}").contains("PRICE_OUT_OF_RANGE"));
                         }
-                        other => panic!("unexpected inactive state: {:?}", other),
+                        other => panic!("unexpected inactive state: {other:?}"),
                     }
                 } else {
                     panic!("expected inactive state");
                 }
             }
-            other => panic!("unexpected event: {:?}", other),
+            other => panic!("unexpected event: {other:?}"),
         }
     }
 
@@ -859,7 +859,7 @@ mod tests {
         let first_evt = stream.next().await.expect("first event");
         match first_evt.kind {
             crate::AccountEventKind::OrderSnapshot(_) => {}
-            other => panic!("expected order snapshot, got {:?}", other),
+            other => panic!("expected order snapshot, got {other:?}"),
         }
         // Push trade event
         use chrono::Utc;
@@ -1017,10 +1017,10 @@ mod tests {
                 // state holds Result<Cancelled, OrderError>
                 match cancel_resp.state {
                     Ok(cancelled) => assert_eq!(cancelled.id.as_str(), "DUMMY-CID5"),
-                    Err(e) => panic!("unexpected cancel error: {:?}", e),
+                    Err(e) => panic!("unexpected cancel error: {e:?}"),
                 }
             }
-            other => panic!("expected OrderCancelled event, got {:?}", other),
+            other => panic!("expected OrderCancelled event, got {other:?}"),
         }
     }
 }
