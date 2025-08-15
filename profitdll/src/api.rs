@@ -39,7 +39,7 @@ impl Credentials {
             activation_key,
         })
     }
-    
+
     /// Conveniência: solicita histórico e aguarda coleção local via callbacks HistoryTrade.
     /// Bloqueia assincronamente até que todos os eventos do intervalo cheguem ou timeout.
     #[cfg(feature = "real_dll")]
