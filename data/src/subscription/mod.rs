@@ -287,16 +287,9 @@ mod tests {
 
     mod subscription {
         use super::*; // brings Map, SubscriptionId, InstrumentKind
-        use crate::subscription::trade::PublicTrades;
         use tucano_markets::MarketDataInstrument;
 
-        mod de {
-            use super::*; // inherits MarketDataInstrument
-            use crate::{
-                exchange::b3::B3Exchange,
-                subscription::{book::OrderBooksL2, trade::PublicTrades},
-            };
-        }
+        // Removed nested module with unused imports (B3Exchange, OrderBooksL2, PublicTrades)
 
         #[test]
         fn test_find_instrument() {
@@ -334,7 +327,7 @@ mod tests {
                 let actual = ids.find(&test.input);
                 match (actual, test.expected) {
                     (Ok(actual), Ok(expected)) => {
-                        assert_eq!(*actual, expected, "TC{} failed", index)
+                        assert_eq!(*actual, expected, "TC{index} failed")
                     }
                     (Err(_), Err(_)) => {
                         // Test passed

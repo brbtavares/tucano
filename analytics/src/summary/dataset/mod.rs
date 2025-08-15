@@ -158,25 +158,21 @@ mod tests {
             // Basic statistics checks - exact equality for simple operations
             assert_eq!(
                 data_summary.count, test.expected_summary.count,
-                "Count Input: {:?}",
-                index
+                "Count Input: {index}"
             );
             assert_eq!(
                 data_summary.sum, test.expected_summary.sum,
-                "Sum Input: {:?}",
-                index
+                "Sum Input: {index}"
             );
             assert_eq!(
                 data_summary.mean, test.expected_summary.mean,
-                "Mean Input: {:?}",
-                index
+                "Mean Input: {index}"
             );
 
             // Range checks - exact equality
             assert_eq!(
                 data_summary.dispersion.range, test.expected_summary.dispersion.range,
-                "Range Input: {:?}",
-                index
+                "Range Input: {index}"
             );
 
             // Statistical calculations - check within tolerance
@@ -187,9 +183,7 @@ mod tests {
                 .abs();
             assert!(
                 recurrence_diff <= tolerance,
-                "Recurrence difference {} exceeds tolerance, Input: {:?}",
-                recurrence_diff,
-                index
+                "Recurrence difference {recurrence_diff} exceeds tolerance, Input: {index}"
             );
 
             let variance_diff = (data_summary.dispersion.variance
@@ -197,18 +191,14 @@ mod tests {
                 .abs();
             assert!(
                 variance_diff <= tolerance,
-                "Variance difference {} exceeds tolerance, Input: {:?}",
-                variance_diff,
-                index
+                "Variance difference {variance_diff} exceeds tolerance, Input: {index}"
             );
 
             let std_dev_diff =
                 (data_summary.dispersion.std_dev - test.expected_summary.dispersion.std_dev).abs();
             assert!(
                 std_dev_diff <= tolerance,
-                "Std Dev difference {} exceeds tolerance, Input: {:?}",
-                std_dev_diff,
-                index
+                "Std Dev difference {std_dev_diff} exceeds tolerance, Input: {index}"
             );
         }
     }

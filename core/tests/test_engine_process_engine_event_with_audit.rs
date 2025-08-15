@@ -798,15 +798,21 @@ fn strategy_id() -> StrategyId {
 
 /// Generates a client order ID based on the instrument index.
 /// This ensures unique order IDs for each instrument in the test.
-fn gen_cid(instrument: usize) -> ClientOrderId { ClientOrderId::new(format!("inst{instrument}")) }
+fn gen_cid(instrument: usize) -> ClientOrderId {
+    ClientOrderId::new(format!("inst{instrument}"))
+}
 
 /// Generates a trade ID based on the instrument index.
 /// Used for simulating trade events in the test scenarios.
-fn gen_trade_id(instrument: usize) -> TradeId { TradeId::new(format!("trade_inst{instrument}")) }
+fn gen_trade_id(instrument: usize) -> TradeId {
+    TradeId::new(format!("trade_inst{instrument}"))
+}
 
 /// Generates an order ID based on the instrument index.
 /// Used for simulating order acknowledgments from the exchange.
-fn gen_order_id(instrument: usize) -> OrderId { OrderId::new(format!("order_inst{instrument}")) }
+fn gen_order_id(instrument: usize) -> OrderId {
+    OrderId::new(format!("order_inst{instrument}"))
+}
 
 impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
     type State = EngineState<DefaultGlobalData, DefaultInstrumentMarketData>;
@@ -822,7 +828,7 @@ impl ClosePositionsStrategy for TestBuyAndHoldStrategy {
     where
         String: 'a,
     {
-    let filter_str = format!("{filter:?}");
+        let filter_str = format!("{filter:?}");
         let concrete_filter = if filter_str.contains("inst0") {
             InstrumentFilter::Instruments(OneOrMany::One("inst0".to_string()))
         } else if filter_str.contains("inst1") {
@@ -1110,6 +1116,6 @@ fn account_event_trade(
 
 fn command_close_position(instrument: usize) -> EngineEvent<DataKind> {
     EngineEvent::Command(Command::ClosePositions(InstrumentFilter::Instruments(
-    OneOrMany::One(format!("inst{instrument}")),
+        OneOrMany::One(format!("inst{instrument}")),
     )))
 }

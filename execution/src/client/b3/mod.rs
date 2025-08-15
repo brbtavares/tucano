@@ -139,7 +139,7 @@ impl ExecutionClient for B3ExecutionClient {
 
     fn new(config: Self::Config) -> Self {
         // ProfitDLL transport extracted; using MockTransport placeholder.
-    let transport = MockTransport; // unit-like struct; avoid default()
+        let transport = MockTransport; // unit-like struct; avoid default()
         Self {
             config,
             transport: Arc::new(transport),

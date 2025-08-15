@@ -61,7 +61,7 @@ mod tests {
         }
 
         // dataset = [0.1, -0.2, -0.05, 0.2, 0.15, -0.17]
-    let inputs = [
+        let inputs = [
             // TC0
             Input {
                 prev_mean: dec!(0.0),
@@ -123,7 +123,7 @@ mod tests {
             new_mean: Decimal,
         }
 
-    let inputs = [
+        let inputs = [
             // dataset_1 = [10, 100, -10]
             Input {
                 prev_m: dec!(0.0),
@@ -183,7 +183,7 @@ mod tests {
             },
         ];
 
-    let expected = [
+        let expected = [
             dec!(0.0),
             dec!(4050.0),
             dec!(6866.6666666666666666450),
@@ -195,7 +195,7 @@ mod tests {
             dec!(16200000000.0),
         ];
 
-    for (index, (input, expected)) in inputs.iter().zip(expected.into_iter()).enumerate() {
+        for (index, (input, expected)) in inputs.iter().zip(expected.into_iter()).enumerate() {
             let actual_m = welford_online::calculate_recurrence_relation_m(
                 input.prev_m,
                 input.prev_mean,
@@ -209,14 +209,14 @@ mod tests {
 
     #[test]
     fn calculate_sample_variance() {
-    let inputs = [
+        let inputs = [
             (dec!(0.0), dec!(1)),
             (dec!(1050.0), dec!(5)),
             (dec!(1012.5), dec!(123223)),
             (dec!(16200000000.0), dec!(3)),
             (dec!(99999.9999), dec!(23232)),
         ];
-    let expected = [
+        let expected = [
             dec!(0.0),
             dec!(262.5),
             dec!(0.0082168768564055120027267858),
@@ -232,14 +232,14 @@ mod tests {
 
     #[test]
     fn calculate_population_variance() {
-    let inputs = [
+        let inputs = [
             (dec!(0.0), 1),
             (dec!(1050.0), 5),
             (dec!(1012.5), 123223),
             (dec!(16200000000.0), 3),
             (dec!(99999.9999), 23232),
         ];
-    let expected = [
+        let expected = [
             dec!(0.0),
             dec!(210.0),
             dec!(0.0082168101734254157097295148),

@@ -92,7 +92,7 @@ mod tests {
 
         for (index, test) in tests.into_iter().enumerate() {
             let actual = test.input.is_terminal();
-            assert_eq!(actual, test.expected, "TC{} failed", index);
+            assert_eq!(actual, test.expected, "TC{index} failed");
         }
     }
 }

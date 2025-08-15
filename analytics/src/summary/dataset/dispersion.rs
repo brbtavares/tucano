@@ -220,22 +220,19 @@ mod tests {
                 (dispersion.recurrence_relation_m - out.recurrence_relation_m).abs();
             assert!(
                 recurrence_diff <= tolerance,
-                "Recurrence M difference {} exceeds tolerance",
-                recurrence_diff
+                "Recurrence M difference {recurrence_diff} exceeds tolerance"
             );
 
             let variance_diff = (dispersion.variance - out.variance).abs();
             assert!(
                 variance_diff <= tolerance,
-                "Variance difference {} exceeds tolerance",
-                variance_diff
+                "Variance difference {variance_diff} exceeds tolerance"
             );
 
             let std_dev_diff = (dispersion.std_dev - out.std_dev).abs();
             assert!(
                 std_dev_diff <= tolerance,
-                "Standard deviation difference {} exceeds tolerance",
-                std_dev_diff
+                "Standard deviation difference {std_dev_diff} exceeds tolerance"
             );
         }
     }
