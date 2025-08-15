@@ -1,4 +1,6 @@
-//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
+//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
+//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
+//! Integração técnica. README & DISCLAIMER.
 //! # 🛡️ Risk - Módulo de Gestão de Risco
 //!
 //! Framework abrangente para gestão de risco em trading algorítmico,

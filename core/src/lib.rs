@@ -11,7 +11,9 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
+//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
+//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL são
+//! propriedade da Nelógica; integração meramente técnica. Consulte README & DISCLAIMER.
 //! # 🧠 Core - Engine Principal do Framework Toucan
 //!
 //! Framework Rust para construção de sistemas profissionais de trading ao vivo,

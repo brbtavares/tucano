@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! Estratégia simples de desequilíbrio de livro de ofertas.
 //!
 //! Reutilizável tanto em modo live quanto em backtest.

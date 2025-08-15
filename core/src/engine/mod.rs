@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! # Core Engine - Sistema de Trading Algorítmico
 //!
 //! Este módulo implementa o coração do sistema de trading algorítmico, fornecendo uma arquitetura

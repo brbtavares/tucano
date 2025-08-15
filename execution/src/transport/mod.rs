@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! Transport layer abstractions for execution clients.
 //!
 //! Goal: isolate connectivity / protocol (DLLs, HTTP, WS) from higher-level

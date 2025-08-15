@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! # Tipos de Erro do Core
 //!
 //! Este módulo define os principais tipos de erro usados no módulo core do framework Tucano.

@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 use crate::{exchange::Connector, instrument::InstrumentData};
 use derive_more::Display;
 use fnv::FnvHashMap;

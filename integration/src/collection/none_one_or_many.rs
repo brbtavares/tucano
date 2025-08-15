@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! # NoneOneOrMany<T>
 //!
 //! A type that represents zero, one, or multiple items - the most flexible collection variant.

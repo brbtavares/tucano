@@ -1,4 +1,6 @@
-//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
+//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
+//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
+//! Integração técnica. README & DISCLAIMER.
 //! # 🔧 Macros - Utilitários de Geração de Código
 //!
 //! Crate contendo macros procedurais Rust para automatizar geração de código

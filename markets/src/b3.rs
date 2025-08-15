@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! B3 (Brazilian Stock Exchange) asset definitions
 //!
 //! Provides specialized asset types for different instruments traded on B3:

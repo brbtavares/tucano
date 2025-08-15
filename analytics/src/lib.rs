@@ -1,4 +1,6 @@
-//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
+//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
+//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL são
+//! propriedade da Nelógica; integração técnica. Veja README & DISCLAIMER.
 //! # 📊 Analytics - Módulo de Análise Financeira
 //!
 //! Este módulo fornece ferramentas abrangentes para análise quantitativa de dados financeiros,

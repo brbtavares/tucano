@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! Camada de abstração neutra (Linux/Windows) para uso nos exemplos.
 //!
 //! Objetivo: permitir que exemplos (e outros crates) utilizem a DLL real quando

@@ -1,0 +1,21 @@
+name: Verify Disclaimers
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  disclaimer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Rust toolchain (minimal)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify mini-disclaimers
+        run: |
+          chmod +x scripts/verify_disclaimers.sh
+          ./scripts/verify_disclaimers.sh

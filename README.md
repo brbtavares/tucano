@@ -289,6 +289,9 @@ cargo doc --open
 
 # Benchmarks
 cargo bench
+# Verificação de mini-disclaimers (CI falha se ausentes)
+./scripts/verify_disclaimers.sh
+./scripts/verify_disclaimers.sh --fix  # injeta onde faltar
 
 # Testes específicos
 cargo test -p core --test engine_tests
@@ -391,11 +394,20 @@ Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](h
 
 ---
 
-## ⚠️ Disclaimer
+## ⚠️ Disclaimer (Resumo) & Escopo Legal
 
-Este projeto é fornecido "NO ESTADO EM QUE SE ENCONTRA", sem garantias de qualquer tipo. Não constitui recomendação de investimento, aconselhamento financeiro, legal ou fiscal. Trading envolve risco elevado e pode gerar perdas superiores ao capital investido. O usuário é o único responsável por configuração, testes (backtest/simulação), conformidade regulatória e resultados obtidos. Os autores não se responsabilizam por perdas diretas, indiretas, incidentais, especiais ou consequenciais decorrentes do uso ou incapacidade de uso deste software. Se você não concorda com estes termos, não utilize o projeto.
+Uso educacional/experimental. **Não é recomendação de investimento** nem consultoria financeira, jurídica, contábil ou tributária. Risco elevado: valide tudo em ambiente controlado (backtest / simulação) antes de qualquer operação real. Você é integralmente responsável por configurações, limites de risco, conformidade regulatória e monitoramento contínuo.
 
-Resumo curto: uso educacional/experimental; valide tudo em ambiente controlado antes de produção.
+### Ausência de Afiliação
+Autores e contribuidores **não são afiliados** nem possuem vínculo formal, societário, empregatício, contratual, de representação, patrocínio ou parceria com corretoras, bancos, fintechs/investechs, gestoras, consultorias ou agentes regulados.
+
+### Nenhuma Remuneração de Terceiros
+Não há recebimento de comissão, rebate, patrocínio ou qualquer vantagem econômica de terceiros em função deste projeto.
+
+### Profit / ProfitDLL
+"Profit", "ProfitChart", "Profit DLL" (ProfitDLL) e marcas correlatas são **propriedade da Nelógica**. A integração aqui exibida é meramente técnica (FFI dinâmico) e não implica endosso, suporte ou parceria. O repositório **não distribui** a DLL – apenas mostra como interoperar quando o usuário já possui direito legítimo de uso. Leia e respeite os termos de licença Nelógica.
+
+Para o texto completo, consulte `DISCLAIMER.md`.
 
 ---
 

@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 use crate::compat::*;
 use crate::{error::OrderError, order::id::OrderId};
 use chrono::{DateTime, Utc};

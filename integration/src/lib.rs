@@ -12,7 +12,9 @@
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 // (moved dummy use below to allow crate-level inner doc comments `//!` to appear before any items)
 
-//! DISCLAIMER: Uso experimental/educacional. Não é recomendação de investimento. Veja README e DISCLAIMER.md.
+//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
+//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
+//! Integração técnica. README & DISCLAIMER.
 //! # 🔄 Integration - Framework de Integração de Alta Performance
 //!
 //! Framework de baixo nível e alta performance para composição de integrações

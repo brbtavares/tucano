@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 use super::SubscriptionKind;
 use crate::books::{mid_price, volume_weighted_mid_price, Level, OrderBook};
 use chrono::{DateTime, Utc};

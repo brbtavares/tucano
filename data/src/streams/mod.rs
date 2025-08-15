@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 use self::builder::{multi::MultiStreamBuilder, StreamBuilder};
 use crate::subscription::SubscriptionKind;
 use fnv::FnvHashMap;

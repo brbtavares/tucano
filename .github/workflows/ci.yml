@@ -18,6 +18,16 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  disclaimer:
+    name: Disclaimers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify mini disclaimers
+        run: |
+          chmod +x scripts/verify_disclaimers.sh
+          ./scripts/verify_disclaimers.sh
+
   fmt:
     name: Format
     runs-on: ubuntu-latest

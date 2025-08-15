@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 //! # Configuração de Logging
 //!
 //! Módulo de configuração padronizada de logging do framework Tucano (ex-Toucan).
