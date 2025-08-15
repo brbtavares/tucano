@@ -4,10 +4,12 @@
 
 
 <table>
-    <tr>
+    <tc>
         <td align="center" valign="middle" style="border: none;">
-            <img src="assets/logo.png" alt="Logo Tucano" width="160" />
+            <img src="assets/logo.png" alt="Logo Tucano" />
         </td>
+    </tc>
+    <tc>
         <td align="left" valign="middle" style="border: none; padding-left: 16px;">
             <li><strong>Visão aguçada & alcance estratégico</strong>: monitora múltiplos mercados / books em tempo real para antecipar movimento.</li>
             <li><strong>Precisão & eficiência</strong>: envia ordens enxutas, evita latência e reduz fricção operacional.</li>
@@ -16,7 +18,7 @@
             <li><strong>Visão panorâmica</strong>: consolida dados multi‐fonte para decisão holística (preço, volume, risco, PnL).</li>
             <li><strong>Velocidade de resposta</strong>: loop de eventos otimizado para reagir a micro variações antes da competição.</li>
         </td>
-    </tr>
+    </tc>
 </table>
 
 
