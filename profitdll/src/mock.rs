@@ -2,7 +2,7 @@
 //! Implementação mock & tipos compartilhados.
 
 use crate::error::*;
-use chrono::{DateTime, Utc, TimeZone};
+use chrono::{DateTime, TimeZone, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -398,7 +398,10 @@ impl ProfitConnector {
             while t < to_ms {
                 let price = Decimal::from(10) + Decimal::from(seq % 20 - 10) / Decimal::from(100);
                 let volume = Decimal::from(100 + (seq % 5) * 10);
-                let ts = chrono::Utc.timestamp_millis_opt(t).single().unwrap_or_else(chrono::Utc::now);
+                let ts = chrono::Utc
+                    .timestamp_millis_opt(t)
+                    .single()
+                    .unwrap_or_else(chrono::Utc::now);
                 let _ = tx.send(CallbackEvent::HistoryTrade {
                     ticker: ticker.to_string(),
                     exchange: exchange.to_string(),

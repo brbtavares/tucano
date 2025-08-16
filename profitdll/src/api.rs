@@ -39,7 +39,6 @@ impl Credentials {
             activation_key,
         })
     }
-
 }
 
 /// Contrato mínimo para uso genérico das capacidades necessárias nos exemplos.
@@ -66,7 +65,9 @@ pub trait ProfitBackend: Send + Sync + Any {
         _exchange: &str,
         _from_ms: i64,
         _to_ms: i64,
-    ) -> Result<(), ProfitError> { Ok(()) }
+    ) -> Result<(), ProfitError> {
+        Ok(())
+    }
     /// Solicita encerramento limpo de quaisquer tarefas internas (mock generators, etc.).
     fn shutdown(&self) {}
 }
@@ -177,13 +178,19 @@ pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
         let path = env::var("PROFITDLL_PATH").ok();
         match crate::ffi::ProfitConnector::new(path.as_deref()) {
             Ok(conn) => {
-                if env::var("PROFITDLL_DIAG").map(|v| v=="1").unwrap_or(false) {
+                if env::var("PROFITDLL_DIAG")
+                    .map(|v| v == "1")
+                    .unwrap_or(false)
+                {
                     eprintln!("[profitdll][DIAG] Backend real instanciado.");
                 }
                 return Ok(Box::new(conn));
             }
             Err(e) => {
-                if env::var("PROFITDLL_STRICT").map(|v| v=="1").unwrap_or(false) {
+                if env::var("PROFITDLL_STRICT")
+                    .map(|v| v == "1")
+                    .unwrap_or(false)
+                {
                     return Err(e);
                 } else {
                     eprintln!("[profitdll] Falha carregando DLL real, caindo para mock: {e}");

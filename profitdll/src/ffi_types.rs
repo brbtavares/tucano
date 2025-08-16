@@ -14,7 +14,9 @@ pub unsafe fn utf16_ptr_to_string(ptr: *const u16) -> String {
     let mut len = 0usize;
     loop {
         let v = *ptr.add(len);
-        if v == 0 { break; }
+        if v == 0 {
+            break;
+        }
         len += 1;
     }
     let slice = std::slice::from_raw_parts(ptr, len);
@@ -32,14 +34,24 @@ impl ForeignBuffer {
     pub fn new(ptr: *mut c_void, free_fn: Option<unsafe extern "system" fn(*mut c_void)>) -> Self {
         Self { ptr, free_fn }
     }
-    pub fn as_ptr(&self) -> *mut c_void { self.ptr }
-    pub fn is_null(&self) -> bool { self.ptr.is_null() }
-    pub unsafe fn into_raw(self) -> *mut c_void { let p = self.ptr; std::mem::forget(self); p }
+    pub fn as_ptr(&self) -> *mut c_void {
+        self.ptr
+    }
+    pub fn is_null(&self) -> bool {
+        self.ptr.is_null()
+    }
+    pub unsafe fn into_raw(self) -> *mut c_void {
+        let p = self.ptr;
+        std::mem::forget(self);
+        p
+    }
 }
 
 impl Drop for ForeignBuffer {
     fn drop(&mut self) {
-        if self.ptr.is_null() { return; }
+        if self.ptr.is_null() {
+            return;
+        }
         if let Some(f) = self.free_fn {
             unsafe { f(self.ptr) };
         }

@@ -22,12 +22,12 @@ use std::{
 };
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
+use crate::ForeignBuffer;
 use crate::{
     error::*, BookAction, CallbackEvent, ConnectionState, OrderSide, OrderStatus, OrderType,
     OrderValidity, SendOrder,
 };
-#[cfg(all(target_os = "windows", feature = "real_dll"))]
-use crate::ForeignBuffer;
 use chrono::{TimeZone, Utc};
 use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal; // para to_f64
@@ -157,7 +157,8 @@ type DailySummaryCallbackRawV2 =
     unsafe extern "system" fn(summary: *const ProfitDailySummary, ctx: *mut c_void);
 
 // Callback dedicado para histórico incremental (placeholder)
-type HistoryTradeCallbackRaw = unsafe extern "system" fn(trade: *const ProfitTrade, ctx: *mut c_void);
+type HistoryTradeCallbackRaw =
+    unsafe extern "system" fn(trade: *const ProfitTrade, ctx: *mut c_void);
 #[repr(C)]
 struct CSendOrder {
     icker: *const c_char,
@@ -241,11 +242,39 @@ struct ProfitRaw<'lib> {
     SendChangeOrderV2:
         Option<Symbol<'lib, unsafe extern "system" fn(*const CChangeOrder) -> NResult>>,
     GetOrderDetails: Option<Symbol<'lib, GetOrderDetailsFn>>,
-    SetHistoryTradeCallback: Option<Symbol<'lib, unsafe extern "system" fn(HistoryTradeCallbackRaw, *mut c_void) -> NResult>>,
+    SetHistoryTradeCallback: Option<
+        Symbol<'lib, unsafe extern "system" fn(HistoryTradeCallbackRaw, *mut c_void) -> NResult>,
+    >,
     // --- Novos símbolos (histórico / ajustes / teórico / infra) ---
-    GetHistoryTrades: Option<Symbol<'lib, unsafe extern "system" fn(*const c_char, *const c_char, i64, i64) -> NResult>>, // (ticker, exchange, from_ms, to_ms)
-    SetAdjustHistoryCallbackV2: Option<Symbol<'lib, unsafe extern "system" fn(unsafe extern "system" fn(*const c_void, *mut c_void), *mut c_void) -> NResult>>,
-    SetTheoreticalPriceCallback: Option<Symbol<'lib, unsafe extern "system" fn(unsafe extern "system" fn(*const c_char, *const c_char, f64, f64, f64, f64, *mut c_void), *mut c_void) -> NResult>>,
+    GetHistoryTrades: Option<
+        Symbol<'lib, unsafe extern "system" fn(*const c_char, *const c_char, i64, i64) -> NResult>,
+    >, // (ticker, exchange, from_ms, to_ms)
+    SetAdjustHistoryCallbackV2: Option<
+        Symbol<
+            'lib,
+            unsafe extern "system" fn(
+                unsafe extern "system" fn(*const c_void, *mut c_void),
+                *mut c_void,
+            ) -> NResult,
+        >,
+    >,
+    SetTheoreticalPriceCallback: Option<
+        Symbol<
+            'lib,
+            unsafe extern "system" fn(
+                unsafe extern "system" fn(
+                    *const c_char,
+                    *const c_char,
+                    f64,
+                    f64,
+                    f64,
+                    f64,
+                    *mut c_void,
+                ),
+                *mut c_void,
+            ) -> NResult,
+        >,
+    >,
     FreePointer: Option<Symbol<'lib, unsafe extern "system" fn(*mut c_void)>>,
 }
 
@@ -300,13 +329,27 @@ impl ProfitConnector {
         // Carrega instância global somente uma vez.
         INSTANCE.get_or_try_init(|| {
             let path = dll_path.unwrap_or("ProfitDLL.dll");
-            if std::env::var("PROFITDLL_DIAG").map(|v| v == "1").unwrap_or(false) {
+            if std::env::var("PROFITDLL_DIAG")
+                .map(|v| v == "1")
+                .unwrap_or(false)
+            {
                 eprintln!("[profitdll][DIAG] Tentando carregar DLL em: {path}");
             }
             unsafe {
                 let lib = Library::new(path).map_err(|e| ProfitError::Load(e.to_string()))?;
-                if std::env::var("PROFITDLL_DIAG").map(|v| v == "1").unwrap_or(false) {
+                if std::env::var("PROFITDLL_DIAG")
+                    .map(|v| v == "1")
+                    .unwrap_or(false)
+                {
                     eprintln!("[profitdll][DIAG] DLL carregada com sucesso: {path}");
+                    // Pequeno teste: tentar resolver símbolo Initialize rapidamente para detectar travas iniciais.
+                    match lib.get::<Symbol<unsafe extern "system" fn() -> NResult>>(b"Initialize\0")
+                    {
+                        Ok(_) => eprintln!("[profitdll][DIAG] Símbolo Initialize localizado."),
+                        Err(e) => eprintln!(
+                            "[profitdll][DIAG][AVISO] Não localizou Initialize imediatamente: {e}"
+                        ),
+                    }
                 }
                 let raw = load_symbols(&lib)?;
                 let (tx, _rx) = unbounded_channel::<CallbackEvent>(); // rx descartado - verdadeiro rx produzido em initialize_login
@@ -336,88 +379,159 @@ impl ProfitConnector {
         }
         unsafe {
             // Ponteiro de função: precisa de parênteses para invocação
-            let diag = std::env::var("PROFITDLL_DIAG").map(|v| v == "1").unwrap_or(false);
-            if diag { eprintln!("[profitdll][DIAG] Chamando Initialize()..."); }
+            let diag = std::env::var("PROFITDLL_DIAG")
+                .map(|v| v == "1")
+                .unwrap_or(false);
+            if diag {
+                eprintln!("[profitdll][DIAG] Chamando Initialize()...");
+            }
             map((inst.raw.Initialize)())?;
-            if diag { eprintln!("[profitdll][DIAG] Initialize() OK"); }
+            if diag {
+                eprintln!("[profitdll][DIAG] Initialize() OK");
+            }
             // Registra state callback
-            if diag { eprintln!("[profitdll][DIAG] Registrando SetStateCallback..."); }
+            if diag {
+                eprintln!("[profitdll][DIAG] Registrando SetStateCallback...");
+            }
             map((inst.raw.SetStateCallback)(
                 state_callback_trampoline,
                 ptr::null_mut(),
             ))?;
-            if diag { eprintln!("[profitdll][DIAG] SetStateCallback OK"); }
+            if diag {
+                eprintln!("[profitdll][DIAG] SetStateCallback OK");
+            }
             // Login
             let c_user = std::ffi::CString::new(user).unwrap();
             let c_pass = std::ffi::CString::new(password).unwrap();
-            if diag { eprintln!("[profitdll][DIAG] Chamando Login({user}, ****)..."); }
+            if diag {
+                eprintln!("[profitdll][DIAG] Chamando Login({user}, ****)...");
+            }
             map((inst.raw.Login)(c_user.as_ptr(), c_pass.as_ptr()))?;
-            if diag { eprintln!("[profitdll][DIAG] Login() retornou OK"); }
+            if diag {
+                eprintln!("[profitdll][DIAG] Login() retornou OK");
+            }
             // Registro de callbacks opcionais
             if let Some(ref cb) = inst.raw.SetOrderCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando SetOrderCallback..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando SetOrderCallback...");
+                }
                 map(cb(order_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] SetOrderCallback OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] SetOrderCallback OK");
+                }
             }
             // trade (preferência V2)
             if let Some(ref cb_v2) = inst.raw.SetTradeCallbackV2 {
-                if diag { eprintln!("[profitdll][DIAG] Registrando TradeCallbackV2..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando TradeCallbackV2...");
+                }
                 map(cb_v2(trade_callback_trampoline_v2, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] TradeCallbackV2 OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] TradeCallbackV2 OK");
+                }
             } else if let Some(ref cb) = inst.raw.SetTradeCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando TradeCallback (V1)..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando TradeCallback (V1)...");
+                }
                 map(cb(trade_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] TradeCallback (V1) OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] TradeCallback (V1) OK");
+                }
             }
             // book (preferência V2)
             if let Some(ref cb_v2) = inst.raw.SetBookCallbackV2 {
-                if diag { eprintln!("[profitdll][DIAG] Registrando BookCallbackV2..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando BookCallbackV2...");
+                }
                 map(cb_v2(book_callback_trampoline_v2, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] BookCallbackV2 OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] BookCallbackV2 OK");
+                }
             } else if let Some(ref cb) = inst.raw.SetBookCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando BookCallback (V1)..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando BookCallback (V1)...");
+                }
                 map(cb(book_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] BookCallback (V1) OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] BookCallback (V1) OK");
+                }
             }
             // daily summary (preferência V2)
             if let Some(ref cb_v2) = inst.raw.SetDailySummaryCallbackV2 {
-                if diag { eprintln!("[profitdll][DIAG] Registrando DailySummaryCallbackV2..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando DailySummaryCallbackV2...");
+                }
                 map(cb_v2(daily_summary_callback_trampoline_v2, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] DailySummaryCallbackV2 OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] DailySummaryCallbackV2 OK");
+                }
             } else if let Some(ref cb) = inst.raw.SetDailySummaryCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando DailySummaryCallback (V1)..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando DailySummaryCallback (V1)...");
+                }
                 map(cb(daily_summary_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] DailySummaryCallback (V1) OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] DailySummaryCallback (V1) OK");
+                }
             }
             // accounts
             if let Some(ref cb) = inst.raw.SetAccountCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando AccountCallback..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando AccountCallback...");
+                }
                 map(cb(account_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] AccountCallback OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] AccountCallback OK");
+                }
             }
             // invalid ticker
             if let Some(ref cb) = inst.raw.SetInvalidTickerCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando InvalidTickerCallback..."); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] Registrando InvalidTickerCallback...");
+                }
                 map(cb(invalid_ticker_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] InvalidTickerCallback OK"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] InvalidTickerCallback OK");
+                }
             }
             // ajustes corporativos (V2) - placeholder sem parse
             if let Some(ref cb) = inst.raw.SetAdjustHistoryCallbackV2 {
-                if diag { eprintln!("[profitdll][DIAG] Registrando AdjustHistoryCallbackV2 (placeholder)..."); }
+                if diag {
+                    eprintln!(
+                        "[profitdll][DIAG] Registrando AdjustHistoryCallbackV2 (placeholder)..."
+                    );
+                }
                 map(cb(adjust_history_callback_trampoline_v2, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] AdjustHistoryCallbackV2 OK (placeholder)"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] AdjustHistoryCallbackV2 OK (placeholder)");
+                }
             }
             // preço teórico - placeholder parcial
             if let Some(ref cb) = inst.raw.SetTheoreticalPriceCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando TheoreticalPriceCallback (placeholder)..."); }
+                if diag {
+                    eprintln!(
+                        "[profitdll][DIAG] Registrando TheoreticalPriceCallback (placeholder)..."
+                    );
+                }
                 map(cb(theoretical_price_callback_trampoline, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] TheoreticalPriceCallback OK (placeholder)"); }
+                if diag {
+                    eprintln!("[profitdll][DIAG] TheoreticalPriceCallback OK (placeholder)");
+                }
             }
             // history trade callback - registrar após os demais
             if let Some(ref cb_hist) = inst.raw.SetHistoryTradeCallback {
-                if diag { eprintln!("[profitdll][DIAG] Registrando HistoryTradeCallback (placeholder)..."); }
-                map(cb_hist(history_trade_callback_trampoline_placeholder, ptr::null_mut()))?;
-                if diag { eprintln!("[profitdll][DIAG] HistoryTradeCallback OK (placeholder)"); }
+                if diag {
+                    eprintln!(
+                        "[profitdll][DIAG] Registrando HistoryTradeCallback (placeholder)..."
+                    );
+                }
+                map(cb_hist(
+                    history_trade_callback_trampoline_placeholder,
+                    ptr::null_mut(),
+                ))?;
+                if diag {
+                    eprintln!("[profitdll][DIAG] HistoryTradeCallback OK (placeholder)");
+                }
             }
         }
         Ok(rx)
@@ -514,9 +628,19 @@ impl ProfitConnector {
     ) -> Result<(), ProfitError> {
         with_instance(|inst| unsafe {
             if let Some(ref f) = inst.raw.GetHistoryTrades {
+                let diag = std::env::var("PROFITDLL_DIAG")
+                    .map(|v| v == "1")
+                    .unwrap_or(false);
                 let t = std::ffi::CString::new(ticker).unwrap();
                 let e = std::ffi::CString::new(exchange).unwrap();
-                map(f(t.as_ptr(), e.as_ptr(), from_ms, to_ms))
+                if diag {
+                    eprintln!("[profitdll][DIAG] GetHistoryTrades(ticker={ticker}, exchange={exchange}, from_ms={from_ms}, to_ms={to_ms}) chamando...");
+                }
+                let raw_res = f(t.as_ptr(), e.as_ptr(), from_ms, to_ms);
+                if diag {
+                    eprintln!("[profitdll][DIAG] GetHistoryTrades retornou={:?}", raw_res);
+                }
+                map(raw_res)
             } else {
                 Err(ProfitError::MissingSymbol("GetHistoryTrades"))
             }
@@ -574,11 +698,11 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
         SendCancelOrderV2: opt!(SendCancelOrderV2: unsafe extern "system" fn(*const CCancelOrder) -> NResult),
         SendChangeOrderV2: opt!(SendChangeOrderV2: unsafe extern "system" fn(*const CChangeOrder) -> NResult),
         GetOrderDetails: opt!(GetOrderDetails: GetOrderDetailsFn),
-    SetHistoryTradeCallback: opt!(SetHistoryTradeCallback: unsafe extern "system" fn(HistoryTradeCallbackRaw, *mut c_void) -> NResult),
-    GetHistoryTrades: opt!(GetHistoryTrades: unsafe extern "system" fn(*const c_char, *const c_char, i64, i64) -> NResult),
-    SetAdjustHistoryCallbackV2: opt!(SetAdjustHistoryCallbackV2: unsafe extern "system" fn(unsafe extern "system" fn(*const c_void, *mut c_void), *mut c_void) -> NResult),
-    SetTheoreticalPriceCallback: opt!(SetTheoreticalPriceCallback: unsafe extern "system" fn(unsafe extern "system" fn(*const c_char, *const c_char, f64, f64, f64, f64, *mut c_void), *mut c_void) -> NResult),
-    FreePointer: opt!(FreePointer: unsafe extern "system" fn(*mut c_void)),
+        SetHistoryTradeCallback: opt!(SetHistoryTradeCallback: unsafe extern "system" fn(HistoryTradeCallbackRaw, *mut c_void) -> NResult),
+        GetHistoryTrades: opt!(GetHistoryTrades: unsafe extern "system" fn(*const c_char, *const c_char, i64, i64) -> NResult),
+        SetAdjustHistoryCallbackV2: opt!(SetAdjustHistoryCallbackV2: unsafe extern "system" fn(unsafe extern "system" fn(*const c_void, *mut c_void), *mut c_void) -> NResult),
+        SetTheoreticalPriceCallback: opt!(SetTheoreticalPriceCallback: unsafe extern "system" fn(unsafe extern "system" fn(*const c_char, *const c_char, f64, f64, f64, f64, *mut c_void), *mut c_void) -> NResult),
+        FreePointer: opt!(FreePointer: unsafe extern "system" fn(*mut c_void)),
     };
     // Elevamos lifetime para 'static pois a Library vive dentro de OnceCell enquanto o processo estiver ativo
     Ok(std::mem::transmute::<ProfitRaw<'_>, ProfitRaw<'static>>(
@@ -670,7 +794,7 @@ unsafe extern "system" fn order_callback_trampoline(order_id: i64, _ctx: *mut c_
                     let _ = sender.send(evt);
                     return;
                 }
-                }
+            }
             let _ = sender.send(CallbackEvent::OrderUpdated { order_id });
         }
     }
@@ -975,16 +1099,29 @@ unsafe extern "system" fn adjust_history_callback_trampoline_v2(
     data: *const c_void,
     _ctx: *mut c_void,
 ) {
-    if data.is_null() { return; }
+    if data.is_null() {
+        return;
+    }
     if let Some(inst) = INSTANCE.get() {
-        let _lock = CALLBACK_GUARD.get_or_init(|| Mutex::new(())).lock().unwrap();
+        let _lock = CALLBACK_GUARD
+            .get_or_init(|| Mutex::new(()))
+            .lock()
+            .unwrap();
         if let Ok(sender) = inst.sender.inner.lock() {
             // Opcional: diagnóstico hexdump inicial das primeiras bytes para mapear layout futuro.
-            if std::env::var("PROFITDLL_DIAG").map(|v| v == "1").unwrap_or(false) {
+            if std::env::var("PROFITDLL_DIAG")
+                .map(|v| v == "1")
+                .unwrap_or(false)
+            {
                 unsafe {
                     let bytes = std::slice::from_raw_parts(data as *const u8, 64.min(512));
                     let mut line = String::new();
-                    for (i, b) in bytes.iter().enumerate() { line.push_str(&format!("{b:02X} ")); if (i+1)%16==0 { line.push('|'); } }
+                    for (i, b) in bytes.iter().enumerate() {
+                        line.push_str(&format!("{b:02X} "));
+                        if (i + 1) % 16 == 0 {
+                            line.push('|');
+                        }
+                    }
                     eprintln!("[profitdll][DIAG] AdjustHistory raw head: {line}");
                 }
             }
@@ -1052,7 +1189,10 @@ unsafe extern "system" fn theoretical_price_callback_trampoline(
     _ctx: *mut c_void,
 ) {
     if let Some(inst) = INSTANCE.get() {
-        let _lock = CALLBACK_GUARD.get_or_init(|| Mutex::new(())).lock().unwrap();
+        let _lock = CALLBACK_GUARD
+            .get_or_init(|| Mutex::new(()))
+            .lock()
+            .unwrap();
         if let Ok(sender) = inst.sender.inner.lock() {
             let evt = CallbackEvent::TheoreticalPrice {
                 ticker: cstr_to_string(ticker),
@@ -1069,17 +1209,25 @@ unsafe extern "system" fn history_trade_callback_trampoline_placeholder(
     trade: *const ProfitTrade,
     _ctx: *mut c_void,
 ) {
-    if trade.is_null() { return; }
+    if trade.is_null() {
+        return;
+    }
     if let Some(inst) = INSTANCE.get() {
         let t = unsafe { &*trade };
-        let _lock = CALLBACK_GUARD.get_or_init(|| Mutex::new(())).lock().unwrap();
+        let _lock = CALLBACK_GUARD
+            .get_or_init(|| Mutex::new(()))
+            .lock()
+            .unwrap();
         if let Ok(sender) = inst.sender.inner.lock() {
             let evt = CallbackEvent::HistoryTrade {
                 ticker: cstr_to_string(t.ticker),
                 exchange: cstr_to_string(t.exchange),
                 price: dec(t.price),
                 volume: dec(t.volume),
-                timestamp: Utc.timestamp_millis_opt(t.timestamp_ms).single().unwrap_or_else(Utc::now),
+                timestamp: Utc
+                    .timestamp_millis_opt(t.timestamp_ms)
+                    .single()
+                    .unwrap_or_else(Utc::now),
                 qty: (t.volume.max(0.0) as i64).clamp(0, i32::MAX as i64) as i32,
                 trade_id: t.trade_id,
                 source: crate::mock::HistoryTradeSource::IncrementalCallback,
