@@ -1,33 +1,87 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! # Example 1: Live Login (DLL real obrigatória)
+//! # Example 1: Live Login & Subscribe
 //!
-//! Este exemplo exige a ProfitDLL real carregada (Windows nativo ou Wine) + feature `real_dll`.
-//! Não há fallback para mock aqui.
+//! Demonstra login na DLL real + assinatura de um ticker e impressão de eventos iniciais.
 //!
-//! Passos:
-//! 1. Definir variáveis de ambiente `PROFIT_USER`, `PROFIT_PASSWORD` (e opcional `PROFIT_ACTIVATION_KEY`).
-//! 2. Garantir que a DLL esteja acessível: caminho padrão `profitdll/ProfitDLL.dll` ou definir `PROFITDLL_PATH`.
-//! 3. Executar com `--features real_dll`.
+//! Requisitos:
+//! - SO: Windows (exemplos live são Windows-only; stubs em outras plataformas)
+//! - Feature: `--features real_dll`
+//! - DLL: Disponível e acessível (definir `PROFITDLL_PATH` se não estiver no diretório padrão)
+//! - Credenciais: `PROFIT_USER`, `PROFIT_PASSWORD` (opcional `PROFIT_ACTIVATION_KEY`)
 //!
-//! Variáveis adicionais:
-//! - `LIVE_TICKER` (default PETR4)
-//! - `LIVE_EXCHANGE` (default B)
-//! - `PROFITDLL_PATH` se a DLL não estiver no diretório padrão.
+//! Ambiente (.env opcional na raiz):
+//! ```env
+//! PROFIT_USER=seu_usuario
+//! PROFIT_PASSWORD=sua_senha
+//! PROFITDLL_PATH=C:\\caminho\\para\\ProfitDLL.dll
+//! LIVE_TICKER=PETR4
+//! LIVE_EXCHANGE=B
+//! PROFITDLL_DIAG=1             # opcional, logs FFI
+//! PROFITDLL_STRICT=1           # opcional, falha se não conseguir backend real
+//! ```
 //!
 //! Execução:
 //! ```bash
-//! cargo run -p tucano-examples --bin example_1_live_login --features real_dll
+//! cargo run -p tucano-examples --features real_dll --bin example_1_live_login
 //! ```
-//! Erro genérico será exibido se a DLL não puder ser carregada / símbolos ausentes / credenciais inválidas.
+//!
+//! Fluxo Interno:
+//! 1. Carrega `.env` se existir.
+//! 2. Lê credenciais (`Credentials::from_env`).
+//! 3. `new_backend()` -> instancia backend real (falha se mock).
+//! 4. `initialize_login()` -> recebe canal de eventos.
+//! 5. `subscribe_ticker()` para `LIVE_TICKER@LIVE_EXCHANGE`.
+//! 6. Loop (10s ou 30 eventos) imprimindo `CallbackEvent`.
+//!
+//! Eventos impressos podem incluir: StateChanged, Book/Trade (se logo após login), etc.
+//!
+//! Erros Comuns:
+//! - "Backend não é real_dll": faltou feature ou DLL inacessível.
+//! - Falha no login: credenciais inválidas ou símbolos incompatíveis.
+//! - MissingSymbol: versão da DLL não bate com binding atual.
+//!
+//! Ajustes Rápidos:
+//! - Alterar ticker: exportar `LIVE_TICKER=...`.
+//! - Mais eventos: aumentar `MAX_EVENTS` no código.
+//! - Diagnóstico: `PROFITDLL_DIAG=1` (mostra carga e registro de callbacks).
+//!
+//! Saída Esperada (exemplo sintetizado):
+//! ```text
+//! [example_1_live_login] Conectado (backend real). Lendo eventos (10s ou 30 eventos)...
+//! evt[0]: StateChanged { ... }
+//! evt[1]: Trade { ... }
+//! ...
+//! [example_1_live_login] Timeout.
+//! ```
+//!
+//! Segurança / Produção:
+//! - Não fazer log de senha.
+//! - Tratar reconexões e resubscribes (não coberto neste exemplo inicial).
+//!
+//! Próximas Extensões Planejadas:
+//! - Envio de ordens
+//! - Book nível 2 + agregação
+//! - Métricas (VWAP) em streaming
+//! - Gestão de reconexão automática
+//!
+//! Licença: Apache-2.0 OR MIT.
 
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
 use profitdll::{backend_kind, new_backend, Credentials};
-use std::io::Write;
 
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
 fn fatal(msg: &str) -> ! {
     eprintln!("[example_1_live_login][ERRO] {msg}");
     std::process::exit(1)
 }
 
+// Stub para plataformas que não são Windows ou sem feature real_dll: apenas avisa e sai.
+#[cfg(not(all(target_os = "windows", feature = "real_dll")))]
+fn main() {
+    eprintln!("[example_1_live_login] Este exemplo live só é suportado em Windows com --features real_dll.");
+}
+
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Carrega .env (ignora ausência)
@@ -36,23 +90,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Credenciais
     eprintln!("[example_1_live_login][DEBUG] Lendo credenciais...");
-    let creds = Credentials::from_env()
-        .unwrap_or_else(|e| fatal(&format!("Falha lendo credenciais: {e}")));
-    eprintln!("[example_1_live_login][DEBUG] Credenciais obtidas para usuário='{}'", creds.user);
+    let creds =
+        Credentials::from_env().unwrap_or_else(|e| fatal(&format!("Falha lendo credenciais: {e}")));
+    eprintln!(
+        "[example_1_live_login][DEBUG] Credenciais obtidas para usuário='{}'",
+        creds.user
+    );
 
     // Instancia backend real. Se mock for retornado (ambiente sem Windows+feature), aborta.
     eprintln!("[example_1_live_login][DEBUG] Criando backend...");
-    let backend = new_backend()
-        .unwrap_or_else(|e| fatal(&format!("Falha inicializando backend: {e}")));
+    let backend =
+        new_backend().unwrap_or_else(|e| fatal(&format!("Falha inicializando backend: {e}")));
     eprintln!("[example_1_live_login][DEBUG] Backend criado.");
     let kind = backend_kind(&*backend);
     eprintln!("[example_1_live_login][DEBUG] backend_kind={kind}");
-    if kind != "real" {
-        fatal("Backend não é real (DLL). Causas possíveis: 1) não compilou com --features real_dll 2) não está em Windows/Wine 3) faltou DLL no caminho indicado.");
+    if kind != "real_dll" {
+        fatal("Backend não é real_dll. Certifique-se de rodar em Windows e compilar com --features real_dll e que a DLL esteja acessível.");
     }
 
     eprintln!("[example_1_live_login][DEBUG] Chamando initialize_login...");
-    std::io::stdout().flush().ok();
     let mut rx = backend.initialize_login(&creds).await.unwrap_or_else(|e| {
         fatal(&format!("Falha no login inicial: {e}. Causas possíveis: credenciais inválidas, DLL incompatível, símbolo faltante."));
     });
