@@ -1,5 +1,5 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-use tucano_profitdll::*;
+use tucano_profitdll::profitdll::*;
 use std::time::Duration;
 
 #[tokio::test]

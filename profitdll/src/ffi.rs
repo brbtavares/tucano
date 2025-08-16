@@ -156,6 +156,8 @@ type BookCallbackRawV2 =
 type DailySummaryCallbackRawV2 =
     unsafe extern "system" fn(summary: *const ProfitDailySummary, ctx: *mut c_void);
 
+// Callback dedicado para histórico incremental (placeholder)
+type HistoryTradeCallbackRaw = unsafe extern "system" fn(trade: *const ProfitTrade, ctx: *mut c_void);
 #[repr(C)]
 struct CSendOrder {
     icker: *const c_char,
@@ -411,6 +413,12 @@ impl ProfitConnector {
                 map(cb(theoretical_price_callback_trampoline, ptr::null_mut()))?;
                 if diag { eprintln!("[profitdll][DIAG] TheoreticalPriceCallback OK (placeholder)"); }
             }
+            // history trade callback - registrar após os demais
+            if let Some(ref cb_hist) = inst.raw.SetHistoryTradeCallback {
+                if diag { eprintln!("[profitdll][DIAG] Registrando HistoryTradeCallback (placeholder)..."); }
+                map(cb_hist(history_trade_callback_trampoline_placeholder, ptr::null_mut()))?;
+                if diag { eprintln!("[profitdll][DIAG] HistoryTradeCallback OK (placeholder)"); }
+            }
         }
         Ok(rx)
     }
@@ -662,19 +670,16 @@ unsafe extern "system" fn order_callback_trampoline(order_id: i64, _ctx: *mut c_
                     let _ = sender.send(evt);
                     return;
                 }
-                if let Some(ref cb_hist) = inst.raw.SetHistoryTradeCallback {
-                    if diag { eprintln!("[profitdll][DIAG] Registrando HistoryTradeCallback (placeholder)..."); }
-                    map(cb_hist(history_trade_callback_trampoline_placeholder, ptr::null_mut()))?;
-                    if diag { eprintln!("[profitdll][DIAG] HistoryTradeCallback OK (placeholder)"); }
-            }
+                }
             let _ = sender.send(CallbackEvent::OrderUpdated { order_id });
         }
     }
+}
 
 // ---- Trampolines adicionais ----
 
 unsafe extern "system" fn trade_callback_trampoline(
-    icker: *const c_char,
+    ticker: *const c_char,
     exchange: *const c_char,
     price: f64,
     volume: f64,
@@ -688,7 +693,7 @@ unsafe extern "system" fn trade_callback_trampoline(
     if let Some(inst) = INSTANCE.get() {
         emit_trade(
             inst,
-            icker,
+            ticker,
             exchange,
             price,
             volume,
@@ -826,7 +831,7 @@ unsafe fn emit_book(
 }
 
 unsafe extern "system" fn daily_summary_callback_trampoline(
-    icker: *const c_char,
+    ticker: *const c_char,
     exchange: *const c_char,
     open: f64,
     high: f64,
@@ -841,7 +846,7 @@ unsafe extern "system" fn daily_summary_callback_trampoline(
     _ctx: *mut c_void,
 ) {
     emit_daily(
-        icker,
+        ticker,
         exchange,
         open,
         high,
@@ -1103,9 +1108,11 @@ pub fn wrap_foreign_buffer(ptr: *mut c_void) -> Option<ForeignBuffer> {
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
     {
         if let Some(inst) = INSTANCE.get() {
-            let free_fn = inst.raw.FreePointer.map(|s| *s);
+            let free_fn = inst.raw.FreePointer.as_ref().map(|s| **s);
             return Some(ForeignBuffer::new(ptr, free_fn));
         }
     }
     None
 }
+
+// Fim

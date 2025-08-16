@@ -14,10 +14,20 @@ mod mock;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 mod ffi_types;
 
-pub use api::*;
-pub use error::*;
+// Evita ambiguidade de glob: exporta NResult apenas de um lugar
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
-pub use ffi::*;
+pub use ffi::NResult;
+pub use error::*; // contém ProfitError etc.
+
+pub use api::*;
 pub use mock::*; // inclui CallbackEvent, HistoryTradeSource etc.
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
+pub use ffi::{ProfitConnector as RealProfitConnector};
+pub use mock::ProfitConnector as MockProfitConnector;
+#[cfg(all(target_os = "windows", feature = "real_dll"))]
 pub use ffi_types::*;
+
+// Compat: módulo `profitdll` interno para permitir `use profitdll::*` mesmo quando o crate se chama tucano-profitdll
+pub mod profitdll {
+	pub use super::*;
+}

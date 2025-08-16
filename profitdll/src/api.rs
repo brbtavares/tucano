@@ -40,28 +40,6 @@ impl Credentials {
         })
     }
 
-    /// Conveniência: solicita histórico e aguarda coleção local via callbacks HistoryTrade.
-    /// Bloqueia assincronamente até que todos os eventos do intervalo cheguem ou timeout.
-    #[cfg(feature = "real_dll")]
-    pub async fn collect_history_trades(
-        &self,
-        ticker: &str,
-        exchange: &str,
-        from_ms: i64,
-        to_ms: i64,
-        timeout: std::time::Duration,
-    ) -> Result<Vec<crate::CallbackEvent>, ProfitError> {
-        use tokio::time::{Instant, sleep, Duration};
-        self.backend.request_history_trades(ticker, exchange, from_ms, to_ms)?;
-        let deadline = Instant::now() + timeout;
-        let mut collected = Vec::new();
-        loop {
-            while let Ok(ev) = self.rx.try_recv() { if matches!(ev, crate::CallbackEvent::HistoryTrade{..}) { collected.push(ev); } }
-            if Instant::now() >= deadline { break; }
-            sleep(Duration::from_millis(20)).await;
-        }
-        Ok(collected)
-    }
 }
 
 /// Contrato mínimo para uso genérico das capacidades necessárias nos exemplos.
