@@ -23,6 +23,3 @@ repo_context.md
 *.hpp
 *.cxx
 *.inl
-
-# Archived examples
-/examples/archived
