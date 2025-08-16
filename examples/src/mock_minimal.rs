@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 // Mini-Disclaimer.
 //! Exemplo mínimo que roda em mock ou live (se não forçado mock).
 use profitdll::{

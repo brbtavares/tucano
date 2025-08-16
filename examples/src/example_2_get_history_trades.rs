@@ -83,19 +83,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     eprintln!("[example_2_get_history_trades][DEBUG] Chamando initialize_login (timeout 10s)...");
-    let login_result = tokio::time::timeout(
-        Duration::from_secs(10),
-        backend.initialize_login(&creds)
-    ).await;
+    let login_result =
+        tokio::time::timeout(Duration::from_secs(10), backend.initialize_login(&creds)).await;
     let mut rx = match login_result {
         Ok(Ok(rx)) => {
             eprintln!("[example_2_get_history_trades][DEBUG] initialize_login OK, canal de eventos pronto.");
             rx
-        },
+        }
         Ok(Err(e)) => {
             eprintln!("[example_2_get_history_trades][ERRO] Login falhou: {e}");
             return Err(e.into());
-        },
+        }
         Err(_) => {
             eprintln!("[example_2_get_history_trades][ERRO] initialize_login travou por mais de 10s! Possível deadlock ou bloqueio na DLL. Verifique PROFIT_USER, PROFIT_PASSWORD e logs da DLL.");
             return Err("Timeout em initialize_login".into());
@@ -153,7 +151,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
                 }
                 other => {
-                    println!("[example_2_get_history_trades][DEBUG] Evento não-HistoryTrade: {other:?}");
+                    println!(
+                        "[example_2_get_history_trades][DEBUG] Evento não-HistoryTrade: {other:?}"
+                    );
                 }
             }
         } else {
