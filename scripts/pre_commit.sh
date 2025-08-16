@@ -26,6 +26,10 @@ else
   echo "[pre-commit] cargo-deny not installed (skip) -> install with: cargo install cargo-deny --locked" >&2
 fi
 
+
+echo "[pre-commit] Verificando disclaimers..."
+./scripts/verify_disclaimers.sh
+
 echo "[pre-commit] Tests (fast) ..."
 # Strategy: run doc tests + library/unit tests w/out features that increase build time.
 cargo test --all --lib --quiet
