@@ -15,7 +15,6 @@ default = []
 
 [target.'cfg(windows)'.dependencies]
 # Windows-specific dependencies for ProfitDLL integration
-winapi = { version = "0.3", features = ["libloaderapi", "processthreadsapi"] }
 
 #[dev-dependencies]
 # (none currently)

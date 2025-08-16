@@ -59,9 +59,7 @@ fn configure_windows_dll() {
     }
 
     if dll_found {
-        // Configurar linkagem
-        println!("cargo:rustc-link-lib=dylib=ProfitDLL");
-
+        // Não configuramos linkagem estática: carregamento dinâmico puro via libloading.
         // Definir feature condicional
         println!("cargo:rustc-cfg=feature=\"real_dll\"");
 

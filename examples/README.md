@@ -1,79 +1,79 @@
 # Tucano Examples
 
-Diretório com binários de exemplo (mock e live).
+Conjunto de binários de demonstração. Cada exemplo suporta backend real (Windows + `--features real_dll`) ou mock (qualquer SO / `PROFITDLL_FORCE_MOCK=1` / fallback automático se DLL indisponível).
 
-## Estrutura
-Pastas:
-- `mock/` (sem DLL / sem credenciais)
-- `live/` (requer DLL real, Windows e credenciais)
+## Binários
+Todos localizados em `examples/src/`:
+| Bin | Descrição |
+|-----|-----------|
+| `example_1_live_login` | Login + subscribe de um ticker e impressão dos primeiros eventos |
+| `example_2_get_history_trades` | Solicita histórico de trades em um intervalo e imprime `HistoryTrade` |
+| `mock_minimal` | Minimal: login (mock), subscribe, envia ordem simulada e lê alguns eventos |
+| `tucano-examples` | Bin de índice: lista os exemplos disponíveis |
 
-Binários principais:
-- `mock_minimal`
-- `example_1_live_login`
-- `example_2_get_history_trades`
-
-Scripts auxiliares antigos removidos (uso direto de `cargo run`).
-
-## Requisitos Live
-1. Windows.
-2. `--features real_dll`.
-3. `ProfitDLL.dll` acessível (`PROFITDLL_PATH`).
-4. `PROFIT_USER`, `PROFIT_PASSWORD` (+ opcional `PROFIT_ACTIVATION_KEY`).
-5. `.env` opcional na raiz.
-
-Exemplo `.env`:
+## Execução Rápida
+Mock forçado (qualquer SO):
+```bash
+PROFITDLL_FORCE_MOCK=1 cargo run -p tucano-examples --bin example_1_live_login
 ```
+Live (Windows + DLL):
+```bash
+cargo run -p tucano-examples --features real_dll --bin example_1_live_login
+```
+Histórico:
+```bash
+cargo run -p tucano-examples --features real_dll --bin example_2_get_history_trades
+```
+Minimal:
+```bash
+cargo run -p tucano-examples --bin mock_minimal
+```
+
+## Variáveis de Ambiente Principais
+| Variável | Uso |
+|----------|-----|
+| `PROFIT_USER` / `PROFIT_PASSWORD` | Credenciais (mock aceita qualquer valor) |
+| `PROFIT_ACTIVATION_KEY` | Opcional |
+| `PROFITDLL_PATH` | Caminho da DLL real |
+| `PROFITDLL_FORCE_MOCK=1` | Força backend mock |
+| `PROFITDLL_DIAG=1` | Logs de diagnóstico do carregamento/callbacks |
+| `PROFITDLL_STRICT=1` | Falha se não conseguir backend real (sem fallback para mock) |
+| `EX1_TICKER` / `EX1_EXCHANGE` | Ticker do Example 1 (default PETR4 / B) |
+| `HIST_TICKER` / `HIST_EXCHANGE` | Ticker do Example 2 (default PETR4 / B) |
+| `INTERVAL_START` | Início intervalo Example 2 (ex: 2025-08-15T10:30) |
+| `INTERVAL_MINUTES` | Duração em minutos (Example 2, default 5) |
+
+Exemplo `.env` (live):
+```env
 PROFIT_USER=seu_usuario
 PROFIT_PASSWORD=sua_senha
 PROFITDLL_PATH=C:\\path\\to\\ProfitDLL.dll
-LIVE_TICKER=PETR4
-LIVE_EXCHANGE=B
+EX1_TICKER=PETR4
+EX1_EXCHANGE=B
 HIST_TICKER=PETR4
 HIST_EXCHANGE=B
+INTERVAL_START=2025-08-15T10:30
+INTERVAL_MINUTES=5
 ```
-
-## Como Executar
-Mock:
-```
-cargo run -p tucano-examples --bin mock_minimal
-```
-Login (Example 1):
-```
-cargo run -p tucano-examples --features real_dll --bin example_1_live_login
-```
-Histórico (Example 2):
-```
-cargo run -p tucano-examples --features real_dll --bin example_2_get_history_trades
-```
-
-## Variáveis
-| Variável | Descrição |
-|----------|-----------|
-| PROFIT_USER | Usuário Profit |
-| PROFIT_PASSWORD | Senha |
-| PROFIT_ACTIVATION_KEY | Chave de ativação opcional |
-| PROFITDLL_PATH | Caminho DLL real |
-| LIVE_TICKER / LIVE_EXCHANGE | Ativo Example 1 |
-| HIST_TICKER / HIST_EXCHANGE | Ativo Example 2 |
-| PROFITDLL_DIAG | Logs diagnósticos (=1) |
-| PROFITDLL_STRICT | Falha se não conseguir backend real (=1) |
 
 ## Troubleshooting
-| Sintoma | Causa provável | Ação |
-|---------|---------------|-------|
-| Backend não é real_dll | Faltou feature / não Windows | Adicionar feature e usar Windows |
-| Sem eventos | Credencial/licença | Verificar vars; `PROFITDLL_DIAG=1` |
-| Histórico vazio | Intervalo ou callback placeholder | Ajustar intervalo/ticker |
-| MissingSymbol | DLL incompatível | Verificar versão/export names |
+| Sintoma | Possível causa | Mitigação |
+|---------|----------------|-----------|
+| "Backend não é real_dll" | Ausência de feature / não Windows / DLL faltando | Compilar com `--features real_dll` em Windows e conferir `PROFITDLL_PATH` |
+| Sem eventos após subscribe | Credenciais/licença / ticker inválido | Verificar vars e usar `PROFITDLL_DIAG=1` |
+| Histórico vazio | Intervalo sem trades / callback parcial | Ajustar `INTERVAL_START` / `INTERVAL_MINUTES` |
+| MissingSymbol / símbolo ausente | Versão da DLL incompatível | Atualizar binding ou DLL |
+| Fallback inesperado para mock | DLL não carregou e `PROFITDLL_STRICT` ausente | Definir `PROFITDLL_STRICT=1` para abortar |
 
 ## Roadmap
 - [x] Mock mínimo
 - [x] Login + subscribe
-- [x] Histórico simples
-- [ ] Envio de ordens
-- [ ] Book nível 2
-- [ ] VWAP / métricas streaming
-- [ ] Progresso fetch histórico
+- [x] Histórico (pull)
+- [ ] Envio de ordens (live) completo
+- [ ] Book nível 2 avançado
+- [ ] Métricas streaming (VWAP, agregações)
+- [ ] Progresso / confirmação fim histórico
+- [ ] CLI args para parametrizar todos exemplos
 
 ---
 Licença: Apache-2.0 OR MIT.

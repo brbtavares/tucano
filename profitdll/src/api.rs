@@ -10,13 +10,22 @@ use core::any::{Any, TypeId};
 use std::env;
 use tokio::sync::mpsc::UnboundedReceiver;
 
-/// Credenciais de login (obtidas preferencialmente via variáveis de ambiente).
+/// Estrutura de credenciais para login na DLL Profit.
+///
+/// Parâmetros:
+/// - **activation_key**: Chave de ativação fornecida pela Nelógica.
+/// - **user**: Nome de usuário cadastrado na plataforma.
+/// - **password**: Senha do usuário.
+///
+/// Consulte [`InitializeLogin`](../MANUAL.md#initializelogin) para detalhes.
 #[derive(Debug, Clone)]
 pub struct Credentials {
-    pub user: String,
-    pub password: String,
-    /// Chave de ativação / licença se for necessária em fluxo futuro. Mantida para estabilidade.
+    /// Chave de ativação (**ActivationKey**)
     pub activation_key: String,
+    /// Nome de usuário (**User**)
+    pub user: String,
+    /// Senha (**Password**)
+    pub password: String,
 }
 
 impl Credentials {
@@ -41,34 +50,80 @@ impl Credentials {
     }
 }
 
-/// Contrato mínimo para uso genérico das capacidades necessárias nos exemplos.
+/// Trait abstrata para backend Profit (DLL real ou mock).
+///
+/// Implementa a interface oficial da DLL Profit, conforme descrito no [MANUAL.md](../MANUAL.md).
+/// Todos os métodos e parâmetros seguem a nomenclatura e semântica da DLL original.
 #[async_trait::async_trait]
 pub trait ProfitBackend: Send + Sync + Any {
+    /// Inicializa o login na DLL (**InitializeLogin**).
+    ///
+    /// Parâmetros:
+    /// - **creds**: [`Credentials`] contendo activation_key, user e password.
+    ///
+    /// Retorna: [`UnboundedReceiver<CallbackEvent>`] para eventos assíncronos.
+    ///
+    /// Erros: [`ProfitError`] conforme códigos NL_*.
     async fn initialize_login(
         &self,
         creds: &Credentials,
     ) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError>;
+
+    /// Solicita inscrição em um ticker (**SubscribeTicker**).
+    ///
+    /// Parâmetros:
+    /// - **ticker**: Código do ativo.
+    /// - **exchange**: Bolsa.
     fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError>;
+
+    /// Cancela inscrição em um ticker (**UnsubscribeTicker**).
+    ///
+    /// Parâmetros:
+    /// - **ticker**: Código do ativo.
+    /// - **exchange**: Bolsa.
     fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError>;
+
+    /// Envia ordem (**SendOrder**).
+    ///
+    /// Parâmetros:
+    /// - **order**: [`SendOrder`] com todos os campos obrigatórios.
     fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError>;
+
+    /// Cancela ordem existente pelo ID (**CancelOrder**).
+    ///
+    /// Parâmetros:
+    /// - **order_id**: Identificador da ordem.
     fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError>;
+
+    /// Altera ordem existente (**ChangeOrder**).
+    ///
+    /// Parâmetros:
+    /// - **order_id**: Identificador da ordem.
+    /// - **new_price**: Novo preço (opcional).
+    /// - **new_qty**: Nova quantidade (opcional).
     fn change_order(
         &self,
         order_id: i64,
         new_price: Option<rust_decimal::Decimal>,
         new_qty: Option<rust_decimal::Decimal>,
     ) -> Result<(), ProfitError>;
-    /// Solicita histórico de trades (pull). Backend mock gera imediatamente; real encaminha à DLL.
+
+    /// Solicita histórico de trades (**GetHistoryTrades**).
+    ///
+    /// Parâmetros:
+    /// - **ticker**: Código do ativo.
+    /// - **exchange**: Bolsa.
+    /// - **from_ms**: Timestamp inicial (ms).
+    /// - **to_ms**: Timestamp final (ms).
     fn request_history_trades(
         &self,
-        _ticker: &str,
-        _exchange: &str,
-        _from_ms: i64,
-        _to_ms: i64,
-    ) -> Result<(), ProfitError> {
-        Ok(())
-    }
-    /// Solicita encerramento limpo de quaisquer tarefas internas (mock generators, etc.).
+        ticker: &str,
+        exchange: &str,
+        from_ms: i64,
+        to_ms: i64,
+    ) -> Result<(), ProfitError>;
+
+    /// Finaliza backend e libera recursos (opcional).
     fn shutdown(&self) {}
 }
 
@@ -167,10 +222,16 @@ impl ProfitBackend for crate::ffi::ProfitConnector {
 /// 2. Senão, em Windows + feature tenta DLL real (caminho de `PROFITDLL_PATH` se definido).
 /// 3. Fallback final: mock.
 pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
-    if env::var("PROFITDLL_FORCE_MOCK")
+    let force_mock = env::var("PROFITDLL_FORCE_MOCK")
         .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
-        .unwrap_or(false)
-    {
+        .unwrap_or(false);
+    if force_mock {
+        if env::var("PROFITDLL_DIAG")
+            .map(|v| v == "1")
+            .unwrap_or(false)
+        {
+            eprintln!("[profitdll][DIAG] new_backend: FORCE_MOCK=1 -> usando mock");
+        }
         return Ok(Box::new(mock::ProfitConnector::new(None)?));
     }
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
@@ -191,12 +252,28 @@ pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
                     .map(|v| v == "1")
                     .unwrap_or(false)
                 {
+                    if env::var("PROFITDLL_DIAG")
+                        .map(|v| v == "1")
+                        .unwrap_or(false)
+                    {
+                        eprintln!(
+                            "[profitdll][DIAG] new_backend: STRICT=1 e falhou carregar DLL: {e}"
+                        );
+                    }
                     return Err(e);
                 } else {
                     eprintln!("[profitdll] Falha carregando DLL real, caindo para mock: {e}");
                 }
             }
         }
+    }
+    if env::var("PROFITDLL_DIAG")
+        .map(|v| v == "1")
+        .unwrap_or(false)
+    {
+        eprintln!(
+            "[profitdll][DIAG] new_backend: retornando mock (condições para real não satisfeitas)"
+        );
     }
     Ok(Box::new(mock::ProfitConnector::new(None)?))
 }

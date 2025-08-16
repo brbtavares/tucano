@@ -1,5 +1,8 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Implementação mock & tipos compartilhados.
+//! Implementação mock e tipos compartilhados para interface ProfitDLL.
+//!
+//! Esta camada simula o comportamento da DLL Profit para testes, exemplos e ambientes sem acesso à DLL real.
+//! Todos os eventos, tipos e enums seguem a especificação oficial descrita no [MANUAL.md](../MANUAL.md).
 
 use crate::error::*;
 use chrono::{DateTime, TimeZone, Utc};
@@ -15,19 +18,26 @@ use std::time::Duration;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
 use tokio::task::JoinHandle;
 
+/// Enum de eventos assíncronos emitidos pela DLL Profit (**CallbackEvent**).
+///
+/// Cada variante representa um tipo de callback/documentação oficial da DLL.
+/// Consulte o [MANUAL.md](../MANUAL.md#eventos-e-callbacks) para detalhes completos.
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum CallbackEvent {
+    /// Mudança de estado de conexão (**StateChanged**)
     StateChanged {
         connection_type: ConnectionState,
         result: i32,
     },
+    /// Progresso de inscrição em ticker (**ProgressChanged**)
     ProgressChanged {
         ticker: String,
         exchange: String,
         feed_type: i32,
         progress: i32,
     },
+    /// Novo negócio/trade (**NewTrade**)
     NewTrade {
         ticker: String,
         exchange: String,
@@ -39,6 +49,7 @@ pub enum CallbackEvent {
         trade_id: i64,
         is_edit: bool,
     },
+    /// Resumo diário (**DailySummary**)
     DailySummary {
         ticker: String,
         exchange: String,
@@ -53,6 +64,7 @@ pub enum CallbackEvent {
         trades_buyer: Decimal,
         trades_seller: Decimal,
     },
+    /// Oferta de livro de preços (**PriceBookOffer**)
     PriceBookOffer {
         ticker: String,
         exchange: String,
@@ -60,6 +72,7 @@ pub enum CallbackEvent {
         price: Decimal,
         position: i32,
     },
+    /// Oferta de livro de ofertas de compra (**OfferBookBid**)
     OfferBookBid {
         ticker: String,
         exchange: String,
@@ -67,20 +80,22 @@ pub enum CallbackEvent {
         price: Decimal,
         position: i32,
     },
+    /// Mudança de conta (**AccountChanged**)
     AccountChanged {
         account_id: String,
         account_holder: String,
         broker_name: String,
         broker_id: i32,
     },
+    /// Ticker inválido (**InvalidTicker**)
     InvalidTicker {
         ticker: String,
         exchange: String,
         feed_type: i32,
     },
-    OrderUpdated {
-        order_id: i64,
-    },
+    /// Ordem atualizada (**OrderUpdated**)
+    OrderUpdated { order_id: i64 },
+    /// Snapshot completo de ordem (**OrderSnapshot**)
     OrderSnapshot {
         order_id: i64,
         account_id: String,
@@ -96,7 +111,7 @@ pub enum CallbackEvent {
         validity: OrderValidity,
         text: Option<String>,
     },
-    /// Trade histórico (pull ou callback incremental). Similar a NewTrade mas distinguido semanticamente.
+    /// Trade histórico (**HistoryTrade**): pull ou callback incremental.
     HistoryTrade {
         ticker: String,
         exchange: String,
@@ -107,7 +122,7 @@ pub enum CallbackEvent {
         trade_id: i64,
         source: HistoryTradeSource,
     },
-    /// Ajustes corporativos (dividendos, splits, etc.) versão V2 (com flags e multiplier).
+    /// Ajustes corporativos (**AdjustHistory**): dividendos, splits, etc.
     AdjustHistory {
         ticker: String,
         exchange: String,
@@ -120,7 +135,7 @@ pub enum CallbackEvent {
         flags: i32,
         multiplier: Decimal,
     },
-    /// Preço teórico (leilão / derivativos).
+    /// Preço teórico (**TheoreticalPrice**): leilão/derivativos.
     TheoreticalPrice {
         ticker: String,
         exchange: String,
@@ -129,16 +144,22 @@ pub enum CallbackEvent {
     },
 }
 
+/// Origem do trade histórico (**HistoryTradeSource**).
+///
+/// Indica a fonte do evento **HistoryTrade** conforme a DLL.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HistoryTradeSource {
     /// Proveniente de stream em tempo real mas classificado como histórico (ex: backfill inicial curto)
     RealtimeBackfill,
-    /// Resultado de chamada explícita a get_history_trades (pull)
+    /// Resultado de chamada explícita a **GetHistoryTrades** (pull)
     Pull,
     /// Recebido via callback incremental dedicado (caso DLL use canal separado)
     IncrementalCallback,
 }
 
+/// Estado de conexão (**ConnectionState**).
+///
+/// Usado em eventos **StateChanged**.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy)]
 pub enum ConnectionState {
@@ -148,6 +169,9 @@ pub enum ConnectionState {
     MarketLogin = 3,
 }
 
+/// Ação de livro de ofertas (**BookAction**).
+///
+/// Usado em eventos **PriceBookOffer** e **OfferBookBid**.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy)]
 pub enum BookAction {
@@ -465,6 +489,9 @@ impl AccountIdentifier {
     }
 }
 
+/// Lado da ordem (**OrderSide**).
+///
+/// Usado em **SendOrder** e eventos de ordem.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderSide {
@@ -472,6 +499,9 @@ pub enum OrderSide {
     Sell = 1,
 }
 
+/// Estrutura de envio de ordem (**SendOrder**).
+///
+/// Parâmetros conforme função **SendOrder** da DLL.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SendOrder {
     pub asset: AssetIdentifier,
@@ -515,6 +545,9 @@ impl SendOrder {
     }
 }
 
+/// Validade da ordem (**OrderValidity**).
+///
+/// Usado em **SendOrder** e eventos de ordem.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderValidity {
@@ -524,6 +557,9 @@ pub enum OrderValidity {
     FillOrKill,
 }
 
+/// Tipo de ordem (**OrderType**).
+///
+/// Usado em eventos de ordem.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderType {
@@ -532,6 +568,9 @@ pub enum OrderType {
     StopLimit = 4,
 }
 
+/// Status da ordem (**OrderStatus**).
+///
+/// Usado em eventos de ordem e callbacks.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderStatus {

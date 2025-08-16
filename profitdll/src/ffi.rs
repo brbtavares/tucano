@@ -1,15 +1,14 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Implementação FFI real (Windows + feature `real_dll`).
+//! Implementação FFI real (Windows + feature `real_dll`) para a DLL Profit.
 //!
-//! Esta versão restabelece as funcionalidades principais:
-//! - Carregamento dinâmico da DLL
-//! - Registro de callback de estado
-//! - Login inicial (Initialize + Login)
-//! - Canal unbounded para eventos (`CallbackEvent`)
-//! - Envio / cancelamento / alteração de ordens quando símbolos expostos
+//! Esta camada realiza:
+//! - Carregamento dinâmico da DLL (**ProfitDLL.dll**)
+//! - Registro de callbacks oficiais (ver [MANUAL.md](../MANUAL.md#eventos-e-callbacks))
+//! - Login inicial (**InitializeLogin**)
+//! - Canal assíncrono para eventos ([`CallbackEvent`])
+//! - Envio, cancelamento e alteração de ordens conforme interface oficial
 //!
-//! OBS: Callbacks de trade / book / resumo diário / contas / ordens ainda
-//! podem ser expandidos copiando a mesma estrutura usada no trampoline de estado.
+//! OBS: Callbacks adicionais podem ser expandidos conforme necessidade, seguindo a estrutura dos trampolines.
 #![allow(non_camel_case_types)]
 
 use libloading::{Library, Symbol};
@@ -32,6 +31,7 @@ use chrono::{TimeZone, Utc};
 use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal; // para to_f64
 
+/// Tipo de retorno padrão da DLL (**NResult**).
 pub type NResult = i32; // re-export local para facilitar (mantém igual)
 
 // ---- Assinaturas brutas (subset) ----
@@ -96,6 +96,9 @@ type OrderCallbackRaw = unsafe extern "system" fn(order_id: i64, ctx: *mut c_voi
 type GetOrderDetailsFn =
     unsafe extern "system" fn(order_id: i64, out: *mut COrderDetails) -> NResult;
 
+/// Estrutura C para trade (**ProfitTrade**).
+///
+/// Usada em callbacks e funções da DLL.
 #[repr(C)]
 pub struct ProfitTrade {
     pub ticker: *const c_char,
@@ -109,6 +112,7 @@ pub struct ProfitTrade {
     pub is_edit: c_int,
 }
 
+/// Estrutura C para atualização de livro de ofertas (**ProfitBookUpdate**).
 #[repr(C)]
 pub struct ProfitBookUpdate {
     pub side: c_int,
@@ -119,6 +123,7 @@ pub struct ProfitBookUpdate {
     pub position: c_int,
 }
 
+/// Estrutura C para resumo diário (**ProfitDailySummary**).
 #[repr(C)]
 pub struct ProfitDailySummary {
     pub ticker: *const c_char,
@@ -136,6 +141,7 @@ pub struct ProfitDailySummary {
 }
 
 // SUPOSIÇÃO (layout a confirmar via header real): campos char* + doubles + i32 flags
+/// Estrutura C para ajuste corporativo (**ProfitAdjustHistoryV2**).
 #[repr(C)]
 struct ProfitAdjustHistoryV2 {
     ticker: *const c_char,
@@ -199,8 +205,9 @@ struct COrderDetails {
 
 #[allow(non_snake_case)]
 struct ProfitRaw<'lib> {
-    Initialize: Symbol<'lib, unsafe extern "system" fn() -> NResult>,
-    Finalize: Symbol<'lib, unsafe extern "system" fn() -> NResult>,
+    // Alguns builds da DLL podem não expor Initialize/Finalize explicitamente: tratamos como opcionais.
+    Initialize: Option<Symbol<'lib, unsafe extern "system" fn() -> NResult>>,
+    _Finalize: Option<Symbol<'lib, unsafe extern "system" fn() -> NResult>>,
     SetStateCallback:
         Symbol<'lib, unsafe extern "system" fn(StateCallbackRaw, *mut c_void) -> NResult>,
     Login: Symbol<
@@ -258,6 +265,7 @@ struct ProfitRaw<'lib> {
             ) -> NResult,
         >,
     >,
+    #[allow(clippy::type_complexity)]
     SetTheoreticalPriceCallback: Option<
         Symbol<
             'lib,
@@ -283,7 +291,7 @@ struct SenderState {
 }
 
 struct ProfitDll {
-    lib: Library,
+    _lib: Library,
     raw: ProfitRaw<'static>,
     sender: Arc<SenderState>,
 }
@@ -342,19 +350,11 @@ impl ProfitConnector {
                     .unwrap_or(false)
                 {
                     eprintln!("[profitdll][DIAG] DLL carregada com sucesso: {path}");
-                    // Pequeno teste: tentar resolver símbolo Initialize rapidamente para detectar travas iniciais.
-                    match lib.get::<Symbol<unsafe extern "system" fn() -> NResult>>(b"Initialize\0")
-                    {
-                        Ok(_) => eprintln!("[profitdll][DIAG] Símbolo Initialize localizado."),
-                        Err(e) => eprintln!(
-                            "[profitdll][DIAG][AVISO] Não localizou Initialize imediatamente: {e}"
-                        ),
-                    }
                 }
                 let raw = load_symbols(&lib)?;
                 let (tx, _rx) = unbounded_channel::<CallbackEvent>(); // rx descartado - verdadeiro rx produzido em initialize_login
                 Ok(ProfitDll {
-                    lib,
+                    _lib: lib,
                     raw,
                     sender: Arc::new(SenderState {
                         inner: Mutex::new(tx),
@@ -373,42 +373,97 @@ impl ProfitConnector {
     ) -> Result<tokio::sync::mpsc::UnboundedReceiver<CallbackEvent>, ProfitError> {
         let inst = INSTANCE.get().expect("instance after new");
         let (tx, rx) = unbounded_channel();
-        // substitui sender global
         if let Ok(mut guard) = inst.sender.inner.lock() {
             *guard = tx;
         }
         unsafe {
-            // Ponteiro de função: precisa de parênteses para invocação
+            // Unconditional trace (independente de variáveis) para confirmar entrada.
+            eprintln!("[profitdll][TRACE] entered initialize_login (unconditional)");
             let diag = std::env::var("PROFITDLL_DIAG")
                 .map(|v| v == "1")
                 .unwrap_or(false);
-            if diag {
-                eprintln!("[profitdll][DIAG] Chamando Initialize()...");
+            let debug_steps = std::env::var("PROFITDLL_DEBUG_STEPS")
+                .map(|v| v == "1")
+                .unwrap_or(false);
+            if debug_steps {
+                eprintln!(
+                    "[profitdll][STEP] initialize_login start thread={:?}",
+                    std::thread::current().id()
+                );
             }
-            map((inst.raw.Initialize)())?;
-            if diag {
-                eprintln!("[profitdll][DIAG] Initialize() OK");
+            if debug_steps || diag {
+                // Resumo de presença de símbolos opcionais / críticos para depuração.
+                eprintln!(
+                    "[profitdll][STEP] Symbols: Initialize={:?} SetStateCallback=1 Login=1 \
+OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV2={:?} DailySumV1={:?} AccountCb={:?} InvalidTickerCb={:?} AdjustHistV2={:?} TheorPriceCb={:?} HistTradeCb={:?} GetHistoryTrades={:?}",
+                    inst.raw.Initialize.is_some(),
+                    inst.raw.SetOrderCallback.is_some(),
+                    inst.raw.SetTradeCallbackV2.is_some(),
+                    inst.raw.SetTradeCallback.is_some(),
+                    inst.raw.SetBookCallbackV2.is_some(),
+                    inst.raw.SetBookCallback.is_some(),
+                    inst.raw.SetDailySummaryCallbackV2.is_some(),
+                    inst.raw.SetDailySummaryCallback.is_some(),
+                    inst.raw.SetAccountCallback.is_some(),
+                    inst.raw.SetInvalidTickerCallback.is_some(),
+                    inst.raw.SetAdjustHistoryCallbackV2.is_some(),
+                    inst.raw.SetTheoreticalPriceCallback.is_some(),
+                    inst.raw.SetHistoryTradeCallback.is_some(),
+                    inst.raw.GetHistoryTrades.is_some(),
+                );
             }
-            // Registra state callback
-            if diag {
-                eprintln!("[profitdll][DIAG] Registrando SetStateCallback...");
+            unsafe fn with_timeout<F>(label: &str, debug: bool, f: F) -> Result<(), ProfitError>
+            where
+                F: FnOnce() -> Result<(), ProfitError> + Send + 'static,
+            {
+                if !debug {
+                    return f();
+                }
+                let (tx, rx) = std::sync::mpsc::channel();
+                std::thread::spawn(move || {
+                    let _ = tx.send(f());
+                });
+                match rx.recv_timeout(std::time::Duration::from_secs(5)) {
+                    Ok(r) => r,
+                    Err(_) => {
+                        eprintln!("[profitdll][STEP][TIMEOUT] {label} >5s");
+                        Err(ProfitError::Unknown(-999))
+                    }
+                }
             }
-            map((inst.raw.SetStateCallback)(
-                state_callback_trampoline,
-                ptr::null_mut(),
-            ))?;
+            if let Some(ref init) = inst.raw.Initialize {
+                if diag {
+                    eprintln!("[profitdll][DIAG] Initialize()...");
+                }
+                with_timeout("Initialize", debug_steps, || map((init)()))?;
+                if diag {
+                    eprintln!("[profitdll][DIAG] Initialize OK");
+                }
+            } else if diag {
+                eprintln!("[profitdll][DIAG] Initialize ausente");
+            }
+            if diag {
+                eprintln!("[profitdll][DIAG] SetStateCallback...");
+            }
+            with_timeout("SetStateCallback", debug_steps, || {
+                map((inst.raw.SetStateCallback)(
+                    state_callback_trampoline,
+                    ptr::null_mut(),
+                ))
+            })?;
             if diag {
                 eprintln!("[profitdll][DIAG] SetStateCallback OK");
             }
-            // Login
             let c_user = std::ffi::CString::new(user).unwrap();
             let c_pass = std::ffi::CString::new(password).unwrap();
             if diag {
-                eprintln!("[profitdll][DIAG] Chamando Login({user}, ****)...");
+                eprintln!("[profitdll][DIAG] Login({user}, ****)...");
             }
-            map((inst.raw.Login)(c_user.as_ptr(), c_pass.as_ptr()))?;
+            with_timeout("Login", debug_steps, move || {
+                map((inst.raw.Login)(c_user.as_ptr(), c_pass.as_ptr()))
+            })?;
             if diag {
-                eprintln!("[profitdll][DIAG] Login() retornou OK");
+                eprintln!("[profitdll][DIAG] Login OK");
             }
             // Registro de callbacks opcionais
             if let Some(ref cb) = inst.raw.SetOrderCallback {
@@ -661,28 +716,123 @@ where
     f(inst)
 }
 
+// Busca símbolo obrigatório tentando múltiplos nomes (primeiro que existir).
+unsafe fn load_required_any<'lib, T>(
+    lib: &'lib Library,
+    candidates: &[&str],
+    debug: bool,
+) -> Result<libloading::Symbol<'lib, T>, ProfitError> {
+    for name in candidates {
+        let full = format!("{name}\0");
+        let bytes = full.as_bytes();
+        match lib.get::<T>(bytes) {
+            Ok(sym) => {
+                if debug {
+                    eprintln!("[profitdll][LOAD] OK (candidate): {name}");
+                }
+                return Ok(sym);
+            }
+            Err(_) => {
+                if debug {
+                    eprintln!("[profitdll][LOAD] Falhou candidate: {name}");
+                }
+            }
+        }
+    }
+    // retorna erro com primeiro nome (ou placeholder se vazio)
+    let first = candidates.first().copied().unwrap_or("<none>");
+    // Converter para 'static leakando (custo irrelevante pois ocorre só em erro de init)
+    let leaked: &'static str = Box::leak(first.to_string().into_boxed_str());
+    Err(ProfitError::MissingSymbol(leaked))
+}
+
 unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError> {
+    let debug_load = std::env::var("PROFITDLL_DEBUG_LOAD")
+        .map(|v| v == "1")
+        .unwrap_or(false);
+    if debug_load {
+        eprintln!("[profitdll][LOAD] Iniciando load_symbols");
+    }
     macro_rules! must {
         ($name:ident : $t:ty) => {{
-            let sym: Symbol<$t> = lib
-                .get(concat!(stringify!($name), "\0").as_bytes())
-                .map_err(|_| ProfitError::MissingSymbol(stringify!($name)))?;
-            sym
+            if debug_load {
+                eprintln!("[profitdll][LOAD] Obrigatório: {}", stringify!($name));
+            }
+            let res: Result<Symbol<$t>, _> = lib.get(concat!(stringify!($name), "\0").as_bytes());
+            match res {
+                Ok(sym) => {
+                    if debug_load {
+                        eprintln!("[profitdll][LOAD] OK: {}", stringify!($name));
+                    }
+                    sym
+                }
+                Err(_) => {
+                    if debug_load {
+                        eprintln!(
+                            "[profitdll][LOAD][ERRO] Faltando obrigatório: {}",
+                            stringify!($name)
+                        );
+                    }
+                    return Err(ProfitError::MissingSymbol(stringify!($name)));
+                }
+            }
         }};
     }
     macro_rules! opt {
         ($name:ident : $t:ty) => {{
+            if debug_load {
+                eprintln!("[profitdll][LOAD] Opcional: {}", stringify!($name));
+            }
             match lib.get(concat!(stringify!($name), "\0").as_bytes()) {
-                Ok(s) => Some(s),
-                Err(_) => None,
+                Ok(s) => {
+                    if debug_load {
+                        eprintln!("[profitdll][LOAD] OK opcional: {}", stringify!($name));
+                    }
+                    Some(s)
+                }
+                Err(_) => {
+                    if debug_load {
+                        eprintln!("[profitdll][LOAD] Ausente opcional: {}", stringify!($name));
+                    }
+                    None
+                }
             }
         }};
     }
+    // Suporte a variantes de nome para Login (DLL pode exportar com prefixo diferente).
+    let login_candidates_env = std::env::var("PROFITDLL_LOGIN_CANDIDATES").ok();
+    let login_candidates_owned: Vec<String> = if let Some(raw) = login_candidates_env {
+        raw.split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect()
+    } else {
+        vec![
+            "Login".to_string(),       // nome esperado original
+            "ProfitLogin".to_string(), // variantes plausíveis
+            "APILogin".to_string(),
+            "LoginUser".to_string(),
+            "LoginA".to_string(),
+            "ProfitDllLogin".to_string(),
+        ]
+    };
+    let mut fallback_vec = login_candidates_owned;
+    if fallback_vec.is_empty() {
+        fallback_vec.push("Login".to_string());
+    }
+    let login_candidates: Vec<&str> = fallback_vec.iter().map(|s| s.as_str()).collect();
+    if debug_load {
+        eprintln!("[profitdll][LOAD] Candidates Login: {:?}", login_candidates);
+    }
+    let login_sym: Symbol<
+        unsafe extern "system" fn(user: *const c_char, pass: *const c_char) -> NResult,
+    > = load_required_any(lib, &login_candidates, debug_load)?;
+
     let temp = ProfitRaw {
-        Initialize: must!(Initialize: unsafe extern "system" fn() -> NResult),
-        Finalize: must!(Finalize: unsafe extern "system" fn() -> NResult),
+        Initialize: opt!(Initialize: unsafe extern "system" fn() -> NResult),
+        _Finalize: opt!(Finalize: unsafe extern "system" fn() -> NResult),
         SetStateCallback: must!(SetStateCallback: unsafe extern "system" fn(StateCallbackRaw, *mut c_void) -> NResult),
-        Login: must!(Login: unsafe extern "system" fn(user: *const c_char, pass: *const c_char) -> NResult),
+        Login: login_sym,
         SubscribeTicker: must!(SubscribeTicker: unsafe extern "system" fn(ticker: *const c_char, exch: *const c_char) -> NResult),
         UnsubscribeTicker: must!(UnsubscribeTicker: unsafe extern "system" fn(ticker: *const c_char, exch: *const c_char) -> NResult),
         SetTradeCallback: opt!(SetTradeCallback: unsafe extern "system" fn(TradeCallbackRaw, *mut c_void) -> NResult),
@@ -704,6 +854,9 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
         SetTheoreticalPriceCallback: opt!(SetTheoreticalPriceCallback: unsafe extern "system" fn(unsafe extern "system" fn(*const c_char, *const c_char, f64, f64, f64, f64, *mut c_void), *mut c_void) -> NResult),
         FreePointer: opt!(FreePointer: unsafe extern "system" fn(*mut c_void)),
     };
+    if debug_load {
+        eprintln!("[profitdll][LOAD] Concluído load_symbols");
+    }
     // Elevamos lifetime para 'static pois a Library vive dentro de OnceCell enquanto o processo estiver ativo
     Ok(std::mem::transmute::<ProfitRaw<'_>, ProfitRaw<'static>>(
         temp,
@@ -854,6 +1007,7 @@ unsafe extern "system" fn trade_callback_trampoline_v2(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 unsafe fn emit_trade(
     inst: &ProfitDll,
     ticker: *const c_char,
@@ -1009,6 +1163,7 @@ unsafe extern "system" fn daily_summary_callback_trampoline_v2(
     );
 }
 
+#[allow(clippy::too_many_arguments)]
 unsafe fn emit_daily(
     ticker: *const c_char,
     exchange: *const c_char,
@@ -1114,7 +1269,7 @@ unsafe extern "system" fn adjust_history_callback_trampoline_v2(
                 .unwrap_or(false)
             {
                 unsafe {
-                    let bytes = std::slice::from_raw_parts(data as *const u8, 64.min(512));
+                    let bytes = std::slice::from_raw_parts(data as *const u8, 64);
                     let mut line = String::new();
                     for (i, b) in bytes.iter().enumerate() {
                         line.push_str(&format!("{b:02X} "));

@@ -2334,7 +2334,6 @@ dependencies = [
  "rust_decimal",
  "serde",
  "thiserror 2.0.12",
- "winapi",
 ]
 
 [[package]]

@@ -1,9 +1,12 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Erros e códigos (NL_*) unificados entre mock e FFI.
+//! Erros e códigos (**NL_***) unificados entre mock e FFI ProfitDLL.
+//!
+//! Todos os códigos e enums seguem a especificação oficial da DLL (ver [MANUAL.md](../MANUAL.md#erros)).
 
+/// Tipo de retorno padrão da DLL (**NResult**).
 pub type NResult = i32;
 
-// Códigos NL_* (extendidos conforme manual). Valores negativos (HRESULT signed style).
+// Códigos **NL_*** (extendidos conforme manual). Valores negativos (HRESULT signed style).
 pub const NL_OK: NResult = 0;
 pub const NL_INTERNAL_ERROR: NResult = -2147483647;
 pub const NL_NOT_INITIALIZED: NResult = -2147483646;
@@ -36,68 +39,71 @@ pub const NL_FILE_ALREADY_EXISTS: NResult = -2147483618;
 pub const NL_INVALID_TICKER: NResult = -2147483617;
 pub const NL_NOT_MASTER_ACCOUNT: NResult = -2147483616;
 
+/// Enum de erros unificados da interface ProfitDLL (**ProfitError**).
+///
+/// Cada variante corresponde a um código **NL_*** ou erro de integração descrito no [MANUAL.md](../MANUAL.md#erros).
 #[non_exhaustive]
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
 pub enum ProfitError {
-    #[error("Erro interno DLL")]
+    #[error("Erro interno DLL (**NL_INTERNAL_ERROR**)")]
     Internal,
-    #[error("DLL não inicializada")]
+    #[error("DLL não inicializada (**NL_NOT_INITIALIZED**)")]
     NotInitialized,
-    #[error("Argumentos inválidos")]
+    #[error("Argumentos inválidos (**NL_INVALID_ARGS**)")]
     InvalidArgs,
-    #[error("Aguardando servidor")]
+    #[error("Aguardando servidor (**NL_WAITING_SERVER**)")]
     WaitingServer,
-    #[error("Sem login")]
+    #[error("Sem login (**NL_NO_LOGIN**)")]
     NoLogin,
-    #[error("Sem licença")]
+    #[error("Sem licença (**NL_NO_LICENSE**)")]
     NoLicense,
-    #[error("Fora de faixa")]
+    #[error("Fora de faixa (**NL_OUT_OF_RANGE**)")]
     OutOfRange,
-    #[error("Função requer roteamento")]
+    #[error("Função requer roteamento (**NL_MARKET_ONLY**)")]
     MarketOnly,
-    #[error("Posição inexistente")]
+    #[error("Posição inexistente (**NL_NO_POSITION**)")]
     NoPosition,
-    #[error("Recurso não encontrado")]
+    #[error("Recurso não encontrado (**NL_NOT_FOUND**)")]
     NotFound,
-    #[error("Versão não suportada")]
+    #[error("Versão não suportada (**NL_VERSION_NOT_SUPPORTED**)")]
     VersionNotSupported,
-    #[error("OCO sem regras")]
+    #[error("OCO sem regras (**NL_OCO_NO_RULES**)")]
     OcoNoRules,
-    #[error("Bolsa desconhecida")]
+    #[error("Bolsa desconhecida (**NL_EXCHANGE_UNKNOWN**)")]
     ExchangeUnknown,
-    #[error("OCO inexistente")]
+    #[error("OCO inexistente (**NL_NO_OCO_DEFINED**)")]
     NoOcoDefined,
-    #[error("Série inválida")]
+    #[error("Série inválida (**NL_INVALID_SERIE**)")]
     InvalidSerie,
-    #[error("Recurso não liberado pela licença")]
+    #[error("Recurso não liberado pela licença (**NL_LICENSE_NOT_ALLOWED**)")]
     LicenseNotAllowed,
-    #[error("Não está em HardLogout")]
+    #[error("Não está em HardLogout (**NL_NOT_HARD_LOGOUT**)")]
     NotHardLogout,
-    #[error("Série sem histórico")]
+    #[error("Série sem histórico (**NL_SERIE_NO_HISTORY**)")]
     SerieNoHistory,
-    #[error("Ativo sem dados")]
+    #[error("Ativo sem dados (**NL_ASSET_NO_DATA**)")]
     AssetNoData,
-    #[error("Série sem dados")]
+    #[error("Série sem dados (**NL_SERIE_NO_DATA**)")]
     SerieNoData,
-    #[error("Estratégia em execução")]
+    #[error("Estratégia em execução (**NL_HAS_STRATEGY_RUNNING**)")]
     HasStrategyRunning,
-    #[error("Sem mais histórico")]
+    #[error("Sem mais histórico (**NL_SERIE_NO_MORE_HISTORY**)")]
     SerieNoMoreHistory,
-    #[error("Série atingiu limite")]
+    #[error("Série atingiu limite (**NL_SERIE_MAX_COUNT**)")]
     SerieMaxCount,
-    #[error("Recurso duplicado")]
+    #[error("Recurso duplicado (**NL_DUPLICATE_RESOURCE**)")]
     DuplicateResource,
-    #[error("Contrato não assinado")]
+    #[error("Contrato não assinado (**NL_UNSIGNED_CONTRACT**)")]
     UnsignedContract,
-    #[error("Senha ausente")]
+    #[error("Senha ausente (**NL_NO_PASSWORD**)")]
     NoPassword,
-    #[error("Usuário ausente")]
+    #[error("Usuário ausente (**NL_NO_USER**)")]
     NoUser,
-    #[error("Arquivo já existe")]
+    #[error("Arquivo já existe (**NL_FILE_ALREADY_EXISTS**)")]
     FileAlreadyExists,
-    #[error("Ticker inválido")]
+    #[error("Ticker inválido (**NL_INVALID_TICKER**)")]
     InvalidTicker,
-    #[error("Conta não é master")]
+    #[error("Conta não é master (**NL_NOT_MASTER_ACCOUNT**)")]
     NotMasterAccount,
     #[error("Resultado desconhecido: {0}")]
     Unknown(NResult),
@@ -112,6 +118,7 @@ pub enum ProfitError {
 }
 
 impl ProfitError {
+    /// Converte um código **NResult** da DLL em [`ProfitError`].
     pub fn from_nresult(code: NResult) -> Result<(), ProfitError> {
         use ProfitError::*;
         match code {

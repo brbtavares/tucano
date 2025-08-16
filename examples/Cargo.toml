@@ -25,13 +25,13 @@ path = "src/main.rs"
 
 [[bin]]
 name = "mock_minimal"
-path = "mock/minimal.rs"
+path = "src/mock_minimal.rs"
 
 [[bin]]
 name = "example_1_live_login"
-path = "live/example_1_live_login.rs"
+path = "src/example_1_live_login.rs"
 
 [[bin]]
 name = "example_2_get_history_trades"
-path = "live/example_2_get_history_trades.rs"
+path = "src/example_2_get_history_trades.rs"
 
