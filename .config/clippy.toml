@@ -23,4 +23,3 @@ max-trait-bounds = 3
 disallowed-names = ["foo", "baz", "quux"]
 
 # Documentation lints
-missing-docs-in-private-items = false
