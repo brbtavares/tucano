@@ -387,7 +387,7 @@ TC_LAST_PACKET : Cardinal = 2;
 
 ### Códigos de erro
 
-Tabela dos códigos (***NL_*** 2A) retornados pela DLL. Valores negativos seguem estilo ***HRESULT*** (bit de erro setado, exibido aqui em hex e decimal).
+Tabela dos códigos (***NL_***) retornados pela DLL. Valores negativos seguem estilo ***HRESULT*** (bit de erro setado, exibido aqui em hex e decimal).
 
 | Nome | Valor (Hex) | Valor (Dec) | Significado |
 |------|-------------|-------------|-------------|
