@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER. DISCLAIMER. DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -13,7 +13,6 @@
 #![allow(unused_crate_dependencies)]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (summary): For educational/experimental use only. No investment advice or affiliation. No third-party compensation. Profit/ProfitDLL © Nelógica. Technical integration. See README & DISCLAIMER.
 //! Core abstractions for trading strategies (traits + types). Concrete implementations go to the `strategies` crate.
 
 pub mod algo;

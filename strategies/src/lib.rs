@@ -1,5 +1,4 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-//! DISCLAIMER (summary): For educational/experimental use only. No investment advice or affiliation. No third-party compensation. Profit/ProfitDLL © Nelógica. Technical integration. See README & DISCLAIMER.
 //! Grouped concrete strategies (enabled via feature flags).
 
 pub mod shared;

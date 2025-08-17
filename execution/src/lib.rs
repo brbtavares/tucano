@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -63,13 +63,6 @@
 //! - **Multi-Asset**: Supports multiple assets simultaneously
 //! - **Real-Time**: Real-time updates via streams
 //! - **Reconciliation**: Automatic consistency validation
-//!
-//! ## 📊 Supported Exchanges
-//!
-//! - **🇧🇷 B3**: Via Nelógica's ProfitDLL
-//! - **🌍 Binance**: Spot and Futures
-//! - **🇺🇸 Coinbase**: US exchange
-//! - **🧪 Mock**: Simulated exchange for testing
 //!
 //! ## 💡 Usage Example
 //!
