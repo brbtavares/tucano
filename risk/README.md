@@ -1,43 +1,43 @@
 # Tucano Risk
 
-> Camada de validação e controle de risco antes de ordens chegarem ao venue (B3 inicialmente).
+> Validation and risk control layer before orders reach the venue (B3 initially).
 
-## 🎯 Papel
-A crate **risk** implementa verificações para proteger capital, assegurar conformidade de limites e evitar execução incorreta. Atua como filtro entre geração de sinal (strategy) e submissão (execution).
+## 🎯 Role
+The **risk** crate implements checks to protect capital, ensure compliance with limits, and prevent incorrect execution. It acts as a filter between signal generation (strategy) and submission (execution).
 
-| Responsabilidade | Descrição |
-|------------------|-----------|
-| Checks Atômicos | `check/` contém validadores (ex: tamanho máximo de posição) |
-| Composição | Estrutura para combinar múltiplos checks sequencialmente |
-| Resultado Fortemente Tipado | Tipos `RiskApproved<T>` / `RiskRefused<T>` encapsulam decisão |
-| Erros Semânticos | Mapeamento claro de motivos de bloqueio |
+| Responsibility      | Description                                                                 |
+|---------------------|-----------------------------------------------------------------------------|
+| Atomic Checks       | `check/` contains validators (e.g., max position size)                      |
+| Composition         | Structure to combine multiple checks sequentially                            |
+| Strongly Typed Result | `RiskApproved<T>` / `RiskRefused<T>` types encapsulate the decision       |
+| Semantic Errors     | Clear mapping of blocking reasons                                           |
 
-## 🔑 Principais Conceitos
-- `RiskManager` (futuro trait / struct agregadora) – Orquestra avaliação.
-- `check::*` – Módulos individuais para cada política (placeholder inicial).
-- `RiskApproved<T>` / `RiskRefused<T>` – Wrappers garantindo que somente fluxos aprovados avancem.
+## 🔑 Main Concepts
+- `RiskManager` (future trait/aggregator struct) – Orchestrates evaluation.
+- `check::*` – Individual modules for each policy (initial placeholder).
+- `RiskApproved<T>` / `RiskRefused<T>` – Wrappers ensuring only approved flows proceed.
 
-## 🔗 Interdependências
-| Depende de | Motivo |
-|------------|-------|
-| `markets` | Identificação de instrumentos / ativos |
-| `execution` | Acesso a ordens / posições vigentes |
-| `analytics` (futuro) | Volatilidade / métricas dinâmicas para limites adaptativos |
+## 🔗 Interdependencies
+| Depends on   | Reason                                                        |
+|--------------|---------------------------------------------------------------|
+| `markets`    | Instrument/asset identification                               |
+| `execution`  | Access to current orders/positions                            |
+| `analytics` (future) | Volatility/dynamic metrics for adaptive limits        |
 
-| Consumido por | Uso |
-|---------------|-----|
-| `core` | Gate de pré‑execução |
-| `strategy` | Ajuste de posição baseado em resposta de risco |
+| Consumed by  | Usage                                                         |
+|--------------|---------------------------------------------------------------|
+| `core`       | Pre-execution gate                                            |
+| `strategy`   | Position adjustment based on risk response                    |
 
-## ✅ Concluído
-- Estrutura inicial de tipos aprovados / recusados.
-- Esqueleto de checks básicos.
+## ✅ Completed
+- Initial structure for approved/refused types.
+- Skeleton for basic checks.
 
-## 🧪 Parcial
-- Lista real de checks (exposição notional, stop global, perda diária) não implementada.
-- Integração com métricas runtime.
+## 🧪 Partial
+- Real list of checks (notional exposure, global stop, daily loss) not implemented.
+- Integration with runtime metrics.
 
-## 🚧 Pendências
+## 🚧 Pending
 - Política de agregação (primeiro falha vs coletar todos os motivos).
 - Modo simulação vs produção (thresholds distintos).
 - Auditoria de decisões (log estruturado / métricas de bloqueio).

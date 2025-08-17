@@ -1,42 +1,43 @@
+
 # Tucano Analytics
 
-> Camada de métricas, estatísticas e sumarização de performance para estratégias e backtests na B3.
+> Metrics, statistics, and performance summarization layer for strategies and backtests on B3.
 
-## 🎯 Papel na Plataforma
-A crate **analytics** fornece cálculos de retorno, risco e eficiência operacional consumidos por `core` (auditoria), `risk` (limites dinâmicos) e interfaces externas (dashboards / relatórios). Ela transforma eventos (trades, posições, PnL acumulado) em indicadores consolidados dentro do ecossistema Tucano.
+## 🎯 Role in the Platform
+The **analytics** crate provides calculations for return, risk, and operational efficiency consumed by `core` (auditing), `risk` (dynamic limits), and external interfaces (dashboards/reports). It transforms events (trades, positions, accumulated PnL) into consolidated indicators within the Tucano ecosystem.
 
-| Responsabilidade | Descrição |
-|------------------|-----------|
-| Métricas Financeiras | Sharpe, Sortino, Calmar, Profit Factor, Win Rate, Drawdown Máximo / Recuperação |
-| Agregação Temporal | Normalização de séries por intervalos (`time.rs`) |
-| Sumários de Trading | Geração de resumos consolidados por instrumento / exchange / janela |
-| Abstração de Algoritmos | Cálculos estatísticos reutilizáveis (`algorithm.rs`) |
-| Interface Coesa | API estável para outras crates sem expor detalhes internos |
+| Responsibility         | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| Financial Metrics      | Sharpe, Sortino, Calmar, Profit Factor, Win Rate, Max Drawdown/Recovery     |
+| Temporal Aggregation   | Series normalization by intervals (`time.rs`)                               |
+| Trading Summaries      | Generation of consolidated summaries by instrument/exchange/window          |
+| Algorithm Abstraction  | Reusable statistical calculations (`algorithm.rs`)                          |
+| Cohesive Interface     | Stable API for other crates without exposing internal details               |
 
-## 🔑 Principais Módulos / Tipos
-- `algorithm.rs` – Funções utilitárias estatísticas (médias, desvios, normalização de retornos).*  
-- `metric/` – Implementações específicas:  
+## 🔑 Main Modules / Types
+- `algorithm.rs` – Statistical utility functions (means, deviations, return normalization).  
+- `metric/` – Specific implementations:  
   - `sharpe.rs` (`SharpeRatio`)  
   - `sortino.rs` (`SortinoRatio`)  
   - `calmar.rs` (`CalmarRatio`)  
   - `profit_factor.rs` (`ProfitFactor`)  
   - `win_rate.rs` (`WinRate`)  
-  - `drawdown/` (cálculo de séries de drawdown)  
-- `time.rs` – Intervalos e granularidades de tempo para agregações.  
-- `summary/` – Montagem de relatórios (por ativo, sessão, janela) e exibição (`display.rs`).
+  - `drawdown/` (drawdown series calculation)  
+- `time.rs` – Time intervals and granularities for aggregations.  
+- `summary/` – Report assembly (by asset, session, window) and display (`display.rs`).
 
-## 🔗 Interdependências
-| Depende de | Motivo |
-|------------|--------|
-| `core` (eventos/audit) | Fonte de sequências de trades / ordens (futuro) |
-| `execution` | Origem de fill / trade events |
-| `markets` | Identificadores de instrumentos e exchanges |
+## 🔗 Interdependencies
+| Depends on      | Reason                                                        |
+|-----------------|---------------------------------------------------------------|
+| `core` (events/audit) | Source of trade/order sequences (future)                |
+| `execution`     | Source of fill/trade events                                   |
+| `markets`       | Instrument and exchange identifiers                           |
 
-| Consumido por | Uso |
-|---------------|-----|
-| `core` | Consolidação pós-backtest e monitoramento runtime |
-| `risk` | Alimentar limites adaptativos (ex: volatilidade realizada) |
-| `strategy` | Feedback loop para otimização / adaptação |
+| Consumed by     | Usage                                                         |
+|-----------------|---------------------------------------------------------------|
+| `core`          | Post-backtest consolidation and runtime monitoring            |
+| `risk`          | Feeding adaptive limits (e.g., realized volatility)           |
+| `strategy`      | Feedback loop for optimization/adaptation                     |
 
 ## ✅ Concluído
 - Métricas clássicas (Sharpe, Sortino, Calmar, Profit Factor, Win Rate) implementadas.

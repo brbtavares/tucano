@@ -1,43 +1,43 @@
 # Tucano Data
 
-> Camada de ingestão, normalização e distribuição de eventos de mercado para a B3 (e futuras fontes).
+> Layer for ingestion, normalization, and distribution of market events for B3 (and future sources).
 
-## 🎯 Papel
-A crate **data** centraliza a modelagem de eventos de mercado (ticks, trades, books, snapshots), abstrai fontes heterogêneas (ProfitDLL inicialmente) e entrega um fluxo unificado ao `core`.
+## 🎯 Role
+The **data** crate centralizes the modeling of market events (ticks, trades, books, snapshots), abstracts heterogeneous sources (initially ProfitDLL), and delivers a unified stream to the `core`.
 
-| Responsabilidade | Descrição |
-|------------------|-----------|
-| Modelos de Evento | `event.rs` define enums estruturados (Trade, Quote, Book, etc.) |
-| Identificadores | `instrument.rs`, `exchange.rs`, `subscriber`/`subscription` gerenciam chaves |
-| Streams | Módulo `streams/` provê construção, reconexão, transformação |
-| Transformação | `transformer/` para parsing/adaptação de payloads brutos |
-| Normalização B3 | Integração com tipos de ativos/mercados da crate `markets` |
-| Snapshotting | `snapshot.rs` + `collection/` para estado consistente inicial |
+| Responsibility      | Description                                                                 |
+|---------------------|-----------------------------------------------------------------------------|
+| Event Models        | `event.rs` defines structured enums (Trade, Quote, Book, etc.)              |
+| Identifiers         | `instrument.rs`, `exchange.rs`, `subscriber`/`subscription` manage keys     |
+| Streams             | `streams/` module provides construction, reconnection, transformation       |
+| Transformation      | `transformer/` for parsing/adapting raw payloads                            |
+| B3 Normalization    | Integration with asset/market types from the `markets` crate                |
+| Snapshotting        | `snapshot.rs` + `collection/` for consistent initial state                  |
 
-## 🔑 Principais Módulos
-- `event.rs` – Tipos de evento de mercado/conta.
-- `instrument.rs` – Estruturas de identificação de instrumentos normalizados.
-- `streams/` – Conectores e lógica de (re)conexão resiliente.
-- `exchange/` – Organização por venue (B3 primeiro; espaço para outros).
-- `subscriber/` & `subscription/` – Gestão de inscrições e lifecycle.
-- `transformer/` – Pipelines de parsing e enriquecimento.
-- `snapshot.rs` – Processamento de snapshots iniciais.
+## 🔑 Main Modules
+- `event.rs` – Market/account event types.
+- `instrument.rs` – Structures for normalized instrument identification.
+- `streams/` – Connectors and resilient (re)connection logic.
+- `exchange/` – Organization by venue (B3 first; room for others).
+- `subscriber/` & `subscription/` – Subscription and lifecycle management.
+- `transformer/` – Parsing and enrichment pipelines.
+- `snapshot.rs` – Initial snapshot processing.
 
-## 🔗 Interdependências
-| Depende de | Motivo |
-|------------|-------|
-| `markets` | Tipagem de ativos / instrumentos B3 |
-| `integration` | Canais / transporte (websocket / http wrappers futuramente) |
-| `execution` | Para unir eventos de mercado e conta (consistência) |
+## 🔗 Interdependencies
+| Depends on     | Reason                                                        |
+|----------------|---------------------------------------------------------------|
+| `markets`      | Typing for B3 assets/instruments                              |
+| `integration`  | Channels/transport (websocket/http wrappers in the future)    |
+| `execution`    | To join market and account events (consistency)               |
 
-| Consumido por | Uso |
-|---------------|-----|
-| `core` | Feed principal do motor de eventos |
-| `analytics` | Série de preços / trades para métricas |
-| `strategy` | Gatilhos de sinal |
-| `risk` | Volatilidade, gaps, validações de integridade |
+| Consumed by    | Usage                                                         |
+|----------------|---------------------------------------------------------------|
+| `core`         | Main feed for the event engine                                |
+| `analytics`    | Price/trade series for metrics                                |
+| `strategy`     | Signal triggers                                               |
+| `risk`         | Volatility, gaps, integrity checks                            |
 
-## ✅ Concluído
+## ✅ Completed
 - Modelos básicos de evento e assinatura.
 - Estrutura de reconexão inicial (`streams::reconnect`).
 - Integração parcial com ProfitDLL (estado embrionário).

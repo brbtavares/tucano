@@ -1,21 +1,22 @@
+
 # brokers
 
-Camada de abstração para corretoras (brokers) integrada ao ecossistema Tucano.
+Abstraction layer for brokers integrated into the Tucano ecosystem.
 
-## Objetivos
-- Identificação padronizada de corretoras (código operacional + nome oficial)
-- Metadados de certificação (ex: Selo PQO B3)
-- Associação de modelos de custo (ex: corretagem, custódia, emolumentos) por instrumento
-- Extensível para múltiplos mercados / geografias
+## Objectives
+- Standardized identification of brokers (operational code + official name)
+- Certification metadata (e.g., B3 PQO Seal)
+- Association of cost models (e.g., brokerage, custody, fees) per instrument
+- Extensible for multiple markets/geographies
 
-## Conceitos
-- `BrokerId`: identificador curto (slug) estável utilizado internamente
-- `BrokerCode`: código operacional usado na B3 (quando aplicável)
-- `BrokerName`: nome oficial publicado
-- `BrokerCertification`: enum de certificações reconhecidas
-- `CostModel`: coleção de funções/estratégias para calcular custos de execução
+## Concepts
+- `BrokerId`: short, stable identifier (slug) used internally
+- `BrokerCode`: operational code used on B3 (when applicable)
+- `BrokerName`: official published name
+- `BrokerCertification`: enum of recognized certifications
+- `CostModel`: collection of functions/strategies to calculate execution costs
 
-## Próximos passos
-1. Integrar `brokers` com crates `execution` e `markets` (associar ExchangeId -> BrokerId quando aplicável)
-2. Enriquecer modelos de custo com camadas (fixo + variável + por contrato)
-3. Persistência e atualização dinâmica de custos (ex: carregar JSON/YAML)
+## Next Steps
+1. Integrate `brokers` with the `execution` and `markets` crates (associate ExchangeId -> BrokerId when applicable)
+2. Enrich cost models with layers (fixed + variable + per contract)
+3. Persistence and dynamic update of costs (e.g., load JSON/YAML)

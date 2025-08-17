@@ -1,42 +1,40 @@
 # Tucano Markets
 
-> Modela entidades de mercado (Exchange, Asset, Instrument, Side, OrderType) com especialização para a B3.
+> Models market entities (Exchange, Asset, Instrument, Side, OrderType) with specialization for B3.
 
-## 🎯 Papel
-A crate **markets** fornece a taxonomia e tipos semânticos que suportam execução, dados e risco. Garante que instrumentos e ativos sejam identificados de forma consistente ao longo da plataforma.
+## 🎯 Role
+The **markets** crate provides the taxonomy and semantic types that support execution, data, and risk. It ensures that instruments and assets are consistently identified throughout the platform.
 
-| Responsabilidade | Descrição |
-|------------------|-----------|
-| Exchange Model | `exchange.rs` / `b3.rs` definem enum `ExchangeId` e características |
-| Asset Model | `asset.rs`, `asset_simplified.rs` e especializações B3 (Stocks, ETFs, REITs, Futuros) |
-| Instrument | Construção padronizada (nome, mercado, símbolo derivado) |
-| Index | `index/` para coleções chaveadas eficientes |
-| Broker Abstractions | `broker/` esqueleto para unir múltiplas corretoras ProfitDLL |
+| Responsibility   | Description                                                                 |
+|------------------|-----------------------------------------------------------------------------|
+| Exchange Model   | `exchange.rs` / `b3.rs` define the `ExchangeId` enum and characteristics    |
+| Asset Model      | `asset.rs`, `asset_simplified.rs` and B3 specializations (Stocks, ETFs, REITs, Futures) |
+| Instrument       | Standardized construction (name, market, derived symbol)                    |
+| Index            | `index/` for efficient keyed collections                                    |
+| Broker Abstractions | `broker/` skeleton to unite multiple ProfitDLL brokers                   |
 
-## 🔑 Principais Tipos
-- `ExchangeId` – Identificador canônico (ex: `B3`).
-- `Asset` / `B3Asset*` – Implementações por categoria (stock, ETF, REIT, futuro). 
-- `Instrument` – Combinação de asset + mercado + semântica (ex: mini‑índice).
-- `Side`, `OrderType` – Direção e modalidade de ordens.
-  
+## 🔑 Main Types
+- `ExchangeId` – Canonical identifier (e.g., `B3`).
+- `Asset` / `B3Asset*` – Implementations by category (stock, ETF, REIT, future).
+- `Instrument` – Combination of asset + market + semantics (e.g., mini-index).
+- `Side`, `OrderType` – Order direction and modality.
 
-## 🔗 Interdependências
-| Depende de | Motivo |
-|------------|-------|
-| `rust_decimal`, `chrono` | Precisão monetária / timestamps |
+## 🔗 Interdependencies
+| Depends on                | Reason                                 |
+|---------------------------|----------------------------------------|
+| `rust_decimal`, `chrono`  | Monetary precision / timestamps        |
 
-| Consumido por | Uso |
-|---------------|-----|
-| `execution` | Identificação de ordens / roteamento |
-| `data` | Normalização de eventos de mercado |
-| `risk` | Cálculos de limites por ativo / instrumento |
-| `core` | Estado global de instrumentos |
-| `analytics` | Chaves de agregação por instrumento |
+| Consumed by   | Usage                                         |
+|---------------|-----------------------------------------------|
+| `execution`   | Order identification / routing                |
+| `data`        | Market event normalization                    |
+| `risk`        | Limit calculations per asset/instrument       |
+| `core`        | Global instrument state                       |
+| `analytics`   | Aggregation keys by instrument                |
 
-## ✅ Concluído
-- Enum de exchanges e tipos básicos B3.
-  
-- Instrumentos básicos listados como exemplos (stocks, alguns futuros administrativos).
+## ✅ Completed
+- Enum of exchanges and basic B3 types.
+- Basic instruments listed as examples (stocks, some administrative futures).
 
 ## 🧪 Parcial
 - Broker multi‑corretora (estrutura inicial; falta abstração robusta de credenciais/latência).
