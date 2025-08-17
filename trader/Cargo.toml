@@ -6,7 +6,7 @@ license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-trader"
-description = "Abstrações centrais de estratégia (traits e tipos)"
+description = "Core abstractions for strategies (traits and types)"
 keywords = ["trading","strategy","framework"]
 categories = ["finance","algorithms"]
 

@@ -1,8 +1,9 @@
 <div align="center">
 
+
 # tucano-profitdll
 
-Camada isolada de integração (tipos + abstrações + FFI opcional) com a **ProfitDLL** (Nelógica).
+Isolated integration layer (types + abstractions + optional FFI) with **ProfitDLL** (Nelógica).
 
 [![Crates.io](https://img.shields.io/crates/v/tucano-profitdll.svg)](https://crates.io/crates/tucano-profitdll)
 [![Docs](https://img.shields.io/docsrs/tucano-profitdll)](https://docs.rs/tucano-profitdll)
@@ -10,80 +11,92 @@ Camada isolada de integração (tipos + abstrações + FFI opcional) com a **Pro
 
 </div>
 
-> Mini-Disclaimer: uso educacional/experimental; sem recomendação de investimento ou afiliação; Profit/ProfitDLL © Nelógica; veja DISCLAIMER no repositório principal.
 
-## ✨ Visão Geral
+> Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; Profit/ProfitDLL © Nelógica; see DISCLAIMER in the main repository.
 
-Fornece:
-- Eventos (`CallbackEvent`, `BookAction`, etc.)
-- Tipos de identificação (`AssetIdentifier`, `AccountIdentifier`)
-- Envio simples de ordens (`SendOrder`)
-- Backend mock multiplataforma (Linux/macOS/Windows) para desenvolvimento rápido
-- (Opcional via feature `real_dll`) carregamento dinâmico da DLL real (Windows)
 
-## 🚀 Adicionando ao `Cargo.toml`
+## ✨ Overview
+
+Provides:
+- Events (`CallbackEvent`, `BookAction`, etc.)
+- Identification types (`AssetIdentifier`, `AccountIdentifier`)
+- Simple order sending (`SendOrder`)
+- Cross-platform mock backend (Linux/macOS/Windows) for fast development
+- (Optional via `real_dll` feature) dynamic loading of the real DLL (Windows)
+
+
+## 🚀 Adding to `Cargo.toml`
 
 ```toml
 [dependencies]
 profitdll = { package = "tucano-profitdll", version = "0.1" }
 ```
 
-Para usar a DLL real (Windows + DLL instalada/licenciada):
+To use the real DLL (Windows + installed/licensed DLL):
 
 ```toml
 [dependencies]
 profitdll = { package = "tucano-profitdll", version = "0.1", features = ["real_dll"] }
 ```
 
-### Seleção Automática de Backend
-`new_backend()` tenta:
-1. Forçar mock se `PROFITDLL_FORCE_MOCK=1`.
-2. Em Windows + feature `real_dll`, tenta DLL real (usa `PROFITDLL_PATH` se definido).
-3. Fallback para mock.
 
-## 🔐 Credenciais / Variáveis de Ambiente
+### Automatic Backend Selection
+`new_backend()` tries:
+1. Forces mock if `PROFITDLL_FORCE_MOCK=1`.
+2. On Windows + `real_dll` feature, tries real DLL (uses `PROFITDLL_PATH` if set).
+3. Fallback to mock.
+
+
+## 🔐 Credentials / Environment Variables
 ```
-PROFIT_USER=seu_usuario
-PROFIT_PASSWORD=sua_senha
-PROFIT_ACTIVATION_KEY=opcional
-PROFITDLL_PATH=C:\\caminho\\ProfitDLL.dll   # opcional
-PROFITDLL_FORCE_MOCK=1                        # força mock
+PROFIT_USER=your_user
+PROFIT_PASSWORD=your_password
+PROFIT_ACTIVATION_KEY=optional
+PROFITDLL_PATH=C:\path\ProfitDLL.dll   # optional
+PROFITDLL_FORCE_MOCK=1                  # forces mock
 ```
 
-## 🧪 Exemplo Rápido
+
+## 🧪 Quick Example
 ```rust,no_run
-use profitdll::{new_backend, SendOrder}; // alias para tucano-profitdll
+use profitdll::{new_backend, SendOrder}; // alias for tucano-profitdll
 use rust_decimal::Decimal;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-	let backend = new_backend()?; // mock ou real dependendo do ambiente
-	let creds = profitdll::api::Credentials::from_env()?; // ainda acessível via alias
+	let backend = new_backend()?; // mock or real depending on environment
+	let creds = profitdll::api::Credentials::from_env()?; // still accessible via alias
 	let mut events = backend.initialize_login(&creds).await?;
 	backend.subscribe_ticker("PETR4", "B")?;
-	backend.send_order(&SendOrder { /* campos */ ..Default::default() })?;
-	// consumir events.try_recv() ...
+	backend.send_order(&SendOrder { /* fields */ ..Default::default() })?;
+	// consume events.try_recv() ...
 	Ok(())
 }
 ```
 
+
 ## 🧩 Feature Flags
-- `real_dll`: habilita FFI para a DLL real (Windows). Sem ela, apenas mock.
+- `real_dll`: enables FFI for the real DLL (Windows). Without it, only mock.
 
-## 🛡️ Segurança
-- FFI é inerentemente inseguro: valide entradas e trate todos os códigos de erro.
-- A DLL real é carregada dinamicamente; falhas fazem fallback para o mock (log de aviso).
 
-## 🔁 Estabilidade da API
-- Tipos marcados com `#[non_exhaustive]` podem receber variantes futuras sem breaking change.
-- Versões 0.x podem introduzir ajustes; pin se precisar de estabilidade rígida.
+## 🛡️ Security
+- FFI is inherently unsafe: validate inputs and handle all error codes.
+- The real DLL is loaded dynamically; failures fall back to mock (with warning log).
 
-## 📄 Documentação Estendida
-Consulte `MANUAL.md` (quando presente) e os comentários inline dos tipos principais.
 
-## ⚖️ Licença & Marcas
-- Código sob MIT (ver `LICENSE`).
-- Profit / ProfitDLL são marcas e propriedade da Nelógica; integração meramente técnica.
+## 🔁 API Stability
+- Types marked with `#[non_exhaustive]` may receive future variants without breaking changes.
+- Versions 0.x may introduce adjustments; pin if you need strict stability.
+
+
+## 📄 Extended Documentation
+See `MANUAL.md` (when present) and inline comments on main types.
+
+
+## ⚖️ License & Trademarks
+- Code under MIT (see `LICENSE`).
+- Profit / ProfitDLL are trademarks and property of Nelógica; integration is purely technical.
+
 
 ---
-Mini-Disclaimer repetido: uso educacional; sem recomendação; sem afiliação; Profit/ProfitDLL © Nelógica.
+Repeated Mini-Disclaimer: educational use; no recommendation; no affiliation; Profit/ProfitDLL © Nelógica.

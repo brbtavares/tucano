@@ -1,34 +1,34 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! # Tipos de Erro do Core
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! # Core Error Types
 //!
-//! Este módulo define os principais tipos de erro usados no módulo core do framework Tucano.
-//! Fornece um sistema centralizado de tratamento agregando erros de vários subsistemas:
-//! execução, dados de mercado e indexação.
+//! This module defines the main error types used in the core module of the Tucano framework.
+//! It provides a centralized error handling system aggregating errors from various subsystems:
+//! execution, market data, and indexing.
 //!
-//! ## Hierarquia de Erros
+//! ## Error Hierarchy
 //!
-//! O tipo principal `TucanoError` engloba:
-//! - **IndexError**: Erros de indexação de ativo / instrumento / exchange
-//! - **ExecutionBuilder**: Erros durante inicialização do subsistema de execução
-//! - **ExecutionRxDropped**: Canal de comunicação cujo receiver foi descartado
-//! - **MarketData**: Erros do módulo de dados (streaming, parsing, assinatura)
-//! - **Execution**: Erros de execução (ordens, saldos, liquidações)
-//! - **JoinError**: Falhas ao aguardar tasks assíncronas (join)
+//! The main type `TucanoError` includes:
+//! - **IndexError**: Indexing errors for asset / instrument / exchange
+//! - **ExecutionBuilder**: Errors during initialization of the execution subsystem
+//! - **ExecutionRxDropped**: Communication channel whose receiver was dropped
+//! - **MarketData**: Errors from the data module (streaming, parsing, subscription)
+//! - **Execution**: Execution errors (orders, balances, liquidations)
+//! - **JoinError**: Failures when awaiting async tasks (join)
 //!
-//! ## Uso
+//! ## Usage
 //!
 //! ```rust,ignore
 //! use tucano_core::error::TucanoError;
 //!
-//! fn tratar_erro_trading(error: TucanoError) {
+//! fn handle_trading_error(error: TucanoError) {
 //!     match error {
 //!         TucanoError::MarketData(data_err) => {
-//!             eprintln!("Problema de dados de mercado: {}", data_err);
+//!             eprintln!("Market data problem: {}", data_err);
 //!         }
 //!         TucanoError::Execution(exec_err) => {
-//!             eprintln!("Problema de execução: {}", exec_err);
+//!             eprintln!("Execution problem: {}", exec_err);
 //!         }
-//!         _ => eprintln!("Outro erro: {}", error),
+//!         _ => eprintln!("Other error: {}", error),
 //!     }
 //! }
 //! ```

@@ -1,6 +1,6 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![cfg(all(target_os = "windows", feature = "real_dll"))]
-use tucano_profitdll::profitdll::*;
+use tucano_profitdll::*;
 
 #[test]
 fn load_or_missing_symbol() {

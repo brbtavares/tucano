@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! Erros e códigos (**NL_***) unificados entre mock e FFI ProfitDLL.
 //!
 //! Todos os códigos e enums seguem a especificação oficial da DLL (ver [MANUAL.md](../MANUAL.md#erros)).
@@ -59,66 +59,66 @@ pub enum ProfitError {
     NoLicense,
     #[error("Fora de faixa (**NL_OUT_OF_RANGE**)")]
     OutOfRange,
-    #[error("Função requer roteamento (**NL_MARKET_ONLY**)")]
+    #[error("Function requires routing (**NL_MARKET_ONLY**)")]
     MarketOnly,
-    #[error("Posição inexistente (**NL_NO_POSITION**)")]
+    #[error("Position does not exist (**NL_NO_POSITION**)")]
     NoPosition,
-    #[error("Recurso não encontrado (**NL_NOT_FOUND**)")]
+    #[error("Resource not found (**NL_NOT_FOUND**)")]
     NotFound,
-    #[error("Versão não suportada (**NL_VERSION_NOT_SUPPORTED**)")]
+    #[error("Version not supported (**NL_VERSION_NOT_SUPPORTED**)")]
     VersionNotSupported,
-    #[error("OCO sem regras (**NL_OCO_NO_RULES**)")]
+    #[error("OCO no rules (**NL_OCO_NO_RULES**)")]
     OcoNoRules,
-    #[error("Bolsa desconhecida (**NL_EXCHANGE_UNKNOWN**)")]
+    #[error("Unknown exchange (**NL_EXCHANGE_UNKNOWN**)")]
     ExchangeUnknown,
-    #[error("OCO inexistente (**NL_NO_OCO_DEFINED**)")]
+    #[error("No OCO defined (**NL_NO_OCO_DEFINED**)")]
     NoOcoDefined,
-    #[error("Série inválida (**NL_INVALID_SERIE**)")]
+    #[error("Invalid serie (**NL_INVALID_SERIE**)")]
     InvalidSerie,
-    #[error("Recurso não liberado pela licença (**NL_LICENSE_NOT_ALLOWED**)")]
+    #[error("Resource not allowed by license (**NL_LICENSE_NOT_ALLOWED**)")]
     LicenseNotAllowed,
-    #[error("Não está em HardLogout (**NL_NOT_HARD_LOGOUT**)")]
+    #[error("Not in HardLogout (**NL_NOT_HARD_LOGOUT**)")]
     NotHardLogout,
-    #[error("Série sem histórico (**NL_SERIE_NO_HISTORY**)")]
+    #[error("Serie has no history (**NL_SERIE_NO_HISTORY**)")]
     SerieNoHistory,
-    #[error("Ativo sem dados (**NL_ASSET_NO_DATA**)")]
+    #[error("Asset has no data (**NL_ASSET_NO_DATA**)")]
     AssetNoData,
-    #[error("Série sem dados (**NL_SERIE_NO_DATA**)")]
+    #[error("Serie has no data (**NL_SERIE_NO_DATA**)")]
     SerieNoData,
-    #[error("Estratégia em execução (**NL_HAS_STRATEGY_RUNNING**)")]
+    #[error("Strategy running (**NL_HAS_STRATEGY_RUNNING**)")]
     HasStrategyRunning,
-    #[error("Sem mais histórico (**NL_SERIE_NO_MORE_HISTORY**)")]
+    #[error("No more history (**NL_SERIE_NO_MORE_HISTORY**)")]
     SerieNoMoreHistory,
-    #[error("Série atingiu limite (**NL_SERIE_MAX_COUNT**)")]
+    #[error("Serie reached limit (**NL_SERIE_MAX_COUNT**)")]
     SerieMaxCount,
-    #[error("Recurso duplicado (**NL_DUPLICATE_RESOURCE**)")]
+    #[error("Duplicate resource (**NL_DUPLICATE_RESOURCE**)")]
     DuplicateResource,
-    #[error("Contrato não assinado (**NL_UNSIGNED_CONTRACT**)")]
+    #[error("Unsigned contract (**NL_UNSIGNED_CONTRACT**)")]
     UnsignedContract,
-    #[error("Senha ausente (**NL_NO_PASSWORD**)")]
+    #[error("Password missing (**NL_NO_PASSWORD**)")]
     NoPassword,
-    #[error("Usuário ausente (**NL_NO_USER**)")]
+    #[error("User missing (**NL_NO_USER**)")]
     NoUser,
-    #[error("Arquivo já existe (**NL_FILE_ALREADY_EXISTS**)")]
+    #[error("File already exists (**NL_FILE_ALREADY_EXISTS**)")]
     FileAlreadyExists,
-    #[error("Ticker inválido (**NL_INVALID_TICKER**)")]
+    #[error("Invalid ticker (**NL_INVALID_TICKER**)")]
     InvalidTicker,
-    #[error("Conta não é master (**NL_NOT_MASTER_ACCOUNT**)")]
+    #[error("Account is not master (**NL_NOT_MASTER_ACCOUNT**)")]
     NotMasterAccount,
-    #[error("Resultado desconhecido: {0}")]
+    #[error("Unknown result: {0}")]
     Unknown(NResult),
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
-    #[error("Falha carregando DLL: {0}")]
+    #[error("DLL load failed: {0}")]
     Load(String),
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
-    #[error("Função não encontrada: {0}")]
+    #[error("Function not found: {0}")]
     MissingSymbol(&'static str),
-    #[error("Conexão falhou: {0}")]
+    #[error("Connection failed: {0}")]
     ConnectionFailed(String),
 }
 
 impl ProfitError {
-    /// Converte um código **NResult** da DLL em [`ProfitError`].
+    /// Converts a **NResult** code from the DLL into a [`ProfitError`].
     pub fn from_nresult(code: NResult) -> Result<(), ProfitError> {
         use ProfitError::*;
         match code {

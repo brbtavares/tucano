@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Estratégia simples de desequilíbrio de livro de ofertas.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! Simple order book imbalance strategy.
 //!
-//! Reutilizável tanto em modo live quanto em backtest.
-//! Não depende de indicadores técnicos; apenas compara volume agregado de bids vs asks.
+//! Reusable in both live and backtest modes.
+//! Does not depend on technical indicators; only compares aggregated bid vs ask volume.
 
 use rust_decimal::Decimal;
 use tucano_execution::order::request::OrderRequestOpen;
@@ -10,12 +10,12 @@ use tucano_execution::{ExchangeIndex, InstrumentIndex};
 use tucano_markets::Side;
 use tucano_trader::AlgoStrategy;
 
-/// Configuração para a estratégia de desequilíbrio.
+/// Configuration for the imbalance strategy.
 #[derive(Debug, Clone)]
 pub struct OrderBookImbalanceConfig {
-    /// Percentual mínimo (0-1) de desequilíbrio para acionar compra/venda. Ex: 0.6 => 60%.
+    /// Minimum imbalance percentage (0-1) to trigger buy/sell. E.g., 0.6 => 60%.
     pub threshold: Decimal,
-    /// Quantidade base a enviar por ordem quando sinal ocorre.
+    /// Base quantity to send per order when signal occurs.
     pub quantity: Decimal,
 }
 
@@ -28,7 +28,7 @@ impl Default for OrderBookImbalanceConfig {
     }
 }
 
-/// Estado volátil opcional (ex: última direção acionada) para evitar over-trading.
+/// Optional volatile state (e.g., last triggered direction) to avoid over-trading.
 #[derive(Debug, Default, Clone)]
 pub struct OrderBookImbalanceState {
     #[allow(dead_code)]

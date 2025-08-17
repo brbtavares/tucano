@@ -1,41 +1,41 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! # Configuração de Logging
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! # Logging Configuration
 //!
-//! Módulo de configuração padronizada de logging do framework Tucano (ex-Toucan).
-//! Fornece logs estruturados com filtros para reduzir ruído de auditoria interna.
+//! Standardized logging configuration module for the Tucano framework (formerly Toucan).
+//! Provides structured logs with filters to reduce internal audit noise.
 //!
-//! ## Funcionalidades
+//! ## Features
 //!
-//! - **Saída Configurável**: Formato humano ou JSON
-//! - **Filtro por Ambiente**: Usa variável `RUST_LOG` para níveis
-//! - **Filtro de Ruído de Auditoria**: Remove atualizações verbosas de réplica de estado
-//! - **Nível INFO Padrão**: Ajustável conforme necessidade
+//! - **Configurable Output**: Human-readable or JSON format
+//! - **Environment Filtering**: Uses `RUST_LOG` variable for levels
+//! - **Audit Noise Filter**: Removes verbose state replica updates
+//! - **Default INFO Level**: Adjustable as needed
 //!
-//! ## Uso
+//! ## Usage
 //!
-//! ### Logging Padrão (legível humano)
+//! ### Standard Logging (human-readable)
 //! ```rust,ignore
-//! use tucano_core::logging::init_logging; // crate path when used externamente
+//! use tucano_core::logging::init_logging; // crate path when used externally
 //!
 //! fn main() {
 //!     init_logging();
-//!     tracing::info!("Sistema de trading iniciado");
+//!     tracing::info!("Trading system started");
 //! }
 //! ```
 //!
-//! ### Logging JSON (agregadores / observabilidade)
+//! ### JSON Logging (aggregators / observability)
 //! ```rust,ignore
-//! use tucano_core::logging::init_json_logging; // crate path externo
+//! use tucano_core::logging::init_json_logging; // external crate path
 //!
 //! fn main() {
 //!     init_json_logging();
-//!     tracing::info!("Sistema de trading iniciado");
+//!     tracing::info!("Trading system started");
 //! }
 //! ```
 //!
-//! ### Configuração via Ambiente
+//! ### Environment Configuration
 //! ```bash
-//! # Nível debug para todos os módulos
+//! # Debug level for all modules
 //! export RUST_LOG=debug
 //!
 //! # Níveis específicos por módulo

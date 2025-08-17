@@ -26,13 +26,13 @@ use crate::{
     InstrumentAccountSnapshot, UnindexedAccountEvent, UnindexedAccountSnapshot,
 };
 use chrono::{DateTime, Utc};
-use profitdll::ProfitError;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tucano_markets::{ExchangeId, Side};
+use tucano_profitdll::ProfitError;
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {

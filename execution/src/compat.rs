@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 /// Compatibility type aliases during the ongoing markets → execution refactor.
 ///
 /// Why aliases (pub type X = String)?
@@ -7,16 +7,16 @@
 /// - Easy rollback and incremental re-introduction of real newtypes later.
 ///
 /// When to migrate to real newtypes again:
-/// - After stabilising engine + analytics behaviour under string route.
-/// - Once we want compiler to prevent accidental cross-kind mixups (asset vs instrument).
+/// - After stabilizing engine + analytics behavior under string route.
+/// - Once we want the compiler to prevent accidental cross-kind mixups (asset vs instrument).
 ///
 /// Transitional plan (see long design note below): keep these aliases exported here;
-/// begin introducing opt‑in newtypes under `compat::typed` for modules that are
+/// begin introducing opt-in newtypes under `compat::typed` for modules that are
 /// ready (e.g. indexing, persistence). Downstream crates should not assume these
 /// stay aliases forever—treat them as semantic identifiers.
-// Tipos de compatibilidade para migração da arquitetura markets
-// Mantemos aliases simples para não quebrar o build; adicionamos módulo opcional
-// `typed` com newtypes para migração progressiva (opt-in).
+// Compatibility types for migration from the markets architecture
+// We keep simple aliases to avoid breaking the build; we add an optional
+// `typed` module with newtypes for progressive migration (opt-in).
 pub type AssetIndex = String;
 pub type InstrumentIndex = String;
 pub type AssetNameExchange = String;
@@ -26,14 +26,14 @@ pub type ExchangeIndex = String;
 pub type ExchangeKey = String;
 pub type AssetKey = String;
 pub type InstrumentKey = String;
-// Nova camada (Fase 1 da separação Exchange / Broker / Transporte)
-// BrokerId: identifica a corretora (ex: "XP", "CLEAR"). Inicialmente alias = String.
-// AccountId: identifica a conta dentro do broker (ex: número da conta / login).
+// New layer (Phase 1 of Exchange / Broker / Transport separation)
+// BrokerId: identifies the broker (e.g., "XP", "CLEAR"). Initially alias = String.
+// AccountId: identifies the account within the broker (e.g., account number / login).
 pub type BrokerId = String;
 pub type AccountId = String;
 
-/// Newtypes experimentais para migração futura (ainda não usados). Fornecem maior segurança
-/// sem quebrar o código atual. Quando adotados, bastará substituir imports:
+/// Experimental newtypes for future migration (not yet used). Provide greater safety
+/// without breaking current code. When adopted, just replace imports:
 /// `use execution::compat::typed::AssetIndex` etc.
 #[allow(dead_code)]
 pub mod typed {

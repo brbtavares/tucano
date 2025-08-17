@@ -1,12 +1,12 @@
 [package]
 name = "tucano-execution"
-version = "0.5.3"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-execution"
-description = "Ordem & account data: execução (mock/live) e streams privadas"
+description = "Order & account data: execution (mock/live) and private streams"
 keywords = ["trading","execution","orders","account"]
 categories = ["finance","api-bindings"]
 
@@ -14,46 +14,46 @@ categories = ["finance","api-bindings"]
 all-features = true
 
 [features]
-# Habilita newtypes experimentais para indices/nomes (map.rs usa cfg(feature = "typed_indices")).
+## Enables experimental newtypes for indices/names (map.rs uses cfg(feature = "typed_indices")).
 typed_indices = []
 
 
 [dependencies]
-# Tucano Ecosystem
+## Tucano Ecosystem
 "tucano-data" = { workspace = true }
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
-profitdll = { workspace = true }
+"tucano-profitdll" = { workspace = true }
 
-# Logging
+## Logging
 tracing = { workspace = true }
 
-# Async
+## Async
 tokio = { workspace = true, features = ["sync", "macros", "rt-multi-thread"] }
 tokio-stream = { workspace = true, features = ["sync"] }
 futures = { workspace = true }
 
-# Data Structures
+## Data Structures
 smol_str = { workspace = true }
 fnv = { workspace = true }
 rust_decimal = { workspace = true }
 
-# Error
+## Error
 thiserror = { workspace = true }
 
-# SerDe
+## SerDe
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 
-# Crypto for Binance signing (commented out for now)
+## Crypto for Binance signing (commented out for now)
 # hex = "0.4"
 # hmac = "0.12"
 # sha2 = "0.10"
 
-# HTTP client (commented out for now due to OpenSSL issues)
+## HTTP client (commented out for now due to OpenSSL issues)
 # reqwest = { version = "0.11", features = ["json"] }
 
-# Misc
+## Misc
 rand = { workspace = true }
 chrono = { workspace = true, features = ["serde"]}
 itertools = { workspace = true }

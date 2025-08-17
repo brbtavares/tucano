@@ -1,12 +1,12 @@
 [package]
 name = "tucano-core"
-version = "0.1.2"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-core"
-description = "Núcleo de engine: backtesting, live trading, orchestration e estado"
+description = "Engine core: backtesting, live trading, orchestration and state"
 keywords = ["trading","engine","backtesting","live","orchestration"]
 categories = ["finance","algorithms"]
 
@@ -18,35 +18,35 @@ tokio = { workspace = true, features = ["fs"]}
 [dependencies]
 "tucano-analytics" = { workspace = true }
 "tucano-risk" = { workspace = true }
-# Tucano Ecosystem
+## Tucano Ecosystem
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
 "tucano-data" = { workspace = true }
 "tucano-execution" = { workspace = true }
 "tucano-trader" = { workspace = true }
 
-# Logging
+## Logging
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true, features = ["env-filter", "json", "registry"]}
 
-# Async
+## Async
 tokio = { workspace = true, features = ["sync"] }
 futures = { workspace = true }
 pin-project = { workspace = true }
 
-# Error
+## Error
 thiserror = { workspace = true }
 
-# SerDe
+## SerDe
 serde = { workspace = true, features = ["derive"] }
 
-# Data Structures
+## Data Structures
 smol_str = { workspace = true }
 rust_decimal = { workspace = true }
 fnv = { workspace = true }
 indexmap = { workspace = true, features = ["serde"]}
 
-# Misc
+## Misc
 chrono = { workspace = true, features = ["serde"]}
 derive_more = { workspace = true, features = ["constructor", "from", "display"]}
 prettytable-rs = "0.10.0"

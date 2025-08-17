@@ -1,13 +1,13 @@
 [package]
 name = "tucano"
-version = "0.1.1"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-description = "Façade unificada do ecossistema Tucano (trading algorítmico B3)"
+description = "Unified facade for the Tucano ecosystem (algorithmic trading)"
 repository = "https://github.com/brbtavares/tucano"
 documentation = "https://docs.rs/tucano"
 readme = "../README.md"
-keywords = ["trading","b3","algoritmico","finance","rust"]
+keywords = ["trading","finance","rust"]
 categories = ["finance","algorithms"]
 authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
 
@@ -22,10 +22,10 @@ authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
 "tucano-strategies" = { workspace = true }
 "tucano-analytics" = { workspace = true }
 "tucano-integration" = { workspace = true }
-profitdll = { workspace = true }
+"tucano-profitdll" = { workspace = true }
 
 [features]
-# Feature agregadora para conveniência
+## Aggregator feature for convenience
 full = []
 
 [package.metadata.docs.rs]

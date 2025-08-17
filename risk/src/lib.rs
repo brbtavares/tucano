@@ -1,92 +1,90 @@
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. README & DISCLAIMER.
-//! # 🛡️ Risk - Módulo de Gestão de Risco
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER. DISCLAIMER. DISCLAIMER. DISCLAIMER. DISCLAIMER. DISCLAIMER. DISCLAIMER.
+//! # 🛡️ Risk - Risk Management Module
 //!
-//! Framework abrangente para gestão de risco em trading algorítmico,
-//! fornecendo validações, limites e controles para proteger o capital
-//! e garantir conformidade regulatória.
+//! Comprehensive framework for risk management in algorithmic trading,
+//! providing validations, limits, and controls to protect capital
+//! and ensure regulatory compliance.
 //!
-//! ## 🎯 Objetivos Principais
+//! ## 🎯 Main Objectives
 //!
-//! - **Proteção de Capital**: Prevenção de perdas excessivas
-//! - **Controle de Exposição**: Limitação de posições por ativo/mercado
-//! - **Conformidade**: Aderência a regulamentações financeiras
-//! - **Performance**: Validações em tempo real com baixa latência
+//! - **Capital Protection**: Prevent excessive losses
+//! - **Exposure Control**: Limit positions per asset/market
+//! - **Compliance**: Adhere to financial regulations
+//! - **Performance**: Real-time validations with low latency
 //!
-//! ## 🏗️ Componentes do Sistema
+//! ## 🏗️ System Components
 //!
 //! ### RiskManager
-//! Interface principal para revisão e filtragem de ordens:
+//! Main interface for reviewing and filtering orders:
 //! ```text
 //! use risk::{RiskManager, RiskApproved, RiskRefused};
 //!
 //! impl RiskManager for MyRiskManager {
 //!     fn check_order(&self, order: &Order) -> Result<RiskApproved<Order>, RiskRefused<Order>> {
-//!         // Implementar validações específicas
+//!         // Implement specific validations
 //!     }
 //! }
 //! ```
 //!
-//! ### Tipos de Validação
-//! - **Position Limits**: Limites máximos de posição por instrumento
-//! - **Exposure Limits**: Limites de exposição total por mercado
-//! - **Leverage Control**: Controle de alavancagem máxima
-//! - **Concentration Risk**: Prevenção de concentração excessiva
-//! - **Market Hours**: Validação de horários de mercado
-//! - **Circuit Breakers**: Parada automática em perdas excessivas
+//! ### Validation Types
+//! - **Position Limits**: Maximum position limits per instrument
+//! - **Exposure Limits**: Total exposure limits per market
+//! - **Leverage Control**: Maximum leverage control
+//! - **Concentration Risk**: Prevent excessive concentration
+//! - **Market Hours**: Market hours validation
+//! - **Circuit Breakers**: Automatic stop on excessive losses
 //!
-//! ## 🔍 Estruturas de Resultado
+//! ## 🔍 Result Structures
 //!
 //! ### RiskApproved<T>
-//! Representa uma operação aprovada pelo sistema de risco:
+//! Represents an operation approved by the risk system:
 //! ```text
 //! let approved = RiskApproved::new(order);
-//! let order = approved.into_item(); // Extrair o item aprovado
+//! let order = approved.into_item(); // Extract the approved item
 //! ```
 //!
 //! ### RiskRefused<T>
-//! Representa uma operação rejeitada com motivo específico:
+//! Represents an operation rejected with a specific reason:
 //! ```text
-//! let refused = RiskRefused::new(order, "Excede limite de posição");
-//! println!("Rejeitado: {}", refused.reason);
+//! let refused = RiskRefused::new(order, "Exceeds position limit");
+//! println!("Rejected: {}", refused.reason);
 //! ```
 //!
-//! ## 🚨 Cenários de Risco Comum
+//! ## 🚨 Common Risk Scenarios
 //!
-//! ### Limites de Posição
+//! ### Position Limits
 //! ```rust,ignore
 //! if position_size > max_position_limit {
-//!     return Err(RiskRefused::new(order, "Excede limite máximo de posição"));
+//!     return Err(RiskRefused::new(order, "Exceeds maximum position limit"));
 //! }
 //! ```
 //!
-//! ### Controle de Exposição
+//! ### Exposure Control
 //! ```text
 //! let total_exposure = calculate_exposure(&portfolio);
 //! if total_exposure > exposure_limit {
-//!     return Err(RiskRefused::new(order, "Excede limite de exposição"));
+//!     return Err(RiskRefused::new(order, "Exceeds exposure limit"));
 //! }
 //! ```
 //!
-//! ### Horário de Mercado
+//! ### Market Hours
 //! ```text
 //! if !is_market_open(instrument.exchange()) {
-//!     return Err(RiskRefused::new(order, "Mercado fechado"));
+//!     return Err(RiskRefused::new(order, "Market closed"));
 //! }
 //! ```
 //!
-//! ## 📊 Métricas de Risco
+//! ## 📊 Risk Metrics
 //!
-//! - **VaR (Value at Risk)**: Risco de perda em condições normais
-//! - **CVaR (Conditional VaR)**: Risco de perda em cenários extremos
-//! - **Maximum Drawdown**: Maior perda histórica observada
-//! - **Sharpe Ratio**: Retorno ajustado ao risco
-//! - **Beta**: Correlação com mercado de referência
+//! - **VaR (Value at Risk)**: Loss risk under normal conditions
+//! - **CVaR (Conditional VaR)**: Loss risk in extreme scenarios
+//! - **Maximum Drawdown**: Largest historical observed loss
+//! - **Sharpe Ratio**: Risk-adjusted return
+//! - **Beta**: Correlation with reference market
 //!
-//! ## 🔄 Integração com Engine
+//! ## 🔄 Integration with Engine
 //!
-//! O módulo de risco se integra nativamente com o core engine:
+//! The risk module integrates natively with the core engine:
 //! ```text
 //! use core::engine::Engine;
 //! use risk::RiskManager;
@@ -96,14 +94,14 @@
 //!     state,
 //!     execution_txs,
 //!     strategy,
-//!     risk_manager // <- Integração automática
+//!     risk_manager // <- Automatic integration
 //! );
 //! ```
 
-/// Módulo contendo implementações de verificações de risco.
+/// Module containing risk check implementations.
 ///
-/// Inclui validadores específicos para diferentes tipos de risco
-/// como limites de posição, exposição, horários de mercado, etc.
+/// Includes specific validators for different types of risk
+/// such as position limits, exposure, market hours, etc.
 pub mod check;
 
 pub use check::*;
@@ -116,17 +114,17 @@ use tucano_execution::{
     ExchangeIndex, InstrumentIndex,
 };
 
-/// Resultado aprovado de uma verificação do [`RiskManager`].
+/// Approved result of a [`RiskManager`] check.
 ///
-/// Wrapper que indica que um item (como uma ordem) passou por todas
-/// as verificações de risco e foi aprovado para execução.
+/// Wrapper indicating that an item (such as an order) has passed all
+/// risk checks and is approved for execution.
 ///
-/// # Exemplo
+/// # Example
 /// ```rust,ignore
 /// use risk::RiskApproved;
 ///
 /// let approved_order = RiskApproved::new(order);
-/// println!("Ordem aprovada: {}", approved_order);
+/// println!("Order approved: {}", approved_order);
 /// ```
 #[derive(
     Debug,
@@ -151,28 +149,28 @@ impl<T> RiskApproved<T> {
     }
 }
 
-/// Resultado rejeitado de uma verificação do [`RiskManager`].
+/// Rejected result of a [`RiskManager`] check.
 ///
-/// Contém o item rejeitado e o motivo específico da rejeição,
-/// permitindo logging detalhado e ações corretivas.
+/// Contains the rejected item and the specific reason for rejection,
+/// allowing detailed logging and corrective actions.
 ///
-/// # Exemplo
+/// # Example
 /// ```rust,ignore
 /// use risk::RiskRefused;
 ///
-/// let refused = RiskRefused::new(order, "Excede limite de posição");
-/// println!("Ordem rejeitada: {}", refused.reason);
+/// let refused = RiskRefused::new(order, "Exceeds position limit");
+/// println!("Order rejected: {}", refused.reason);
 /// ```
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub struct RiskRefused<T, Reason = String> {
-    /// O item que foi rejeitado
+    /// The item that was rejected
     pub item: T,
-    /// Motivo específico da rejeição
+    /// Specific reason for rejection
     pub reason: Reason,
 }
 
 impl<T> RiskRefused<T> {
-    /// Cria uma nova instância de `RiskRefused` com o item e motivo fornecidos.
+    /// Creates a new `RiskRefused` instance with the provided item and reason.
     pub fn new(item: T, reason: impl Into<String>) -> Self {
         Self {
             item,
@@ -182,26 +180,25 @@ impl<T> RiskRefused<T> {
 }
 
 impl<T, Reason> RiskRefused<T, Reason> {
-    /// Extrai o item rejeitado do wrapper.
+    /// Extracts the rejected item from the wrapper.
     pub fn into_item(self) -> T {
         self.item
     }
 }
 
-/// Interface do RiskManager para revisar e opcionalmente filtrar ordens de
-/// cancelamento e abertura geradas por uma [`AlgoStrategy`](trader::AlgoStrategy).
+/// RiskManager interface for reviewing and optionally filtering cancel and open orders generated by an [`AlgoStrategy`](trader::AlgoStrategy).
 ///
-/// ## Responsabilidades Principais
+/// ## Main Responsibilities
 ///
-/// Um RiskManager pode implementar diversas verificações como:
-/// - **Filtro de Exposição**: Rejeitar ordens que resultariam em exposição excessiva
-/// - **Limites de Posição**: Verificar se a ordem não excede limites por instrumento
-/// - **Validação de Margem**: Garantir margem suficiente para novas posições
-/// - **Horários de Mercado**: Validar se o mercado está aberto para negociação
-/// - **Circuit Breakers**: Parar operações em caso de perdas excessivas
-/// - **Compliance**: Verificar conformidade com regulamentações
+/// A RiskManager can implement various checks such as:
+/// - **Exposure Filter**: Reject orders that would result in excessive exposure
+/// - **Position Limits**: Check if the order does not exceed limits per instrument
+/// - **Margin Validation**: Ensure sufficient margin for new positions
+/// - **Market Hours**: Validate if the market is open for trading
+/// - **Circuit Breakers**: Stop operations in case of excessive losses
+/// - **Compliance**: Check compliance with regulations
 ///
-/// ## Exemplo de Implementação
+/// ## Implementation Example
 /// ```rust,ignore
 /// use risk::{RiskManager, RiskApproved, RiskRefused};
 ///
@@ -213,7 +210,7 @@ impl<T, Reason> RiskRefused<T, Reason> {
 /// impl RiskManager for MyRiskManager {
 ///     fn check_order(&self, order: &Order) -> Result<RiskApproved<Order>, RiskRefused<Order>> {
 ///         if order.quantity > self.max_position {
-///             return Err(RiskRefused::new(order.clone(), "Posição muito grande"));
+///             return Err(RiskRefused::new(order.clone(), "Position too large"));
 ///         }
 ///         Ok(RiskApproved::new(order.clone()))
 ///     }

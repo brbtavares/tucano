@@ -1,22 +1,22 @@
 # tucano-trader
 
-Abstrações centrais de estratégia (traits, tipos e helpers) para o ecossistema **Tucano**.
+Core strategy abstractions (traits, types, and helpers) for the **Tucano** ecosystem.
 
-Este crate define:
+This crate defines:
 
-- Traits de estratégia e ciclo de vida
-- Tipos de eventos e sinais
-- Tipos utilitários compartilhados entre estratégias concretas e o engine
+- Strategy traits and lifecycle
+- Event and signal types
+- Utility types shared between concrete strategies and the engine
 
-## Uso
+## Usage
 
-Adicione ao seu `Cargo.toml` (após publicação):
+Add to your `Cargo.toml` (after publishing):
 
 ```toml
 [dependencies]
 tucano-trader = "0.1"
 ```
 
-## Licença
+## License
 
-MIT. Veja o repositório principal para mais detalhes.
+MIT. See the main repository for more details.

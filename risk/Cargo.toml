@@ -6,14 +6,14 @@ license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-risk"
-description = "Interfaces e implementações de gestão de risco"
+description = "Interfaces and implementations for risk management"
 keywords = ["trading","risk","risk-management"]
 categories = ["finance","algorithms"]
 
 [package.metadata.docs.rs]
 all-features = true
 repository = "https://github.com/brbtavares/tucano"
-description = "Interfaces e implementações de gestão de risco para o ecossistema Tucano"
+description = "Interfaces and implementations for risk management for the Tucano ecosystem"
 keywords = ["trading","risk","risk-management","finance"]
 categories = ["finance","algorithms"]
 

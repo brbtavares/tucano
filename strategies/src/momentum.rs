@@ -1,5 +1,5 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Placeholder de estratégia Momentum (ainda não implementada).
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! Momentum strategy placeholder (not yet implemented).
 
-/// Estrutura placeholder.
+/// Placeholder struct.
 pub struct MomentumStrategy;

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Tucano - Framework de Trading Algorítmico para B3
+# Tucano - Algorithmic Trading Framework for Global Markets
 
 
 <table>
@@ -11,15 +11,16 @@
     </tr>
     <tr>
         <td align="left" valign="middle" style="border: none; padding-left: 16px;">
-            <li><strong>Visão aguçada & alcance estratégico</strong>: monitora múltiplos mercados / books em tempo real para antecipar movimento.</li>
-            <li><strong>Precisão & eficiência</strong>: envia ordens enxutas, evita latência e reduz fricção operacional.</li>
-            <li><strong>Navegação em ambientes complexos</strong>: abstrai protocolos, streams e formatos heterogêneos.</li>
-            <li><strong>Inteligência adaptativa</strong>: ajusta parâmetros & estratégias conforme regime de mercado.</li>
-            <li><strong>Visão panorâmica</strong>: consolida dados multi‐fonte para decisão holística (preço, volume, risco, PnL).</li>
-            <li><strong>Velocidade de resposta</strong>: loop de eventos otimizado para reagir a micro variações antes da competição.</li>
+            <li><strong>Keen vision & strategic reach</strong>: monitors multiple markets/order books in real time to anticipate movement.</li>
+            <li><strong>Precision & efficiency</strong>: sends lean orders, avoids latency, and reduces operational friction.</li>
+            <li><strong>Navigation in complex environments</strong>: abstracts protocols, streams, and heterogeneous formats.</li>
+            <li><strong>Adaptive intelligence</strong>: adjusts parameters & strategies according to market regime.</li>
+            <li><strong>Panoramic view</strong>: consolidates multi-source data for holistic decision-making (price, volume, risk, PnL).</li>
+            <li><strong>Fast response</strong>: optimized event loop to react to micro-variations before the competition.</li>
         </td>
     </tr>
 </table>
+
 
 
 
@@ -28,126 +29,156 @@
 [![Docs](https://img.shields.io/docsrs/tucano)](https://docs.rs/tucano)
 [![CI](https://github.com/brbtavares/tucano/actions/workflows/ci.yml/badge.svg)](https://github.com/brbtavares/tucano/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![B3](https://img.shields.io/badge/exchange-B3-green.svg)](http://www.b3.com.br)
 
 </div>
 
-## 🎯 Características Principais
+## 🎯 Key Features
 
-- **🧠 Engine Unificado**: Mesmo código para backtest e execução (real ou simulada) ao vivo
-- **🇧🇷 Mercado Brasileiro**: Integração nativa com B3 já implementada via ProfitDLL
-- **⚡ Alta Performance**: Desenvolvido em Rust para máxima eficiência
-- **🛡️ Type Safety**: Sistema de tipos que previne erros em tempo de compilação
- - **🔄 Modular**: Arquitetura extensível e componentes reutilizáveis
+    **🌐 Multi-market Ready**: Designed for integration with any exchange or broker (WebSocket, REST, DLL, etc.)
 
-## 📦 Crates Publicadas
+## 📦 Published Crates
 
-| Crate | Versão | Descrição | Docs |
-|-------|--------|-----------|------|
-| `tucano` | 0.1.x | Façade unificada (re-export) | [docs.rs](https://docs.rs/tucano) |
-| `tucano-core` | 0.12.x | Engine, execução/backtest unificado | [docs.rs](https://docs.rs/tucano-core) |
-| `tucano-markets` | 0.3.x | Instrumentos & exchanges (B3, etc) | [docs.rs](https://docs.rs/tucano-markets) |
-| `tucano-data` | 0.10.x | Eventos & pipeline de dados (streams, books, trades) | [docs.rs](https://docs.rs/tucano-data) |
-| `tucano-execution` | 0.5.x | Ordens, fills, roteamento & clientes | [docs.rs](https://docs.rs/tucano-execution) |
-| `tucano-trader` | 0.1.x | Traits centrais de estratégia & tipos | [docs.rs](https://docs.rs/tucano-trader) |
-| `tucano-risk` | 0.1.x | Gestão de risco (limites, validações) | [docs.rs](https://docs.rs/tucano-risk) |
-| `tucano-strategies` | 0.1.x | Estratégias de exemplo / referência | [docs.rs](https://docs.rs/tucano-strategies) |
-| `tucano-analytics` | 0.1.x | Métricas, summaries, performance & PnL | [docs.rs](https://docs.rs/tucano-analytics) |
-| `tucano-integration` | 0.9.x | Protocolos externos, canais & snapshots | [docs.rs](https://docs.rs/tucano-integration) |
-| `tucano-macros` | 0.2.x | Procedural macros internas | [docs.rs](https://docs.rs/tucano-macros) |
-| `tucano-profitdll` | 0.1.x | Integração ProfitDLL (mock + FFI opcional) | [docs.rs](https://docs.rs/tucano-profitdll) |
+| Crate | Version | Description | Docs |
+|-------|---------|-------------|------|
+| `tucano` | 0.1.x | Unified façade (re-export) | [docs.rs](https://docs.rs/tucano) |
+| `tucano-core` | 0.12.x | Engine, unified execution/backtest | [docs.rs](https://docs.rs/tucano-core) |
+| `tucano-markets` | 0.3.x | Instruments & exchanges (multi-market) | [docs.rs](https://docs.rs/tucano-markets) |
+| `tucano-data` | 0.10.x | Events & data pipeline (streams, books, trades) | [docs.rs](https://docs.rs/tucano-data) |
+| `tucano-execution` | 0.5.x | Orders, fills, routing & clients | [docs.rs](https://docs.rs/tucano-execution) |
+| `tucano-trader` | 0.1.x | Core strategy traits & types | [docs.rs](https://docs.rs/tucano-trader) |
+| `tucano-risk` | 0.1.x | Risk management (limits, validations) | [docs.rs](https://docs.rs/tucano-risk) |
+| `tucano-strategies` | 0.1.x | Example/reference strategies | [docs.rs](https://docs.rs/tucano-strategies) |
+| `tucano-analytics` | 0.1.x | Metrics, summaries, performance & PnL | [docs.rs](https://docs.rs/tucano-analytics) |
+| `tucano-integration` | 0.9.x | External protocols, channels & snapshots | [docs.rs](https://docs.rs/tucano-integration) |
+| `tucano-macros` | 0.2.x | Internal procedural macros | [docs.rs](https://docs.rs/tucano-macros) |
+| `tucano-profitdll` | 0.1.x | ProfitDLL integration (mock + optional FFI) | [docs.rs](https://docs.rs/tucano-profitdll) |
 
-Convenção: usar intervalo `major.minor.x` nas docs; indique patch específico se precisar de reprodutibilidade.
+Convention: use `major.minor.x` range in docs; specify patch for reproducibility if needed.
 
-## 🏗️ Arquitetura do Sistema (Visão Rápida)
-`core/` (engine), `execution/` (ordens), `data/` (streams), `markets/` (instrumentos B3), `analytics/` (métricas), `risk/`, `trader/` (traits), `strategies/`, `integration/` (protocolos) e `examples/`.
+## 🏗️ System Architecture
 
-## 🚀 Início Rápido
+Tucano is organized as a modular Rust workspace, where each crate is responsible for a specific domain of algorithmic trading. This design enables easy extension, testing, and integration with new markets, protocols, and strategies. Below is an overview of the main components and their roles:
 
-### Pré-requisitos
+**Workspace Structure:**
+
+```
+├── tucano/                # Unified façade crate (re-exports)
+├── core/                  # Core engine: event loop, unified execution/backtest logic
+├── execution/             # Order management, routing, fills, and client abstractions
+├── data/                  # Market data events, streaming, books, trades
+├── markets/               # Instrument definitions, exchange adapters, market-specific logic
+├── analytics/             # Metrics, summaries, performance, PnL calculations
+├── risk/                  # Risk management: limits, validations, risk checks
+├── trader/                # Core traits and types for strategy development
+├── strategies/            # Example/reference strategies (plug-and-play)
+├── integration/           # External protocol adapters, channels, snapshots
+├── macros/                # Internal procedural macros for code generation
+├── profitdll/             # ProfitDLL integration (mock + optional FFI)
+├── examples/              # Usage examples, integration demos
+├── devkit/                # Developer scripts and utilities
+```
+
+**Component Roles:**
+
+- **tucano**: The main entry point. Re-exports all core modules for easy consumption.
+- **core**: The heart of the framework. Implements the event-driven engine, supporting both live trading and backtesting with the same codebase.
+- **execution**: Handles order creation, routing, execution, and client abstraction for different brokers/exchanges.
+- **data**: Manages all market data streams, order books, trades, and event normalization.
+- **markets**: Defines financial instruments (stocks, futures, options, crypto, etc.) and provides adapters for each supported exchange or market.
+- **analytics**: Provides performance metrics, summaries, and reporting tools for strategies and portfolios.
+- **risk**: Centralizes risk checks, position limits, and validation logic to ensure safe trading.
+- **trader**: Contains the main traits and types for implementing trading strategies in a generic, engine-agnostic way.
+- **strategies**: Houses reusable and reference strategies, which can be used as templates or directly in production.
+- **integration**: Adapters for external protocols (WebSocket, REST, FIX, DLL, etc.), channels, and snapshotting tools.
+- **macros**: Internal procedural macros to reduce boilerplate and enable advanced code generation.
+- **profitdll**: Optional integration with ProfitDLL (for platforms that support it), including mock and FFI bindings.
+- **examples**: Real-world usage examples, integration tests, and demos for new users.
+- **devkit**: Scripts and utilities to help with development, CI/CD, and code quality.
+
+**Extending the Framework:**
+
+- To add support for a new market or protocol, create a new crate (e.g., `tucano-binance`, `tucano-ibrk`, `tucano-kraken`) following the same modular pattern. Implement the required traits from `core`, `execution`, and `data`.
+- New strategies can be added to the `strategies/` crate or as separate crates for better isolation.
+- All components communicate via strongly-typed events and traits, making it easy to plug in new modules without breaking existing code.
+
+This architecture allows you to build, test, and deploy algorithmic trading systems for any market or protocol, while keeping code maintainable and extensible.
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 ```bash
-# Instalar Rust (versão 1.75 ou superior)
+# Install Rust (version 1.75 or higher)
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# Clonar o repositório (novo nome)
+# Clone the repository
 git clone https://github.com/brbtavares/tucano.git
 cd tucano
 ```
 
-### Adicionar dependência (façade)
+### Add Dependency (façade)
 
-No seu `Cargo.toml` adicione a crate unificada (re-export) — recomendado para começar:
+In your `Cargo.toml`, add the unified crate (re-export) — recommended to start:
 
 ```toml
 [dependencies]
 tucano = { version = "0.1", features = ["full" ] }
 ```
 
-Ou, se quiser granularidade / compilar menos coisas, use crates individuais:
+Or, if you want more granularity/compile less, use individual crates:
 
 ```toml
 [dependencies]
-tucano-core = "0.12"
-tucano-markets = "0.3"
-tucano-data = "0.10"
-tucano-execution = "0.5"
+tucano-core = "0.1"
+tucano-markets = "0.1"
+tucano-data = "0.1"
+tucano-execution = "0.1"
 tucano-trader = "0.1"
 tucano-risk = "0.1"
 tucano-strategies = "0.1"
 tucano-analytics = "0.1"
 ```
 
-Depois importe via façade:
+Then import via façade:
 
 ```rust
 use tucano::prelude::*; // Engine, ExchangeId, Side, etc.
 ```
 
-### Compilação
+### Build
 
 ```bash
-# Compilar todo o workspace
+# Build the entire workspace
 cargo build --release
 
-# Executar testes
+# Run tests
 cargo test
 
-# Formatação de código (usa rustfmt.toml)
+# Code formatting (uses rustfmt.toml)
 cargo fmt
 
-# Verificar formatação (CI/CD)
+# Check formatting (CI/CD)
 cargo fmt --check
 
-# Lint de código (usa .config/clippy.toml)
+# Code linting (uses .config/clippy.toml)
 cargo clippy -- -D warnings
 
-# Script personalizado de formatação
-./scripts/format.sh
-./scripts/format.sh --check
+# Custom formatting script (devkit crate is not functional yet)
+./devkit/scripts/format.sh
+./devkit/scripts/format.sh --check
 
-# Executar exemplo básico
-cargo run --example basic_b3_usage
+# Run a basic example
+cargo run --example basic_usage
 
-# Gerar documentação
+# Generate documentation
 cargo doc --open
 ```
 
-### Configuração para B3
+## 💡 Usage Example
 
-```bash
-# Variáveis de ambiente
-export PROFIT_DLL_PATH="/path/to/ProfitDLL.dll"  # Windows
-export B3_USERNAME="seu_usuario"
-export B3_PASSWORD="sua_senha"
-export RUST_LOG=info
-```
+### Reusable Strategy: Order Book Imbalance
 
-## 💡 Exemplo de Uso
-
-### Estratégia Reutilizável: Order Book Imbalance
-
-Uma estratégia simples que observa o desequilíbrio entre volumes BID e ASK no melhor nível do livro. A mesma implementação pode ser plugada tanto em um motor live quanto em um motor de backtest sem alterar a lógica.
+A simple strategy that observes the imbalance between BID and ASK volumes at the best book level. The same implementation can be plugged into both a live engine and a backtest engine without changing the logic.
 
 ```rust
 use tucano_trader::AlgoStrategy;
@@ -158,11 +189,11 @@ use tucano_strategies::{
 use tucano_execution::{ExchangeIndex, InstrumentIndex};
 use tucano_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
 
-// Wrapper leve para demonstrar o trait (delegaria internamente para a estratégia real).
+// Lightweight wrapper to demonstrate the trait (would delegate internally to the real strategy).
 struct MyImbalance(OrderBookImbalanceStrategy);
 
 impl AlgoStrategy for MyImbalance {
-    type State = NoOpState; // estado do engine (placeholder)
+    type State = NoOpState; // engine state (placeholder)
 
     fn generate_algo_orders(
         &self,
@@ -171,13 +202,13 @@ impl AlgoStrategy for MyImbalance {
         impl IntoIterator<Item = OrderRequestCancel<ExchangeIndex, InstrumentIndex>>,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>>,
     ) {
-        // Aqui chamaríamos self.0.generate_algo_orders(...) quando integrado ao estado real
+        // Here we would call self.0.generate_algo_orders(...) when integrated with the real state
         (Vec::<OrderRequestCancel<_, _>>::new(), Vec::<OrderRequestOpen<_, _>>::new())
     }
 }
 ```
 
-### Uso em Live vs Backtest (mesma estratégia)
+### Usage in Live vs Backtest (same strategy)
 
 ```rust
 // Live
@@ -189,157 +220,52 @@ let strategy_bt = MyImbalance(OrderBookImbalanceStrategy::new(Default::default()
 let engine_bt = BacktestEngine::new(bt_config, bt_state, bt_exec_txs, strategy_bt, risk_manager_bt);
 ```
 
-Somente os componentes de dados (streaming vs histórico) e de execução (cliente real vs simulado) mudam; a estratégia permanece idêntica.
+Only the data components (streaming vs historical) and execution (real client vs simulated) change; the strategy remains identical.
 
-## 🇧🇷 Integração B3 via ProfitDLL (conceitual)
 
-A integração com a ProfitDLL foi extraída para a crate dedicada `profitdll` (anteriormente `tucano-profitdll`).
-O exemplo abaixo mostra uso direto do conector mock atualmente disponível:
+## 🛠️ Development
 
-```rust
-use profitdll::{ProfitConnector, CallbackEvent};
-
-let connector = ProfitConnector::new(None)?;
-let mut events = connector
-    .initialize_login("ACTIVATION_KEY", "user", "pass")
-    .await?;
-
-// Exemplo de subscription (mock)
-connector.subscribe_ticker("PETR4", "B")?;
-
-while let Ok(event) = events.try_recv() {
-    println!("Evento: {:?}", event);
-}
-```
-
-### Instrumentos Suportados
-
-```rust
-use tucano::tucano_markets::b3::{B3Stock, B3Option, B3Future};
-
-// Ações
-let petr4 = B3Stock::new("PETR4");
-let vale3 = B3Stock::new("VALE3");
-
-// Opções
-let petr_call = B3Option::call("PETRJ45", "PETR4", 45.0, "2024-01-15");
-
-// Futuros
-let dol_future = B3Future::new("DOLM24", "USD", "2024-12-31");
-```
-
-## 📊 Métricas & Analytics
-
-### Métricas Disponíveis
-
-```rust
-use tucano::tucano_analytics::metric::*;
-
-// Sharpe Ratio
-let sharpe = SharpeRatio::calculate(&returns, risk_free_rate)?;
-
-// Sortino Ratio (downside risk)
-let sortino = SortinoRatio::calculate(&returns, target_return)?;
-
-// Maximum Drawdown
-let max_dd = MaxDrawdown::calculate(&portfolio_values)?;
-
-// Win Rate
-let win_rate = WinRate::calculate(&trades)?;
-
-// Profit Factor
-let pf = ProfitFactor::calculate(&trades)?;
-```
-
-### Relatórios Automatizados
-
-```rust
-use tucano::tucano_analytics::summary::TradingSummary;
-
-let summary = TradingSummary::generate(&trades, &positions)?;
-println!("{}", summary.display_table());
-
-// Output:
-// ┌─────────────────┬──────────────┐
-// │ Métrica         │ Valor        │
-// ├─────────────────┼──────────────┤
-// │ Retorno Total   │ 15.3%        │
-// │ Sharpe Ratio    │ 1.45         │
-// │ Max Drawdown    │ -8.2%        │
-// │ Win Rate        │ 62.5%        │
-// └─────────────────┴──────────────┘
-```
-
-## 🛡️ Gestão de Risco (exemplo simplificado)
-
-### Implementação Básica
-
-```rust
-use tucano::tucano_risk::{RiskManager, RiskApproved, RiskRefused};
-
-struct MyRiskManager {
-    max_position_size: f64,
-    max_daily_loss: f64,
-}
-
-impl RiskManager for MyRiskManager {
-    fn check_order(&self, order: &Order) -> RiskResult<Order> {
-        // Verificar tamanho da posição
-        if order.quantity > self.max_position_size {
-            return Err(RiskRefused::new(order.clone(), "Excede limite de posição"));
-        }
-        
-        // Verificar perda diária
-        if current_daily_loss() > self.max_daily_loss {
-            return Err(RiskRefused::new(order.clone(), "Excede perda diária máxima"));
-        }
-        
-        Ok(RiskApproved::new(order.clone()))
-    }
-}
-```
-
-## 🔧 Desenvolvimento
-
-### Comandos Úteis
+### Useful Commands
 
 ```bash
-# Formatação de código
+# Code formatting
 cargo fmt
 
 # Lint
 cargo clippy -- -D warnings
 
-# Gerar documentação
+# Generate documentation
 cargo doc --open
 
 # Benchmarks
 cargo bench
-# Verificação de mini-disclaimers (CI falha se ausentes)
-./scripts/verify_disclaimers.sh
-./scripts/verify_disclaimers.sh --fix  # injeta onde faltar
 
-# Testes específicos
+# Mini-disclaimer check (CI fails if missing)
+./devkit/scripts/verify_disclaimers.sh
+./devkit/scripts/verify_disclaimers.sh --fix  # injects where missing
+
+# Specific tests
 cargo test -p core --test engine_tests
 ```
 
-### Formatação Automática
 
-O projeto usa [`rustfmt.toml`](rustfmt.toml) para garantir código consistente:
+### Automatic Formatting
 
-- **VS Code**: Formatação automática ao salvar (configurado em `.vscode/settings.json`)
-- **CI/CD**: Verificação automática no GitHub Actions
-- **Manual**: Execute `cargo fmt` para formatar todo o código
+The project uses [`rustfmt.toml`](rustfmt.toml) to ensure consistent code style:
+
+- **VS Code**: Auto-format on save (configured in `.vscode/settings.json`)
+- **CI/CD**: Automatic check in GitHub Actions
+- **Manual**: Run `cargo fmt` to format all code
 
 ```bash
-# Verificar se código está formatado (usado no CI)
+# Check if code is formatted (used in CI)
 cargo fmt --check
 
-# Formatar automaticamente
+# Format automatically
 cargo fmt
 ```
 
-### Estrutura de Testes (exemplo)
+### Test Structure (example)
 
 ```rust
 #[cfg(test)]
@@ -363,7 +289,7 @@ mod tests {
 ```rust
 use tracing::{info, warn, error, debug};
 
-// Setup de logging
+// Logging setup
 tracing_subscriber::fmt()
     .with_env_filter("tucano=debug")
     .init();
@@ -376,7 +302,7 @@ warn!("Limite de risco próximo: {}", exposure);
 
 ## 🚀 Deployment
 
-### Configuração de Produção
+### Production Configuration
 
 ```toml
 # Cargo.toml
@@ -402,7 +328,7 @@ COPY --from=builder /app/target/release/tucano /usr/local/bin/
 CMD ["tucano"]
 ```
 
-### Variáveis de Ambiente
+### Environment Variables
 
 ```bash
 # Produção
@@ -414,28 +340,29 @@ export DATABASE_URL=postgresql://user:pass@localhost/tucano
 export REDIS_URL=redis://localhost:6379
 ```
 
-## 🙏 Inspiração & Agradecimentos
 
-Este projeto foi fortemente **inspirado no desenho arquitetural do [barter-rs](https://github.com/barter-rs/barter-rs)**, cuja estrutura inicial serviu como ponto de partida para organizar módulos, traits centrais e a abordagem de streaming/normalização. Nosso sincero agradecimento ao seu criador e a todos os demais desenvolvedores e contribuidores do ecossistema barter-rs – o trabalho de vocês facilitou acelerar a fase inicial deste framework.
+## 🙏 Inspiration & Acknowledgments
 
----
-
-## ⚠️ Disclaimer (Resumo) & Escopo Legal
-
-Uso educacional/experimental. **Não é recomendação de investimento** nem consultoria financeira, jurídica, contábil ou tributária. Risco elevado: valide tudo em ambiente controlado (backtest / simulação) antes de qualquer operação real. Você é integralmente responsável por configurações, limites de risco, conformidade regulatória e monitoramento contínuo.
-
-### Ausência de Afiliação
-Autores e contribuidores **não são afiliados** nem possuem vínculo formal, societário, empregatício, contratual, de representação, patrocínio ou parceria com corretoras, bancos, fintechs/investechs, gestoras, consultorias ou agentes regulados.
-
-### Nenhuma Remuneração de Terceiros
-Não há recebimento de comissão, rebate, patrocínio ou qualquer vantagem econômica de terceiros em função deste projeto.
-
-### Profit / ProfitDLL
-"Profit", "ProfitChart", "Profit DLL" (ProfitDLL) e marcas correlatas são **propriedade da Nelógica**. A integração aqui exibida é meramente técnica (FFI dinâmico) e não implica endosso, suporte ou parceria. O repositório **não distribui** a DLL – apenas mostra como interoperar quando o usuário já possui direito legítimo de uso. Leia e respeite os termos de licença Nelógica.
-
-Para o texto completo, consulte `DISCLAIMER.md`.
+This project was strongly **inspired by the architectural design of [barter-rs](https://github.com/barter-rs/barter-rs)**, whose initial structure served as a starting point for organizing modules, core traits, and the streaming/normalization approach. Our sincere thanks to its creator and all other developers and contributors of the **barter-rs** ecosystem – your work helped accelerate the initial phase of this framework.
 
 ---
 
-**Tucano** – Trading algorítmico moderno para o mercado brasileiro 🇧🇷  \
-*MIT License* – ver [LICENSE](LICENSE) | [DISCLAIMER](DISCLAIMER.md)
+
+## ⚠️ Disclaimer & Legal Scope
+
+Educational/experimental use. **Not investment advice** nor financial, legal, accounting, or tax consulting. High risk: validate everything in a controlled environment (backtest/simulation) before any real operation. You are fully responsible for configurations, risk limits, regulatory compliance, and continuous monitoring.
+
+
+### No Third-Party Compensation
+There is no receipt of commission, rebate, sponsorship, or any economic advantage from third parties as a result of this project.
+
+
+### Brands and Proprietary Integrations
+All brands, trademarks, and proprietary APIs referenced are the property of their respective owners. Any integration shown here is purely technical and does not imply endorsement, support, or partnership. This repository does not distribute proprietary files or libraries – it only demonstrates how to interoperate when the user already has legitimate usage rights. Always read and respect the license terms of any third-party software or service you integrate.
+
+For the full text, see `DISCLAIMER.md`.
+
+---
+
+**Tucano** – Modern algorithmic trading for global markets  
+*MIT License* – see [LICENSE](LICENSE) | [DISCLAIMER](DISCLAIMER.md)

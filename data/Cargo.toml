@@ -1,12 +1,12 @@
 [package]
 name = "tucano-data"
-version = "0.10.1"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-data"
-description = "Ingestão WebSocket normalizada de dados públicos (foco B3)"
+description = "Normalized WebSocket ingestion of public data (focus B3)"
 keywords = ["trading","marketdata","websocket","b3"]
 categories = ["finance","api-bindings"]
 
@@ -17,39 +17,41 @@ all-features = true
 rust_decimal_macros = { workspace = true }
 
 [dependencies]
-# Tucano Ecosystem
+## Tucano Ecosystem
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
-profitdll = { workspace = true }
-tucano-macros = "0.2.0"
+"tucano-macros" = { workspace = true }
 
-# Logging
+## ProfitDLL
+"tucano-profitdll" = { workspace = true }
+
+## Logging
 tracing = { workspace = true }
 
-# Async
+## Async
 tokio = { workspace = true, features = ["sync", "macros", "rt-multi-thread"] }
 tokio-stream = { workspace = true, features = ["sync"] }
 futures = { workspace = true }
 futures-util = { workspace = true }
 async-trait = { workspace = true }
 
-# Protocol
+## Protocol
 url = { workspace = true }
 reqwest = { workspace = true}
 
-# Error
+## Error
 thiserror = { workspace = true }
 
-# SerDe
+## SerDe
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 
-# Data Structures
+## Data Structures
 parking_lot = { workspace = true }
 rust_decimal = { workspace = true, features = ["serde-with-str"] }
 smol_str = { workspace = true, features = ["serde"] }
 
-# Misc
+## Misc
 chrono = { workspace = true, features = ["serde"] }
 derive_more = { workspace = true }
 itertools = { workspace = true }

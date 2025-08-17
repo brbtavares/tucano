@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use crate::{
     error::DataError,
     streams::consumer::MarketStreamResult,
@@ -29,7 +29,7 @@ impl<InstrumentKey, T> FromIterator<Result<MarketEvent<InstrumentKey, T>, DataEr
     }
 }
 
-/// Normalised Toucan [`MarketEvent<T>`](Self) wrapping the `T` data variant in metadata.
+/// Normalized Toucan [`MarketEvent<T>`](Self) wrapping the `T` data variant in metadata.
 ///
 /// Note: `T` can be an enum such as the [`DataKind`] if required.
 ///

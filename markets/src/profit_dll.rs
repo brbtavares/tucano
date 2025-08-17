@@ -1,13 +1,13 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! (Deprecated) ProfitDLL types were moved to crate `tucano-profitdll`.
 //! This file remains temporarily to avoid breaking external imports; it re-exports
 //! the new locations. Will be removed in a future major release.
 
-pub use profitdll::*;
+pub use tucano_profitdll::*;
 
 // All previous definitions re-exported; no inline code retained.
 
-/// Estados de conexão do ProfitDLL
+/// ProfitDLL connection states
 #[derive(Debug, Clone, Copy)]
 pub enum ConnectionState {
     Login = 0,
@@ -16,7 +16,7 @@ pub enum ConnectionState {
     MarketLogin = 3,
 }
 
-/// Ações no book de ofertas
+/// Book actions
 #[derive(Debug, Clone, Copy)]
 pub enum BookAction {
     New = 0,
@@ -24,10 +24,10 @@ pub enum BookAction {
     Delete = 2,
 }
 
-/// Resultado das operações da DLL
+/// DLL operation result
 pub type NResult = i32;
 
-// Constantes de resultado - Error Codes
+// Result constants - Error Codes
 pub const NL_OK: NResult = 0;
 pub const NL_INTERNAL_ERROR: NResult = -2147483647;
 pub const NL_NOT_INITIALIZED: NResult = -2147483646;
@@ -36,7 +36,7 @@ pub const NL_WAITING_SERVER: NResult = -2147483644;
 pub const NL_NO_LOGIN: NResult = -2147483643;
 pub const NL_NO_LICENSE: NResult = -2147483642;
 
-/// Estrutura mock do ProfitConnector para desenvolvimento
+/// Mock structure of ProfitConnector for development
 ///
 /// NOTA: Esta é uma versão simplificada para permitir compilação
 /// sem a DLL real. Em produção, seria substituída pela implementação

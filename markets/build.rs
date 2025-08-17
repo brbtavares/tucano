@@ -25,14 +25,7 @@ fn configure_windows_dll() {
     println!("🔧 Configurando ProfitDLL para Windows...");
 
     // Diretórios padrão onde a ProfitDLL pode estar instalada
-    let possible_paths = vec![
-        "C:\\Program Files\\Nelogica\\ProfitDLL",
-        "C:\\Program Files (x86)\\Nelogica\\ProfitDLL",
-        "C:\\ProfitDLL",
-        ".",
-        "./lib",
-        "./dll",
-    ];
+    let possible_paths = vec!["C:\\ProfitDLL", ".", "./lib", "./dll"];
 
     // Tentar localizar ProfitDLL.dll
     let mut dll_found = false;

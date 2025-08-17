@@ -21,7 +21,7 @@ pub use exchange::B3Exchange;
 use tokio::sync::mpsc;
 use tucano_markets::b3::{B3AssetCategory, B3AssetFactory};
 // ProfitDLL concrete connectivity moved to `tucano-profitdll` crate.
-use profitdll::{CallbackEvent, ProfitConnector};
+use tucano_profitdll::{CallbackEvent, ProfitConnector};
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;
 

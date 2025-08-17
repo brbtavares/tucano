@@ -1,13 +1,13 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tucano_markets::{InstrumentKind, Keyed, MarketDataInstrument};
 
 /// Instrument related data that defines an associated unique `Id`.
 ///
-/// Verbose `InstrumentData` is often used to subscribe to market data feeds, but it's unique `Id`
+/// Verbose `InstrumentData` is often used to subscribe to market data feeds, but its unique `Id`
 /// can then be used to key consumed [MarketEvents](crate::event::MarketEvent), significantly reducing
-/// duplication in the case of complex instruments (eg/ options).
+/// duplication in the case of complex instruments (e.g., options).
 pub trait InstrumentData: Debug + Clone + Eq + Send + Sync {
     type Key: Debug + Clone + Eq + Send + Sync;
     fn key(&self) -> &Self::Key;

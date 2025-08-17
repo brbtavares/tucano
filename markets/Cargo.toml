@@ -1,12 +1,12 @@
 [package]
 name = "tucano-markets"
-version = "0.4.0"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-markets"
-description = "Modelos de Exchange, Instrument, Asset e utilidades de mercado"
+description = "Exchange, Instrument, Asset models and market utilities"
 keywords = ["trading","markets","assets","instruments","exchange"]
 categories = ["finance","algorithms"]
 
@@ -14,25 +14,25 @@ categories = ["finance","algorithms"]
 default = []
 
 [target.'cfg(windows)'.dependencies]
-# Windows-specific dependencies for ProfitDLL integration
+## Windows-specific dependencies for ProfitDLL integration
 
 #[dev-dependencies]
 # (none currently)
 
 [dependencies]
-# SerDe
+## SerDe
 serde = { workspace = true, features = ["derive"] }
 
-# Async (used by broker traits)
+## Async (used by broker traits)
 async-trait = { workspace = true }
 
 
-# Error handling
+## Error handling
 thiserror = { workspace = true }
 
-# Data types
+## Data types
 rust_decimal = { workspace = true }
 chrono = { workspace = true }
 
-# Misc
+## Misc
 derive_more = { workspace = true, features = ["display"] }

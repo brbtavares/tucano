@@ -1,14 +1,14 @@
 # tucano-strategies
 
-Coleção de estratégias de exemplo / referência para o ecossistema **Tucano**.
+Collection of example/reference strategies for the **Tucano** ecosystem.
 
-Inclui (features opcionais):
+Includes (optional features):
 - momentum
 - mean_rev (mean reversion)
 - microstructure
 - options
 
-Uso:
+Usage:
 ```toml
 [dependencies]
 tucano-strategies = { version = "0.1", features = ["momentum"] }

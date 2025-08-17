@@ -1,32 +1,30 @@
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. README & DISCLAIMER.
-//! # 🔧 Macros - Utilitários de Geração de Código
+// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+//! # 🔧 Macros - Code Generation Utilities
 //!
-//! Crate contendo macros procedurais Rust para automatizar geração de código
-//! boilerplate comum no framework Toucan. Reduz código repetitivo e garante
-//! consistência nas implementações.
+//! Crate containing Rust procedural macros to automate boilerplate code generation
+//! common in the Toucan framework. Reduces repetitive code and ensures
+//! consistency in implementations.
 //!
-//! ## 🎯 Funcionalidades Principais
+//! ## 🎯 Main Features
 //!
-//! ### Serialização de Exchanges
-//! - `#[derive(SerExchange)]`: Gera implementação automática de `Serialize` para exchanges
-//! - `#[derive(DeExchange)]`: Gera implementação automática de `Deserialize` para exchanges
-//! - `#[derive(SerDe)]`: Combinação de ambos para conveniência
+//! ### Exchange Serialization
+//! - `#[derive(SerExchange)]`: Automatically generates `Serialize` implementation for exchanges
+//! - `#[derive(DeExchange)]`: Automatically generates `Deserialize` implementation for exchanges
+//! - `#[derive(SerDe)]`: Combination of both for convenience
 //!
-//! ### Geração de Identificadores
-//! - Criação automática de IDs únicos para exchanges
-//! - Conversão de nomes para diferentes casos (snake_case, CamelCase, etc.)
-//! - Validação de formatos durante deserialização
+//! ### Identifier Generation
+//! - Automatic creation of unique IDs for exchanges
+//! - Name conversion to different cases (snake_case, CamelCase, etc.)
+//! - Format validation during deserialization
 //!
-//! ## 💡 Exemplo de Uso
+//! ## 💡 Usage Example
 //!
 //! ```rust,ignore
 //! use tucano_macros::{DeExchange, SerExchange};
 //!
 //! #[derive(DeExchange, SerExchange)]
 //! struct B3Exchange {
-//!     // campos específicos
+//!     // specific fields
 //! }
 //!
 //! impl B3Exchange {
@@ -34,27 +32,27 @@
 //! }
 //! ```
 //!
-//! ## 🔍 Macros Disponíveis
+//! ## 🔍 Available Macros
 //!
 //! ### DeExchange
-//! Gera implementação de `Deserialize` que valida o ID do exchange:
-//! - Verifica se o ID deserializado corresponde ao esperado
-//! - Retorna erro descritivo em caso de incompatibilidade
-//! - Usa a constante `ID` do tipo para validação
+//! Generates a `Deserialize` implementation that validates the exchange ID:
+//! - Checks if the deserialized ID matches the expected one
+//! - Returns a descriptive error in case of mismatch
+//! - Uses the type's `ID` constant for validation
 //!
 //! ### SerExchange
-//! Gera implementação de `Serialize` que converte para string:
-//! - Serializa usando o ID único do exchange
-//! - Garante consistência entre serialização e deserialização
-//! - Suporte a diferentes formatos de output
+//! Generates a `Serialize` implementation that converts to string:
+//! - Serializes using the exchange's unique ID
+//! - Ensures consistency between serialization and deserialization
+//! - Supports different output formats
 //!
-//! ## 🏗️ Implementação Interna
+//! ## 🏗️ Internal Implementation
 //!
-//! As macros utilizam:
-//! - **syn**: Parsing de AST Rust
-//! - **quote**: Geração de código Rust
-//! - **convert_case**: Conversão entre casos de string
-//! - **proc_macro**: Interface de macros procedurais
+//! The macros use:
+//! - **syn**: Rust AST parsing
+//! - **quote**: Rust code generation
+//! - **convert_case**: String case conversion
+//! - **proc_macro**: Procedural macro interface
 
 extern crate proc_macro;
 

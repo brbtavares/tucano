@@ -1,60 +1,79 @@
-## ⚠️ Disclaimer / Aviso Legal Completo
+## ⚠️ Disclaimer / Full Legal Notice
 
-Este software ("Tucano") é distribuído **"NO ESTADO EM QUE SE ENCONTRA" ("AS IS")**, sem garantias expressas ou implícitas, incluindo, mas não se limitando a, quaisquer garantias de comerciabilidade, adequação a um propósito específico, disponibilidade, precisão de dados, ausência de falhas ou não violação.
 
-Nada neste repositório constitui **recomendação, oferta, solicitação ou convite** para compra, venda, manutenção ou qualquer outra transação com ativos financeiros, nem **aconselhamento financeiro, de investimentos, jurídico, contábil, tributário ou regulatório**.
+This software ("Tucano") is distributed **"AS IS"**, without express or implied warranties, including but not limited to any warranties of merchantability, fitness for a particular purpose, availability, data accuracy, absence of defects, or non-infringement.
 
-### Ausência de Afiliação / Vínculo Institucional
 
-Os autores e contribuidores **não são afiliados** nem possuem vínculo formal, societário, empregatício, contratual, de representação, patrocínio ou parceria com corretoras, distribuidoras, bancos, fintechs, investechs, gestoras, consultorias de valores mobiliários, agentes autônomos, casas de research ou quaisquer outras instituições reguladas (ex.: CVM, BACEN, SUSEP). Qualquer referência a tais entidades é puramente descritiva e para fins técnicos ou educacionais.
+Nothing in this repository constitutes a **recommendation, offer, solicitation, or invitation** to buy, sell, hold, or otherwise transact in financial assets, nor **financial, investment, legal, accounting, tax, or regulatory advice**.
 
-### Nenhuma Remuneração ou Vantagem Econômica de Terceiros
 
-Não há recebimento de comissão, rebate, patrocínio, participação societária, cessão de licenças privilegiadas, distribuição conjunta ou qualquer vantagem financeira oriunda de terceiros em decorrência deste projeto. O uso, manutenção e evolução são realizados em caráter aberto e comunitário.
+### No Affiliation / Institutional Relationship
 
-### Propriedade Intelectual de Terceiros (Nelógica / ProfitDLL)
 
-"Profit", "ProfitChart", "Profit DLL" (ou "ProfitDLL") e quaisquer marcas, nomes comerciais, APIs proprietárias, arquivos binários, bibliotecas dinâmicas e tecnologias correlatas são **propriedade intelectual da Nelógica**. A integração demonstrada neste repositório tem caráter **estritamente técnico e educacional** (interoperabilidade) e **não implica endosso, suporte, parceria, afiliação ou relação comercial** com a Nelógica. Os autores não distribuem, redistribuem ou incorporam cópias proprietárias da DLL — apenas mostram como um carregamento dinâmico/FFI pode ocorrer quando o usuário já possui legitimamente a biblioteca.
+The authors and contributors **are not affiliated** and have no formal, corporate, employment, contractual, representation, sponsorship, or partnership ties with brokers, dealers, banks, fintechs, investechs, asset managers, securities consultants, independent agents, research firms, or any other regulated institutions (e.g., SEC, central banks, regulatory agencies). Any reference to such entities is purely descriptive and for technical or educational purposes only.
 
-Qualquer uso da ProfitDLL deve observar: (i) licenciamento vigente; (ii) termos de uso da Nelógica; (iii) legislações aplicáveis. Caso não possua direito de uso da DLL, não utilize a parte correspondente do código.
 
-### Riscos
+### No Third-Party Compensation or Economic Advantage
 
-- Trading e operações em mercados financeiros envolvem risco substancial de perda.
-- Resultados passados não garantem desempenho futuro.
-- Falhas de software, latência, perdas de conectividade, dados incorretos ou integrações de terceiros podem gerar execuções inesperadas ou perdas.
 
-### Responsabilidade do Usuário
+There is no receipt of commission, rebate, sponsorship, equity participation, privileged license assignment, joint distribution, or any financial advantage from third parties as a result of this project. Use, maintenance, and development are carried out openly and as a community effort.
 
-Você é integralmente responsável por:
-1. Testar exaustivamente (backtests, simulações) antes de uso real.
-2. Configurar limites, filtros de risco e mecanismos de fail‑safe.
-3. Garantir conformidade com leis, regulamentos e políticas de corretoras (CVM, B3, BACEN etc.).
-4. Verificar integridade e atualidade de dados utilizados.
-5. Monitorar continuamente ordens e posições.
 
-### Limitação de Responsabilidade
+### Third-Party Intellectual Property / Proprietary Integrations
 
-Em nenhuma circunstância os autores ou contribuidores serão responsáveis por quaisquer danos diretos, indiretos, especiais, incidentais, punitivos ou consequenciais, incluindo (sem limitação) lucros cessantes, interrupção de negócios, perda de informações, falha de sistema, custos de substituição ou quaisquer outras perdas decorrentes do uso ou incapacidade de uso deste software, ainda que avisados da possibilidade de tais danos.
+Any brands, trade names, proprietary APIs, binary files, dynamic libraries, and related technologies mentioned in this repository are **intellectual property of their respective owners**. Any integration shown here is strictly technical and educational (interoperability) and does not imply endorsement, support, partnership, affiliation, or commercial relationship with any third party. The authors do not distribute, redistribute, or incorporate proprietary copies of libraries or files – they only demonstrate how to interoperate technically when the user already has legitimate usage rights.
 
-### Não é Corretora / Serviço Regulamentado
+Any use of proprietary APIs or libraries must comply with: (i) current licensing; (ii) the terms of use of the respective owner; (iii) applicable laws. If you do not have the right to use, do not use the corresponding part of the code.
 
-Este projeto **não é** e **não substitui** corretora, distribuidora, banco, DTVM, custodiante, plataforma de negociação oficial ou qualquer serviço regulado. Especificamente, o projeto **não**:
-1. Executa ordens automaticamente sem sua configuração explícita e consentimento.
-2. Garante roteamento, liquidez, prioridade, melhor execução ou integridade de mercado.
-3. Fornece custódia, clearing, compensação, liquidação, registro ou serviços de intermediação.
-4. Assume responsabilidades fiduciárias ou de suitability.
-5. Oferece garantias de disponibilidade ou continuidade operacional.
 
-### Aceitação
+### Risks
 
-Ao utilizar este software você declara que (i) leu, entendeu e concorda integralmente com este Disclaimer; (ii) reconhece que o uso é por sua exclusiva conta e risco; (iii) compreende que integrações externas podem falhar, mudar, expirar ou ser revogadas sem aviso.
+
+- Trading and operations in financial markets involve substantial risk of loss.
+- Past results do not guarantee future performance.
+- Software failures, latency, connectivity losses, incorrect data, or third-party integrations may cause unexpected executions or losses.
+
+
+### User Responsibility
+
+
+You are fully responsible for:
+1. Exhaustively testing (backtests, simulations) before real use.
+2. Setting limits, risk filters, and fail-safe mechanisms.
+3. Ensuring compliance with laws, regulations, and broker policies.
+4. Verifying the integrity and timeliness of the data used.
+5. Continuously monitoring orders and positions.
+
+
+### Limitation of Liability
+
+
+In no event shall the authors or contributors be liable for any direct, indirect, special, incidental, punitive, or consequential damages, including (without limitation) lost profits, business interruption, loss of information, system failure, replacement costs, or any other losses arising from the use or inability to use this software, even if advised of the possibility of such damages.
+
+
+### Not a Broker / Regulated Service
+
+
+This project is **not** and does **not replace** a broker, dealer, bank, custodian, official trading platform, or any regulated service. Specifically, the project does **not**:
+1. Execute orders automatically without your explicit configuration and consent.
+2. Guarantee routing, liquidity, priority, best execution, or market integrity.
+3. Provide custody, clearing, settlement, registration, or intermediary services.
+4. Assume fiduciary or suitability responsibilities.
+5. Offer guarantees of availability or operational continuity.
+
+
+### Acceptance
+
+
+By using this software you declare that (i) you have read, understood, and fully agree with this Disclaimer; (ii) you acknowledge that use is at your sole risk; (iii) you understand that external integrations may fail, change, expire, or be revoked without notice.
 
 ---
 
-### Resumo Operacional (para inclusão sintética em arquivos de código)
-Uso educacional/experimental. Sem recomendação de investimento. Sem afiliação ou vínculo com instituições financeiras. Sem remuneração de terceiros. Profit/ProfitDLL são propriedade da Nelógica; integração meramente técnica. Consulte README e DISCLAIMER completos.
+
+### Operational Summary (for inclusion in code files)
+Educational/experimental use. Not investment advice. No affiliation or ties with financial institutions. No third-party compensation. Proprietary APIs/libraries belong to their respective owners; integration is purely technical. See full README and DISCLAIMER.
 
 ---
 
-Resumo curto: ferramenta experimental/educacional; uso por sua conta e risco.
+
+Short summary: experimental/educational tool; use at your own risk.

@@ -1,28 +1,28 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! # Gestão de Execução
+//! # Execution Management
 //!
-//! Módulo de roteamento de requisições de execução e gestão de conta em alto nível.
-//! Orquestra execução de ordens em múltiplas exchanges mantendo estado e saldos centralizados.
+//! High-level module for routing execution requests and account management.
+//! Orchestrates order execution across multiple exchanges while maintaining centralized state and balances.
 //!
-//! ## Componentes Principais
+//! ## Main Components
 //!
 //! ### ExecutionManager
-//! - Roteia requisições de execução para a exchange apropriada
-//! - Gerencia links de execução por exchange
-//! - Processa eventos de conta e atualiza estado
-//! - Interface unificada para trading multi‑exchange
+//! - Routes execution requests to the appropriate exchange
+//! - Manages execution links per exchange
+//! - Processes account events and updates state
+//! - Unified interface for multi-exchange trading
 //!
 //! ### ExecutionBuilder
-//! - Configuração ergonômica para montagem multi‑exchange
-//! - Suporta conexões live e mock
-//! - Inicializa links de execução e canais de comunicação
+//! - Ergonomic configuration for multi-exchange setup
+//! - Supports live and mock connections
+//! - Initializes execution links and communication channels
 //!
-//! ### Roteamento de Requisições
-//! - Distribuição central baseada em exchange e instrumento
-//! - Gerência ciclo de vida de ordens entre protocolos distintos
-//! - Tratamento de erros e retries para falhas de execução
+//! ### Request Routing
+//! - Centralized distribution based on exchange and instrument
+//! - Manages order lifecycle across different protocols
+//! - Error handling and retries for execution failures
 //!
-//! ## Arquitetura
+//! ## Architecture
 //!
 //! ```text
 //! ┌─────────────────────────────────────────────────────────────┐

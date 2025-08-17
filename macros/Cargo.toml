@@ -1,12 +1,12 @@
 [package]
 name = "tucano-macros"
-version = "0.1.1"
+	version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-macros"
-description = "Macros procedurais de suporte ao ecossistema Tucano"
+description = "Procedural macros supporting the Tucano ecosystem"
 keywords = ["trading","macros","proc-macro"]
 categories = ["development-tools","finance"]
 

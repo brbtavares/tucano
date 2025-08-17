@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; proprietary APIs/libraries belong to their respective owners; see README & DISCLAIMER.
 use serde::{Deserialize, Serialize};
 use tracing::info;
 

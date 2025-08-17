@@ -1,11 +1,9 @@
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. Consulte README & DISCLAIMER.
-//! Estratégias concretas agrupadas (ativadas via feature flags).
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! Grouped concrete strategies (enabled via feature flags).
 
 pub mod shared;
 
-pub mod order_book_imbalance; // sempre disponível: exemplo simples reutilizável
+pub mod order_book_imbalance; // always available: simple reusable example
 
 #[cfg(feature = "momentum")]
 pub mod momentum;
