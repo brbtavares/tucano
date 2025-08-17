@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Implementação mock e tipos compartilhados para interface ProfitDLL.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; no third-party compensation; proprietary APIs/libraries belong to their respective owners; see README & DISCLAIMER.
+//! Mock implementation and shared types for the ProfitDLL interface.
 //!
-//! Esta camada simula o comportamento da DLL Profit para testes, exemplos e ambientes sem acesso à DLL real.
-//! Todos os eventos, tipos e enums seguem a especificação oficial descrita no [MANUAL.md](../MANUAL.md).
+//! This layer simulates the behavior of the Profit DLL for tests, examples, and environments without access to the real DLL.
+//! All events, types, and enums follow the official specification described in [MANUAL.md](../MANUAL.md).
 
 use crate::error::*;
 use chrono::{DateTime, TimeZone, Utc};
@@ -18,26 +18,26 @@ use std::time::Duration;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
 use tokio::task::JoinHandle;
 
-/// Enum de eventos assíncronos emitidos pela DLL Profit (**CallbackEvent**).
+/// Enum of asynchronous events emitted by the Profit DLL (**CallbackEvent**).
 ///
-/// Cada variante representa um tipo de callback/documentação oficial da DLL.
-/// Consulte o [MANUAL.md](../MANUAL.md#eventos-e-callbacks) para detalhes completos.
+/// Each variant represents a callback type/official DLL documentation.
+/// See [MANUAL.md](../MANUAL.md#eventos-e-callbacks) for full details.
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum CallbackEvent {
-    /// Mudança de estado de conexão (**StateChanged**)
+    /// Connection state change (**StateChanged**)
     StateChanged {
         connection_type: ConnectionState,
         result: i32,
     },
-    /// Progresso de inscrição em ticker (**ProgressChanged**)
+    /// Ticker subscription progress (**ProgressChanged**)
     ProgressChanged {
         ticker: String,
         exchange: String,
         feed_type: i32,
         progress: i32,
     },
-    /// Novo negócio/trade (**NewTrade**)
+    /// New trade (**NewTrade**)
     NewTrade {
         ticker: String,
         exchange: String,

@@ -11,32 +11,31 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL são
-//! propriedade da Nelógica; integração meramente técnica. Consulte README & DISCLAIMER.
-//! # 🧠 Core - Engine Principal do Framework Toucan
+//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
+//! No institutional affiliation or third-party compensation. Profit/ProfitDLL are
+//! property of Nelógica; technical integration only. See README & DISCLAIMER.
+//! # 🧠 Core - Main Engine of the Toucan Framework
 //!
-//! Framework Rust para construção de sistemas profissionais de trading ao vivo,
-//! paper trading e backtesting. O Engine central facilita execução em múltiplos
-//! exchanges simultaneamente e oferece flexibilidade para executar a maioria dos
-//! tipos de estratégias de trading.
+//! Rust framework for building professional live trading systems,
+//! paper trading, and backtesting. The central Engine facilitates execution on multiple
+//! exchanges simultaneously and offers flexibility to run most types of trading strategies.
 //!
-//! ## 🎯 Características Principais
+//! ## 🎯 Main Features
 //!
-//! - **Multi-Exchange**: Execução simultânea em múltiplos exchanges
-//! - **Estratégias Flexíveis**: Suporte a diversos tipos de estratégias algorítmicas
-//! - **Controle Dinâmico**: Liga/desliga geração de ordens algorítmicas
-//! - **Comandos Externos**: Aceita comandos de processos externos
-//! - **Type Safety**: Sistema de tipos Rust para máxima segurança
+//! - **Multi-Exchange**: Simultaneous execution on multiple exchanges
+//! - **Flexible Strategies**: Support for various types of algorithmic strategies
+//! - **Dynamic Control**: Enable/disable algorithmic order generation
+//! - **External Commands**: Accepts commands from external processes
+//! - **Type Safety**: Rust type system for maximum safety
 //!
-//! ## 🏗️ Arquitetura do Engine
+//! ## 🏗️ Engine Architecture
 //!
-//! O Engine é o componente central que:
-//! - Processa eventos de mercado e conta em tempo real
-//! - Executa estratégias algorítmicas configuradas
-//! - Gerencia estado global do sistema de trading
-//! - Aplica regras de gestão de risco
-//! - Mantém auditoria completa de operações
+//! The Engine is the central component that:
+//! - Processes real-time market and account events
+//! - Executes configured algorithmic strategies
+//! - Manages global trading system state
+//! - Applies risk management rules
+//! - Maintains a complete audit of operations
 //!
 //! ## 🔄 Fluxo de Processamento
 //!

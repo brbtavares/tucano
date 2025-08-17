@@ -1,10 +1,8 @@
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL são
-//! propriedade da Nelógica; integração meramente técnica (FFI dinâmico). Consulte
-//! README & DISCLAIMER completos.
+//! DISCLAIMER (summary): Educational/experimental use. Not investment advice.
+//! No institutional affiliation or third-party compensation. Proprietary APIs/libraries belong to their respective owners; integration is purely technical (dynamic FFI). See full README & DISCLAIMER.
 //!
-//! Integração isolada com ProfitDLL. Fornece tipos, eventos e (opcionalmente)
-//! bindings FFI reais via feature `real_dll`.
+//! Isolated integration with ProfitDLL. Provides types, events, and (optionally)
+//! real FFI bindings via the `real_dll` feature.
 
 mod api;
 mod error;
@@ -14,10 +12,10 @@ mod ffi;
 mod ffi_types;
 mod mock;
 
-// Evita ambiguidade de glob: exporta NResult apenas de um lugar
+// Avoid glob ambiguity: export NResult from a single place only
 pub use error::*;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
-pub use ffi::NResult; // contém ProfitError etc.
+pub use ffi::NResult; // contains ProfitError etc.
 
 pub use api::*;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
@@ -25,9 +23,9 @@ pub use ffi::ProfitConnector as RealProfitConnector;
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 pub use ffi_types::*;
 pub use mock::ProfitConnector as MockProfitConnector;
-pub use mock::*; // inclui CallbackEvent, HistoryTradeSource etc.
+pub use mock::*; // includes CallbackEvent, HistoryTradeSource etc.
 
-// Compat: módulo `profitdll` interno para permitir `use profitdll::*` mesmo quando o crate se chama tucano-profitdll
+// Compat: internal `profitdll` module to allow `use profitdll::*` even when the crate is named tucano-profitdll
 pub mod profitdll {
     pub use super::*;
 }

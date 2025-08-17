@@ -1,10 +1,10 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tucano_integration::error::SocketError;
 use tucano_markets::ExchangeId;
 
-// Tipos temporários para compatibilidade durante migração
+// Temporary types for compatibility during migration
 pub type AssetIndex = String;
 pub type InstrumentIndex = String;
 pub type AssetNameExchange = String;

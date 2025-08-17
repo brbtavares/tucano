@@ -11,33 +11,33 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. Veja README & DISCLAIMER.
-//! # 📊 Data - Módulo de Streaming de Dados de Mercado
+//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
+//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
+//! Technical integration. See README & DISCLAIMER.
+//! # 📊 Data - Market Data Streaming Module
 //!
-//! Biblioteca de alta performance para integração via WebSocket, especializada em streaming
-//! de dados públicos de mercado de exchanges líderes - bateria incluída. Características:
+//! High-performance library for WebSocket integration, specialized in streaming
+//! public market data from leading exchanges - batteries included. Features:
 //!
-//! ## 🎯 Características Principais
+//! ## 🎯 Main Features
 //!
-//! * **🚀 Simplicidade**: Interface simples com [`StreamBuilder`](streams::builder::StreamBuilder)
-//!   e [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para configuração rápida
-//! * **🔄 Padronização**: Interface unificada para consumo de dados WebSocket com modelo
-//!   de dados normalizado para todos os exchanges
-//! * **⚡ Tempo Real**: Integrações WebSocket em tempo real permitindo consumo de dados
-//!   tick-by-tick normalizados
-//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições com novas
-//!   integrações de exchanges
+//! * **🚀 Simplicity**: Simple interface with [`StreamBuilder`](streams::builder::StreamBuilder)
+//!   and [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) for quick setup
+//! * **🔄 Standardization**: Unified interface for consuming WebSocket data with a normalized
+//!   data model for all exchanges
+//! * **⚡ Real-Time**: Real-time WebSocket integrations allowing consumption of
+//!   normalized tick-by-tick data
+//! * **🔧 Extensibility**: Highly extensible, making it easy to contribute new
+//!   exchange integrations
 //!
-//! ## 🏗️ API do Usuário
+//! ## 🏗️ User API
 //!
-//! - [`StreamBuilder`](streams::builder::StreamBuilder) para inicializar [`MarketStream`]s
-//!   de tipos específicos de dados
-//! - [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) para inicializar
-//!   [`MarketStream`]s de todos os tipos de dados suportados simultaneamente
-//! - Defina quais dados de mercado deseja usando o tipo [`Subscription`]
-//! - Passe [`Subscription`]s para os métodos [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe)
+//! - [`StreamBuilder`](streams::builder::StreamBuilder) to initialize [`MarketStream`]s
+//!   of specific data types
+//! - [`DynamicStreams`](streams::builder::dynamic::DynamicStreams) to initialize
+//!   [`MarketStream`]s of all supported data types simultaneously
+//! - Define which market data you want using the [`Subscription`] type
+//! - Pass [`Subscription`]s to the [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) methods
 //!   ou [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)
 //! - Cada chamada para [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe)
 //!   (ou batch para [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init))

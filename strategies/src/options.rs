@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Placeholder de estratégia de Opções (ainda não implementada).
+// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
+//! Options strategy placeholder (not yet implemented).
 
 pub struct OptionsStrategy;

@@ -1,10 +1,10 @@
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL são
-//! propriedade da Nelógica; integração técnica. Veja README & DISCLAIMER.
-//! # 📊 Analytics - Módulo de Análise Financeira
+//! DISCLAIMER (summary): Educational/experimental use. Not investment advice.
+//! No institutional affiliation or third-party compensation. Proprietary APIs/libraries belong to their respective owners; technical integration only. See README & DISCLAIMER.
 //!
-//! Este módulo fornece ferramentas abrangentes para análise quantitativa de dados financeiros,
-//! incluindo métricas de performance, algoritmos estatísticos e geração de relatórios.
+//! # 📊 Analytics - Financial Analysis Module
+//!
+//! This module provides comprehensive tools for quantitative analysis of financial data,
+//! including performance metrics, statistical algorithms, and report generation.
 //!
 //! ## 🎯 Funcionalidades Principais
 //!

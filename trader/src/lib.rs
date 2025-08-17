@@ -8,15 +8,15 @@
     missing_debug_implementations,
     rust_2018_idioms
 )]
-// Dependências são usadas por crates downstream via tipos genéricos; suprimir para evitar falso positivo
+// Dependencies are used by downstream crates via generic types; suppress to avoid false positives
 #![allow(unused_crate_dependencies)]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. README & DISCLAIMER.
-//! Core abstractions para estratégias de trading (traits + tipos). Implementações concretas vão
-//! para a crate `strategies`.
+//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
+//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
+//! Technical integration. See README & DISCLAIMER.
+//! Core abstractions for trading strategies (traits + types). Concrete implementations go
+//! to the `strategies` crate.
 
 pub mod algo;
 pub mod close_positions;

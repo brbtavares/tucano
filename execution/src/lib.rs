@@ -12,29 +12,29 @@
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 // (moved dummy imports below crate docs to satisfy inner doc comment placement rules)
 
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. README & DISCLAIMER.
-//! # ⚡ Execution - Módulo de Execução de Ordens
+//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
+//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
+//! Technical integration. See README & DISCLAIMER.
+//! # ⚡ Execution - Order Execution Module
 //!
-//! Stream de dados privados de conta de venues financeiros e execução de ordens
-//! (ao vivo ou simuladas). Também fornece MockExchange e MockExecutionClient
-//! ricos em recursos para auxiliar backtesting e paper trading.
+//! Private account data streams from financial venues and order execution
+//! (live or simulated). Also provides feature-rich MockExchange and MockExecutionClient
+//! to assist with backtesting and paper trading.
 //!
-//! ## 🎯 Características Principais
+//! ## 🎯 Main Features
 //!
-//! * **🚀 Simplicidade**: Trait ExecutionClient fornece linguagem unificada
-//!   e simples para interagir com exchanges
-//! * **🔄 Padronização**: Permite que sua estratégia se comunique com qualquer
-//!   exchange real ou Mock usando a mesma interface
-//! * **🔧 Extensibilidade**: Altamente extensível, facilitando contribuições
-//!   com novas integrações de exchanges
+//! * **🚀 Simplicity**: ExecutionClient trait provides a unified
+//!   and simple language to interact with exchanges
+//! * **🔄 Standardization**: Allows your strategy to communicate with any
+//!   real or Mock exchange using the same interface
+//! * **🔧 Extensibility**: Highly extensible, making it easy to contribute
+//!   new exchange integrations
 //!
-//! ## 🏗️ Componentes Principais
+//! ## 🏗️ Main Components
 //!
 //! ### ExecutionClient
-//! Interface unificada para execução de ordens em diferentes exchanges.
-//! Abaixo um esboço (não compilável) de como uma implementação concreta poderia ficar:
+//! Unified interface for order execution on different exchanges.
+//! Below is a sketch (non-compilable) of how a concrete implementation might look:
 //! ```rust,ignore
 //! use execution::client::ExecutionClient;
 //! use markets::ExchangeId;

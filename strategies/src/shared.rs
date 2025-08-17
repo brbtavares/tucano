@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Módulos compartilhados (indicadores, utilidades) entre estratégias.
+// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
+//! Shared modules (indicators, utilities) among strategies.
 
-/// Estado vazio que pode ser reutilizado por estratégias que ainda não
-/// necessitam de dados específicos do motor. Serve como placeholder.
+/// Empty state that can be reused by strategies that do not yet
+/// require specific engine data. Serves as a placeholder.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct NoOpState;

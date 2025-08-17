@@ -1,7 +1,7 @@
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. Consulte README & DISCLAIMER.
-//! Estratégias concretas agrupadas (ativadas via feature flags).
+//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
+//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
+//! Technical integration. See README & DISCLAIMER.
+//! Grouped concrete strategies (enabled via feature flags).
 
 pub mod shared;
 

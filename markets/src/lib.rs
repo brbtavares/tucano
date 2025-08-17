@@ -11,31 +11,31 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração meramente técnica. Leia README & DISCLAIMER completos.
-//! # 🏛️ Markets - Abstrações Simplificadas de Mercado
+//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
+//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
+//! Technical integration only. Read the full README & DISCLAIMER.
+//! # 🏛️ Markets - Simplified Market Abstractions
 //!
-//! Traits e tipos fundamentais para exchanges, instrumentos e ativos financeiros.
-//! Focado em abstrações essenciais sem implementações específicas.
+//! Fundamental traits and types for exchanges, instruments, and financial assets.
+//! Focused on essential abstractions without specific implementations.
 //!
-//! ## 🎯 Filosofia de Design
+//! ## 🎯 Design Philosophy
 //!
-//! Este módulo implementa uma arquitetura **híbrida** que combina:
-//! - **Abstrações Reutilizáveis**: Traits genéricos para máxima flexibilidade
-//! - **Implementações Específicas**: Tipos brasileiros com terminologia nativa
-//! - **Extensibilidade**: Fácil adição de novos exchanges e instrumentos
+//! This module implements a **hybrid** architecture that combines:
+//! - **Reusable Abstractions**: Generic traits for maximum flexibility
+//! - **Specific Implementations**: Brazilian types with native terminology
+//! - **Extensibility**: Easy addition of new exchanges and instruments
 //!
-//! ## 🏗️ Módulos Principais
+//! ## 🏗️ Main Modules
 //!
-//! - `exchange`: Abstrações de exchange e identificadores
-//! - `asset`: Definições de ativos financeiros e tipos
-//! - `instrument`: Abstrações de instrumentos financeiros
-//! - `side`: Enumeração de lados de operação (Buy/Sell)
-//! - `b3`: Definições específicas da Bolsa Brasileira (B3)
-//! - `broker`: Camada de abstração de corretoras (abstrata – integrações externas em crates próprias)
+//! - `exchange`: Exchange abstractions and identifiers
+//! - `asset`: Financial asset definitions and types
+//! - `instrument`: Financial instrument abstractions
+//! - `side`: Operation side enumeration (Buy/Sell)
+//! - `b3`: Brazilian Exchange (B3) specific definitions
+//! - `broker`: Broker abstraction layer (abstract – external integrations in their own crates)
 //!
-//! ## 💡 Conceitos Fundamentais
+//! ## 💡 Fundamental Concepts
 //!
 //! ### Exchange
 //! Representa um mercado ou bolsa onde instrumentos são negociados:
