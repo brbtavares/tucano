@@ -15,13 +15,13 @@
 
 // Re-export de crates internas com namespaces organizados
 // Re-export da crate externa tucano-profitdll evitando ambiguidade de nome de módulo local
-pub use ::profitdll::*;
 pub use tucano_analytics as analytics;
 pub use tucano_core as core;
 pub use tucano_data as data;
 pub use tucano_execution as execution;
 pub use tucano_integration as integration;
 pub use tucano_markets as markets;
+pub use tucano_profitdll as profitdll;
 pub use tucano_risk as risk;
 pub use tucano_strategies as strategies;
 pub use tucano_trader as trader;

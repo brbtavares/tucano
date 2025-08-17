@@ -1,10 +1,10 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 // Mini-Disclaimer.
 //! Exemplo mínimo que roda em mock ou live (se não forçado mock).
-use profitdll::{
+use rust_decimal::Decimal;
+use tucano_profitdll::{
     new_backend, AccountIdentifier, AssetIdentifier, Credentials, OrderSide, SendOrder,
 };
-use rust_decimal::Decimal;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _ = dotenvy::from_filename(".env");

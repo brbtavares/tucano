@@ -37,7 +37,7 @@
 //!
 //! Licença: Apache-2.0 OR MIT.
 
-use profitdll::{backend_kind, new_backend, Credentials};
+use tucano_profitdll::{backend_kind, new_backend, Credentials};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

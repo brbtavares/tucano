@@ -6,12 +6,12 @@
 //! while maintaining Brazilian market terminology.
 
 use chrono::{DateTime, Utc};
-use profitdll::OrderSide;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
 use tucano_markets::{Asset, AssetType};
+use tucano_profitdll::OrderSide;
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

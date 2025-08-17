@@ -1,6 +1,6 @@
 [package]
 name = "tucano-data"
-version = "0.10.1"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
@@ -20,8 +20,10 @@ rust_decimal_macros = { workspace = true }
 # Tucano Ecosystem
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
-profitdll = { workspace = true }
-tucano-macros = "0.2.0"
+"tucano-macros" = { workspace = true }
+
+# ProfitDLL
+"tucano-profitdll" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

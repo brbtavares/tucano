@@ -1,5 +1,5 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação.
-use tucano_profitdll::profitdll::*;
+use tucano_profitdll::*;
 
 #[tokio::test]
 async fn mock_history_trades_generation() {

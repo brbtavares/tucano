@@ -1,6 +1,6 @@
 [package]
 name = "tucano-execution"
-version = "0.5.3"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
@@ -23,7 +23,7 @@ typed_indices = []
 "tucano-data" = { workspace = true }
 "tucano-integration" = { workspace = true }
 "tucano-markets" = { workspace = true }
-profitdll = { workspace = true }
+"tucano-profitdll" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

@@ -7,10 +7,10 @@ license = "Apache-2.0 OR MIT"
 [features]
 default = []
 # Proxy para habilitar a feature real_dll do dependency tucano-profitdll
-real_dll = ["profitdll/real_dll"]
+real_dll = ["tucano-profitdll/real_dll"]
 
 [dependencies]
-profitdll = { package = "tucano-profitdll", path = "../profitdll" }
+"tucano-profitdll" = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 dotenvy = "0.15"
 rust_decimal = { workspace = true }

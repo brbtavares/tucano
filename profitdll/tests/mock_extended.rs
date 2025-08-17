@@ -1,6 +1,6 @@
 // Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
 use std::time::Duration;
-use tucano_profitdll::profitdll::*;
+use tucano_profitdll::*;
 
 #[tokio::test]
 async fn mock_emits_extended_placeholders() {

@@ -23,8 +23,8 @@
 //!
 //! Licença: Apache-2.0 OR MIT.
 
-use profitdll::{backend_kind, new_backend, CallbackEvent, Credentials};
 use std::time::Duration;
+use tucano_profitdll::{backend_kind, new_backend, CallbackEvent, Credentials};
 
 fn brasil_ts_ms(y: i32, m: u32, d: u32, hh: u32, mm: u32) -> i64 {
     use chrono::{Duration, NaiveDate, TimeZone, Utc};

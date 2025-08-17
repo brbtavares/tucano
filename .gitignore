@@ -1,6 +1,9 @@
 # Rust
 /target
 
+# Lockfile
+Cargo.lock
+
 # Native libraries (DLLs, SOs, etc.)
 *.dll
 *.so
