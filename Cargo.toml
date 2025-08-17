@@ -15,7 +15,7 @@ members = [
     "examples",
     "tucano",
     "profitdll",
-    "devkit"]
+    "xtask"]
 
 [workspace.dependencies]
 # Tucano Ecosystem (direct crate names with tucano- prefix)
@@ -30,7 +30,7 @@ tucano-risk = { path = "./risk", version = "0.1.0" }
 tucano-trader = { path = "./trader", version = "0.1.0" }
 tucano-strategies = { path = "./strategies", version = "0.1.0" }
 tucano-profitdll = { path = "./profitdll", version = "0.1.0" }
-tucano-devkit = { path = "./devkit", version = "0.1.0" }
+tucano-xtask = { path = "./xtask", version = "0.1.0" }
 
 # Logging
 tracing = { version = "0.1.41" }
@@ -87,3 +87,6 @@ rust_decimal_macros = { version = "1.29.1" }
 bytes = { version = "1.5.0" }
 spin_sleep = { version = "1.3.0 "}
 criterion = { version = "0.6.0" }
+
+[workspace.metadata]
+exclude-from-publish = ["xtask"]

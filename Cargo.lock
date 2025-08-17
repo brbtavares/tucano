@@ -2508,14 +2508,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tucano-devkit"
-version = "0.1.0"
-dependencies = [
- "clap",
- "ratatui",
-]
-
-[[package]]
 name = "tucano-examples"
 version = "0.1.0"
 dependencies = [
@@ -2659,6 +2651,14 @@ dependencies = [
  "tracing",
  "tucano-execution",
  "tucano-markets",
+]
+
+[[package]]
+name = "tucano-xtask"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "ratatui",
 ]
 
 [[package]]
