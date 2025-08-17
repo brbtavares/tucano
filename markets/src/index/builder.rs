@@ -1,4 +1,4 @@
-// DISCLAIMER (resumo): Este arquivo é parte de um projeto educacional e experimental para estudo de infraestrutura e estratégias de trading. Não constitui recomendação de investimento, nem promessa de resultados. Use por sua conta e risco.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 
 use crate::{
 	asset::{Asset, AssetIndex, ExchangeAsset},

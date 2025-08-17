@@ -1,19 +1,19 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! # Core Engine - Sistema de Trading Algorítmico
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! # Core Engine - Algorithmic Trading System
 //!
-//! Este módulo implementa o coração do sistema de trading algorítmico, fornecendo uma arquitetura
-//! flexível e de alta performance para processamento de eventos de mercado, execução de estratégias
-//! e gerenciamento de risco.
+//! This module implements the heart of the algorithmic trading system, providing a flexible
+//! and high-performance architecture for processing market events, executing strategies,
+//! and managing risk.
 //!
-//! ## 🎯 Visão Geral
+//! ## 🎯 Overview
 //!
-//! O [`Engine`] é uma estrutura genérica que processa diferentes tipos de eventos:
-//! - **Market Events**: Dados de mercado (preços, book de ofertas, negócios)
-//! - **Account Events**: Eventos de execução (ordens executadas, posições)
-//! - **Commands**: Comandos externos (fechar posições, cancelar ordens)
-//! - **Trading State**: Mudanças de estado (habilitado/desabilitado)
+//! The [`Engine`] is a generic structure that processes different types of events:
+//! - **Market Events**: Market data (prices, order book, trades)
+//! - **Account Events**: Execution events (filled orders, positions)
+//! - **Commands**: External commands (close positions, cancel orders)
+//! - **Trading State**: State changes (enabled/disabled)
 //!
-//! ## 🏗️ Arquitetura
+//! ## 🏗️ Architecture
 //!
 //! ```text
 //! ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -32,12 +32,12 @@
 //!                        └─────────────────┘
 //! ```
 //!
-//! ## 🔧 Componentes Principais
+//! ## 🔧 Main Components
 //!
-//! ### [`Engine`] - Estrutura Principal
-//! Estrutura genérica com 5 type parameters que permite composição flexível:
-//! - **`Clock`**: Controle de tempo (real-time vs backtest)
-//! - **`State`**: Estado interno (posições, ordens, dados de mercado)
+//! ### [`Engine`] - Main Structure
+//! Generic structure with 5 type parameters that allows flexible composition:
+//! - **`Clock`**: Time control (real-time vs backtest)
+//! - **`State`**: Internal state (positions, orders, market data)
 //! - **`ExecutionTxs`**: Canais de comunicação com exchanges
 //! - **`Strategy`**: Lógica de trading algorítmico
 //! - **`Risk`**: Gerenciamento de risco

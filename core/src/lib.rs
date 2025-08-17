@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -10,10 +11,7 @@
     rust_2018_idioms
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
-
-//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
-//! No institutional affiliation or third-party compensation. Profit/ProfitDLL are
-//! property of Nelógica; technical integration only. See README & DISCLAIMER.
+// ...existing code...
 //! # 🧠 Core - Main Engine of the Toucan Framework
 //!
 //! Rust framework for building professional live trading systems,

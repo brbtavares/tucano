@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -12,27 +13,24 @@
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 // (moved dummy use below to allow crate-level inner doc comments `//!` to appear before any items)
 
-//! DISCLAIMER (resumo): Uso educacional/experimental. Sem recomendação de investimento.
-//! Sem afiliação institucional ou remuneração de terceiros. Profit/ProfitDLL © Nelógica.
-//! Integração técnica. README & DISCLAIMER.
-//! # 🔄 Integration - Framework de Integração de Alta Performance
+// ...existing code...
+//! # 🔄 Integration - High Performance Integration Framework
 //!
-//! Framework de baixo nível e alta performance para composição de integrações
-//! web flexíveis. Utilizado por outras crates do ecossistema Toucan para
-//! construir integrações financeiras robustas, principalmente para coleta de
-//! dados públicos e execução de trades.
+//! Low-level, high-performance framework for composing flexible web integrations.
+//! Used by other crates in the Toucan ecosystem to build robust financial integrations,
+//! mainly for public data collection and trade execution.
 //!
-//! ## 🎯 Características Principais
+//! ## 🎯 Main Features
 //!
-//! * **🔧 Baixo Nível**: Traduz streams de dados brutos comunicados via web
-//!   em qualquer modelo de dados desejado usando transformações arbitrárias
-//! * **🚀 Flexibilidade**: Compatível com qualquer protocolo (WebSocket, FIX,
-//!   Http, etc.), qualquer modelo input/output, e transformações definidas pelo usuário
+//! * **🔧 Low Level**: Translates raw data streams communicated via web
+//!   into any desired data model using arbitrary transformations
+//! * **🚀 Flexibility**: Compatible with any protocol (WebSocket, FIX,
+//!   Http, etc.), any input/output model, and user-defined transformations
 //!
-//! ## 🏗️ Abstrações Fundamentais
+//! ## 🏗️ Core Abstractions
 //!
 //! ### RestClient
-//! Comunicação HTTP configurável e assinada entre cliente e servidor:
+//! Configurable and signed HTTP communication between client and server:
 //! ```rust,ignore
 //! use integration::protocol::http::rest::RestClient;
 //!
@@ -42,7 +40,7 @@
 //! ```
 //!
 //! ### ExchangeStream
-//! Comunicação configurável sobre protocolos de stream assíncronos:
+//! Configurable communication over asynchronous stream protocols:
 //! ```rust,ignore
 //! use integration::stream::ExchangeStream;
 //!
@@ -51,31 +49,31 @@
 //!     .with_heartbeat(30); // seconds
 //! ```
 //!
-//! ## 🌐 Protocolos Suportados
+//! ## 🌐 Supported Protocols
 //!
-//! - **WebSocket**: Streaming em tempo real
-//! - **HTTP REST**: APIs tradicionais
-//! - **FIX Protocol**: Protocolo financeiro padrão
-//! - **Extensível**: Fácil adição de novos protocolos
+//! - **WebSocket**: Real-time streaming
+//! - **HTTP REST**: Traditional APIs
+//! - **FIX Protocol**: Standard financial protocol
+//! - **Extensible**: Easy addition of new protocols
 //!
-//! ## 📊 Funcionalidades de Integração
+//! ## 📊 Integration Features
 //!
-//! ### Transformação de Dados
-//! - **Parser Flexível**: Converte dados de diferentes formatos
-//! - **Normalização**: Padroniza dados de múltiplos exchanges
-//! - **Validação**: Verificação de integridade em tempo real
+//! ### Data Transformation
+//! - **Flexible Parser**: Converts data from different formats
+//! - **Normalization**: Standardizes data from multiple exchanges
+//! - **Validation**: Real-time integrity checking
 //!
-//! ### Gestão de Conectividade
-//! - **Auto-Reconnect**: Reconexão automática em falhas
-//! - **Heartbeat**: Monitoramento de conectividade
-//! - **Circuit Breaker**: Proteção contra falhas em cascata
+//! ### Connectivity Management
+//! - **Auto-Reconnect**: Automatic reconnection on failures
+//! - **Heartbeat**: Connectivity monitoring
+//! - **Circuit Breaker**: Protection against cascading failures
 //!
-//! ### Métricas e Monitoramento
-//! - **Real-Time Metrics**: Métricas de performance em tempo real
-//! - **Health Checks**: Verificações de saúde do sistema
-//! - **Alerting**: Sistema de alertas para anomalias
+//! ### Metrics and Monitoring
+//! - **Real-Time Metrics**: Real-time performance metrics
+//! - **Health Checks**: System health checks
+//! - **Alerting**: Alert system for anomalies
 //!
-//! ## 💡 Exemplo de Uso
+//! ## 💡 Usage Example
 //!
 //! ```rust,ignore
 //! use integration::{
@@ -85,24 +83,24 @@
 //! };
 //!
 //! async fn setup_integration() {
-//!     // Configurar cliente WebSocket
+//!     // Configure WebSocket client
 //!     let mut ws_client = WebSocketClient::new("wss://exchange.com/ws")
 //!         .with_reconnect()
 //!         .connect().await?;
 //!
-//!     // Subscrever dados de mercado
+//!     // Subscribe to market data
 //!     let subscription = Subscription::new("PETR4", "trades");
 //!     ws_client.subscribe(subscription).await?;
 //!
-//!     // Processar dados em tempo real
+//!     // Process real-time data
 //!     while let Some(data) = ws_client.next().await {
 //!         process_market_data(data);
 //!     }
 //! }
 //! ```
 //!
-//! Ambas abstrações fornecem a cola robusta necessária para traduzir
-//! convenientemente entre modelos de dados de servidor e cliente.
+//! Both abstractions provide the robust glue needed to conveniently translate
+//! between server and client data models.
 
 // Silence transitional unused dependency warnings (must appear after inner crate docs)
 #[allow(unused_imports)]

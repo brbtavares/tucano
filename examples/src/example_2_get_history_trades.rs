@@ -1,27 +1,27 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica.
-//! # Example 2: History Trades Interval (Pull + Incremental opcional)
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! # Example 2: History Trades Interval (Pull + Optional Incremental)
 //!
-//! Suporta backend real (Windows + feature `real_dll`) ou mock. No mock os eventos são
-//! gerados sinteticamente no intervalo solicitado.
+//! Supports real backend (Windows + feature `real_dll`) or mock. In mock mode, events are
+//! generated synthetically for the requested interval.
 //!
-//! Variáveis de ambiente:
+//! Environment variables:
 //! - HIST_TICKER / HIST_EXCHANGE (defaults PETR4 / B)
-//! - PROFIT_USER / PROFIT_PASSWORD (credenciais)
-//! - PROFITDLL_FORCE_MOCK=1 força mock
-//! - PROFITDLL_PATH / PROFITDLL_DIAG / PROFITDLL_STRICT conforme exemplo 1
-//! - INTERVAL_START=YYYY-MM-DDTHH:MM (horário Brasil, offset -03 assumido)
-//! - INTERVAL_MINUTES=duração em minutos (default 5)
+//! - PROFIT_USER / PROFIT_PASSWORD (credentials)
+//! - PROFITDLL_FORCE_MOCK=1 forces mock
+//! - PROFITDLL_PATH / PROFITDLL_DIAG / PROFITDLL_STRICT as in example 1
+//! - INTERVAL_START=YYYY-MM-DDTHH:MM (Brazil time, offset -03 assumed)
+//! - INTERVAL_MINUTES=duration in minutes (default 5)
 //!
-//! Execução:
+//! Execution:
 //! ```bash
 //! cargo run -p tucano-examples --bin example_2_get_history_trades --features real_dll
 //! ```
-//! ou mock:
+//! or mock:
 //! ```bash
 //! PROFITDLL_FORCE_MOCK=1 cargo run -p tucano-examples --bin example_2_get_history_trades
 //! ```
 //!
-//! Licença: Apache-2.0 OR MIT.
+//! License: Apache-2.0 OR MIT.
 
 use std::time::Duration;
 use tucano_profitdll::{backend_kind, new_backend, CallbackEvent, Credentials};
@@ -37,7 +37,7 @@ fn brasil_ts_ms(y: i32, m: u32, d: u32, hh: u32, mm: u32) -> i64 {
 }
 
 fn parse_interval() -> (i64, i64) {
-    // Determinístico: PETR4, B, 2025-08-16T10:35, duração 5 minutos
+    // Deterministic: PETR4, B, 2025-08-16T10:35, duration 5 minutes
     let y = 2025;
     let m = 8;
     let d = 15;
@@ -51,38 +51,38 @@ fn parse_interval() -> (i64, i64) {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Força diagnóstico detalhado da DLL em toda execução
+    // Forces detailed DLL diagnostics on every run
     std::env::set_var("PROFITDLL_DIAG", "1");
     let _ = dotenvy::from_filename(".env");
-    eprintln!("[example_2_get_history_trades][DEBUG] .env carregado (se existia) e PROFITDLL_DIAG=1 ativado por padrão");
+    eprintln!("[example_2_get_history_trades][DEBUG] .env loaded (if present) and PROFITDLL_DIAG=1 enabled by default");
 
-    eprintln!("[example_2_get_history_trades][DEBUG] Lendo credenciais do ambiente...");
+    eprintln!("[example_2_get_history_trades][DEBUG] Reading credentials from environment...");
     let creds = Credentials::from_env().map_err(|e| {
-        eprintln!("[example_2_get_history_trades][ERRO] Credenciais inválidas: {e}");
+        eprintln!("[example_2_get_history_trades][ERROR] Invalid credentials: {e}");
         e
     })?;
-    eprintln!("[example_2_get_history_trades][DEBUG] Criando backend...");
+    eprintln!("[example_2_get_history_trades][DEBUG] Creating backend...");
     let backend = new_backend().map_err(|e| {
-        eprintln!("[example_2_get_history_trades][ERRO] Falha criando backend: {e}");
+        eprintln!("[example_2_get_history_trades][ERROR] Failed to create backend: {e}");
         e
     })?;
     let kind = backend_kind(&*backend);
-    eprintln!("[example_2_get_history_trades][DEBUG] Backend criado: kind={kind}");
+    eprintln!("[example_2_get_history_trades][DEBUG] Backend created: kind={kind}");
     // Diagnóstico explícito para modo live
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
     {
         let strict = std::env::var("PROFITDLL_STRICT").unwrap_or_default() == "1";
         let force_mock = std::env::var("PROFITDLL_FORCE_MOCK").unwrap_or_default() == "1";
         if kind != "real_dll" && !force_mock {
-            eprintln!("[example_2_get_history_trades][AVISO] Não foi possível usar o modo live (real_dll). Rodando em mock.\n  Dicas:\n  - Verifique se a DLL está acessível e PROFITDLL_PATH está correto.\n  - Ative logs com PROFITDLL_DIAG=1.\n  - Use PROFITDLL_STRICT=1 para forçar erro se não conseguir live.\n  - Veja README/MANUAL.md para requisitos do modo real.");
+            eprintln!("[example_2_get_history_trades][WARNING] Could not use live mode (real_dll). Running in mock.\n  Tips:\n  - Check if the DLL is accessible and PROFITDLL_PATH is correct.\n  - Enable logs with PROFITDLL_DIAG=1.\n  - Use PROFITDLL_STRICT=1 to force error if live is not available.\n  - See README/MANUAL.md for real mode requirements.");
             if strict {
-                eprintln!("[example_2_get_history_trades][FALHA] PROFITDLL_STRICT=1: abortando por não conseguir backend real.");
-                return Err("Backend real_dll não disponível".into());
+                eprintln!("[example_2_get_history_trades][FAILURE] PROFITDLL_STRICT=1: aborting because real backend is not available.");
+                return Err("Backend real_dll not available".into());
             }
         }
     }
 
-    eprintln!("[example_2_get_history_trades][DEBUG] Chamando initialize_login (timeout 10s)...");
+    eprintln!("[example_2_get_history_trades][DEBUG] Calling initialize_login (timeout 10s)...");
     let login_result =
         tokio::time::timeout(Duration::from_secs(10), backend.initialize_login(&creds)).await;
     let mut rx = match login_result {
@@ -91,12 +91,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             rx
         }
         Ok(Err(e)) => {
-            eprintln!("[example_2_get_history_trades][ERRO] Login falhou: {e}");
+            eprintln!("[example_2_get_history_trades][ERROR] Login failed: {e}");
             return Err(e.into());
         }
         Err(_) => {
-            eprintln!("[example_2_get_history_trades][ERRO] initialize_login travou por mais de 10s! Possível deadlock ou bloqueio na DLL. Verifique PROFIT_USER, PROFIT_PASSWORD e logs da DLL.");
-            return Err("Timeout em initialize_login".into());
+            eprintln!("[example_2_get_history_trades][ERROR] initialize_login stuck for more than 10s! Possible deadlock or block in DLL. Check PROFIT_USER, PROFIT_PASSWORD, and DLL logs.");
+            return Err("Timeout in initialize_login".into());
         }
     };
 
@@ -104,22 +104,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let exchange = "B".to_string();
     let (from_ms, to_ms) = parse_interval();
 
-    println!("[example_2_get_history_trades] Solicitando histórico {ticker}@{exchange} entre {from_ms}..{to_ms} (ms UTC) kind={kind}");
-    eprintln!("[example_2_get_history_trades][DEBUG] Chamando request_history_trades...");
+    println!("[example_2_get_history_trades] Requesting history {ticker}@{exchange} between {from_ms}..{to_ms} (ms UTC) kind={kind}");
+    eprintln!("[example_2_get_history_trades][DEBUG] Calling request_history_trades...");
     if let Err(e) = backend.request_history_trades(&ticker, &exchange, from_ms, to_ms) {
-        eprintln!("[example_2_get_history_trades][ERRO] Falha solicitando histórico: {e}");
+        eprintln!("[example_2_get_history_trades][ERROR] Failed to request history: {e}");
     } else {
         eprintln!("[example_2_get_history_trades][DEBUG] request_history_trades OK");
     }
 
-    eprintln!("[example_2_get_history_trades][DEBUG] Chamando subscribe_ticker...");
+    eprintln!("[example_2_get_history_trades][DEBUG] Calling subscribe_ticker...");
     if let Err(e) = backend.subscribe_ticker(&ticker, &exchange) {
-        eprintln!("[example_2_get_history_trades][AVISO] subscribe_ticker falhou: {e}");
+        eprintln!("[example_2_get_history_trades][WARNING] subscribe_ticker failed: {e}");
     } else {
         eprintln!("[example_2_get_history_trades][DEBUG] subscribe_ticker OK");
     }
 
-    println!("[example_2_get_history_trades] Aguardando eventos (timeout 15s)...");
+    println!("[example_2_get_history_trades] Waiting for events (timeout 15s)...");
     let deadline = tokio::time::Instant::now() + Duration::from_secs(15);
     let mut count = 0usize;
     let mut iter = 0usize;
@@ -130,7 +130,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .ok()
             .flatten()
         {
-            eprintln!("[example_2_get_history_trades][DEBUG] Evento recebido no loop: {evt:?}");
+            eprintln!("[example_2_get_history_trades][DEBUG] Event received in loop: {evt:?}");
             match evt {
                 CallbackEvent::HistoryTrade {
                     ticker: t,
@@ -152,17 +152,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
                 other => {
                     println!(
-                        "[example_2_get_history_trades][DEBUG] Evento não-HistoryTrade: {other:?}"
+                        "[example_2_get_history_trades][DEBUG] Non-HistoryTrade event: {other:?}"
                     );
                 }
             }
         } else {
-            eprintln!("[example_2_get_history_trades][DEBUG] Nenhum evento recebido nesta iteração (iter={iter})");
+            eprintln!("[example_2_get_history_trades][DEBUG] No event received in this iteration (iter={iter})");
         }
     }
-    println!("[example_2_get_history_trades] Total de negócios coletados: {count}");
+    println!("[example_2_get_history_trades] Total trades collected: {count}");
     if count == 0 {
-        println!("[example_2_get_history_trades][AVISO] Nenhum negócio recebido.\n[example_2_get_history_trades][DICA] Possíveis causas: DLL não acionou callback, ausência de dados no intervalo, ou problema de integração. Rode com PROFITDLL_DIAG=1 para mais detalhes.");
+        println!("[example_2_get_history_trades][WARNING] No trades received.\n[example_2_get_history_trades][TIP] Possible causes: DLL did not trigger callback, no data in interval, or integration issue. Run with PROFITDLL_DIAG=1 for more details.");
     }
 
     let _ = backend.unsubscribe_ticker(&ticker, &exchange);

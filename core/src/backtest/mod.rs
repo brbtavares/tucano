@@ -1,31 +1,31 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! # Framework de Backtesting
+// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
+//! # Backtesting Framework
 //!
-//! Este módulo fornece um framework abrangente de backtesting para estratégias de trading algorítmico.
-//! Permite simular historicamente estratégias usando dados de mercado e gerar análises detalhadas
-//! de performance e relatórios estruturados.
+//! This module provides a comprehensive backtesting framework for algorithmic trading strategies.
+//! It allows historical simulation of strategies using market data and generates detailed
+//! performance analysis and structured reports.
 //!
-//! ## Principais Funcionalidades
+//! ## Main Features
 //!
-//! ### Simulação Histórica
-//! - **Reprodução de Dados**: Processa eventos históricos em ordem cronológica
-//! - **Execução de Estratégias**: Roda estratégias sobre dados históricos normalizados
-//! - **Simulação de Ordens**: Emula execução sem impacto real de mercado
-//! - **Suporte Multi‑Janela**: Testes em múltiplos intervalos de tempo
+//! ### Historical Simulation
+//! - **Data Replay**: Processes historical events in chronological order
+//! - **Strategy Execution**: Runs strategies on normalized historical data
+//! - **Order Simulation**: Emulates execution without real market impact
+//! - **Multi-Window Support**: Tests across multiple time intervals
 //!
-//! ### Análise de Performance
-//! - **Métricas Abrangentes**: Sharpe, Sortino, Máx Drawdown, etc.
-//! - **Risco**: Avaliação risco‑retorno e volatilidade de portfólio
-//! - **Análise de Trades**: Quebra detalhada de cada operação
-//! - **Linha do Tempo**: Evolução temporal de resultados
+//! ### Performance Analysis
+//! - **Comprehensive Metrics**: Sharpe, Sortino, Max Drawdown, etc.
+//! - **Risk**: Risk-return assessment and portfolio volatility
+//! - **Trade Analysis**: Detailed breakdown of each trade
+//! - **Timeline**: Temporal evolution of results
 //!
-//! ### Teste Multi‑Estratégia
-//! - **Execução Paralela**: Variações de parâmetros simultâneas
-//! - **Comparação**: Benchmark entre estratégias
-//! - **Otimização**: Exploração de combinações de parâmetros
-//! - **Portfólio**: Composição multi‑ativo / multi‑estratégia
+//! ### Multi-Strategy Testing
+//! - **Parallel Execution**: Simultaneous parameter variations
+//! - **Comparison**: Benchmarking between strategies
+//! - **Optimization**: Exploration of parameter combinations
+//! - **Portfolio**: Multi-asset / multi-strategy composition
 //!
-//! ## Arquitetura
+//! ## Architecture
 //!
 //! ```text
 //! ┌─────────────────────────────────────────────────────────┐

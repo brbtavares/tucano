@@ -1,55 +1,54 @@
-//! DISCLAIMER (summary): Educational/experimental use. Not investment advice.
-//! No institutional affiliation or third-party compensation. Proprietary APIs/libraries belong to their respective owners; technical integration only. See README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //!
 //! # 📊 Analytics - Financial Analysis Module
 //!
 //! This module provides comprehensive tools for quantitative analysis of financial data,
 //! including performance metrics, statistical algorithms, and report generation.
 //!
-//! ## 🎯 Funcionalidades Principais
+//! ## 🎯 Main Features
 //!
-//! - **Métricas Financeiras**: Sharpe, Sortino, Calmar, Win Rate, Profit Factor
-//! - **Análise de Drawdown**: Cálculo de máximo e médio drawdown
-//! - **Algoritmos Estatísticos**: Processamento de datasets financeiros
-//! - **Relatórios Automatizados**: Geração de sumários e tear sheets
-//! - **Intervalos Temporais**: Suporte a diferentes períodos de análise
+//! - **Financial Metrics**: Sharpe, Sortino, Calmar, Win Rate, Profit Factor
+//! - **Drawdown Analysis**: Calculation of maximum and average drawdown
+//! - **Statistical Algorithms**: Processing of financial datasets
+//! - **Automated Reports**: Generation of summaries and tear sheets
+//! - **Time Intervals**: Support for different analysis periods
 //!
-//! ## 🏗️ Estrutura (simplificada)
-//! Arquivos principais: `algorithm.rs`, diretório `metric/`, diretório `summary/`, `time.rs`.
-//! ## 🏗️ Estrutura do Módulo
+//! ## 🏗️ Structure (simplified)
+//! Main files: `algorithm.rs`, `metric/` directory, `summary/` directory, `time.rs`.
+//! ## 🏗️ Module Structure
 //!
-//! (Diagrama ilustrativo – não é código executável)
+//! (Illustrative diagram – not executable code)
 //!
 //! ```text
 //! analytics/
-//!  ├─ algorithm.rs     # Algoritmos estatísticos para análise de datasets
-//!  ├─ metric/          # Métricas financeiras (Sharpe, Sortino, etc.)
-//!  ├─ summary/         # Relatórios e sumários financeiros
-//!  └─ time.rs          # Definições de intervalos temporais
+//!  ├─ algorithm.rs     # Statistical algorithms for dataset analysis
+//!  ├─ metric/          # Financial metrics (Sharpe, Sortino, etc.)
+//!  ├─ summary/         # Financial reports and summaries
+//!  └─ time.rs          # Time interval definitions
 //! ```
 //!
-//! ## 📈 Exemplo de Uso Simplificado
+//! ## 📈 Simplified Usage Example
 //!
-//! Cálculo de Sharpe Ratio com valores hipotéticos (retornos já agregados).
+//! Sharpe Ratio calculation with hypothetical values (returns already aggregated).
 //!
-//! Cálculo simples do Sharpe Ratio usando estatísticas pré-computadas de uma série de retornos:
+//! Simple Sharpe Ratio calculation using pre-computed statistics from a return series:
 //!
 //! ```rust
 //! use tucano_analytics::metric::sharpe::SharpeRatio;
 //! use rust_decimal_macros::dec;
 //! use chrono::TimeDelta;
 //!
-//! // Estatísticas de retornos (exemplo fictício)
+//! // Return statistics (fictitious example)
 //! let risk_free_return = dec!(0.0015);    // 0.15%
 //! let mean_return      = dec!(0.0025);    // 0.25%
 //! let std_dev_returns  = dec!(0.02);      // 2%
-//! let interval = TimeDelta::hours(2);     // período analisado
+//! let interval = TimeDelta::hours(2);     // analyzed period
 //!
 //! let sharpe = SharpeRatio::calculate(risk_free_return, mean_return, std_dev_returns, interval);
 //! assert!(sharpe.value != rust_decimal::Decimal::ZERO);
 //! ```
 //!
-//! Outro exemplo calculando Sharpe em base diária:
+//! Another example calculating Sharpe on a daily basis:
 //!
 //! ```rust
 //! use tucano_analytics::metric::sharpe::SharpeRatio;
@@ -64,61 +63,61 @@
 //! assert_eq!(sharpe.value, dec!(0.05));
 //! ```
 //!
-//! ## 🔍 Métricas Disponíveis
+//! ## 🔍 Available Metrics
 //!
-//! - **Sharpe Ratio**: Retorno ajustado ao risco
-//! - **Sortino Ratio**: Sharpe considerando apenas downside risk
-//! - **Calmar Ratio**: Retorno anualizado / máximo drawdown
-//! - **Win Rate**: Percentual de trades vencedores
-//! - **Profit Factor**: Lucro bruto / prejuízo bruto
-//! - **Drawdown**: Análise de perdas máximas e médias
+//! - **Sharpe Ratio**: Risk-adjusted return
+//! - **Sortino Ratio**: Sharpe considering only downside risk
+//! - **Calmar Ratio**: Annualized return / maximum drawdown
+//! - **Win Rate**: Percentage of winning trades
+//! - **Profit Factor**: Gross profit / gross loss
+//! - **Drawdown**: Analysis of maximum and average losses
 
-/// Algoritmos estatísticos para análise de datasets financeiros.
+/// Statistical algorithms for financial dataset analysis.
 ///
-/// Contém implementações de algoritmos para processamento e análise
-/// de dados financeiros, incluindo cálculos de volatilidade, correlação
-/// e outras métricas estatísticas fundamentais.
+/// Contains implementations of algorithms for processing and analyzing
+/// financial data, including calculations of volatility, correlation,
+/// and other fundamental statistical metrics.
 pub mod algorithm;
 
-/// Métricas financeiras e métodos para calculá-las em diferentes
+/// Financial metrics and methods for calculating them in different
 /// [`TimeIntervals`](time::TimeInterval).
 ///
-/// Inclui todas as métricas essenciais para análise quantitativa:
-/// Sharpe, Sortino, Calmar ratios, Win Rate, Profit Factor, e análises
-/// de drawdown para avaliação de performance de estratégias.
+/// Includes all essential metrics for quantitative analysis:
+/// Sharpe, Sortino, Calmar ratios, Win Rate, Profit Factor, and drawdown
+/// analyses for evaluating strategy performance.
 pub mod metric;
 
-/// Sumários estatísticos para datasets financeiros.
+/// Statistical summaries for financial datasets.
 ///
-/// Fornece estruturas para geração de relatórios abrangentes como
+/// Provides structures for generating comprehensive reports such as
 /// `TradingSummary`, `TearSheet`, `TearSheetAsset`, `PnLReturns`, etc.
-/// Essenciais para análise de performance e relatórios automatizados.
+/// Essential for performance analysis and automated reporting.
 pub mod summary;
 
-/// Definições de intervalos temporais usados em cálculos financeiros.
+/// Definitions of time intervals used in financial calculations.
 ///
-/// Suporta diferentes convenções de tempo financeiro como `Annual365`,
-/// `Annual252` (dias úteis), `Daily`, etc. para cálculos precisos
-/// de métricas anualizadas e periódicas.
+/// Supports different financial time conventions such as `Annual365`,
+/// `Annual252` (business days), `Daily`, etc. for precise calculations
+/// of annualized and periodic metrics.
 pub mod time;
 
 use chrono::{DateTime, Utc};
 
-/// Trait para tipos que possuem timestamp.
+/// Trait for types that have a timestamp.
 ///
-/// Define a interface padrão para objetos que carregam informação temporal,
-/// essencial para análises baseadas em tempo e ordenação cronológica.
+/// Defines the standard interface for objects that carry temporal information,
+/// essential for time-based analysis and chronological ordering.
 pub trait Timed {
-    /// Retorna o timestamp deste item.
+    /// Returns the timestamp of this item.
     fn timestamp(&self) -> DateTime<Utc>;
 }
 
-/// Estrutura wrapper que combina um valor com timestamp.
+/// Wrapper structure that combines a value with a timestamp.
 ///
-/// Útil para associar dados financeiros com seus timestamps específicos,
-/// permitindo análises temporais precisas e ordenação cronológica.
+/// Useful for associating financial data with their specific timestamps,
+/// allowing precise temporal analysis and chronological ordering.
 ///
-/// # Exemplo
+/// # Example
 /// ```rust
 /// use tucano_analytics::{TimedValue, Timed};
 /// use chrono::Utc;
@@ -128,14 +127,14 @@ pub trait Timed {
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct TimedValue<T> {
-    /// O valor associado ao timestamp
+    /// The value associated with the timestamp
     pub value: T,
-    /// Timestamp UTC do valor
+    /// UTC timestamp of the value
     pub timestamp: DateTime<Utc>,
 }
 
 impl<T> TimedValue<T> {
-    /// Cria um novo `TimedValue` com o valor e timestamp fornecidos.
+    /// Creates a new `TimedValue` with the provided value and timestamp.
     pub fn new(value: T, timestamp: DateTime<Utc>) -> Self {
         Self { value, timestamp }
     }
@@ -149,17 +148,17 @@ impl<T> Timed for TimedValue<T> {
 
 #[cfg(test)]
 pub mod test_utils {
-    //! Utilitários para testes do módulo analytics.
+    //! Utilities for testing the analytics module.
     //!
-    //! Fornece funções auxiliares para criação de dados de teste
-    //! e manipulação temporal em cenários de teste.
+    //! Provides helper functions for creating test data
+    //! and manipulating time in test scenarios.
 
     use chrono::{DateTime, Utc};
 
-    /// Adiciona dias a uma data base para criação de dados de teste.
+    /// Adds days to a base date for creating test data.
     ///
-    /// Útil para gerar séries temporais de teste com intervalos
-    /// específicos entre observações.
+    /// Useful for generating test time series with specific intervals
+    /// between observations.
     pub fn time_plus_days(base: DateTime<Utc>, plus: u64) -> DateTime<Utc> {
         base + chrono::Duration::days(plus as i64)
     }

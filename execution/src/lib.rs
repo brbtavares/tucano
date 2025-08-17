@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -12,9 +13,7 @@
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 // (moved dummy imports below crate docs to satisfy inner doc comment placement rules)
 
-//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
-//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
-//! Technical integration. See README & DISCLAIMER.
+// ...existing code...
 //! # ⚡ Execution - Order Execution Module
 //!
 //! Private account data streams from financial venues and order execution
@@ -43,39 +42,39 @@
 //! struct MyClient;
 //!
 //! impl ExecutionClient for MyClient {
-//!     const EXCHANGE: ExchangeId = ExchangeId::B3; // exemplo
+//!     const EXCHANGE: ExchangeId = ExchangeId::B3; // example
 //!     type Config = ();
 //!     type AccountStream = futures::stream::Empty<execution::UnindexedAccountEvent>;
 //!     fn new(_: Self::Config) -> Self { Self }
-//!     // Demais métodos exigidos pelo trait devem ser implementados...
+//!     // Other methods required by the trait must be implemented...
 //!     // fn account_snapshot(..) -> ... { }
 //!     // fn open_order(..) -> ... { }
 //! }
 //! ```
 //!
 //! ### MockExchange
-//! Exchange simulado para backtesting e testes:
-//! - **Latência Realística**: Simula delays de rede e processamento
-//! - **Slippage**: Modela escorregamento de preços real
-//! - **Rejeições**: Simula rejeições por risco ou liquidez
+//! Simulated exchange for backtesting and testing:
+//! - **Realistic Latency**: Simulates network and processing delays
+//! - **Slippage**: Models real price slippage
+//! - **Rejections**: Simulates rejections due to risk or liquidity
 //!
-//! ### Gestão de Saldos
-//! Sistema robusto para tracking de saldos e posições:
-//! - **Multi-Asset**: Suporte a múltiplos ativos simultaneamente
-//! - **Real-Time**: Atualizações em tempo real via streams
-//! - **Reconciliação**: Validação automática de consistência
+//! ### Balance Management
+//! Robust system for tracking balances and positions:
+//! - **Multi-Asset**: Supports multiple assets simultaneously
+//! - **Real-Time**: Real-time updates via streams
+//! - **Reconciliation**: Automatic consistency validation
 //!
-//! ## 📊 Exchanges Suportados
+//! ## 📊 Supported Exchanges
 //!
-//! - **🇧🇷 B3**: Via ProfitDLL da Nelógica
-//! - **🌍 Binance**: Spot e Futures
-//! - **🇺🇸 Coinbase**: Exchange americano
-//! - **🧪 Mock**: Exchange simulado para testes
+//! - **🇧🇷 B3**: Via Nelógica's ProfitDLL
+//! - **🌍 Binance**: Spot and Futures
+//! - **🇺🇸 Coinbase**: US exchange
+//! - **🧪 Mock**: Simulated exchange for testing
 //!
-//! ## 💡 Exemplo de Uso
+//! ## 💡 Usage Example
 //!
 //! ```rust,ignore
-//! // Exemplo conceitual de fluxo (pseudocódigo):
+//! // Conceptual flow example (pseudocode):
 //! use execution::client::ExecutionClient;
 //! use execution::order::request::OrderRequestOpen;
 //! use execution::order::{OrderKind, TimeInForce, OrderKey};
@@ -83,17 +82,17 @@
 //! use markets::ExchangeId;
 //! use rust_decimal_macros::dec;
 //!
-//! async fn exemplo(mut client: impl ExecutionClient) {
+//! async fn example(mut client: impl ExecutionClient) {
 //!     let instrument = "PETR4".to_string();
 //!     let req = OrderRequestOpen {
 //!         key: OrderKey { exchange: ExchangeId::B3, instrument: &instrument, strategy: StrategyId("s".into()), cid: ClientOrderId("c1".into()) },
 //!         state: execution::order::request::RequestOpen { side: markets::Side::Buy, price: dec!(10), quantity: dec!(5), kind: OrderKind::Limit, time_in_force: TimeInForce::GoodUntilEndOfDay }
 //!     };
-//!     let _maybe_order = client.open_order(req).await; // retorna Option<...>
+//!     let _maybe_order = client.open_order(req).await; // returns Option<...>
 //! }
 //! ```
 //!
-//! Veja `README.md` para mais informações e exemplos.
+//! See `README.md` for more information and examples.
 
 // Silence transitional unused deps (must appear after inner crate docs)
 #[allow(unused_imports)]

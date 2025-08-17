@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use crate::engine::state::IndexedInstruments;
 use crate::{
     engine::{
@@ -34,10 +34,10 @@ use futures::Stream;
 use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, marker::PhantomData};
 
-/// Define como o `Engine` processa eventos de entrada.
+/// Defines how the `Engine` processes input events.
 ///
-/// Controla se o `Engine` roda de forma síncrona (thread bloqueante com `Iterator`)
-/// ou assíncrona (via `Stream` em tasks tokio).
+/// Controls whether the `Engine` runs synchronously (blocking thread with `Iterator`)
+/// or asynchronously (via `Stream` in tokio tasks).
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Default)]
 pub enum EngineFeedMode {
     /// Processa eventos de forma síncrona com `Iterator` em thread bloqueante (padrão).

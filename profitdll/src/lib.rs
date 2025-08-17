@@ -1,5 +1,5 @@
-//! DISCLAIMER (summary): Educational/experimental use. Not investment advice.
-//! No institutional affiliation or third-party compensation. Proprietary APIs/libraries belong to their respective owners; integration is purely technical (dynamic FFI). See full README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! DISCLAIMER (summary): For educational/experimental use only. No investment advice or affiliation. No third-party compensation. Proprietary APIs/libraries belong to their respective owners; integration is purely technical (dynamic FFI). See full README & DISCLAIMER.
 //!
 //! Isolated integration with ProfitDLL. Provides types, events, and (optionally)
 //! real FFI bindings via the `real_dll` feature.

@@ -6,7 +6,7 @@ license = "Apache-2.0 OR MIT"
 
 [features]
 default = []
-# Proxy para habilitar a feature real_dll do dependency tucano-profitdll
+## Proxy to enable the real_dll feature of the tucano-profitdll dependency
 real_dll = ["tucano-profitdll/real_dll"]
 
 [dependencies]
@@ -16,8 +16,8 @@ dotenvy = "0.15"
 rust_decimal = { workspace = true }
 chrono = { workspace = true }
 
-# Curadoria em andamento: exemplos antigos removidos.
-# Novo pipeline: adicionaremos gradualmente exemplos "live" e "mock" com convenções padronizadas.
+## Curation in progress: old examples removed.
+## New pipeline: we will gradually add "live" and "mock" examples with standardized conventions.
 
 [[bin]]
 name = "tucano-examples"

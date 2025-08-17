@@ -6,7 +6,7 @@ license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-analytics"
-description = "Métricas, estatísticas e summaries (drawdown, Sharpe, TearSheet) do ecossistema Tucano"
+description = "Metrics, statistics, and summaries (drawdown, Sharpe, TearSheet) for the Tucano ecosystem"
 keywords = ["trading","analytics","metrics","finance"]
 categories = ["finance","algorithms"]
 

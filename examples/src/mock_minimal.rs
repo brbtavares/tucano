@@ -1,6 +1,5 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-// Mini-Disclaimer.
-//! Exemplo mínimo que roda em mock ou live (se não forçado mock).
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! Minimal example that runs in mock or live mode (unless mock is forced).
 use rust_decimal::Decimal;
 use tucano_profitdll::{
     new_backend, AccountIdentifier, AssetIdentifier, Credentials, OrderSide, SendOrder,
@@ -9,12 +8,12 @@ use tucano_profitdll::{
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _ = dotenvy::from_filename(".env");
     if std::env::var("PROFITDLL_FORCE_MOCK").is_err() {
-        // Força mock implicitamente se variáveis de credencial não existirem
+        // Implicitly force mock if credential variables do not exist
         if std::env::var("PROFIT_USER").is_err() {
             std::env::set_var("PROFITDLL_FORCE_MOCK", "1");
         }
     }
-    // Usa credenciais reais se disponíveis; caso contrário fallback hardcoded mock
+    // Use real credentials if available; otherwise fallback to hardcoded mock
     let creds = Credentials::from_env().unwrap_or(Credentials {
         user: "demo_user".into(),
         password: "demo_pass".into(),
@@ -30,7 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Decimal::from(100),
     );
     let _ = backend.send_order(&order);
-    println!("[mock_minimal] Esperando 5 eventos...");
+    println!("[mock_minimal] Waiting for 5 events...");
     for i in 0..5 {
         if let Some(evt) = rx.recv().await {
             println!("evt[{i}]: {evt:?}");

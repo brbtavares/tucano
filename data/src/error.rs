@@ -1,4 +1,4 @@
-// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use crate::subscription::SubKind;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -13,7 +13,7 @@ use tucano_markets::{
 pub enum DataError {
     // #[error("failed to index market data Subscriptions: {0}")]
     // Index(#[from] IndexError),
-    #[error("failed to initialise reconnecting MarketStream due to empty subscriptions")]
+    #[error("failed to initialize reconnecting MarketStream due to empty subscriptions")]
     SubscriptionsEmpty,
 
     #[error("unsupported DynamicStreams Subscription SubKind: {0}")]

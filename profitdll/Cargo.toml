@@ -6,7 +6,7 @@ license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-profitdll"
-description = "Integração ProfitDLL (tipos + FFI opcional Windows / mock) para o ecossistema Tucano"
+description = "ProfitDLL integration (types + optional Windows FFI / mock) for the Tucano ecosystem"
 keywords = ["trading","b3","dll","profit","marketdata"]
 categories = ["finance","api-bindings"]
 

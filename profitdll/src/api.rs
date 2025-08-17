@@ -1,46 +1,46 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Camada de abstração neutra (Linux/Windows) para uso nos exemplos.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! Neutral abstraction layer (Linux/Windows) for use in examples.
 //!
-//! Objetivo: permitir que exemplos (e outros crates) utilizem a DLL real quando
-//! disponível (Windows + feature `real_dll`) ou automaticamente caiam para o
-//! mock em Linux / builds sem a feature, sem precisar de `#[cfg]` espalhado.
+//! Purpose: allow examples (and other crates) to use the real DLL when
+//! available (Windows + feature `real_dll`) or automatically fall back to
+//! mock on Linux / builds without the feature, without needing scattered `#[cfg]`.
 
 use crate::{error::ProfitError, mock, CallbackEvent, SendOrder};
 use core::any::{Any, TypeId};
 use std::env;
 use tokio::sync::mpsc::UnboundedReceiver;
 
-/// Estrutura de credenciais para login na DLL Profit.
+/// Credentials structure for logging into the Profit DLL.
 ///
-/// Parâmetros:
-/// - **activation_key**: Chave de ativação fornecida pela Nelógica.
-/// - **user**: Nome de usuário cadastrado na plataforma.
-/// - **password**: Senha do usuário.
+/// Parameters:
+/// - **activation_key**: Activation key provided by Nelógica.
+/// - **user**: Username registered on the platform.
+/// - **password**: User password.
 ///
-/// Consulte [`InitializeLogin`](../MANUAL.md#initializelogin) para detalhes.
+/// See [`InitializeLogin`](../MANUAL.md#initializelogin) for details.
 #[derive(Debug, Clone)]
 pub struct Credentials {
-    /// Chave de ativação (**ActivationKey**)
+    /// Activation key (**ActivationKey**)
     pub activation_key: String,
-    /// Nome de usuário (**User**)
+    /// Username (**User**)
     pub user: String,
-    /// Senha (**Password**)
+    /// Password (**Password**)
     pub password: String,
 }
 
 impl Credentials {
-    /// Carrega credenciais de variáveis de ambiente padrão.
+    /// Loads credentials from standard environment variables.
     ///
-    /// Variáveis consultadas (em ordem):
-    /// - PROFIT_USER (fallback para USER)
+    /// Variables checked (in order):
+    /// - PROFIT_USER (fallback to USER)
     /// - PROFIT_PASSWORD
-    /// - PROFIT_ACTIVATION_KEY (se ausente, usa string vazia)
+    /// - PROFIT_ACTIVATION_KEY (if missing, uses empty string)
     pub fn from_env() -> Result<Self, ProfitError> {
         let user = env::var("PROFIT_USER")
             .or_else(|_| env::var("USER"))
-            .map_err(|_| ProfitError::ConnectionFailed("PROFIT_USER não definido".into()))?;
+            .map_err(|_| ProfitError::ConnectionFailed("PROFIT_USER not set".into()))?;
         let password = env::var("PROFIT_PASSWORD")
-            .map_err(|_| ProfitError::ConnectionFailed("PROFIT_PASSWORD não definido".into()))?;
+            .map_err(|_| ProfitError::ConnectionFailed("PROFIT_PASSWORD not set".into()))?;
         let activation_key = env::var("PROFIT_ACTIVATION_KEY").unwrap_or_default();
         Ok(Self {
             user,
@@ -50,13 +50,13 @@ impl Credentials {
     }
 }
 
-/// Trait abstrata para backend Profit (DLL real ou mock).
+/// Abstract trait for Profit backend (real DLL or mock).
 ///
-/// Implementa a interface oficial da DLL Profit, conforme descrito no [MANUAL.md](../MANUAL.md).
-/// Todos os métodos e parâmetros seguem a nomenclatura e semântica da DLL original.
+/// Implements the official Profit DLL interface, as described in [MANUAL.md](../MANUAL.md).
+/// All methods and parameters follow the original DLL's naming and semantics.
 #[async_trait::async_trait]
 pub trait ProfitBackend: Send + Sync + Any {
-    /// Inicializa o login na DLL (**InitializeLogin**).
+    /// Initializes login in the DLL (**InitializeLogin**).
     ///
     /// Parâmetros:
     /// - **creds**: [`Credentials`] contendo activation_key, user e password.

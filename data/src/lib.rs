@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -10,10 +11,7 @@
     rust_2018_idioms
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
-
-//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
-//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
-//! Technical integration. See README & DISCLAIMER.
+// ...existing code...
 //! # 📊 Data - Market Data Streaming Module
 //!
 //! High-performance library for WebSocket integration, specialized in streaming
@@ -38,14 +36,14 @@
 //!   [`MarketStream`]s of all supported data types simultaneously
 //! - Define which market data you want using the [`Subscription`] type
 //! - Pass [`Subscription`]s to the [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe) methods
-//!   ou [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)
-//! - Cada chamada para [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe)
-//!   (ou batch para [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init))
-//!   abre uma nova conexão WebSocket ao exchange - controle total
+//!   or [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init)
+//! - Each call to [`StreamBuilder::subscribe`](streams::builder::StreamBuilder::subscribe)
+//!   (or batch for [`DynamicStreams::init`](streams::builder::dynamic::DynamicStreams::init))
+//!   opens a new WebSocket connection to the exchange - full control
 //!
-//! ## 📈 Exchanges Suportados
+//! ## 📈 Supported Exchanges
 //!
-//! - **🇧🇷 B3**: Bolsa brasileira via ProfitDLL
+//! - **🇧🇷 B3**: Brazilian stock exchange via ProfitDLL
 
 // Silence unused dependency warnings for transitional deps (pending removal)
 use crate::{
@@ -89,25 +87,25 @@ pub mod exchange;
 pub mod streams;
 
 /// [`Subscriber`], [`SubscriptionMapper`](subscriber::mapper::SubscriptionMapper) and
-/// [`SubscriptionValidator`](subscriber::validator::SubscriptionValidator)  traits that define how a
+/// [`SubscriptionValidator`](subscriber::validator::SubscriptionValidator) traits that define how a
 /// [`Connector`] will subscribe to exchange [`MarketStream`]s.
 ///
 /// Standard implementations for subscribing to WebSocket [`MarketStream`]s are included.
 pub mod subscriber;
 
-/// Types that communicate the type of each [`MarketStream`] to initialise, and what normalised
+/// Types that communicate the type of each [`MarketStream`] to initialize, and what normalized
 /// Toucan output type the exchange will be transformed into.
 pub mod subscription;
 
 /// [`InstrumentData`] trait for instrument describing data.
 pub mod instrument;
 
-/// [`OrderBook`](books::OrderBook) related types, and utilities for initialising and maintaining
+/// [`OrderBook`](books::OrderBook) related types, and utilities for initializing and maintaining
 /// a collection of sorted local Instrument [`OrderBook`](books::OrderBook)s
 pub mod books;
 
 /// Generic [`ExchangeTransformer`] implementations used by [`MarketStream`]s to translate exchange
-/// specific types to normalised Toucan types.
+/// specific types to normalized Toucan types.
 ///
 /// A standard [`StatelessTransformer`](transformer::stateless::StatelessTransformer) implementation
 /// that works for most `Exchange`-`SubscriptionKind` combinations is included.
@@ -117,7 +115,7 @@ pub mod books;
 /// [`ExchangeTransformer`] implementations.
 pub mod transformer;
 
-/// Convenient type alias for an [`ExchangeStream`] utilising a tungstenite
+/// Convenient type alias for an [`ExchangeStream`] utilizing a tungstenite
 /// [`WebSocket`](tucano_integration::protocol::websocket::WebSocket).
 pub type ExchangeWsStream<Transformer> = ExchangeStream<WebSocketParser, WsStream, Transformer>;
 
@@ -194,7 +192,7 @@ where
         // Split WebSocket into WsStream & WsSink components
         let (ws_sink, ws_stream) = websocket.split();
 
-        // Spawn task to distribute Transformer messages (eg/ custom pongs) to the exchange
+        // Spawn task to distribute Transformer messages (e.g., custom pongs) to the exchange
         let (ws_sink_tx, ws_sink_rx) = mpsc::unbounded_channel();
         tokio::spawn(distribute_messages_to_exchange(
             Exchange::ID,
@@ -211,7 +209,7 @@ where
             ));
         }
 
-        // Initialise Transformer associated with this Exchange and SubscriptionKind
+        // Initialize Transformer associated with this Exchange and SubscriptionKind
         let mut transformer =
             Transformer::init(instrument_map, &initial_snapshots, ws_sink_tx).await?;
 
@@ -277,7 +275,7 @@ where
 ///
 /// **Note:**
 /// ExchangeTransformer is operating in a synchronous trait context so we use this separate task
-/// to avoid adding `#[\async_trait\]` to the transformer - this avoids allocations.
+/// to avoid adding `#[async_trait]` to the transformer - this avoids allocations.
 pub async fn distribute_messages_to_exchange(
     exchange: ExchangeId,
     mut ws_sink: WsSink,

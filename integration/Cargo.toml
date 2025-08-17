@@ -6,7 +6,7 @@ license = "Apache-2.0 OR MIT"
 repository = "https://github.com/brbtavares/tucano"
 readme = "README.md"
 documentation = "https://docs.rs/tucano-integration"
-description = "Framework de integrações Web (HTTP/WebSocket) para venues/exchanges"
+description = "Web integration framework (HTTP/WebSocket) for venues/exchanges"
 keywords = ["trading","integration","http","websocket"]
 categories = ["finance","api-bindings"]
 

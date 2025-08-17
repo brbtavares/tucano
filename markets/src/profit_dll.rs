@@ -1,4 +1,4 @@
-// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! (Deprecated) ProfitDLL types were moved to crate `tucano-profitdll`.
 //! This file remains temporarily to avoid breaking external imports; it re-exports
 //! the new locations. Will be removed in a future major release.

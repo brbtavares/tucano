@@ -1,14 +1,14 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
-//! Implementação FFI real (Windows + feature `real_dll`) para a DLL Profit.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+//! Real FFI implementation (Windows + feature `real_dll`) for the Profit DLL.
 //!
-//! Esta camada realiza:
-//! - Carregamento dinâmico da DLL (**ProfitDLL.dll**)
-//! - Registro de callbacks oficiais (ver [MANUAL.md](../MANUAL.md#eventos-e-callbacks))
-//! - Login inicial (**InitializeLogin**)
-//! - Canal assíncrono para eventos ([`CallbackEvent`])
-//! - Envio, cancelamento e alteração de ordens conforme interface oficial
+//! This layer performs:
+//! - Dynamic loading of the DLL (**ProfitDLL.dll**)
+//! - Registration of official callbacks (see [MANUAL.md](../MANUAL.md#eventos-e-callbacks))
+//! - Initial login (**InitializeLogin**)
+//! - Asynchronous channel for events ([`CallbackEvent`])
+//! - Sending, canceling, and modifying orders as per the official interface
 //!
-//! OBS: Callbacks adicionais podem ser expandidos conforme necessidade, seguindo a estrutura dos trampolines.
+//! NOTE: Additional callbacks can be expanded as needed, following the trampoline structure.
 #![allow(non_camel_case_types)]
 
 use libloading::{Library, Symbol};
@@ -31,7 +31,7 @@ use chrono::{TimeZone, Utc};
 use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal; // para to_f64
 
-/// Tipo de retorno padrão da DLL (**NResult**).
+/// Default return type of the DLL (**NResult**).
 pub type NResult = i32; // re-export local para facilitar (mantém igual)
 
 // ---- Assinaturas brutas (subset) ----

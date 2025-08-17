@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -11,9 +12,7 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (summary): Educational/experimental use only. No investment advice.
-//! No institutional affiliation or third-party compensation. Profit/ProfitDLL © Nelógica.
-//! Technical integration only. Read the full README & DISCLAIMER.
+//! DISCLAIMER (summary): For educational/experimental use only. No investment advice or affiliation. No third-party compensation. Profit/ProfitDLL © Nelógica. Technical integration only. Read the full README & DISCLAIMER.
 //! # 🏛️ Markets - Simplified Market Abstractions
 //!
 //! Fundamental traits and types for exchanges, instruments, and financial assets.
@@ -38,7 +37,7 @@
 //! ## 💡 Fundamental Concepts
 //!
 //! ### Exchange
-//! Representa um mercado ou bolsa onde instrumentos são negociados:
+//! Represents a market or exchange where instruments are traded:
 //! ```rust,ignore
 //! use markets::{Exchange, ExchangeId};
 //!
@@ -51,7 +50,7 @@
 //! ```
 //!
 //! ### Instrument
-//! Define instrumentos financeiros negociáveis:
+//! Defines tradable financial instruments:
 //! ```rust,ignore
 //! use markets::{Instrument, InstrumentKind};
 //!
@@ -62,7 +61,7 @@
 //! ```
 //!
 //! ### Asset
-//! Representa ativos financeiros subjacentes:
+//! Represents underlying financial assets:
 //! ```rust,ignore
 //! use markets::{Asset, AssetType};
 //!
@@ -73,12 +72,12 @@
 //! }
 //! ```
 //!
-//! ## 🇧🇷 Suporte ao Mercado Brasileiro
+//! ## 🇧🇷 Brazilian Market Support
 //!
-//! - **B3 Integration**: Suporte nativo à Bolsa Brasileira
-//! - **ProfitDLL**: Conectividade através da Nelógica
-//! - **Terminologia Local**: Uso de termos específicos do mercado brasileiro
-//! - **Regulamentação**: Conformidade com regras da CVM
+//! - **B3 Integration**: Native support for the Brazilian Exchange
+//! - **ProfitDLL**: Connectivity via Nelógica
+//! - **Local Terminology**: Use of Brazilian market-specific terms
+//! - **Regulation**: Compliance with CVM rules
 //!
 
 use derive_more::Constructor;
@@ -86,48 +85,48 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 // Silence unused_crate_dependencies for transitional re-export of tucano-profitdll
 
-/// Re-exporta traits principais para conveniência de uso.
+/// Re-exports main traits for convenient usage.
 ///
-/// Permite importar facilmente os traits fundamentais do módulo
-/// sem precisar especificar o caminho completo de cada submódulo.
+/// Allows easy import of the module's fundamental traits
+/// without specifying the full path to each submodule.
 pub use asset::{Asset, AssetType};
 pub use exchange::{Exchange, ExchangeId};
 pub use instrument::{Instrument, InstrumentKind, MarketDataInstrument};
 pub use side::Side;
 
-/// Define abstrações de exchanges financeiros.
+/// Defines abstractions for financial exchanges.
 ///
-/// Contém traits e tipos para representar diferentes mercados
-/// e bolsas onde instrumentos financeiros são negociados.
+/// Contains traits and types to represent different markets
+/// and exchanges where financial instruments are traded.
 pub mod exchange;
 
-/// Define abstrações de ativos financeiros.
+/// Defines abstractions for financial assets.
 ///
-/// Inclui definições para diferentes tipos de ativos como
-/// moedas, ações, commodities, etc., com suas características
-/// específicas e métodos de identificação.
+/// Includes definitions for different asset types such as
+/// currencies, stocks, commodities, etc., with their specific
+/// characteristics and identification methods.
 pub mod asset;
 
-/// Define abstrações de instrumentos financeiros.
+/// Defines abstractions for financial instruments.
 ///
-/// Contém traits e estruturas para representar instrumentos
-/// negociáveis como ações, opções, futuros, etc., incluindo
-/// metadados de mercado e identificação.
+/// Contains traits and structures to represent tradable instruments
+/// such as stocks, options, futures, etc., including market metadata
+/// and identification.
 pub mod instrument;
 
-/// Define enumeração de lados de operação.
+/// Defines the operation side enumeration.
 ///
-/// Especifica se uma operação é de compra (Buy) ou venda (Sell),
-/// fundamental para definição de ordens e análise de fluxo.
+/// Specifies whether an operation is a buy (Buy) or sell (Sell),
+/// fundamental for order definition and flow analysis.
 pub mod side;
 
-/// Utilitário para valores com chave associada.
+/// Utility for values with an associated key.
 ///
-/// Estrutura genérica que combina uma chave com um valor,
-/// útil para mapear dados com identificadores específicos
-/// de forma type-safe e eficiente.
+/// Generic structure that combines a key with a value,
+/// useful for mapping data with specific identifiers
+/// in a type-safe and efficient way.
 ///
-/// # Exemplo
+/// # Example
 /// ```rust,ignore
 /// use markets::Keyed;
 ///

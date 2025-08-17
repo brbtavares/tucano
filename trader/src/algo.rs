@@ -1,4 +1,4 @@
-// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; Profit/ProfitDLL © Nelógica; see README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! Ported from former `strategy` crate: AlgoStrategy trait.
 use tucano_execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},

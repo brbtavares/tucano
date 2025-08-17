@@ -1,4 +1,4 @@
-// Mini-Disclaimer: For educational/experimental use only; no investment advice or affiliation; no third-party compensation; proprietary APIs/libraries belong to their respective owners; see README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 /// Top-level trading system architecture for composing trading engines with execution components.
 ///
 /// This module provides an architecture for building and running trading systems composed of the
