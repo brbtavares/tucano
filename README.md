@@ -82,7 +82,7 @@ Tucano is organized as a modular Rust workspace, where each crate is responsible
 
 - **tucano**: The main entry point. Re-exports all core modules for easy consumption.
 - **core**: The heart of the framework. Implements the event-driven engine, supporting both live trading and backtesting with the same codebase.
-- **execution**: Handles order creation, routing, execution, and client abstraction for different brokers/exchanges.
+- **execution**: Handles order creation, routing, execution, and client abstraction for different exchanges.
 - **data**: Manages all market data streams, order books, trades, and event normalization.
 - **markets**: Defines financial instruments (stocks, futures, options, crypto, etc.) and provides adapters for each supported exchange or market.
 - **analytics**: Provides performance metrics, summaries, and reporting tools for strategies and portfolios.

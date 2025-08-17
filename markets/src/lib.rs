@@ -32,7 +32,6 @@
 //! - `instrument`: Financial instrument abstractions
 //! - `side`: Operation side enumeration (Buy/Sell)
 //! - `b3`: Brazilian Exchange (B3) specific definitions
-//! - `broker`: Broker abstraction layer (abstract – external integrations in their own crates)
 //!
 //! ## 💡 Fundamental Concepts
 //!
@@ -179,10 +178,8 @@ impl<AssetKey> Underlying<AssetKey> {
 
 // Module declarations
 pub mod b3;
-pub mod broker;
 
 // Re-exports
 pub use b3::*;
-pub use broker::*;
 // Re-export commonly used instrument struct
 pub use crate::instrument::ConcreteInstrument;
