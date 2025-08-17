@@ -38,16 +38,18 @@ The **integration** crate provides building blocks for data ingestion and reques
 
 ## 🧪 Partial
 - Metrics: collection still superficial.
-- Protocolos: HTTP/WebSocket placeholders; FIX não iniciado.
-- Tipos collection documentados mas com links rustdoc quebrados (ajustar).
+- Protocols: HTTP/WebSocket placeholders; FIX not started.
+- Collection types documented but with broken rustdoc links (to fix).
 
-## 🚧 Pendências
-- Service layer para reconexão automática com política configurável.
-- Buffering adaptativo com pressão de memória.
-- Telemetria estruturada (latência por estágio de pipeline).
 
-## 🇧🇷 Contexto B3
-Servirá de ponte para integrar ProfitDLL hoje e futuramente APIs oficiais B3 (REST / WebSocket) ou provedores de dados alternativos.
+## 🚧 Pending
+- Service layer for automatic reconnection with configurable policy.
+- Adaptive buffering with memory pressure.
+- Structured telemetry (latency per pipeline stage).
+
+
+## 🇧🇷 B3 Context
+Will serve as a bridge to integrate ProfitDLL today and, in the future, official B3 APIs (REST / WebSocket) or alternative data providers.
 
 ## Exemplo (conceitual)
 ```rust

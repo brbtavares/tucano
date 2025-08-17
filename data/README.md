@@ -38,14 +38,15 @@ The **data** crate centralizes the modeling of market events (ticks, trades, boo
 | `risk`         | Volatility, gaps, integrity checks                            |
 
 ## ✅ Completed
-- Modelos básicos de evento e assinatura.
-- Estrutura de reconexão inicial (`streams::reconnect`).
-- Integração parcial com ProfitDLL (estado embrionário).
+- Basic event and subscription models.
+- Initial reconnection structure (`streams::reconnect`).
+- Partial integration with ProfitDLL (embryonic state).
 
-## 🧪 Parcial
-- Transformer genérico (alguns parsers placeholders).
-- Snapshots de book / profundidade – a detalhar.
-- Book incremental (diffs) não implementado.
+
+## 🧪 Partial
+- Generic transformer (some parser placeholders).
+- Book/depth snapshots – to be detailed.
+- Incremental book (diffs) not implemented.
 
 ## 🚧 Pendências
 - Suporte a diferentes frequências (agg de 1s/1m) nativamente.
@@ -53,8 +54,9 @@ The **data** crate centralizes the modeling of market events (ticks, trades, boo
 - Backfill de gaps de conexão.
 - Canal de latência (timestamp triplo: source, receive, process).
 
-## 🇧🇷 Contexto B3
-Foco inicial: ações e derivativos listados; necessidade de mapear códigos padronizados (WIN, IND, DOL, WDO, ouro, BTC). Fábricas de símbolos e *rollover* de contratos futuros serão adicionados.
+
+## 🇧🇷 B3 Context
+Initial focus: listed stocks and derivatives; need to map standardized codes (WIN, IND, DOL, WDO, gold, BTC). Symbol factories and futures contract rollover will be added.
 
 ## 🏁 Exemplo (conceitual)
 ```rust

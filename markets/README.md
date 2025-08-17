@@ -37,18 +37,21 @@ The **markets** crate provides the taxonomy and semantic types that support exec
 - Basic instruments listed as examples (stocks, some administrative futures).
 
 ## 🧪 Parcial
-- Broker multi‑corretora (estrutura inicial; falta abstração robusta de credenciais/latência).
-- Futuros: rollover e cálculo de fator de ajuste ainda não implementados.
-- Opções listadas B3: não suportadas no momento (design pendente).
 
-## 🚧 Pendências
-- Normalização de símbolos de derivativos (WIN, IND, DOL, WDO) com parsing robusto.
-- Tabela de multiplicadores / tick size configurável.
-- Catálogo dinâmico de instrumentos (carregamento via API/Master file). 
-- Mapeamento de corporate actions (dividendos / splits) para backtest fiel.
+- Multi-broker support (initial structure; robust credential/latency abstraction missing).
+- Futures: rollover and adjustment factor calculation not yet implemented.
+- B3 listed options: not supported at the moment (design pending).
 
-## 🇧🇷 Contexto B3
-Proverá base para suportar gradualmente toda a gama de instrumentos negociados, com especial atenção a: mini-contratos, contratos cheios, ETFs setoriais e futuros de cripto listados.
+
+## 🚧 Pending
+- Normalization of derivative symbols (WIN, IND, DOL, WDO) with robust parsing.
+- Configurable multipliers / tick size table.
+- Dynamic instrument catalog (loading via API/Master file).
+- Mapping of corporate actions (dividends / splits) for accurate backtesting.
+
+
+## 🇧🇷 B3 Context
+Will provide a foundation to gradually support the full range of traded instruments, with special attention to: mini-contracts, full contracts, sector ETFs, and listed crypto futures.
 
 ## Exemplo (conceitual)
 ```rust

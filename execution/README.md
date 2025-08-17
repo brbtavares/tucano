@@ -39,19 +39,22 @@ The **execution** crate encapsulates interaction with venues for order submissio
 - Structured account event pipeline (snapshot, open order, cancel, trade).
 - Compat layer (String ↔ ExchangeId) stabilized post-refactor.
 
-## 🧪 Parcial
-- ProfitDLL real: autenticação e subscrição iniciadas; rota de ordens incompleta.
-- Suporte a múltiplas corretoras ProfitDLL (faltando abstração de broker id/latência).
-- Gestão de reconexão para execução (apenas esboço).
 
-## 🚧 Pendências
-- Implementar cancelamento efetivo / partial fills.
-- Time-in-force, tipos avançados (stop, OCO) – roadmap.
-- Medição de latência (enfileirar timestamps). 
-- Persistência de sequência de ordens para recovery.
+## 🧪 Partial
+- Real ProfitDLL: authentication and subscription started; order routing incomplete.
+- Support for multiple ProfitDLL brokers (missing broker id/latency abstraction).
+- Execution reconnection management (only a draft).
 
-## 🇧🇷 Contexto B3
-Foco em: ações, índice (IND/MINI WIN), dólar (DOL/WDO), futuros de bitcoin e ouro. Necessário mapear multiplicadores e taxas (emolumentos, corretagem, B3 fees) para PnL realista.
+
+## 🚧 Roadmap
+- Implement effective cancellation / partial fills.
+- Time-in-force, advanced types (stop, OCO) – roadmap.
+- Latency measurement (queueing timestamps).
+- Order sequence persistence for recovery.
+
+
+## 🇧🇷 B3 Context
+Focus: stocks, index (IND/MINI WIN), dollar (DOL/WDO), bitcoin and gold futures. It is necessary to map multipliers and fees (exchange fees, brokerage, B3 fees) for realistic PnL.
 
 ## 🏁 Exemplo Conceitual
 ```rust
