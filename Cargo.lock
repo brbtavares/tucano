@@ -2596,12 +2596,10 @@ dependencies = [
 name = "tucano-markets"
 version = "0.1.0"
 dependencies = [
- "async-trait",
  "chrono",
  "derive_more 2.0.1",
  "rust_decimal",
  "serde",
- "thiserror 2.0.15",
 ]
 
 [[package]]

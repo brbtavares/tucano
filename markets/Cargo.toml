@@ -23,12 +23,8 @@ default = []
 ## SerDe
 serde = { workspace = true, features = ["derive"] }
 
-## Async (used by broker traits)
-async-trait = { workspace = true }
-
-
 ## Error handling
-thiserror = { workspace = true }
+# thiserror = { workspace = true }
 
 ## Data types
 rust_decimal = { workspace = true }
