@@ -2,7 +2,23 @@
 name = "tucano-xtask"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/brbtavares/tucano"
 
 [dependencies]
+# TUI
 ratatui = "0.26"
 clap = { version = "4.5", features = ["derive"] }
+
+# Macro
+proc-macro2 = "1.0.49"
+syn = "2.0.104"
+quote = "1.0.23"
+
+# Misc
+convert_case = "0.8.0"
+
+[lib]
+proc-macro = true
+
+

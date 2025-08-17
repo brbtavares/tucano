@@ -10,19 +10,9 @@ Cargo.lock
 *.dylib
 *.lib
 *.a
-profit-dll/lib/*.dll
-profit-dll/lib/*.so
-profit-dll/lib/*.dylib
-
-# Context file
-repo_context.md
 
 # .env files
 .env
 
-# C++ files
-*.cpp
-*.h
-*.hpp
-*.cxx
-*.inl
+# Utility files
+/utils

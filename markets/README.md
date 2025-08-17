@@ -1,6 +1,6 @@
 # Tucano Markets
 
-> Models market entities (Exchange, Asset, Instrument, Side, OrderType) with specialization for B3.
+> Models market entities (Exchange, Asset, Instrument, Side, OrderType)
 
 ## 🎯 Role
 The **markets** crate provides the taxonomy and semantic types that support execution, data, and risk. It ensures that instruments and assets are consistently identified throughout the platform.
