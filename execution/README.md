@@ -42,7 +42,6 @@ The **execution** crate encapsulates interaction with venues for order submissio
 
 ## 🧪 Partial
 - Real ProfitDLL: authentication and subscription started; order routing incomplete.
-- Support for multiple ProfitDLL brokers (missing broker id/latency abstraction).
 - Execution reconnection management (only a draft).
 
 

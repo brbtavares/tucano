@@ -11,7 +11,6 @@ The **markets** crate provides the taxonomy and semantic types that support exec
 | Asset Model      | `asset.rs`, `asset_simplified.rs` and B3 specializations (Stocks, ETFs, REITs, Futures) |
 | Instrument       | Standardized construction (name, market, derived symbol)                    |
 | Index            | `index/` for efficient keyed collections                                    |
-| Broker Abstractions | `broker/` skeleton to unite multiple ProfitDLL brokers                   |
 
 ## 🔑 Main Types
 - `ExchangeId` – Canonical identifier (e.g., `B3`).

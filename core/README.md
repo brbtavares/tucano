@@ -55,7 +55,6 @@ The **Core** module is the "brain" of the Tucano platform. It coordinates state,
 - Implement incremental persistence (journaling) for fast recovery.
 - Plug-in layer for custom clocks (e.g., micro-latency simulation).
 - Orchestration of multiple strategies with capital partitioning.
-- Bridge for multiple ProfitDLL brokers (test latency/robustness variations).
 - Additional risk hooks (sector exposure, issuer concentration) specific to B3.
 
 ## 🧾 Note
