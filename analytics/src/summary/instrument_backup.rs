@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use crate::{
     metric::{
         calmar::CalmarRatio,
@@ -55,20 +55,6 @@ impl<Interval: Default> Default for TearSheet<Interval> {
 /// Generator for an [`TearSheet`].
 #[derive(Debug, Clone, PartialEq, PartialOrd, Default, Deserialize, Serialize)]
 pub struct TearSheetGenerator {
-
-/// TearSheet summarising the trading performance related to an instrument.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
-pub struct TearSheet<Interval> {
-    pub pnl: Decimal,
-    pub pnl_return: RateOfReturn<Interval>,
-    pub sharpe_ratio: SharpeRatio<Interval>,
-    pub sortino_ratio: SortinoRatio<Interval>,
-    pub calmar_ratio: CalmarRatio<Interval>,
-    pub pnl_drawdown: Option<Drawdown>,
-    pub pnl_drawdown_mean: Option<MeanDrawdown>,
-    pub pnl_drawdown_max: Option<MaxDrawdown>,
-    pub win_rate: Option<WinRate>,
-    pub profit_factor: Option<ProfitFactor>,
 }
 
 impl<Interval> Default for TearSheet<Interval> {
