@@ -7,7 +7,7 @@ repository = "https://github.com/brbtavares/tucano"
 
 [dependencies]
 # TUI
-ratatui = "0.26"
+ratatui = "0.29"
 clap = { version = "4.5", features = ["derive"] }
 
 # Macro
