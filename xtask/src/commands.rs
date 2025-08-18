@@ -30,7 +30,8 @@ pub async fn run_clippy() -> Result<()> {
             "--all-targets",
             "--all-features",
             "--",
-            "-D", "warnings"
+            "-D",
+            "warnings",
         ])
         .output()
         .await?;
@@ -71,7 +72,11 @@ pub async fn check_disclaimers() -> Result<()> {
 
         if !missing_files.is_empty() {
             issues_found += missing_files.len();
-            println!("📦 Crate '{}' - {} files missing disclaimer:", package.name, missing_files.len());
+            println!(
+                "📦 Crate '{}' - {} files missing disclaimer:",
+                package.name,
+                missing_files.len()
+            );
             for file in &missing_files {
                 println!("  - {}", file.display());
             }
@@ -159,7 +164,8 @@ pub async fn show_size_comparison() -> Result<()> {
             None => "unknown".to_string(),
         };
 
-        println!("│ {:<27} │ {:>12} │ {:>12} │ {:>12} │",
+        println!(
+            "│ {:<27} │ {:>12} │ {:>12} │ {:>12} │",
             truncate_string(&crate_info.name, 27),
             crate_info.local_size_mb(),
             crate_info.published_size_mb(),
@@ -180,7 +186,9 @@ pub async fn release_crates(crate_name: Option<String>, dry_run: bool) -> Result
     let workspace = crate::workspace::WorkspaceInfo::load().await?;
 
     let crates_to_release = if let Some(name) = crate_name {
-        workspace.crates.into_iter()
+        workspace
+            .crates
+            .into_iter()
             .filter(|c| c.name == name)
             .collect::<Vec<_>>()
     } else {
@@ -231,7 +239,10 @@ pub async fn release_crates(crate_name: Option<String>, dry_run: bool) -> Result
 
 // Helper functions
 
-fn find_files_missing_disclaimer(crate_path: &std::path::Path, disclaimer_template: &str) -> Result<Vec<PathBuf>> {
+fn find_files_missing_disclaimer(
+    crate_path: &std::path::Path,
+    disclaimer_template: &str,
+) -> Result<Vec<PathBuf>> {
     let mut missing_files = Vec::new();
     let disclaimer_lines: Vec<&str> = disclaimer_template.lines().collect();
 
@@ -243,9 +254,10 @@ fn find_files_missing_disclaimer(crate_path: &std::path::Path, disclaimer_templa
         let path = entry.path();
 
         // Skip target directory and other build artifacts
-        if path.components().any(|c| {
-            matches!(c.as_os_str().to_string_lossy().as_ref(), "target" | ".git")
-        }) {
+        if path
+            .components()
+            .any(|c| matches!(c.as_os_str().to_string_lossy().as_ref(), "target" | ".git"))
+        {
             continue;
         }
 
@@ -348,6 +360,6 @@ fn truncate_string(s: &str, max_len: usize) -> String {
     if s.len() <= max_len {
         s.to_string()
     } else {
-        format!("{}...", &s[..max_len-3])
+        format!("{}...", &s[..max_len - 3])
     }
 }

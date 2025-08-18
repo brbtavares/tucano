@@ -1,10 +1,7 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
-use ratatui::{
-    backend::CrosstermBackend,
-    Terminal,
-};
+use ratatui::{backend::CrosstermBackend, Terminal};
 use std::io;
 
 mod app;
@@ -37,7 +34,7 @@ enum Commands {
     /// Add disclaimer to files (--fix to apply)
     AddDisclaimer {
         #[arg(long)]
-        fix: bool
+        fix: bool,
     },
     /// Show crate sizes comparison
     SizeCheck,
@@ -61,7 +58,10 @@ async fn main() -> Result<()> {
         Commands::CheckDisclaimer => check_disclaimers().await,
         Commands::AddDisclaimer { fix } => add_disclaimers(fix).await,
         Commands::SizeCheck => show_size_comparison().await,
-        Commands::Release { crate_name, dry_run } => release_crates(crate_name, dry_run).await,
+        Commands::Release {
+            crate_name,
+            dry_run,
+        } => release_crates(crate_name, dry_run).await,
     }
 }
 
@@ -92,7 +92,7 @@ async fn run_tui() -> Result<()> {
 
 async fn run_app<B: ratatui::backend::Backend>(
     terminal: &mut Terminal<B>,
-    app: &mut App
+    app: &mut App,
 ) -> Result<()> {
     loop {
         terminal.draw(|f| tui::ui(f, app))?;

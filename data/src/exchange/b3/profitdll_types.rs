@@ -1,5 +1,5 @@
 // Minimal local definitions for B3/ProfitDLL integration
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderSide {
@@ -11,7 +11,11 @@ pub enum OrderSide {
 pub struct ProfitConnector; // Stub, implement as needed
 
 impl ProfitConnector {
-    pub fn subscribe_ticker(&self, _symbol: &str, _market: &str) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn subscribe_ticker(
+        &self,
+        _symbol: &str,
+        _market: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         Ok(())
     }
 }

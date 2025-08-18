@@ -18,8 +18,8 @@ pub mod instrument;
 pub mod profitdll_types;
 pub mod types;
 
+use self::profitdll_types::{CallbackEvent, ProfitConnector};
 pub use exchange::B3Exchange;
-use self::profitdll_types::{ProfitConnector, CallbackEvent};
 use tokio::sync::mpsc;
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;

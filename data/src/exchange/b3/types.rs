@@ -5,12 +5,12 @@
 //! the markets abstractions, making them compatible with the framework
 //! while maintaining Brazilian market terminology.
 
+use super::profitdll_types::OrderSide;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
-use super::profitdll_types::OrderSide;
 use tucano_markets::{Asset, AssetType};
 
 /// B3 Exchange identifier

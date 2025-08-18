@@ -89,7 +89,9 @@ impl App {
             Screen::SizeComparison | Screen::Release => {
                 if !self.workspace.crates.is_empty() {
                     let i = match self.crate_state.selected() {
-                        Some(i) => (i + self.workspace.crates.len() - 1) % self.workspace.crates.len(),
+                        Some(i) => {
+                            (i + self.workspace.crates.len() - 1) % self.workspace.crates.len()
+                        }
                         None => 0,
                     };
                     self.crate_state.select(Some(i));
@@ -249,7 +251,8 @@ impl App {
     }
 
     pub fn get_selected_crate(&self) -> Option<&crate::workspace::CrateInfo> {
-        self.crate_state.selected()
+        self.crate_state
+            .selected()
             .and_then(|i| self.workspace.crates.get(i))
     }
 }

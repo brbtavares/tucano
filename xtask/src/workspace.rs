@@ -1,7 +1,7 @@
 use anyhow::Result;
-use cargo_metadata::{MetadataCommand};
-use std::path::PathBuf;
+use cargo_metadata::MetadataCommand;
 use chrono::Datelike;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone)]
 pub struct WorkspaceInfo {
@@ -14,8 +14,8 @@ pub struct CrateInfo {
     pub name: String,
     pub version: String,
     pub path: PathBuf,
-    pub local_size: Option<u64>,      // em bytes
-    pub published_size: Option<u64>,   // em bytes
+    pub local_size: Option<u64>,     // em bytes
+    pub published_size: Option<u64>, // em bytes
     pub dependencies: Vec<String>,
     pub has_disclaimer: Option<bool>,
     pub fmt_status: Option<bool>,
@@ -39,13 +39,17 @@ impl WorkspaceInfo {
             let crate_info = CrateInfo {
                 name: package.name.clone(),
                 version: package.version.to_string(),
-                path: package.manifest_path.parent()
+                path: package
+                    .manifest_path
+                    .parent()
                     .unwrap_or_else(|| &package.manifest_path)
                     .as_std_path()
                     .to_path_buf(),
                 local_size: None,
                 published_size: None,
-                dependencies: package.dependencies.iter()
+                dependencies: package
+                    .dependencies
+                    .iter()
                     .map(|dep| dep.name.clone())
                     .collect(),
                 has_disclaimer: None,
@@ -82,9 +86,10 @@ impl WorkspaceInfo {
 
     pub async fn check_disclaimers(&mut self, disclaimer_template: &str) -> Result<()> {
         for crate_info in &mut self.crates {
-            crate_info.has_disclaimer = Some(
-                check_crate_disclaimer(&crate_info.path, disclaimer_template)?
-            );
+            crate_info.has_disclaimer = Some(check_crate_disclaimer(
+                &crate_info.path,
+                disclaimer_template,
+            )?);
         }
         Ok(())
     }
@@ -127,8 +132,10 @@ fn calculate_crate_size(crate_path: &PathBuf) -> Result<u64> {
 
         // Skip target, node_modules, .git etc
         if path.components().any(|c| {
-            matches!(c.as_os_str().to_string_lossy().as_ref(),
-                "target" | "node_modules" | ".git" | ".svn")
+            matches!(
+                c.as_os_str().to_string_lossy().as_ref(),
+                "target" | "node_modules" | ".git" | ".svn"
+            )
         }) {
             continue;
         }
@@ -194,7 +201,10 @@ fn check_crate_disclaimer(crate_path: &PathBuf, template: &str) -> Result<bool> 
                     break;
                 }
 
-                let actual_line = lines[i].trim_start_matches("//").trim_start_matches("/*").trim();
+                let actual_line = lines[i]
+                    .trim_start_matches("//")
+                    .trim_start_matches("/*")
+                    .trim();
                 let template_line = template_line.trim();
 
                 if actual_line != template_line && !template_line.contains("{year}") {

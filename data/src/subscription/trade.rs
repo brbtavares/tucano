@@ -6,9 +6,7 @@ use tucano_markets::Side;
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`PublicTrade`]
 /// [`MarketEvent<T>`](crate::event::MarketEvent) events.
-#[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
-)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct PublicTrades;
 
 impl SubscriptionKind for PublicTrades {
