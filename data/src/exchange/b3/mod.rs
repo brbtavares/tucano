@@ -78,7 +78,6 @@ impl B3ProfitConnector {
     //
     //     Ok(())
     // }
-
     /// Subscribe to market data for a specific B3 instrument
     pub fn subscribe_instrument(
         &self,
@@ -103,7 +102,6 @@ impl B3ProfitConnector {
     //     }
     //     Ok(())
     // }
-
     /// Get asset category from symbol
     // pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
     //     // let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol

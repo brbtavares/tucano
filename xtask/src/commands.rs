@@ -8,7 +8,7 @@ pub async fn run_fmt() -> Result<()> {
     println!("🎨 Running cargo fmt --all...");
 
     let output = TokioCommand::new("cargo")
-        .args(&["fmt", "--all"])
+        .args(["fmt", "--all"])
         .output()
         .await?;
 
@@ -25,7 +25,7 @@ pub async fn run_clippy() -> Result<()> {
     println!("🔍 Running cargo clippy...");
 
     let output = TokioCommand::new("cargo")
-        .args(&[
+        .args([
             "clippy",
             "--all-targets",
             "--all-features",
@@ -262,7 +262,7 @@ fn find_files_missing_disclaimer(
         }
 
         // Only check .rs files
-        if path.extension().map_or(false, |ext| ext == "rs") {
+        if path.extension().is_some_and(|ext| ext == "rs") {
             if !has_disclaimer(path, &disclaimer_lines)? {
                 missing_files.push(path.to_path_buf());
             }
@@ -320,7 +320,7 @@ fn add_disclaimer_to_file(file_path: &PathBuf, disclaimer_template: &str) -> Res
 
 async fn run_crate_tests(crate_path: &PathBuf) -> Result<bool> {
     let output = TokioCommand::new("cargo")
-        .args(&["test"])
+        .args(["test"])
         .current_dir(crate_path)
         .output()
         .await?;
@@ -343,7 +343,7 @@ async fn is_version_published(crate_name: &str, version: &str) -> Result<bool> {
 
 async fn publish_crate(crate_path: &PathBuf) -> Result<()> {
     let output = TokioCommand::new("cargo")
-        .args(&["publish"])
+        .args(["publish"])
         .current_dir(crate_path)
         .output()
         .await?;

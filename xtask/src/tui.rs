@@ -346,7 +346,7 @@ fn render_crate_details(f: &mut Frame, area: Rect, app: &App, crate_name: &str) 
     };
     let mut full_content = content;
     if let Some(crate_info) = selected_crate {
-        for (i, dep) in crate_info.dependencies.iter().enumerate().take(10) {
+        for (_i, dep) in crate_info.dependencies.iter().enumerate().take(10) {
             full_content.push(Line::from(vec![Span::raw("  • "), Span::raw(dep)]));
         }
         if crate_info.dependencies.len() > 10 {

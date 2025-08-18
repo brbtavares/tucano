@@ -9,7 +9,7 @@ pub struct App {
     pub current_screen: Screen,
     pub menu_state: ListState,
     pub crate_state: ListState,
-    pub selected_crate: Option<usize>,
+    //pub selected_crate: Option<usize>,
     pub status_message: String,
     pub loading: bool,
     pub current_tab: Tab,
@@ -48,7 +48,7 @@ impl App {
             current_screen: Screen::MainMenu,
             menu_state,
             crate_state,
-            selected_crate: None,
+            //selected_crate: None,
             status_message: "Ready - Use ↑↓ to navigate, Enter to select, 'q' to quit".to_string(),
             loading: false,
             current_tab: Tab::Overview,
@@ -250,9 +250,9 @@ impl App {
         Ok(())
     }
 
-    pub fn get_selected_crate(&self) -> Option<&crate::workspace::CrateInfo> {
+    /*pub fn get_selected_crate(&self) -> Option<&crate::workspace::CrateInfo> {
         self.crate_state
             .selected()
             .and_then(|i| self.workspace.crates.get(i))
-    }
+    }*/
 }

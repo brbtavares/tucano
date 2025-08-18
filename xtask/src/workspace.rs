@@ -6,7 +6,7 @@ use std::path::PathBuf;
 #[derive(Debug, Clone)]
 pub struct WorkspaceInfo {
     pub crates: Vec<CrateInfo>,
-    pub root_path: PathBuf,
+    //pub root_path: PathBuf,
 }
 
 #[derive(Debug, Clone)]
@@ -17,9 +17,9 @@ pub struct CrateInfo {
     pub local_size: Option<u64>,     // em bytes
     pub published_size: Option<u64>, // em bytes
     pub dependencies: Vec<String>,
-    pub has_disclaimer: Option<bool>,
-    pub fmt_status: Option<bool>,
-    pub clippy_issues: Option<u32>,
+    //pub has_disclaimer: Option<bool>,
+    //pub fmt_status: Option<bool>,
+    //pub clippy_issues: Option<u32>,
 }
 
 impl WorkspaceInfo {
@@ -52,9 +52,9 @@ impl WorkspaceInfo {
                     .iter()
                     .map(|dep| dep.name.clone())
                     .collect(),
-                has_disclaimer: None,
-                fmt_status: None,
-                clippy_issues: None,
+                //has_disclaimer: None,
+                //fmt_status: None,
+                //clippy_issues: None,
             };
 
             crates.push(crate_info);
@@ -62,7 +62,7 @@ impl WorkspaceInfo {
 
         Ok(WorkspaceInfo {
             crates,
-            root_path: metadata.workspace_root.as_std_path().to_path_buf(),
+            //root_path: metadata.workspace_root.as_std_path().to_path_buf(),
         })
     }
 
@@ -84,7 +84,7 @@ impl WorkspaceInfo {
         Ok(())
     }
 
-    pub async fn check_disclaimers(&mut self, disclaimer_template: &str) -> Result<()> {
+    /*pub async fn check_disclaimers(&mut self, disclaimer_template: &str) -> Result<()> {
         for crate_info in &mut self.crates {
             crate_info.has_disclaimer = Some(check_crate_disclaimer(
                 &crate_info.path,
@@ -92,7 +92,7 @@ impl WorkspaceInfo {
             )?);
         }
         Ok(())
-    }
+    }*/
 }
 
 impl CrateInfo {
@@ -173,54 +173,54 @@ async fn fetch_crates_io_size(client: &reqwest::Client, crate_name: &str) -> Res
     }
 }
 
-fn check_crate_disclaimer(crate_path: &PathBuf, template: &str) -> Result<bool> {
-    use walkdir::WalkDir;
+// fn check_crate_disclaimer(crate_path: &PathBuf, template: &str) -> Result<bool> {
+//     use walkdir::WalkDir;
 
-    let disclaimer_lines: Vec<&str> = template.lines().collect();
-    if disclaimer_lines.is_empty() {
-        return Ok(true); // No template, consider as having disclaimer
-    }
+//     let disclaimer_lines: Vec<&str> = template.lines().collect();
+//     if disclaimer_lines.is_empty() {
+//         return Ok(true); // No template, consider as having disclaimer
+//     }
 
-    for entry in WalkDir::new(crate_path)
-        .follow_links(true)
-        .into_iter()
-        .filter_map(|e| e.ok())
-    {
-        let path = entry.path();
+//     for entry in WalkDir::new(crate_path)
+//         .follow_links(true)
+//         .into_iter()
+//         .filter_map(|e| e.ok())
+//     {
+//         let path = entry.path();
 
-        // Only check .rs files
-        if path.extension().map_or(false, |ext| ext == "rs") {
-            let content = std::fs::read_to_string(path)?;
-            let lines: Vec<&str> = content.lines().collect();
+//         // Only check .rs files
+//         if path.extension().map_or(false, |ext| ext == "rs") {
+//             let content = std::fs::read_to_string(path)?;
+//             let lines: Vec<&str> = content.lines().collect();
 
-            // Check if first lines match disclaimer template
-            let mut has_disclaimer = true;
-            for (i, template_line) in disclaimer_lines.iter().enumerate() {
-                if i >= lines.len() {
-                    has_disclaimer = false;
-                    break;
-                }
+//             // Check if first lines match disclaimer template
+//             let mut has_disclaimer = true;
+//             for (i, template_line) in disclaimer_lines.iter().enumerate() {
+//                 if i >= lines.len() {
+//                     has_disclaimer = false;
+//                     break;
+//                 }
 
-                let actual_line = lines[i]
-                    .trim_start_matches("//")
-                    .trim_start_matches("/*")
-                    .trim();
-                let template_line = template_line.trim();
+//                 let actual_line = lines[i]
+//                     .trim_start_matches("//")
+//                     .trim_start_matches("/*")
+//                     .trim();
+//                 let template_line = template_line.trim();
 
-                if actual_line != template_line && !template_line.contains("{year}") {
-                    has_disclaimer = false;
-                    break;
-                }
-            }
+//                 if actual_line != template_line && !template_line.contains("{year}") {
+//                     has_disclaimer = false;
+//                     break;
+//                 }
+//             }
 
-            if !has_disclaimer {
-                return Ok(false);
-            }
-        }
-    }
+//             if !has_disclaimer {
+//                 return Ok(false);
+//             }
+//         }
+//     }
 
-    Ok(true)
-}
+//     Ok(true)
+// }
 
 pub fn get_default_disclaimer() -> String {
     format!(
