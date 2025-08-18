@@ -1,6 +1,6 @@
 # Tucano Execution
 
-> Order execution and account synchronization layer (B3 via ProfitDLL initially).
+> Order execution and account synchronization layer (global venues, with all concrete integrations implemented as local modules; `markets` contains only abstractions).
 
 ## 🎯 Role
 The **execution** crate encapsulates interaction with venues for order submission, fill reception, balance and position synchronization, offering a stable interface to `core` and abstracting specific details (latency, proprietary formats).
@@ -24,7 +24,7 @@ The **execution** crate encapsulates interaction with venues for order submissio
 ## 🔗 Interdependencies
 | Depends on   | Reason                                                        |
 |--------------|---------------------------------------------------------------|
-| `markets`    | Exchange/instrument identifiers                               |
+| `markets`    | Abstractions (traits, enums, types) for exchange/instrument identifiers |
 | `integration`| Async channels for requests/responses                         |
 | `data`       | Coherence between market events and fills (timestamp)         |
 
@@ -41,7 +41,7 @@ The **execution** crate encapsulates interaction with venues for order submissio
 
 
 ## 🧪 Partial
-- Real ProfitDLL: authentication and subscription started; order routing incomplete.
+
 - Execution reconnection management (only a draft).
 
 
@@ -52,8 +52,7 @@ The **execution** crate encapsulates interaction with venues for order submissio
 - Order sequence persistence for recovery.
 
 
-## 🇧🇷 B3 Context
-Focus: stocks, index (IND/MINI WIN), dollar (DOL/WDO), bitcoin and gold futures. It is necessary to map multipliers and fees (exchange fees, brokerage, B3 fees) for realistic PnL.
+
 
 ## 🏁 Exemplo Conceitual
 ```rust

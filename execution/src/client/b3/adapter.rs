@@ -3,7 +3,7 @@
 
 use crate::{balance::AssetBalance, error::AssetNameExchange, UnindexedAccountEvent};
 use tucano_markets::Side;
-use tucano_profitdll::{CallbackEvent, OrderSide};
+use tucano_data::exchange::b3::profitdll_types::{CallbackEvent, OrderSide};
 
 /// Convert ProfitDLL CallbackEvent to Toucan UnindexedAccountEvent
 pub fn convert_callback_event(event: CallbackEvent) -> Option<UnindexedAccountEvent> {
@@ -30,7 +30,6 @@ pub fn convert_order_side(side: OrderSide) -> Side {
     match side {
         OrderSide::Buy => Side::Buy,
         OrderSide::Sell => Side::Sell,
-        _ => Side::Buy,
     }
 }
 

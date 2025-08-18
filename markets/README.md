@@ -1,20 +1,20 @@
 # Tucano Markets
 
-> Models market entities (Exchange, Asset, Instrument, Side, OrderType)
+> Abstractions for market entities (Exchange, Asset, Instrument, Side, OrderType). This crate now contains only traits, enums, and types; all concrete exchange/broker integrations are implemented in `data` or `integration`.
 
 ## 🎯 Role
 The **markets** crate provides the taxonomy and semantic types that support execution, data, and risk. It ensures that instruments and assets are consistently identified throughout the platform.
 
 | Responsibility   | Description                                                                 |
 |------------------|-----------------------------------------------------------------------------|
-| Exchange Model   | `exchange.rs` / `b3.rs` define the `ExchangeId` enum and characteristics    |
-| Asset Model      | `asset.rs`, `asset_simplified.rs` and B3 specializations (Stocks, ETFs, REITs, Futures) |
+| Exchange Model   | `exchange.rs` defines the `ExchangeId` enum and characteristics (abstractions only)    |
+| Asset Model      | `asset.rs`, `asset_simplified.rs` and specializations (Stocks, ETFs, REITs, Futures) (abstractions only) |
 | Instrument       | Standardized construction (name, market, derived symbol)                    |
 | Index            | `index/` for efficient keyed collections                                    |
 
 ## 🔑 Main Types
-- `ExchangeId` – Canonical identifier (e.g., `B3`).
-- `Asset` / `B3Asset*` – Implementations by category (stock, ETF, REIT, future).
+-- `ExchangeId` – Canonical identifier.
+-- `Asset` – Implementations by category (stock, ETF, REIT, future).
 - `Instrument` – Combination of asset + market + semantics (e.g., mini-index).
 - `Side`, `OrderType` – Order direction and modality.
 
@@ -32,14 +32,14 @@ The **markets** crate provides the taxonomy and semantic types that support exec
 | `analytics`   | Aggregation keys by instrument                |
 
 ## ✅ Completed
-- Enum of exchanges and basic B3 types.
+-- Enum of exchanges and basic types.
 - Basic instruments listed as examples (stocks, some administrative futures).
 
 ## 🧪 Parcial
 
-- Multi-broker support (initial structure; robust credential/latency abstraction missing).
+- Multi-broker abstraction (initial structure; all concrete implementations now live in `data` or `integration`).
 - Futures: rollover and adjustment factor calculation not yet implemented.
-- B3 listed options: not supported at the moment (design pending).
+
 
 
 ## 🚧 Pending
@@ -49,11 +49,10 @@ The **markets** crate provides the taxonomy and semantic types that support exec
 - Mapping of corporate actions (dividends / splits) for accurate backtesting.
 
 
-## 🇧🇷 B3 Context
-Will provide a foundation to gradually support the full range of traded instruments, with special attention to: mini-contracts, full contracts, sector ETFs, and listed crypto futures.
+
 
 ## Exemplo (conceitual)
 ```rust
 use markets::exchange::ExchangeId;
-let venue = ExchangeId::B3;
+// let venue = ExchangeId::SomeExchange;
 ```

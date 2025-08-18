@@ -5,7 +5,7 @@ use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use tucano_macros::{DeSubKind, SerSubKind};
+// use tucano_macros::{DeSubKind, SerSubKind}; // removed: crate no longer exists
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`OrderBookL1`]
 /// market events.
@@ -13,7 +13,7 @@ use tucano_macros::{DeSubKind, SerSubKind};
 /// Level 1 refers to the best non-aggregated bid and ask [`Level`] on each side of the
 /// [`OrderBook`].
 #[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, DeSubKind, SerSubKind,
+    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
 )]
 pub struct OrderBooksL1;
 
@@ -68,7 +68,7 @@ impl OrderBookL1 {
 ///
 /// Level 2 refers to an [`OrderBook`] with orders at each price level aggregated.
 #[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, DeSubKind, SerSubKind,
+    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
 )]
 pub struct OrderBooksL2;
 
@@ -91,7 +91,7 @@ impl std::fmt::Display for OrderBooksL2 {
 /// Level 3 refers to the non-aggregated [`OrderBook`]. This is a direct replication of the exchange
 /// [`OrderBook`].
 #[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, DeSubKind, SerSubKind,
+    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
 )]
 pub struct OrderBooksL3;
 

@@ -6,7 +6,7 @@
 <table>
     <tr>
         <td align="center" valign="middle" style="border: none;">
-            <img src="assets/logo.png" alt="Logo Tucano" />
+            <img src="_assets/logo.png" alt="Logo Tucano" />
         </td>
     </tr>
     <tr>
@@ -51,7 +51,6 @@
 | `tucano-analytics` | 0.1.x | Metrics, summaries, performance & PnL | [docs.rs](https://docs.rs/tucano-analytics) |
 | `tucano-integration` | 0.9.x | External protocols, channels & snapshots | [docs.rs](https://docs.rs/tucano-integration) |
 | `tucano-macros` | 0.2.x | Internal procedural macros | [docs.rs](https://docs.rs/tucano-macros) |
-| `tucano-profitdll` | 0.1.x | ProfitDLL integration (mock + optional FFI) | [docs.rs](https://docs.rs/tucano-profitdll) |
 
 Convention: use `major.minor.x` range in docs; specify patch for reproducibility if needed.
 
@@ -73,25 +72,25 @@ Tucano is organized as a modular Rust workspace, where each crate is responsible
 ├── strategies/            # Example/reference strategies (plug-and-play)
 ├── integration/           # External protocol adapters, channels, snapshots
 ├── macros/                # Internal procedural macros for code generation
-├── profitdll/             # ProfitDLL integration (mock + optional FFI)
+
 ├── examples/              # Usage examples, integration demos
 ├── devkit/                # Developer scripts and utilities
 ```
+
 
 **Component Roles:**
 
 - **tucano**: The main entry point. Re-exports all core modules for easy consumption.
 - **core**: The heart of the framework. Implements the event-driven engine, supporting both live trading and backtesting with the same codebase.
 - **execution**: Handles order creation, routing, execution, and client abstraction for different exchanges.
-- **data**: Manages all market data streams, order books, trades, and event normalization.
-- **markets**: Defines financial instruments (stocks, futures, options, crypto, etc.) and provides adapters for each supported exchange or market.
+- **data**: Manages all market data streams, order books, trades, event normalization, and now contains all concrete exchange/broker integrations.
+- **markets**: Defines financial instruments (stocks, futures, options, crypto, etc.) and provides only abstractions (traits, enums, types) for supported exchanges/markets.
 - **analytics**: Provides performance metrics, summaries, and reporting tools for strategies and portfolios.
 - **risk**: Centralizes risk checks, position limits, and validation logic to ensure safe trading.
 - **trader**: Contains the main traits and types for implementing trading strategies in a generic, engine-agnostic way.
 - **strategies**: Houses reusable and reference strategies, which can be used as templates or directly in production.
-- **integration**: Adapters for external protocols (WebSocket, REST, FIX, DLL, etc.), channels, and snapshotting tools.
+- **integration**: Adapters for external protocols (WebSocket, REST, FIX, DLL, etc.), channels, and snapshotting tools. Concrete adapters are now implemented here or in `data/` as appropriate.
 - **macros**: Internal procedural macros to reduce boilerplate and enable advanced code generation.
-- **profitdll**: Optional integration with ProfitDLL (for platforms that support it), including mock and FFI bindings.
 - **examples**: Real-world usage examples, integration tests, and demos for new users.
 - **devkit**: Scripts and utilities to help with development, CI/CD, and code quality.
 
@@ -100,6 +99,9 @@ Tucano is organized as a modular Rust workspace, where each crate is responsible
 - To add support for a new market or protocol, create a new crate (e.g., `tucano-binance`, `tucano-ibrk`, `tucano-kraken`) following the same modular pattern. Implement the required traits from `core`, `execution`, and `data`.
 - New strategies can be added to the `strategies/` crate or as separate crates for better isolation.
 - All components communicate via strongly-typed events and traits, making it easy to plug in new modules without breaking existing code.
+
+
+**Note:** All concrete exchange/broker integrations (such as B3/ProfitDLL) are now implemented as local modules in `tucano-data` or `tucano-integration`. The `markets` crate contains only abstractions (traits, enums, types).
 
 This architecture allows you to build, test, and deploy algorithmic trading systems for any market or protocol, while keeping code maintainable and extensible.
 

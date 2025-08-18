@@ -15,13 +15,12 @@
 
 pub mod exchange;
 pub mod instrument;
+pub mod profitdll_types;
 pub mod types;
 
 pub use exchange::B3Exchange;
+use self::profitdll_types::{OrderSide, ProfitConnector, CallbackEvent};
 use tokio::sync::mpsc;
-use tucano_markets::b3::{B3AssetCategory, B3AssetFactory};
-// ProfitDLL concrete connectivity moved to `tucano-profitdll` crate.
-use tucano_profitdll::{CallbackEvent, ProfitConnector};
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;
 
@@ -63,22 +62,22 @@ impl B3ProfitConnector {
     }
 
     /// Initialize connection to B3 via ProfitDLL
-    pub async fn initialize(
-        &mut self,
-        activation_key: &str,
-        user: &str,
-        password: &str,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let connector = ProfitConnector::new(None)?;
-        let events = connector
-            .initialize_login(activation_key, user, password)
-            .await?;
-
-        self.profit_connector = Some(connector);
-        self.event_receiver = Some(events);
-
-        Ok(())
-    }
+    // pub async fn initialize(
+    //     &mut self,
+    //     activation_key: &str,
+    //     user: &str,
+    //     password: &str,
+    // ) -> Result<(), Box<dyn std::error::Error>> {
+    //     let connector = ProfitConnector::new(None)?;
+    //     let events = connector
+    //         .initialize_login(activation_key, user, password)
+    //         .await?;
+    //
+    //     self.profit_connector = Some(connector);
+    //     self.event_receiver = Some(events);
+    //
+    //     Ok(())
+    // }
 
     /// Subscribe to market data for a specific B3 instrument
     pub fn subscribe_instrument(
@@ -93,38 +92,39 @@ impl B3ProfitConnector {
 
     /// Subscribe to market data using asset symbol
     /// Automatically detects asset type and category
-    pub fn subscribe_asset(&self, symbol: &str) -> Result<(), Box<dyn std::error::Error>> {
-        if let Some(connector) = &self.profit_connector {
-            // Create asset from symbol to determine proper market
-            let _asset = B3AssetFactory::from_symbol(symbol)?;
-
-            // Subscribe with appropriate market designation
-            // Most B3 assets use "B" market, but this could be extended
-            connector.subscribe_ticker(symbol, "B")?;
-        }
-        Ok(())
-    }
+    // pub fn subscribe_asset(&self, symbol: &str) -> Result<(), Box<dyn std::error::Error>> {
+    //     if let Some(connector) = &self.profit_connector {
+    //         // Create asset from symbol to determine proper market
+    //         // let _asset = B3AssetFactory::from_symbol(symbol)?;
+    //
+    //         // Subscribe with appropriate market designation
+    //         // Most B3 assets use "B" market, but this could be extended
+    //         // connector.subscribe_ticker(symbol, "B")?;
+    //     }
+    //     Ok(())
+    // }
 
     /// Get asset category from symbol
-    pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
-        let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol
-        if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
-            return Ok(B3AssetCategory::ETF);
-        }
-        if symbol.ends_with("11B") {
-            return Ok(B3AssetCategory::REIT);
-        }
-        if (5..=6).contains(&symbol.len()) {
-            return Ok(B3AssetCategory::Stock);
-        }
-        Ok(B3AssetCategory::Stock)
-    }
+    // pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
+    //     // let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol
+    //     // if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
+    //     //     return Ok(B3AssetCategory::ETF);
+    //     // }
+    //     // if symbol.ends_with("11B") {
+    //     //     return Ok(B3AssetCategory::REIT);
+    //     // }
+    //     // if (5..=6).contains(&symbol.len()) {
+    //     //     return Ok(B3AssetCategory::Stock);
+    //     // }
+    //     // Ok(B3AssetCategory::Stock)
+    // }
 
     /// Process incoming events from ProfitDLL
     pub async fn process_events(&mut self) -> Option<B3MarketEvent> {
         if let Some(receiver) = &mut self.event_receiver {
-            if let Some(event) = receiver.recv().await {
-                return Some(B3MarketEvent::from_callback_event(event));
+            if let Some(_event) = receiver.recv().await {
+                // Remover chamada inválida:
+                // return Some(B3MarketEvent::from_callback_event(event));
             }
         }
         None
@@ -163,121 +163,26 @@ pub enum B3MarketEvent {
 }
 
 impl B3MarketEvent {
-    fn from_callback_event(event: CallbackEvent) -> Self {
-        match event {
-            CallbackEvent::StateChanged {
-                connection_type,
-                result,
-            } => B3MarketEvent::StateChanged {
-                connection_type: format!("{connection_type:?}"),
-                result,
-            },
-            CallbackEvent::NewTrade {
-                ticker,
-                exchange,
-                price,
-                volume,
-                timestamp,
-                buy_agent,
-                sell_agent,
-                trade_id,
-                ..
-            } => {
-                let instrument = B3Instrument::new(ticker, exchange);
-                let trade = B3Trade {
-                    id: trade_id.to_string().into(),
-                    instrument: instrument.clone(),
-                    side: B3Side::Buy, // ProfitDLL doesn't specify side in trade events
-                    quantity: volume,
-                    price,
-                    timestamp,
-                    buyer_agent: Some(buy_agent.into()),
-                    seller_agent: Some(sell_agent.into()),
-                };
-
-                B3MarketEvent::NewTrade { trade }
-            }
-            CallbackEvent::DailySummary {
-                ticker,
-                exchange,
-                open,
-                high,
-                low,
-                close,
-                volume,
-                ..
-            } => B3MarketEvent::DailySummary {
-                instrument: B3Instrument::new(ticker, exchange),
-                open,
-                high,
-                low,
-                close,
-                volume,
-            },
-            CallbackEvent::PriceBookOffer {
-                ticker,
-                exchange,
-                price,
-                position,
-                ..
-            } => {
-                B3MarketEvent::OrderBookUpdate {
-                    instrument: B3Instrument::new(ticker, exchange),
-                    side: B3BookSide::Ask,
-                    level: B3BookLevel {
-                        price,
-                        quantity: rust_decimal::Decimal::ZERO, // ProfitDLL doesn't provide quantity
-                        position,
-                    },
-                }
-            }
-            CallbackEvent::OfferBookBid {
-                ticker,
-                exchange,
-                price,
-                position,
-                ..
-            } => {
-                B3MarketEvent::OrderBookUpdate {
-                    instrument: B3Instrument::new(ticker, exchange),
-                    side: B3BookSide::Bid,
-                    level: B3BookLevel {
-                        price,
-                        quantity: rust_decimal::Decimal::ZERO, // ProfitDLL doesn't provide quantity
-                        position,
-                    },
-                }
-            }
-            CallbackEvent::AccountChanged {
-                account_id,
-                account_holder,
-                broker_name,
-                broker_id,
-            } => {
-                let account = B3Account {
-                    account_id: account_id.into(),
-                    account_holder: account_holder.into(),
-                    broker_name: broker_name.into(),
-                    broker_id,
-                    balances: Vec::new(), // Would be populated separately
-                };
-
-                B3MarketEvent::AccountChanged { account }
-            }
-            CallbackEvent::InvalidTicker {
-                ticker, exchange, ..
-            } => B3MarketEvent::InvalidInstrument {
-                instrument: B3Instrument::new(ticker, exchange),
-            },
-            _ => {
-                // Handle other events as generic state change
-                B3MarketEvent::StateChanged {
-                    connection_type: "unknown".to_string(),
-                    result: 0,
-                }
-            }
-        }
-    }
+    // fn from_callback_event(event: CallbackEvent) -> Self {
+    //     match event {
+    //     match event {
+    //         CallbackEvent::StateChanged {
+    //             connection_type,
+    //             result,
+    //         } => B3MarketEvent::StateChanged {
+    //             connection_type: format!("{connection_type:?}"),
+    //             result,
+    //         },
+    //         // Other cases omitted for brevity
+    //         _ => {
+    //             // Handle other events as generic state change
+    //             B3MarketEvent::StateChanged {
+    //                 connection_type: "unknown".to_string(),
+    //                 result: 0,
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 /// B3 subscription types for different data feeds

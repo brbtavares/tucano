@@ -6,7 +6,6 @@
 set -euo pipefail
 
 ORDER=(
-  "tucano-macros"
   "tucano-markets"
   "tucano-integration"
   "tucano-data"

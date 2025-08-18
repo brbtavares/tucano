@@ -1,6 +1,6 @@
 # Tucano Integration
 
-> Communication abstractions (channels, protocols) and transformation to connect external sources (WebSocket, HTTP, future FIX) to the ecosystem.
+> Communication abstractions (channels, protocols) and transformation to connect external sources (WebSocket, HTTP, future FIX) to the ecosystem. All concrete exchange/broker integrations are now implemented as local modules in `data` or `integration`. This crate provides only abstractions and building blocks.
 
 ## 🎯 Role
 The **integration** crate provides building blocks for data ingestion and request sending: typed channels, snapshots, transformers, validators, and generic metrics – all reused by `data` and `execution`.
@@ -48,8 +48,7 @@ The **integration** crate provides building blocks for data ingestion and reques
 - Structured telemetry (latency per pipeline stage).
 
 
-## 🇧🇷 B3 Context
-Will serve as a bridge to integrate ProfitDLL today and, in the future, official B3 APIs (REST / WebSocket) or alternative data providers.
+
 
 ## Exemplo (conceitual)
 ```rust

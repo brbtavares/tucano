@@ -1,6 +1,6 @@
 # Tucano Risk
 
-> Validation and risk control layer before orders reach the venue (B3 initially).
+> Validation and risk control layer before orders reach the venue.
 
 ## 🎯 Role
 The **risk** crate implements checks to protect capital, ensure compliance with limits, and prevent incorrect execution. It acts as a filter between signal generation (strategy) and submission (execution).
@@ -42,8 +42,7 @@ The **risk** crate implements checks to protect capital, ensure compliance with 
 - Modo simulação vs produção (thresholds distintos).
 - Auditoria de decisões (log estruturado / métricas de bloqueio).
 
-## 🇧🇷 Contexto B3
-Checks irão incluir: limites por contrato futuro, margem mínima, limites de oscilação (circuit breaker local), filtros de horário (leilões, after-market) e regras específicas da bolsa.
+
 
 ## Exemplo (conceitual)
 ```rust

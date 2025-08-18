@@ -25,7 +25,3 @@ pub use ffi_types::*;
 pub use mock::ProfitConnector as MockProfitConnector;
 pub use mock::*; // includes CallbackEvent, HistoryTradeSource etc.
 
-// Compat: internal `profitdll` module to allow `use profitdll::*` even when the crate is named tucano-profitdll
-pub mod profitdll {
-    pub use super::*;
-}

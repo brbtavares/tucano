@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -176,10 +176,7 @@ impl<AssetKey> Underlying<AssetKey> {
     }
 }
 
-// Module declarations
-pub mod b3;
-
 // Re-exports
-pub use b3::*;
 // Re-export commonly used instrument struct
 pub use crate::instrument::ConcreteInstrument;
+

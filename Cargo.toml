@@ -6,7 +6,6 @@ members = [
     "data",
     "execution",
     "integration",
-    "macros",
     "markets",
     "risk",
     "trader",
@@ -18,10 +17,10 @@ members = [
 # Tucano Ecosystem (direct crate names with tucano- prefix)
 tucano-analytics = { path = "./analytics", version = "0.1.0" }
 tucano-core = { path = "./core", version = "0.1.0" }
+tucano-data = { path = "./data", version = "0.1.0" }
 tucano-integration = { path = "./integration", version = "0.1.0" }
 tucano-markets = { path = "./markets", version = "0.1.0" }
 tucano-execution = { path = "./execution", version = "0.1.0" }
-tucano-macros = { path = "./macros", version = "0.1.0" }
 tucano-risk = { path = "./risk", version = "0.1.0" }
 tucano-trader = { path = "./trader", version = "0.1.0" }
 tucano-strategies = { path = "./strategies", version = "0.1.0" }

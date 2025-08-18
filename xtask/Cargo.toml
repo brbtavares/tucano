@@ -18,7 +18,5 @@ quote = "1.0.23"
 # Misc
 convert_case = "0.8.0"
 
-[lib]
-proc-macro = true
 
 

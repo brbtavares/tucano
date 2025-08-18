@@ -27,8 +27,6 @@ serde = { workspace = true, features = ["derive"] }
 # thiserror = { workspace = true }
 
 ## Data types
-rust_decimal = { workspace = true }
-chrono = { workspace = true }
 
 ## Misc
 derive_more = { workspace = true, features = ["display"] }

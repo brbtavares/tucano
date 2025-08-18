@@ -540,12 +540,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dotenvy"
-version = "0.15.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
-
-[[package]]
 name = "either"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1109,16 +1103,6 @@ name = "libc"
 version = "0.2.175"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a82ae493e598baaea5209805c49bbf2ea7de956d50d7da0da1164f9c6d28543"
-
-[[package]]
-name = "libloading"
-version = "0.8.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07033963ba89ebaf1584d767badaa2e8fcec21aedea6b8c0346d487d49c28667"
-dependencies = [
- "cfg-if",
- "windows-targets 0.53.3",
-]
 
 [[package]]
 name = "libredox"
@@ -2420,7 +2404,6 @@ dependencies = [
  "tucano-execution",
  "tucano-integration",
  "tucano-markets",
- "tucano-profitdll",
  "tucano-risk",
  "tucano-strategies",
  "tucano-trader",
@@ -2500,22 +2483,9 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "tucano-integration",
- "tucano-macros",
  "tucano-markets",
- "tucano-profitdll",
  "url",
  "vecmap-rs",
-]
-
-[[package]]
-name = "tucano-examples"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "dotenvy",
- "rust_decimal",
- "tokio",
- "tucano-profitdll",
 ]
 
 [[package]]
@@ -2540,7 +2510,6 @@ dependencies = [
  "tucano-data",
  "tucano-integration",
  "tucano-markets",
- "tucano-profitdll",
 ]
 
 [[package]]
@@ -2575,38 +2544,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "tucano-macros"
-version = "0.1.0"
-dependencies = [
- "convert_case",
- "proc-macro2",
- "quote",
- "syn 2.0.106",
-]
-
-[[package]]
 name = "tucano-markets"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "derive_more 2.0.1",
- "rust_decimal",
  "serde",
-]
-
-[[package]]
-name = "tucano-profitdll"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "chrono",
- "libloading",
- "once_cell",
- "rust_decimal",
- "serde",
- "thiserror 2.0.15",
- "tokio",
- "widestring",
 ]
 
 [[package]]
@@ -2658,7 +2600,11 @@ name = "tucano-xtask"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "convert_case",
+ "proc-macro2",
+ "quote",
  "ratatui",
+ "syn 2.0.106",
 ]
 
 [[package]]
@@ -2918,12 +2864,6 @@ checksum = "7e8983c3ab33d6fb807cfcdad2491c4ea8cbc8ed839181c7dfd9c67c83e261b2"
 dependencies = [
  "rustls-pki-types",
 ]
-
-[[package]]
-name = "widestring"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd7cf3379ca1aac9eea11fba24fd7e315d621f8dfe35c8d7d2be8b793726e07d"
 
 [[package]]
 name = "winapi"
