@@ -456,32 +456,11 @@ checksum = "2a2330da5de22e8a3cb63252ce2abb30116bf5265e89c0e01bc17015ce30a476"
 
 [[package]]
 name = "derive_more"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a9b99b9cbbe49445b21764dc0625032a89b145a2642e67603e1c936f5458d05"
-dependencies = [
- "derive_more-impl 1.0.0",
-]
-
-[[package]]
-name = "derive_more"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "093242cf7570c207c83073cf82f79706fe7b8317e98620a47d5be7c3d8497678"
 dependencies = [
- "derive_more-impl 2.0.1",
-]
-
-[[package]]
-name = "derive_more-impl"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb7330aeadfbe296029522e6c40f315320aba36fc43a5b3632f3795348f3bd22"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.106",
- "unicode-xid",
+ "derive_more-impl",
 ]
 
 [[package]]
@@ -2414,7 +2393,7 @@ name = "tucano-analytics"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "derive_more 1.0.0",
+ "derive_more",
  "fnv",
  "indexmap",
  "prettytable",
@@ -2434,7 +2413,7 @@ name = "tucano-core"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "derive_more 2.0.1",
+ "derive_more",
  "fnv",
  "futures",
  "indexmap",
@@ -2466,7 +2445,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "chrono",
- "derive_more 2.0.1",
+ "derive_more",
  "fnv",
  "futures",
  "futures-util",
@@ -2493,7 +2472,7 @@ name = "tucano-execution"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "derive_more 2.0.1",
+ "derive_more",
  "fnv",
  "futures",
  "itertools 0.14.0",
@@ -2519,7 +2498,7 @@ dependencies = [
  "base64",
  "bytes",
  "chrono",
- "derive_more 2.0.1",
+ "derive_more",
  "fnv",
  "futures",
  "hex",
@@ -2547,7 +2526,7 @@ dependencies = [
 name = "tucano-markets"
 version = "0.1.0"
 dependencies = [
- "derive_more 2.0.1",
+ "derive_more",
  "serde",
 ]
 
@@ -2555,7 +2534,7 @@ dependencies = [
 name = "tucano-risk"
 version = "0.1.0"
 dependencies = [
- "derive_more 1.0.0",
+ "derive_more",
  "rust_decimal",
  "serde",
  "thiserror 2.0.15",
@@ -2584,7 +2563,7 @@ name = "tucano-trader"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "derive_more 2.0.1",
+ "derive_more",
  "itertools 0.14.0",
  "rust_decimal",
  "serde",
