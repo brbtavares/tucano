@@ -6,23 +6,8 @@ use tucano_markets::Side;
 use tucano_data::exchange::b3::profitdll_types::{CallbackEvent, OrderSide};
 
 /// Convert ProfitDLL CallbackEvent to Toucan UnindexedAccountEvent
-pub fn convert_callback_event(event: CallbackEvent) -> Option<UnindexedAccountEvent> {
-    match event {
-        CallbackEvent::NewTrade { .. } => {
-            // Convert trade events to Toucan format
-            // This would map ProfitDLL trade data to Toucan trade events
-            None
-        }
-        CallbackEvent::StateChanged { .. } => {
-            // Convert connection state changes to Toucan format
-            None
-        }
-        CallbackEvent::DailySummary { .. } => {
-            // Convert daily summary to Toucan format
-            None
-        }
-        _ => None,
-    }
+pub fn convert_callback_event(_event: CallbackEvent) -> Option<UnindexedAccountEvent> {
+    None
 }
 
 /// Convert ProfitDLL OrderSide to Toucan Side
@@ -34,12 +19,12 @@ pub fn convert_order_side(side: OrderSide) -> Side {
 }
 
 /// Convert Toucan Side to ProfitDLL OrderSide
-pub fn convert_to_profit_side(side: Side) -> OrderSide {
+/*pub fn convert_to_profit_side(side: Side) -> OrderSide {
     match side {
         Side::Buy => OrderSide::Buy,
         Side::Sell => OrderSide::Sell,
     }
-}
+}*/
 
 /// Create a balance snapshot from ProfitDLL data
 pub fn create_balance_snapshot(

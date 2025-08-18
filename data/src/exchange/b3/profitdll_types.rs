@@ -1,6 +1,5 @@
 // Minimal local definitions for B3/ProfitDLL integration
 use serde::{Serialize, Deserialize};
-use std::fmt;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderSide {

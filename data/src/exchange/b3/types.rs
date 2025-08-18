@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
 use super::profitdll_types::OrderSide;
-use tucano_markets::{Asset, AssetType, Side};
+use tucano_markets::{Asset, AssetType};
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
