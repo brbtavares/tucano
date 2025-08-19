@@ -82,7 +82,6 @@
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
-// Silence unused_crate_dependencies for transitional re-export of tucano-profitdll
 
 /// Re-exports main traits for convenient usage.
 ///
@@ -179,4 +178,3 @@ impl<AssetKey> Underlying<AssetKey> {
 // Re-exports
 // Re-export commonly used instrument struct
 pub use crate::instrument::ConcreteInstrument;
-

@@ -1,22 +1,28 @@
 [package]
-name = "tucano-xtask"
+name = "xtask"
 version = "0.1.0"
 edition = "2021"
-license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+publish = false
 
 [dependencies]
 # TUI
 ratatui = "0.29"
 clap = { version = "4.5", features = ["derive"] }
 
-# Macro
-proc-macro2 = "1.0.49"
-syn = "2.0.104"
-quote = "1.0.23"
+# CLI e estruturas
+clap = { version = "4.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
 
-# Misc
-convert_case = "0.8.0"
+# Sistema de arquivos e processos
+walkdir = "2.4"
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
 
+# Utilitários
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
 
-
+# Para parsing de Cargo.toml
+cargo_metadata = "0.18"

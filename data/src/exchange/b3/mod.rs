@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! B3 (Brasil Bolsa Balcão) exchange integration via ProfitDLL
 //!
 //! This module provides integration with the Brazilian stock exchange B3
@@ -18,8 +18,8 @@ pub mod instrument;
 pub mod profitdll_types;
 pub mod types;
 
+use self::profitdll_types::{CallbackEvent, ProfitConnector};
 pub use exchange::B3Exchange;
-use self::profitdll_types::{OrderSide, ProfitConnector, CallbackEvent};
 use tokio::sync::mpsc;
 // Re-export only required symbols (avoid wildcard causing warnings)
 pub use types::B3Instrument;
@@ -78,7 +78,6 @@ impl B3ProfitConnector {
     //
     //     Ok(())
     // }
-
     /// Subscribe to market data for a specific B3 instrument
     pub fn subscribe_instrument(
         &self,
@@ -103,7 +102,6 @@ impl B3ProfitConnector {
     //     }
     //     Ok(())
     // }
-
     /// Get asset category from symbol
     // pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
     //     // let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol

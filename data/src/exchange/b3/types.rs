@@ -1,17 +1,17 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! B3-specific types and structures
 //!
 //! This module contains all B3-specific data types that implement
 //! the markets abstractions, making them compatible with the framework
 //! while maintaining Brazilian market terminology.
 
+use super::profitdll_types::OrderSide;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{self, Display};
-use super::profitdll_types::OrderSide;
-use tucano_markets::{Asset, AssetType, Side};
+use tucano_markets::{Asset, AssetType};
 
 /// B3 Exchange identifier
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

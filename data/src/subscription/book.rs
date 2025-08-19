@@ -12,9 +12,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// Level 1 refers to the best non-aggregated bid and ask [`Level`] on each side of the
 /// [`OrderBook`].
-#[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
-)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct OrderBooksL1;
 
 impl SubscriptionKind for OrderBooksL1 {
@@ -67,9 +65,7 @@ impl OrderBookL1 {
 /// [`OrderBookEvent`] market events
 ///
 /// Level 2 refers to an [`OrderBook`] with orders at each price level aggregated.
-#[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
-)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct OrderBooksL2;
 
 impl SubscriptionKind for OrderBooksL2 {
@@ -90,9 +86,7 @@ impl std::fmt::Display for OrderBooksL2 {
 ///
 /// Level 3 refers to the non-aggregated [`OrderBook`]. This is a direct replication of the exchange
 /// [`OrderBook`].
-#[derive(
-    Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default,
-)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct OrderBooksL3;
 
 impl SubscriptionKind for OrderBooksL3 {

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Uso educacional/experimental; sem recomendação de investimento ou afiliação; sem remuneração de terceiros; Profit/ProfitDLL © Nelógica; veja README & DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 //! B3 execution client implementation using ProfitDLL
 //!
 //! This module provides the B3ExecutionClient that integrates with the Brazilian
@@ -31,8 +31,8 @@ use smol_str::SmolStr;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
-use tucano_markets::{ExchangeId, Side};
 use tucano_data::exchange::b3::profitdll_types::ProfitError;
+use tucano_markets::{ExchangeId, Side};
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {
