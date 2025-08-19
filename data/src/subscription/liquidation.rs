@@ -2,7 +2,7 @@
 use super::SubscriptionKind;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use tucano_markets::Side;
+use tucano_instrument::Side;
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`Liquidation`]
 /// [`MarketEvent<T>`](crate::event::MarketEvent) events.

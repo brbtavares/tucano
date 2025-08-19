@@ -33,7 +33,7 @@ use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 
 use exchanges::temp::profitdll::ProfitError;
-use tucano_markets::{ExchangeId, Side};
+use tucano_instrument::{ExchangeId, Side};
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {

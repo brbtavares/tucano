@@ -4,7 +4,7 @@ use crate::subscription::SubscriptionKind;
 use fnv::FnvHashMap;
 use futures::Stream;
 use tucano_integration::channel::UnboundedRx;
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Defines the [`StreamBuilder`] and [`MultiStreamBuilder`] APIs for ergonomically initialising
 /// [`MarketStream`](super::MarketStream) [`Streams`].

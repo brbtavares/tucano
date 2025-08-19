@@ -19,14 +19,14 @@ pub use tucano_core as core;
 pub use tucano_data as data;
 pub use tucano_execution as execution;
 pub use tucano_integration as integration;
-pub use tucano_markets as markets;
+pub use tucano_instrument as markets;
 pub use tucano_risk as risk;
 pub use tucano_strategies as strategies;
 pub use tucano_trader as trader;
 
 // Flat (shallow) re-export of very frequently used symbols
 pub use tucano_core::{engine::Engine, EngineEvent, Sequence};
-pub use tucano_markets::{ExchangeId, Side};
+pub use tucano_instrument::{ExchangeId, Side};
 
 // Optional prelude for single import
 pub mod prelude {

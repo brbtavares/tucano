@@ -9,7 +9,7 @@ use tucano_execution::{
     },
     AssetIndex, ExchangeIndex, InstrumentIndex,
 };
-use tucano_markets::Side;
+use tucano_instrument::Side;
 
 pub trait ClosePositionsStrategy<
     ExchangeKey = ExchangeIndex,

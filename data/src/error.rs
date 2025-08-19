@@ -3,7 +3,7 @@ use crate::subscription::SubKind;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tucano_integration::{error::SocketError, subscription::SubscriptionId};
-use tucano_markets::{
+use tucano_instrument::{
     exchange::ExchangeId,
     // index::error::IndexError,
 };

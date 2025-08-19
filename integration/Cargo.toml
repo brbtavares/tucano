@@ -18,7 +18,7 @@ tokio-test = { workspace = true }
 
 [dependencies]
 # Tucano Ecosystem
-"tucano-markets" = { workspace = true }
+"tucano-instrument" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

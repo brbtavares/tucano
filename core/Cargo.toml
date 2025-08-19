@@ -20,7 +20,6 @@ tokio = { workspace = true, features = ["fs"]}
 "tucano-risk" = { workspace = true }
 ## Tucano Ecosystem
 "tucano-integration" = { workspace = true }
-"tucano-markets" = { workspace = true }
 "tucano-data" = { workspace = true }
 "tucano-execution" = { workspace = true }
 "tucano-trader" = { workspace = true }

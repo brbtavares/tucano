@@ -2857,7 +2857,6 @@ dependencies = [
  "tucano-data",
  "tucano-execution",
  "tucano-integration",
- "tucano-markets",
  "tucano-risk",
  "tucano-strategies",
  "tucano-trader",
@@ -2879,7 +2878,6 @@ dependencies = [
  "thiserror 2.0.15",
  "tucano-execution",
  "tucano-integration",
- "tucano-markets",
  "uuid",
 ]
 
@@ -2909,7 +2907,6 @@ dependencies = [
  "tucano-data",
  "tucano-execution",
  "tucano-integration",
- "tucano-markets",
  "tucano-risk",
  "tucano-trader",
 ]
@@ -2937,7 +2934,6 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "tucano-integration",
- "tucano-markets",
  "url",
  "vecmap-rs",
 ]
@@ -2964,8 +2960,11 @@ dependencies = [
  "tracing",
  "tucano-data",
  "tucano-integration",
- "tucano-markets",
 ]
+
+[[package]]
+name = "tucano-instrument"
+version = "0.1.0"
 
 [[package]]
 name = "tucano-integration"
@@ -2994,16 +2993,8 @@ dependencies = [
  "tokio-test",
  "tokio-tungstenite",
  "tracing",
- "tucano-markets",
+ "tucano-instrument",
  "url",
-]
-
-[[package]]
-name = "tucano-markets"
-version = "0.1.0"
-dependencies = [
- "derive_more 2.0.1",
- "serde",
 ]
 
 [[package]]
@@ -3015,7 +3006,6 @@ dependencies = [
  "serde",
  "thiserror 2.0.15",
  "tucano-execution",
- "tucano-markets",
 ]
 
 [[package]]
@@ -3030,7 +3020,6 @@ dependencies = [
  "tracing",
  "tucano-analytics",
  "tucano-execution",
- "tucano-markets",
  "tucano-trader",
 ]
 
@@ -3047,7 +3036,6 @@ dependencies = [
  "thiserror 2.0.15",
  "tracing",
  "tucano-execution",
- "tucano-markets",
 ]
 
 [[package]]

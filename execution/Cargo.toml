@@ -22,7 +22,6 @@ typed_indices = []
 ## Tucano Ecosystem
 "tucano-data" = { workspace = true }
 "tucano-integration" = { workspace = true }
-"tucano-markets" = { workspace = true }
 ## Logging
 tracing = { workspace = true }
 

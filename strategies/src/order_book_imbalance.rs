@@ -7,7 +7,7 @@
 use rust_decimal::Decimal;
 use tucano_execution::order::request::OrderRequestOpen;
 use tucano_execution::{ExchangeIndex, InstrumentIndex};
-use tucano_markets::Side;
+use tucano_instrument::Side;
 use tucano_trader::AlgoStrategy;
 
 /// Configuration for the imbalance strategy.

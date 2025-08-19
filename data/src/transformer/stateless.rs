@@ -14,7 +14,7 @@ use tokio::sync::mpsc;
 use tucano_integration::{
     protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer,
 };
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Standard generic stateless [`ExchangeTransformer`] to translate exchange specific types into
 /// normalised Toucan types. Often used with

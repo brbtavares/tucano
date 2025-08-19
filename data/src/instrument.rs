@@ -1,7 +1,7 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use tucano_markets::{InstrumentKind, Keyed, MarketDataInstrument};
+use tucano_instrument::{InstrumentKind, Keyed, MarketDataInstrument};
 
 /// Instrument related data that defines an associated unique `Id`.
 ///

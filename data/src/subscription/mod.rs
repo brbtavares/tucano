@@ -8,7 +8,7 @@ use std::{borrow::Borrow, fmt::Debug, hash::Hash};
 use tucano_integration::{
     error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId, Validator,
 };
-use tucano_markets::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
+use tucano_instrument::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
 
 /// OrderBook [`SubscriptionKind`]s and the associated Toucan output data models.
 pub mod book;
@@ -147,20 +147,18 @@ pub fn exchange_supports_instrument_kind(
     exchange: ExchangeId,
     instrument_kind: &InstrumentKind,
 ) -> bool {
-    use InstrumentKind::*;
-
     match (exchange, instrument_kind) {
         // Spot
-        (_, Spot) => true,
+        (_, InstrumentKind::Spot) => true,
 
         // Future - futures markets only
-        (_, Future) => false,
+        (_, InstrumentKind::Future(_)) => false,
 
         // Perpetual - only futures exchanges
-        (_, Perpetual) => false,
+        (_, InstrumentKind::Perpetual(_)) => false,
 
         // Option - no supported options exchanges currently
-        (_, Option) => false,
+        (_, InstrumentKind::Option(_)) => false,
     }
 }
 
@@ -195,15 +193,11 @@ pub fn exchange_supports_instrument_kind_sub_kind(
     instrument_kind: &InstrumentKind,
     sub_kind: SubKind,
 ) -> bool {
-    use ExchangeId::*;
-    use InstrumentKind::*;
-    use SubKind::*;
-
     match (exchange_id, instrument_kind, sub_kind) {
         // Spot exchanges
-        (B3, Spot, PublicTrades | OrderBooksL1) => true,
+        (ExchangeId::B3, InstrumentKind::Spot, SubKind::PublicTrades | SubKind::OrderBooksL1) => true,
 
-        (_, _, _) => false,
+        _ => false,
     }
 }
 
@@ -264,7 +258,7 @@ mod tests {
 
     mod subscription {
         use super::*; // brings Map, SubscriptionId, InstrumentKind
-        use tucano_markets::MarketDataInstrument;
+    use tucano_instrument::MarketDataInstrument;
 
         // Removed nested module with unused imports (B3Exchange, OrderBooksL2, PublicTrades)
 

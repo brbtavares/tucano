@@ -2,9 +2,9 @@
 use crate::instrument::InstrumentData;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use tucano_markets::{
+use tucano_instrument::{
     Instrument,
-    InstrumentKind, // Import trait from simplified markets
+    InstrumentKind, // Import trait from simplified instrument
 };
 
 /// B3 instrument data structure

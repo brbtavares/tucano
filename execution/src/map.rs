@@ -2,12 +2,12 @@
 use crate::{compat::*, error::KeyError};
 use fnv::FnvHashMap;
 use tucano_integration::collection::{FnvIndexMap, FnvIndexSet};
-use tucano_markets::Keyed;
+use tucano_instrument::Keyed;
 
 // Use the core representation of IndexedInstruments (Vec<Keyed<InstrumentIndex, ConcreteInstrument>>)
 // without creating a hard compile-time dependency (keep lightweight placeholder for now).
 // We'll accept any slice of Keyed instrument indices from the caller.
-use tucano_markets::ConcreteInstrument;
+use tucano_instrument::ConcreteInstrument;
 pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
 
 /// Indexed instrument map used to associate the internal Toucan representation of instruments and

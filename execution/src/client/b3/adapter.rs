@@ -4,7 +4,7 @@
 use crate::{balance::AssetBalance, error::AssetNameExchange, UnindexedAccountEvent};
 use exchanges::temp::profitdll::{CallbackEvent, OrderSide};
 
-use tucano_markets::Side;
+use tucano_instrument::Side;
 
 /// Convert ProfitDLL CallbackEvent to Toucan UnindexedAccountEvent
 pub fn convert_callback_event(_event: CallbackEvent) -> Option<UnindexedAccountEvent> {

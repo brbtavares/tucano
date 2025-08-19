@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tucano_integration::error::SocketError;
-use tucano_markets::ExchangeId;
+use tucano_instrument::ExchangeId;
 
 // Temporary types for compatibility during migration
 pub type AssetIndex = String;

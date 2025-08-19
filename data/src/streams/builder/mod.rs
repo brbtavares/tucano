@@ -18,7 +18,7 @@ use std::{
     pin::Pin,
 };
 use tucano_integration::{channel::Channel, Validator};
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Defines the [`MultiStreamBuilder`](multi::MultiStreamBuilder) API for ergonomically
 /// initialising a common [`Streams<Output>`](Streams) from multiple
