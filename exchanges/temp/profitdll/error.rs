@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Erros e códigos (**NL_***) unificados entre mock e FFI ProfitDLL.
 //!
 //! Todos os códigos e enums seguem a especificação oficial da DLL (ver [MANUAL.md](../MANUAL.md#erros)).

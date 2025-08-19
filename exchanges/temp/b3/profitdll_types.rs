@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 // Minimal local definitions for B3/ProfitDLL integration
 use serde::{Deserialize, Serialize};
 

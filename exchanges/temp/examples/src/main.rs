@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 fn main() {
     println!("tucano-examples: available examples (each as a separate bin):");
     println!(" - example_1_live_login        (login + subscribe; mock or live)");

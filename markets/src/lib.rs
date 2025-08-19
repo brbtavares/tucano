@@ -12,7 +12,6 @@
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
 
-//! DISCLAIMER (summary): For educational/experimental use only. No investment advice or affiliation. No third-party compensation. Profit/ProfitDLL © Nelógica. Technical integration only. Read the full README & DISCLAIMER.
 //! # 🏛️ Markets - Simplified Market Abstractions
 //!
 //! Fundamental traits and types for exchanges, instruments, and financial assets.
@@ -22,7 +21,6 @@
 //!
 //! This module implements a **hybrid** architecture that combines:
 //! - **Reusable Abstractions**: Generic traits for maximum flexibility
-//! - **Specific Implementations**: Brazilian types with native terminology
 //! - **Extensibility**: Easy addition of new exchanges and instruments
 //!
 //! ## 🏗️ Main Modules
@@ -31,7 +29,6 @@
 //! - `asset`: Financial asset definitions and types
 //! - `instrument`: Financial instrument abstractions
 //! - `side`: Operation side enumeration (Buy/Sell)
-//! - `b3`: Brazilian Exchange (B3) specific definitions
 //!
 //! ## 💡 Fundamental Concepts
 //!

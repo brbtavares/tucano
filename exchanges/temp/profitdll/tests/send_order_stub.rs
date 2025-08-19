@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Teste que garante comportamento previsível do wrapper send_order quando símbolo ausente.
 
 use rust_decimal::Decimal;

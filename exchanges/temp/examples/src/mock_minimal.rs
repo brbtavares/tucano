@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Minimal example that runs in mock or live mode (unless mock is forced).
 use rust_decimal::Decimal;
 use tucano_profitdll::{

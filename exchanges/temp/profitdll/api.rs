@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Neutral abstraction layer (Linux/Windows) for use in examples.
 //!
 //! Purpose: allow examples (and other crates) to use the real DLL when

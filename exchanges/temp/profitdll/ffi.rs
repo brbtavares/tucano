@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Real FFI implementation (Windows + feature `real_dll`) for the Profit DLL.
 //!
 //! This layer performs:

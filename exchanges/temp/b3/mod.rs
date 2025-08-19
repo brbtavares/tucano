@@ -61,7 +61,7 @@ impl B3ProfitConnector {
         }
     }
 
-    /// Initialize connection to B3 via ProfitDLL
+    // Initialize connection to B3 via ProfitDLL
     // pub async fn initialize(
     //     &mut self,
     //     activation_key: &str,
@@ -78,7 +78,7 @@ impl B3ProfitConnector {
     //
     //     Ok(())
     // }
-    /// Subscribe to market data for a specific B3 instrument
+    // Subscribe to market data for a specific B3 instrument
     pub fn subscribe_instrument(
         &self,
         instrument: &B3Instrument,
@@ -89,8 +89,8 @@ impl B3ProfitConnector {
         Ok(())
     }
 
-    /// Subscribe to market data using asset symbol
-    /// Automatically detects asset type and category
+    // Subscribe to market data using asset symbol
+    // Automatically detects asset type and category
     // pub fn subscribe_asset(&self, symbol: &str) -> Result<(), Box<dyn std::error::Error>> {
     //     if let Some(connector) = &self.profit_connector {
     //         // Create asset from symbol to determine proper market
@@ -104,20 +104,20 @@ impl B3ProfitConnector {
     // }
     /// Get asset category from symbol
     // pub fn get_asset_category(&self, symbol: &str) -> Result<B3AssetCategory, String> {
-    //     // let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol
-    //     // if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
-    //     //     return Ok(B3AssetCategory::ETF);
-    //     // }
-    //     // if symbol.ends_with("11B") {
-    //     //     return Ok(B3AssetCategory::REIT);
-    //     // }
-    //     // if (5..=6).contains(&symbol.len()) {
-    //     //     return Ok(B3AssetCategory::Stock);
-    //     // }
-    //     // Ok(B3AssetCategory::Stock)
+    //      let _ = B3AssetFactory::from_symbol(symbol)?; // validate symbol
+    //      if symbol.len() >= 6 && symbol.ends_with("11") && !symbol.ends_with("11B") {
+    //          return Ok(B3AssetCategory::ETF);
+    //      }
+    //      if symbol.ends_with("11B") {
+    //          return Ok(B3AssetCategory::REIT);
+    //      }
+    //      if (5..=6).contains(&symbol.len()) {
+    //          return Ok(B3AssetCategory::Stock);
+    //     }
+    //     Ok(B3AssetCategory::Stock)
     // }
 
-    /// Process incoming events from ProfitDLL
+    // Process incoming events from ProfitDLL
     pub async fn process_events(&mut self) -> Option<B3MarketEvent> {
         if let Some(receiver) = &mut self.event_receiver {
             if let Some(_event) = receiver.recv().await {
@@ -129,7 +129,7 @@ impl B3ProfitConnector {
     }
 }
 
-/// Market events from B3 via ProfitDLL
+// Market events from B3 via ProfitDLL
 #[derive(Debug, Clone)]
 pub enum B3MarketEvent {
     StateChanged {
@@ -183,7 +183,7 @@ impl B3MarketEvent {
     // }
 }
 
-/// B3 subscription types for different data feeds
+// B3 subscription types for different data feeds
 #[derive(Debug, Clone)]
 pub enum B3SubscriptionType {
     /// Tick-by-tick trades

@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use anyhow::Result;
 use chrono::Datelike;
 use std::path::PathBuf;
@@ -262,10 +263,10 @@ fn find_files_missing_disclaimer(
         }
 
         // Only check .rs files
-        if path.extension().is_some_and(|ext| ext == "rs") {
-            if !has_disclaimer(path, &disclaimer_lines)? {
-                missing_files.push(path.to_path_buf());
-            }
+        if path.extension().is_some_and(|ext| ext == "rs")
+            && !has_disclaimer(path, &disclaimer_lines)?
+        {
+            missing_files.push(path.to_path_buf());
         }
     }
 

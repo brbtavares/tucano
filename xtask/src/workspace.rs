@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use anyhow::Result;
 use cargo_metadata::MetadataCommand;
 use chrono::Datelike;

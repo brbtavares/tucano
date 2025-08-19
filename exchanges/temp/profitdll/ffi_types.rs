@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Auxiliary FFI types and utilities (wide strings, pointer wrappers) used by the real Profit DLL layer.
 //!
 //! See [MANUAL.md](../MANUAL.md#tipos-auxiliares) for details on types and conventions.
