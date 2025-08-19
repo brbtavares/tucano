@@ -5,7 +5,7 @@ use crate::{
         OrderBook,
     },
     error::DataError,
-    exchange::StreamSelector,
+    // ...existing code...
     instrument::InstrumentData,
     streams::{consumer::MarketStreamEvent, reconnect::stream::ReconnectingStream, Streams},
     subscription::{
@@ -70,58 +70,6 @@ where
 /// [`Subscription`]s.
 ///
 /// See `examples/order_books_l2_manager` for how to use this initialisation paradigm.
-pub async fn init_multi_order_book_l2_manager<SubBatchIter, SubIter, Sub, Exchange, Instrument>(
-    subscription_batches: SubBatchIter,
-) -> Result<
-    OrderBookL2Manager<
-        impl Stream<Item = MarketStreamEvent<Instrument::Key, OrderBookEvent>>,
-        impl OrderBookMap<Key = Instrument::Key>,
-    >,
-    DataError,
->
-where
-    SubBatchIter: IntoIterator<Item = SubIter>,
-    SubIter: IntoIterator<Item = Sub>,
-    Sub: Into<Subscription<Exchange, Instrument, OrderBooksL2>>,
-    Exchange: StreamSelector<Instrument, OrderBooksL2> + Ord + Display + Send + Sync + 'static,
-    Instrument: InstrumentData + Ord + Display + 'static,
-    Instrument::Key: Eq + Hash + Send + 'static,
-    Subscription<Exchange, Instrument, OrderBooksL2>:
-        Identifier<Exchange::Channel> + Identifier<Exchange::Market>,
-{
-    // Generate Streams from provided OrderBooksL2 Subscription batches
-    let (stream_builder, books) = subscription_batches.into_iter().fold(
-        (Streams::<OrderBooksL2>::builder(), FnvHashMap::default()),
-        |(builder, mut books), batch| {
-            // Insert OrderBook Entry for each unique Subscription (duplicates upserted)
-            let batch = batch.into_iter().map(|sub| {
-                let subscription = sub.into();
-                books.insert(
-                    subscription.instrument.key().clone(),
-                    Arc::new(RwLock::new(OrderBook::default())),
-                );
-                subscription
-            });
-
-            let builder = builder.subscribe(batch);
-            (builder, books)
-        },
-    );
-
-    // Initialise merged OrderBookL2 Stream
-    let stream = stream_builder
-        .init()
-        .await?
-        .select_all()
-        .with_error_handler(|error| {
-            warn!(
-                ?error,
-                "OrderBookL2Manager consumed recoverable MarketStream error"
-            )
-        });
-
-    Ok(OrderBookL2Manager {
-        stream,
-        books: OrderBookMapMulti::new(books),
-    })
+pub async fn init_multi_order_book_l2_manager() {
+    unimplemented!("A implementação concreta de init_multi_order_book_l2_manager deve ser feita na crate exchanges.");
 }

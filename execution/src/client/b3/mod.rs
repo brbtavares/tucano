@@ -31,8 +31,9 @@ use smol_str::SmolStr;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
-use tucano_data::exchange::b3::profitdll_types::ProfitError;
+
 use tucano_markets::{ExchangeId, Side};
+use exchanges::temp::profitdll::ProfitError;
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {

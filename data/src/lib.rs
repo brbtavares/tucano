@@ -11,7 +11,6 @@
     rust_2018_idioms
 )]
 #![allow(clippy::type_complexity, clippy::too_many_arguments, type_alias_bounds)]
-// ...existing code...
 //! # 📊 Data - Market Data Streaming Module
 //!
 //! High-performance library for WebSocket integration, specialized in streaming
@@ -46,29 +45,14 @@
 //! - **🇧🇷 B3**: Brazilian stock exchange via ProfitDLL
 
 // Silence unused dependency warnings for transitional deps (pending removal)
-use crate::{
-    error::DataError,
-    event::MarketEvent,
-    exchange::{Connector, PingInterval},
-    instrument::InstrumentData,
-    subscriber::{Subscribed, Subscriber},
-    subscription::{Subscription, SubscriptionKind},
-    transformer::ExchangeTransformer,
-};
+// ...existing code...
 use async_trait::async_trait;
-use futures::{SinkExt, Stream, StreamExt};
-use std::{collections::VecDeque, future::Future};
+// ...existing code...
+use std::collections::VecDeque;
 use tokio::sync::mpsc;
-use tracing::{debug, error, warn};
-use tucano_integration::{
-    error::SocketError,
-    protocol::{
-        websocket::{self, WebSocketParser, WsMessage, WsSink, WsStream},
-        StreamParser,
-    },
-    stream::ExchangeStream,
-    Transformer,
-};
+use tracing::{error, warn};
+// ...existing code...
+
 use tucano_markets::exchange::ExchangeId;
 #[allow(unused_imports)]
 use {itertools as _, reqwest as _, serde_json as _, vecmap as _};
@@ -80,7 +64,7 @@ pub mod error;
 pub mod event;
 
 /// [`Connector`] implementations for each exchange.
-pub mod exchange;
+//pub mod exchange;
 
 /// High-level API types used for building [`MarketStream`]s from collections
 /// of Toucan [`Subscription`]s.
@@ -115,9 +99,7 @@ pub mod books;
 /// [`ExchangeTransformer`] implementations.
 pub mod transformer;
 
-/// Convenient type alias for an [`ExchangeStream`] utilizing a tungstenite
-/// [`WebSocket`](tucano_integration::protocol::websocket::WebSocket).
-pub type ExchangeWsStream<Transformer> = ExchangeStream<WebSocketParser, WsStream, Transformer>;
+
 
 /// Defines a generic identification type for the implementor.
 pub trait Identifier<T> {
@@ -125,199 +107,15 @@ pub trait Identifier<T> {
 }
 
 /// [`Stream`] that yields [`Market<Kind>`](MarketEvent) events. The type of [`Market<Kind>`](MarketEvent)
-/// depends on the provided [`SubscriptionKind`] of the passed [`Subscription`]s.
+// ...existing code...
 #[async_trait]
-pub trait MarketStream<Exchange, Instrument, Kind>
-where
-    Self: Stream<Item = Result<MarketEvent<Instrument::Key, Kind::Event>, DataError>>
-        + Send
-        + Sized
-        + Unpin,
-    Exchange: Connector,
-    Instrument: InstrumentData,
-    Kind: SubscriptionKind,
-{
-    async fn init<SnapFetcher>(
-        subscriptions: &[Subscription<Exchange, Instrument, Kind>],
-    ) -> Result<Self, DataError>
-    where
-        SnapFetcher: SnapshotFetcher<Exchange, Kind>,
-        Subscription<Exchange, Instrument, Kind>:
-            Identifier<Exchange::Channel> + Identifier<Exchange::Market>;
+pub trait MarketStream {
+    // Abstract marker trait for market streams.
 }
 
-/// Defines how to fetch market data snapshots for a collection of [`Subscription`]s.
-///
-/// Useful when a [`MarketStream`] requires an initial snapshot on start-up.
-pub trait SnapshotFetcher<Exchange, Kind> {
-    fn fetch_snapshots<Instrument>(
-        subscriptions: &[Subscription<Exchange, Instrument, Kind>],
-    ) -> impl Future<Output = Result<Vec<MarketEvent<Instrument::Key, Kind::Event>>, SocketError>> + Send
-    where
-        Exchange: Connector,
-        Instrument: InstrumentData,
-        Kind: SubscriptionKind,
-        Kind::Event: Send,
-        Subscription<Exchange, Instrument, Kind>: Identifier<Exchange::Market>;
-}
 
-#[async_trait]
-impl<Exchange, Instrument, Kind, Transformer> MarketStream<Exchange, Instrument, Kind>
-    for ExchangeWsStream<Transformer>
-where
-    Exchange: Connector + Send + Sync,
-    Instrument: InstrumentData,
-    Kind: SubscriptionKind + Send + Sync,
-    Transformer: ExchangeTransformer<Exchange, Instrument::Key, Kind> + Send,
-    Kind::Event: Send,
-{
-    async fn init<SnapFetcher>(
-        subscriptions: &[Subscription<Exchange, Instrument, Kind>],
-    ) -> Result<Self, DataError>
-    where
-        SnapFetcher: SnapshotFetcher<Exchange, Kind>,
-        Subscription<Exchange, Instrument, Kind>:
-            Identifier<Exchange::Channel> + Identifier<Exchange::Market>,
-    {
-        // Connect & subscribe
-        let Subscribed {
-            websocket,
-            map: instrument_map,
-            buffered_websocket_events,
-        } = Exchange::Subscriber::subscribe(subscriptions).await?;
 
-        // Fetch any required initial MarketEvent snapshots
-        let initial_snapshots = SnapFetcher::fetch_snapshots(subscriptions).await?;
 
-        // Split WebSocket into WsStream & WsSink components
-        let (ws_sink, ws_stream) = websocket.split();
 
-        // Spawn task to distribute Transformer messages (e.g., custom pongs) to the exchange
-        let (ws_sink_tx, ws_sink_rx) = mpsc::unbounded_channel();
-        tokio::spawn(distribute_messages_to_exchange(
-            Exchange::ID,
-            ws_sink,
-            ws_sink_rx,
-        ));
-
-        // Spawn optional task to distribute custom application-level pings to the exchange
-        if let Some(ping_interval) = Exchange::ping_interval() {
-            tokio::spawn(schedule_pings_to_exchange(
-                Exchange::ID,
-                ws_sink_tx.clone(),
-                ping_interval,
-            ));
-        }
-
-        // Initialize Transformer associated with this Exchange and SubscriptionKind
-        let mut transformer =
-            Transformer::init(instrument_map, &initial_snapshots, ws_sink_tx).await?;
-
-        // Process any buffered active subscription events received during Subscription validation
-        let mut processed = process_buffered_events::<WebSocketParser, _>(
-            &mut transformer,
-            buffered_websocket_events,
-        );
-
-        // Extend buffered events with any initial snapshot events
-        processed.extend(initial_snapshots.into_iter().map(Ok));
-
-        Ok(ExchangeWsStream::new(ws_stream, transformer, processed))
-    }
-}
-
-/// Implementation of [`SnapshotFetcher`] that does not fetch any initial market data snapshots.
-/// Often used for stateless [`MarketStream`]s, such as public trades.
-#[derive(Debug)]
-pub struct NoInitialSnapshots;
-
-impl<Exchange, Kind> SnapshotFetcher<Exchange, Kind> for NoInitialSnapshots {
-    fn fetch_snapshots<Instrument>(
-        _: &[Subscription<Exchange, Instrument, Kind>],
-    ) -> impl Future<Output = Result<Vec<MarketEvent<Instrument::Key, Kind::Event>>, SocketError>> + Send
-    where
-        Exchange: Connector,
-        Instrument: InstrumentData,
-        Kind: SubscriptionKind,
-        Kind::Event: Send,
-        Subscription<Exchange, Instrument, Kind>: Identifier<Exchange::Market>,
-    {
-        std::future::ready(Ok(vec![]))
-    }
-}
-
-pub fn process_buffered_events<Protocol, StreamTransformer>(
-    transformer: &mut StreamTransformer,
-    events: Vec<Protocol::Message>,
-) -> VecDeque<Result<StreamTransformer::Output, StreamTransformer::Error>>
-where
-    Protocol: StreamParser,
-    StreamTransformer: Transformer,
-{
-    events
-        .into_iter()
-        .filter_map(|event| {
-            Protocol::parse::<StreamTransformer::Input>(Ok(event))?
-                .inspect_err(|error| {
-                    warn!(
-                        ?error,
-                        "failed to parse message buffered during Subscription validation"
-                    )
-                })
-                .ok()
-        })
-        .flat_map(|parsed| transformer.transform(parsed))
-        .collect()
-}
-
-/// Transmit [`WsMessage`]s sent from the [`ExchangeTransformer`] to the exchange via
-/// the [`WsSink`].
-///
-/// **Note:**
-/// ExchangeTransformer is operating in a synchronous trait context so we use this separate task
-/// to avoid adding `#[async_trait]` to the transformer - this avoids allocations.
-pub async fn distribute_messages_to_exchange(
-    exchange: ExchangeId,
-    mut ws_sink: WsSink,
-    mut ws_sink_rx: mpsc::UnboundedReceiver<WsMessage>,
-) {
-    while let Some(message) = ws_sink_rx.recv().await {
-        if let Err(error) = ws_sink.send(message).await {
-            if websocket::is_websocket_disconnected(&error) {
-                break;
-            }
-
-            // Log error only if WsMessage failed to send over a connected WebSocket
-            error!(
-                %exchange,
-                %error,
-                "failed to send output message to the exchange via WsSink"
-            );
-        }
-    }
-}
-
-/// Schedule the sending of custom application-level ping [`WsMessage`]s to the exchange using
-/// the provided [`PingInterval`].
-///
-/// **Notes:**
-///  - This is only used for those exchanges that require custom application-level pings.
-///  - This is additional to the protocol-level pings already handled by `tokio_tungstenite`.
-pub async fn schedule_pings_to_exchange(
-    exchange: ExchangeId,
-    ws_sink_tx: mpsc::UnboundedSender<WsMessage>,
-    PingInterval { mut interval, ping }: PingInterval,
-) {
-    loop {
-        // Wait for next scheduled ping
-        interval.tick().await;
-
-        // Construct exchange custom application-level ping payload
-        let payload = ping();
-        debug!(%exchange, %payload, "sending custom application-level ping to exchange");
-
-        if ws_sink_tx.send(payload).is_err() {
-            break;
-        }
-    }
-}
+// TODO: Implementação concreta de schedule_pings_to_exchange deve ser feita na crate exchanges
+// pub async fn schedule_pings_to_exchange(...) { unimplemented!() }

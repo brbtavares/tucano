@@ -1,5 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-use crate::{exchange::Connector, instrument::InstrumentData};
+use crate::instrument::InstrumentData;
 use derive_more::Display;
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
@@ -93,7 +93,11 @@ where
     fn from(
         (exchange, base, quote, instrument_kind, kind): (Exchange, S, S, InstrumentKind, Kind),
     ) -> Self {
-        Self::new(exchange, (base, quote, instrument_kind), kind)
+        Subscription {
+            exchange,
+            instrument: (base, quote, instrument_kind).into(),
+            kind,
+        }
     }
 }
 
@@ -114,7 +118,11 @@ where
     ) -> Self {
         let instrument = Keyed::new(instrument_id, (base, quote, instrument_kind).into());
 
-        Self::new(exchange, instrument, kind)
+        Subscription {
+            exchange,
+            instrument: instrument.into(),
+            kind,
+        }
     }
 }
 
@@ -124,17 +132,7 @@ where
     I: Into<Instrument>,
 {
     fn from((exchange, instrument, kind): (Exchange, I, Kind)) -> Self {
-        Self::new(exchange, instrument, kind)
-    }
-}
-
-impl<Instrument, Exchange, Kind> Subscription<Exchange, Instrument, Kind> {
-    /// Constructs a new [`Subscription`] using the provided configuration.
-    pub fn new<I>(exchange: Exchange, instrument: I, kind: Kind) -> Self
-    where
-        I: Into<Instrument>,
-    {
-        Self {
+        Subscription {
             exchange,
             instrument: instrument.into(),
             kind,
@@ -142,26 +140,7 @@ impl<Instrument, Exchange, Kind> Subscription<Exchange, Instrument, Kind> {
     }
 }
 
-impl<Exchange, Instrument, Kind> Validator for Subscription<Exchange, Instrument, Kind>
-where
-    Exchange: Connector,
-    Instrument: InstrumentData,
-{
-    fn validate(self) -> Result<Self, SocketError>
-    where
-        Self: Sized,
-    {
-        // Validate the Exchange supports the Subscription InstrumentKind
-        if exchange_supports_instrument_kind(Exchange::ID, self.instrument.kind()) {
-            Ok(self)
-        } else {
-            Err(SocketError::Unsupported {
-                entity: Exchange::ID.to_string(),
-                item: self.instrument.kind().to_string(),
-            })
-        }
-    }
-}
+
 
 /// Determines whether the [`Connector`] associated with this [`ExchangeId`] supports the
 /// ingestion of market data for the provided [`InstrumentKind`].

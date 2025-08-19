@@ -3,7 +3,7 @@ use super::ExchangeTransformer;
 use crate::{
     error::DataError,
     event::{MarketEvent, MarketIter},
-    exchange::Connector,
+    // ...existing code...
     subscription::{Map, SubscriptionKind},
     Identifier,
 };
@@ -30,7 +30,7 @@ pub struct StatelessTransformer<Exchange, InstrumentKey, Kind, Input> {
 impl<Exchange, InstrumentKey, Kind, Input> ExchangeTransformer<Exchange, InstrumentKey, Kind>
     for StatelessTransformer<Exchange, InstrumentKey, Kind, Input>
 where
-    Exchange: Connector + Send,
+    // ...existing code...
     InstrumentKey: Clone + Send,
     Kind: SubscriptionKind + Send,
     Input: Identifier<Option<SubscriptionId>> + for<'de> Deserialize<'de>,
@@ -51,7 +51,7 @@ where
 impl<Exchange, InstrumentKey, Kind, Input> Transformer
     for StatelessTransformer<Exchange, InstrumentKey, Kind, Input>
 where
-    Exchange: Connector,
+    // ...existing code...
     InstrumentKey: Clone,
     Kind: SubscriptionKind,
     Input: Identifier<Option<SubscriptionId>> + for<'de> Deserialize<'de>,
@@ -73,7 +73,7 @@ where
         match self.instrument_map.find(&subscription_id) {
             Ok(instrument) => {
                 MarketIter::<InstrumentKey, Kind::Event>::from((
-                    Exchange::ID,
+                    ExchangeId::B3, // Valor fixo temporário, ajuste conforme necessário
                     instrument.clone(),
                     input,
                 ))

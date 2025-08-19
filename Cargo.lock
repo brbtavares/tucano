@@ -2948,6 +2948,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "derive_more 2.0.1",
+ "exchanges",
  "fnv",
  "futures",
  "itertools 0.14.0",

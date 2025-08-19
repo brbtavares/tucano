@@ -1,3 +1,4 @@
+pub mod temp;
 // exchanges/src/lib.rs
 // Crate principal para integrações e lógica de exchanges no workspace tucano.
 

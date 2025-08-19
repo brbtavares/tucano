@@ -26,11 +26,8 @@ pub struct Streams<T> {
 
 impl<T> Streams<T> {
     /// Construct a [`StreamBuilder`] for configuring new market event [`Streams`].
-    pub fn builder<InstrumentKey, Kind>() -> StreamBuilder<InstrumentKey, Kind>
-    where
-        Kind: SubscriptionKind,
-    {
-        StreamBuilder::<InstrumentKey, Kind>::new()
+    pub fn builder() -> StreamBuilder {
+        StreamBuilder::default()
     }
 
     /// Construct a [`MultiStreamBuilder`] for configuring new
