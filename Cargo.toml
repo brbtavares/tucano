@@ -11,7 +11,9 @@ members = [
     "trader",
     "strategies",
     "xtask",
-    "tucano"]
+    "tucano",
+    "exchanges"
+]
 
 [workspace.dependencies]
 # Tucano Ecosystem (direct crate names with tucano- prefix)
