@@ -27,8 +27,8 @@ use std::fmt::Debug;
 use tokio::sync::{broadcast, mpsc, oneshot};
 use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::{error, info};
+use tucano_instrument::{ExchangeId, MarketDataInstrument, Side};
 use tucano_integration::snapshot::Snapshot;
-use tucano_instrument::{ConcreteInstrument, ExchangeId, Side};
 
 pub mod account;
 pub mod request;
@@ -40,7 +40,7 @@ pub struct MockExchange {
     pub fees_percent: Decimal,
     pub request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
     pub event_tx: broadcast::Sender<UnindexedAccountEvent>,
-    pub instruments: FnvHashMap<InstrumentNameExchange, ConcreteInstrument>,
+    pub instruments: FnvHashMap<InstrumentNameExchange, MarketDataInstrument>,
     pub account: AccountState,
     pub order_sequence: u64,
     pub time_exchange_latest: DateTime<Utc>,
@@ -51,7 +51,7 @@ impl MockExchange {
         config: MockExecutionConfig,
         request_rx: mpsc::UnboundedReceiver<MockExchangeRequest>,
         event_tx: broadcast::Sender<UnindexedAccountEvent>,
-        instruments: FnvHashMap<InstrumentNameExchange, ConcreteInstrument>,
+        instruments: FnvHashMap<InstrumentNameExchange, MarketDataInstrument>,
     ) -> Self {
         Self {
             exchange: config.mocked_exchange,
@@ -396,7 +396,7 @@ impl MockExchange {
     pub fn find_instrument_data(
         &self,
         instrument: &InstrumentNameExchange,
-    ) -> Result<&ConcreteInstrument, UnindexedApiError> {
+    ) -> Result<&MarketDataInstrument, UnindexedApiError> {
         self.instruments.get(instrument).ok_or_else(|| {
             ApiError::InstrumentInvalid(
                 instrument.clone(),

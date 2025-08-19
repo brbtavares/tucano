@@ -628,10 +628,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "exchanges"
-version = "0.1.0"
-
-[[package]]
 name = "fastrand"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2933,6 +2929,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tracing",
+ "tucano-instrument",
  "tucano-integration",
  "url",
  "vecmap-rs",
@@ -2944,7 +2941,6 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "derive_more 2.0.1",
- "exchanges",
  "fnv",
  "futures",
  "itertools 0.14.0",
@@ -2959,12 +2955,24 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "tucano-data",
+ "tucano-instrument",
  "tucano-integration",
+ "tucano_exchanges",
 ]
 
 [[package]]
 name = "tucano-instrument"
 version = "0.1.0"
+dependencies = [
+ "chrono",
+ "derive_more 2.0.1",
+ "rust_decimal",
+ "rust_decimal_macros",
+ "serde",
+ "serde_json",
+ "smol_str",
+ "thiserror 2.0.15",
+]
 
 [[package]]
 name = "tucano-integration"
@@ -3037,6 +3045,10 @@ dependencies = [
  "tracing",
  "tucano-execution",
 ]
+
+[[package]]
+name = "tucano_exchanges"
+version = "0.1.0"
 
 [[package]]
 name = "tungstenite"

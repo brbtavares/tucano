@@ -53,7 +53,6 @@ use tokio::sync::mpsc;
 use tracing::{error, warn};
 // ...existing code...
 
-use tucano_markets::exchange::ExchangeId;
 #[allow(unused_imports)]
 use {itertools as _, reqwest as _, serde_json as _, vecmap as _};
 

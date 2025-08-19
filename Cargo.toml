@@ -12,7 +12,8 @@ members = [
     "xtask",
     "tucano",
     "exchanges",
-    "instrument"]
+    "instrument"
+]
 
 [workspace.dependencies]
 # Tucano Ecosystem (direct crate names with tucano- prefix)

@@ -7,8 +7,8 @@ use crate::{
 };
 use futures_util::StreamExt;
 use std::{collections::HashMap, fmt::Debug, future::Future, pin::Pin};
+use tucano_instrument::ExchangeId;
 use tucano_integration::channel::Channel;
-use tucano_instrument::exchange::ExchangeId;
 
 /// Communicative type alias representing the [`Future`] result of a [`StreamBuilder::init`] call
 /// generated whilst executing [`MultiStreamBuilder::add`].

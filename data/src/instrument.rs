@@ -10,8 +10,9 @@ use tucano_instrument::{InstrumentKind, Keyed, MarketDataInstrument};
 /// duplication in the case of complex instruments (e.g., options).
 pub trait InstrumentData: Debug + Clone + Eq + Send + Sync {
     type Key: Debug + Clone + Eq + Send + Sync;
+    type Kind;
     fn key(&self) -> &Self::Key;
-    fn kind(&self) -> &InstrumentKind;
+    fn kind(&self) -> &Self::Kind;
 }
 
 impl<InstrumentKey> InstrumentData for Keyed<InstrumentKey, MarketDataInstrument>
@@ -19,24 +20,26 @@ where
     InstrumentKey: Debug + Clone + Eq + Send + Sync,
 {
     type Key = InstrumentKey;
+    type Kind = tucano_instrument::MarketDataInstrumentKind;
 
     fn key(&self) -> &Self::Key {
         &self.key
     }
 
-    fn kind(&self) -> &InstrumentKind {
+    fn kind(&self) -> &Self::Kind {
         &self.value.kind
     }
 }
 
 impl InstrumentData for MarketDataInstrument {
     type Key = Self;
+    type Kind = tucano_instrument::MarketDataInstrumentKind;
 
     fn key(&self) -> &Self::Key {
         self
     }
 
-    fn kind(&self) -> &InstrumentKind {
+    fn kind(&self) -> &Self::Kind {
         &self.kind
     }
 }
@@ -45,7 +48,7 @@ impl InstrumentData for MarketDataInstrument {
 pub struct MarketInstrumentData<InstrumentKey> {
     pub key: InstrumentKey,
     pub name_exchange: String,
-    pub kind: InstrumentKind,
+    pub kind: InstrumentKind<String>,
 }
 
 impl<InstrumentKey> InstrumentData for MarketInstrumentData<InstrumentKey>
@@ -53,12 +56,13 @@ where
     InstrumentKey: Debug + Clone + Eq + Send + Sync,
 {
     type Key = InstrumentKey;
+    type Kind = InstrumentKind<String>;
 
     fn key(&self) -> &Self::Key {
         &self.key
     }
 
-    fn kind(&self) -> &InstrumentKind {
+    fn kind(&self) -> &Self::Kind {
         &self.kind
     }
 }
@@ -70,7 +74,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{}_{}_{}",
+            "{}_{}_{:?}",
             self.key,
             self.name_exchange.as_str(),
             self.kind

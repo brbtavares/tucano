@@ -19,6 +19,7 @@ rust_decimal_macros = { workspace = true }
 [dependencies]
 ## Tucano Ecosystem
 "tucano-integration" = { workspace = true }
+"tucano-instrument" = { workspace = true }
 
 ## ProfitDLL
 ## Logging

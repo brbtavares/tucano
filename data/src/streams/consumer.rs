@@ -19,7 +19,7 @@ use futures::Stream;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use tracing::info;
-use tucano_instrument::exchange::ExchangeId;
+use tucano_instrument::ExchangeId;
 
 /// Default [`ReconnectionBackoffPolicy`] for a [`reconnecting`](`ReconnectingStream`) [`MarketStream`].
 pub const STREAM_RECONNECTION_POLICY: ReconnectionBackoffPolicy = ReconnectionBackoffPolicy {
