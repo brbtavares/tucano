@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Testes unitários para mapeamento de erros NL_* -> ProfitError.
 
 use tucano_profitdll::{

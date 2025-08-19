@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Example 2: History Trades Interval (Pull + Optional Incremental)
 //!
 //! Supports real backend (Windows + feature `real_dll`) or mock. In mock mode, events are

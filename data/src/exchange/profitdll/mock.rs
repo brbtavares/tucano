@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Mock implementation and shared types for the ProfitDLL interface.
 //!
 //! This layer simulates the behavior of the Profit DLL for tests, examples, and environments without access to the real DLL.

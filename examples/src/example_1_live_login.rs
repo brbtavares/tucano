@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Example 1: Login & Subscribe (Live or Mock)
 //!
 //! Demonstrates login + subscribe to a ticker and printing initial events.

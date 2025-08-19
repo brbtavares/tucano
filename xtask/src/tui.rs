@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use crate::app::*;
 
 fn render_main_menu(f: &mut Frame, area: Rect, app: &mut App) {

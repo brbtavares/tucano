@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER. DISCLAIMER. DISCLAIMER.
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 #![forbid(unsafe_code)]
 #![warn(
     unused,

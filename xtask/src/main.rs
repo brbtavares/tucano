@@ -1,3 +1,4 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
