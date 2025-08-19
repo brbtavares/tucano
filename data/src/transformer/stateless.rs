@@ -11,10 +11,10 @@ use async_trait::async_trait;
 use serde::Deserialize;
 use std::marker::PhantomData;
 use tokio::sync::mpsc;
+use tucano_instrument::ExchangeId;
 use tucano_integration::{
     protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer,
 };
-use tucano_markets::exchange::ExchangeId;
 
 /// Standard generic stateless [`ExchangeTransformer`] to translate exchange specific types into
 /// normalised Toucan types. Often used with
@@ -30,11 +30,11 @@ pub struct StatelessTransformer<Exchange, InstrumentKey, Kind, Input> {
 impl<Exchange, InstrumentKey, Kind, Input> ExchangeTransformer<Exchange, InstrumentKey, Kind>
     for StatelessTransformer<Exchange, InstrumentKey, Kind, Input>
 where
-    // ...existing code...
     InstrumentKey: Clone + Send,
     Kind: SubscriptionKind + Send,
     Input: Identifier<Option<SubscriptionId>> + for<'de> Deserialize<'de>,
-    MarketIter<InstrumentKey, Kind::Event>: From<(ExchangeId, InstrumentKey, Input)>,
+    MarketIter<InstrumentKey, <Kind as SubscriptionKind>::Event>:
+        From<(ExchangeId, InstrumentKey, Input)>,
 {
     async fn init(
         instrument_map: Map<InstrumentKey>,
@@ -51,15 +51,15 @@ where
 impl<Exchange, InstrumentKey, Kind, Input> Transformer
     for StatelessTransformer<Exchange, InstrumentKey, Kind, Input>
 where
-    // ...existing code...
     InstrumentKey: Clone,
     Kind: SubscriptionKind,
     Input: Identifier<Option<SubscriptionId>> + for<'de> Deserialize<'de>,
-    MarketIter<InstrumentKey, Kind::Event>: From<(ExchangeId, InstrumentKey, Input)>,
+    MarketIter<InstrumentKey, <Kind as SubscriptionKind>::Event>:
+        From<(ExchangeId, InstrumentKey, Input)>,
 {
     type Error = DataError;
     type Input = Input;
-    type Output = MarketEvent<InstrumentKey, Kind::Event>;
+    type Output = MarketEvent<InstrumentKey, <Kind as SubscriptionKind>::Event>;
     type OutputIter = Vec<Result<Self::Output, Self::Error>>;
 
     fn transform(&mut self, input: Self::Input) -> Self::OutputIter {
@@ -72,8 +72,8 @@ where
         // Find Instrument associated with Input and transform
         match self.instrument_map.find(&subscription_id) {
             Ok(instrument) => {
-                MarketIter::<InstrumentKey, Kind::Event>::from((
-                    ExchangeId::B3, // Valor fixo temporário, ajuste conforme necessário
+                MarketIter::<InstrumentKey, <Kind as SubscriptionKind>::Event>::from((
+                    ExchangeId::Other, // Valor fixo temporário, ajuste conforme necessário
                     instrument.clone(),
                     input,
                 ))

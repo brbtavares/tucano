@@ -2,7 +2,7 @@
 //! B3 Exchange implementation
 
 use serde::{Deserialize, Serialize};
-use tucano_markets::{Exchange, ExchangeId};
+use tucano_instrument::{Exchange, ExchangeId};
 
 /// B3 Exchange struct
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

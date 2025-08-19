@@ -1,9 +1,10 @@
+use crate::error::ConnectivityError;
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-//! B3 execution client implementation using ProfitDLL
-//!
-//! This module provides the B3ExecutionClient that integrates with the Brazilian
-//! stock exchange through the ProfitDLL library, implementing the ExecutionClient trait
-//! for full compatibility with the Toucan framework.
+// B3 execution client implementation using ProfitDLL
+//
+// This module provides the B3ExecutionClient that integrates with the Brazilian
+// stock exchange through the ProfitDLL library, implementing the ExecutionClient trait
+// for full compatibility with the Toucan framework.
 
 pub mod adapter;
 
@@ -32,8 +33,8 @@ use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 
-use exchanges::temp::profitdll::ProfitError;
-use tucano_markets::{ExchangeId, Side};
+// Legacy: use crate::profitdll::ProfitError;
+use tucano_instrument::{ExchangeId, Side};
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {
@@ -133,7 +134,7 @@ impl std::fmt::Debug for B3ExecutionClient {
 }
 
 impl ExecutionClient for B3ExecutionClient {
-    const EXCHANGE: ExchangeId = ExchangeId::B3;
+    const EXCHANGE: ExchangeId = ExchangeId::Other;
 
     type Config = B3Config;
     type AccountStream = UnboundedReceiverStream<UnindexedAccountEvent>;
@@ -208,7 +209,7 @@ impl ExecutionClient for B3ExecutionClient {
             .collect();
 
         Ok(UnindexedAccountSnapshot::new(
-            ExchangeId::B3,
+            ExchangeId::Other,
             None,
             None,
             balances,
@@ -318,7 +319,7 @@ impl B3ExecutionClient {
                                     crate::order::state::OrderState<String, String>,
                                 > = Order {
                                     key: OrderKey {
-                                        exchange: ExchangeId::B3,
+                                        exchange: ExchangeId::Other,
                                         instrument: ctx.instrument.clone(),
                                         strategy: ctx.strategy.clone(),
                                         cid: ClientOrderId(SmolStr::from(client_cid.clone())),
@@ -336,7 +337,7 @@ impl B3ExecutionClient {
                                 };
                                 let snapshot = Snapshot(order);
                                 let event = crate::AccountEvent {
-                                    exchange: ExchangeId::B3,
+                                    exchange: ExchangeId::Other,
                                     broker: Some(broker.clone()),
                                     account: Some(account.clone()),
                                     kind: crate::AccountEventKind::OrderSnapshot(snapshot),
@@ -381,7 +382,7 @@ impl B3ExecutionClient {
                                     AssetFees::quote_fees(fees),
                                 );
                                 let trade_event = crate::AccountEvent {
-                                    exchange: ExchangeId::B3,
+                                    exchange: ExchangeId::Other,
                                     broker: Some(broker.clone()),
                                     account: Some(account.clone()),
                                     kind: crate::AccountEventKind::Trade(trade),
@@ -396,7 +397,7 @@ impl B3ExecutionClient {
                                         crate::order::state::OrderState<String, String>,
                                     > = Order {
                                         key: OrderKey {
-                                            exchange: ExchangeId::B3,
+                                            exchange: ExchangeId::Other,
                                             instrument: ctx.instrument.clone(),
                                             strategy: ctx.strategy.clone(),
                                             cid: ClientOrderId(SmolStr::from(found_cid.clone())),
@@ -410,7 +411,7 @@ impl B3ExecutionClient {
                                     };
                                     let snapshot = Snapshot(order);
                                     let snapshot_event = crate::AccountEvent {
-                                        exchange: ExchangeId::B3,
+                                        exchange: ExchangeId::Other,
                                         broker: Some(broker.clone()),
                                         account: Some(account.clone()),
                                         kind: crate::AccountEventKind::OrderSnapshot(snapshot),
@@ -439,7 +440,7 @@ impl B3ExecutionClient {
                                     crate::order::state::OrderState<String, String>,
                                 > = Order {
                                     key: OrderKey {
-                                        exchange: ExchangeId::B3,
+                                        exchange: ExchangeId::Other,
                                         instrument: ctx.instrument.clone(),
                                         strategy: ctx.strategy.clone(),
                                         cid: ClientOrderId(SmolStr::from(client_cid.clone())),
@@ -453,7 +454,7 @@ impl B3ExecutionClient {
                                 };
                                 let snapshot = Snapshot(order);
                                 let event = crate::AccountEvent {
-                                    exchange: ExchangeId::B3,
+                                    exchange: ExchangeId::Other,
                                     broker: Some(broker.clone()),
                                     account: Some(account.clone()),
                                     kind: crate::AccountEventKind::OrderSnapshot(snapshot),
@@ -491,7 +492,7 @@ impl B3ExecutionClient {
                                 let response: OrderResponseCancel<ExchangeId, String, String> =
                                     crate::order::OrderEvent::new(
                                         OrderKey {
-                                            exchange: ExchangeId::B3,
+                                            exchange: ExchangeId::Other,
                                             instrument: ctx.instrument.clone(),
                                             strategy: ctx.strategy.clone(),
                                             cid: ClientOrderId(SmolStr::from(client_cid)),
@@ -499,7 +500,7 @@ impl B3ExecutionClient {
                                         Ok(cancelled),
                                     );
                                 let event = crate::AccountEvent {
-                                    exchange: ExchangeId::B3,
+                                    exchange: ExchangeId::Other,
                                     broker: Some(broker.clone()),
                                     account: Some(account.clone()),
                                     kind: crate::AccountEventKind::OrderCancelled(response),
@@ -523,7 +524,7 @@ impl B3ExecutionClient {
         request: &OrderRequestOpen<ExchangeId, &InstrumentNameExchange>,
     ) -> Result<
         Order<ExchangeId, InstrumentNameExchange, Result<Open, UnindexedOrderError>>,
-        ProfitError,
+        UnindexedOrderError,
     > {
         // Convert request to transport invocation
         let instrument_str = format!("{:?}", request.key.instrument);
@@ -560,7 +561,9 @@ impl B3ExecutionClient {
                 &account,
             )
             .await
-            .map_err(|e| ProfitError::ConnectionFailed(e.to_string()))?;
+            .map_err(|e| {
+                UnindexedOrderError::Connectivity(ConnectivityError::Socket(e.to_string()))
+            })?;
         // Store context for later event reconciliation
         {
             self.order_ctx.lock().await.insert(
@@ -585,7 +588,7 @@ impl B3ExecutionClient {
         // Build internal order representation
         let order = Order {
             key: OrderKey {
-                exchange: ExchangeId::B3,
+                exchange: ExchangeId::Other,
                 instrument: (*request.key.instrument).clone(),
                 strategy: request.key.strategy.clone(),
                 cid: request.key.cid.clone(),
@@ -621,7 +624,7 @@ mod tests {
     use rust_decimal_macros::dec;
     use tokio::sync::mpsc;
     use tucano_integration::snapshot::Snapshot;
-    use tucano_markets::ExchangeId;
+    // use tucano_markets::ExchangeId;
 
     #[derive(Debug)]
     struct DummyTransport {
@@ -741,7 +744,7 @@ mod tests {
         use crate::order::request::RequestOpen;
         let req = OrderRequestOpen {
             key: crate::order::OrderKey {
-                exchange: ExchangeId::B3,
+                exchange: ExchangeId::Other,
                 instrument: &instrument_name,
                 strategy: StrategyId(SmolStr::new_inline("strat")),
                 cid: ClientOrderId(SmolStr::new_inline("CID1")),
@@ -785,7 +788,7 @@ mod tests {
         let instrument_name = "PETR4".to_string();
         let req = OrderRequestOpen {
             key: crate::order::OrderKey {
-                exchange: ExchangeId::B3,
+                exchange: ExchangeId::Other,
                 instrument: &instrument_name,
                 strategy: StrategyId(SmolStr::new_inline("strat")),
                 cid: ClientOrderId(SmolStr::new_inline("CID2")),
@@ -842,7 +845,7 @@ mod tests {
         let instrument_name = "PETR4".to_string();
         let req = OrderRequestOpen {
             key: crate::order::OrderKey {
-                exchange: ExchangeId::B3,
+                exchange: ExchangeId::Other,
                 instrument: &instrument_name,
                 strategy: StrategyId(SmolStr::new_inline("strat")),
                 cid: ClientOrderId(SmolStr::new_inline("CID3")),
@@ -914,7 +917,7 @@ mod tests {
         let instrument_name = "PETR4".to_string();
         let req = OrderRequestOpen {
             key: crate::order::OrderKey {
-                exchange: ExchangeId::B3,
+                exchange: ExchangeId::Other,
                 instrument: &instrument_name,
                 strategy: StrategyId(SmolStr::new_inline("strat")),
                 cid: ClientOrderId(SmolStr::new_inline("CID4")),
@@ -990,7 +993,7 @@ mod tests {
         let instrument_name = "PETR4".to_string();
         let req = OrderRequestOpen {
             key: crate::order::OrderKey {
-                exchange: ExchangeId::B3,
+                exchange: ExchangeId::Other,
                 instrument: &instrument_name,
                 strategy: StrategyId(SmolStr::new_inline("strat")),
                 cid: ClientOrderId(SmolStr::new_inline("CID5")),

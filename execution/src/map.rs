@@ -1,14 +1,14 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use crate::{compat::*, error::KeyError};
 use fnv::FnvHashMap;
+use tucano_instrument::Keyed;
 use tucano_integration::collection::{FnvIndexMap, FnvIndexSet};
-use tucano_markets::Keyed;
 
-// Use the core representation of IndexedInstruments (Vec<Keyed<InstrumentIndex, ConcreteInstrument>>)
+// Use the core representation of IndexedInstruments (Vec<Keyed<InstrumentIndex, MarketDataInstrument>>)
 // without creating a hard compile-time dependency (keep lightweight placeholder for now).
 // We'll accept any slice of Keyed instrument indices from the caller.
-use tucano_markets::ConcreteInstrument;
-pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
+use tucano_instrument::MarketDataInstrument;
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, MarketDataInstrument>>;
 
 /// Indexed instrument map used to associate the internal Toucan representation of instruments and
 /// assets with the [`ExecutionClient`](super::client::ExecutionClient) representation.
@@ -72,7 +72,7 @@ impl ExecutionInstrumentMap {
     }
 
     pub fn find_exchange_id(&self, exchange: ExchangeIndex) -> Result<ExchangeId, KeyError> {
-        Ok(ExchangeId::from(exchange.as_str()))
+        Ok(ExchangeId::Other)
     }
     pub fn find_exchange_index(&self, exchange: ExchangeId) -> Result<ExchangeIndex, IndexError> {
         Ok(exchange.to_string())

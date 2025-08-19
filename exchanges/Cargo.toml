@@ -1,5 +1,5 @@
 [package]
-name = "exchanges"
+name = "tucano_exchanges"
 version = "0.1.0"
 edition = "2021"
 description = "Crate para integrações e lógica de exchanges no workspace tucano."

@@ -22,7 +22,7 @@ typed_indices = []
 ## Tucano Ecosystem
 "tucano-data" = { workspace = true }
 "tucano-integration" = { workspace = true }
-"tucano-markets" = { workspace = true }
+"tucano-instrument" = { workspace = true }
 ## Logging
 tracing = { workspace = true }
 
@@ -56,7 +56,7 @@ rand = { workspace = true }
 chrono = { workspace = true, features = ["serde"]}
 itertools = { workspace = true }
 derive_more = { workspace = true, features = ["constructor", "from", "display"]}
-exchanges = { path = "../exchanges" }
+tucano_exchanges = { path = "../exchanges" }
 
 [dev-dependencies]
 rust_decimal_macros = { workspace = true }

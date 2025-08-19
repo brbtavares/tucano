@@ -14,7 +14,6 @@ authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
 [dependencies]
 # Re-export targets
 "tucano-core" = { workspace = true }
-"tucano-markets" = { workspace = true }
 "tucano-data" = { workspace = true }
 "tucano-execution" = { workspace = true }
 "tucano-risk" = { workspace = true }
