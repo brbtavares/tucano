@@ -1,14 +1,17 @@
+use tucano_instrument::asset::name::AssetNameInternal;
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-use crate::{exchange::Connector, instrument::InstrumentData};
+use crate::instrument::InstrumentData;
 use derive_more::Display;
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
 use smol_str::{format_smolstr, ToSmolStr};
 use std::{borrow::Borrow, fmt::Debug, hash::Hash};
+use tucano_instrument::{
+    ExchangeId, InstrumentKind, Keyed, MarketDataInstrument, MarketDataInstrumentKind,
+};
 use tucano_integration::{
     error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId, Validator,
 };
-use tucano_markets::{exchange::ExchangeId, InstrumentKind, Keyed, MarketDataInstrument};
 
 /// OrderBook [`SubscriptionKind`]s and the associated Toucan output data models.
 pub mod book;
@@ -85,22 +88,39 @@ pub enum SubKind {
     Candles,
 }
 
-impl<Exchange, S, Kind> From<(Exchange, S, S, InstrumentKind, Kind)>
+impl<Exchange, S, Kind> From<(Exchange, S, S, MarketDataInstrumentKind, Kind)>
     for Subscription<Exchange, MarketDataInstrument, Kind>
 where
-    S: Into<String>,
+    S: Into<AssetNameInternal>,
 {
     fn from(
-        (exchange, base, quote, instrument_kind, kind): (Exchange, S, S, InstrumentKind, Kind),
+        (exchange, base, quote, instrument_kind, kind): (
+            Exchange,
+            S,
+            S,
+            MarketDataInstrumentKind,
+            Kind,
+        ),
     ) -> Self {
-        Self::new(exchange, (base, quote, instrument_kind), kind)
+        Subscription {
+            exchange,
+            instrument: (base, quote, instrument_kind).into(),
+            kind,
+        }
     }
 }
 
-impl<InstrumentKey, Exchange, S, Kind> From<(InstrumentKey, Exchange, S, S, InstrumentKind, Kind)>
-    for Subscription<Exchange, Keyed<InstrumentKey, MarketDataInstrument>, Kind>
+impl<InstrumentKey, Exchange, S, Kind>
+    From<(
+        InstrumentKey,
+        Exchange,
+        S,
+        S,
+        MarketDataInstrumentKind,
+        Kind,
+    )> for Subscription<Exchange, Keyed<InstrumentKey, MarketDataInstrument>, Kind>
 where
-    S: Into<String>,
+    S: Into<AssetNameInternal>,
 {
     fn from(
         (instrument_id, exchange, base, quote, instrument_kind, kind): (
@@ -108,13 +128,17 @@ where
             Exchange,
             S,
             S,
-            InstrumentKind,
+            MarketDataInstrumentKind,
             Kind,
         ),
     ) -> Self {
         let instrument = Keyed::new(instrument_id, (base, quote, instrument_kind).into());
 
-        Self::new(exchange, instrument, kind)
+        Subscription {
+            exchange,
+            instrument: instrument.into(),
+            kind,
+        }
     }
 }
 
@@ -124,41 +148,10 @@ where
     I: Into<Instrument>,
 {
     fn from((exchange, instrument, kind): (Exchange, I, Kind)) -> Self {
-        Self::new(exchange, instrument, kind)
-    }
-}
-
-impl<Instrument, Exchange, Kind> Subscription<Exchange, Instrument, Kind> {
-    /// Constructs a new [`Subscription`] using the provided configuration.
-    pub fn new<I>(exchange: Exchange, instrument: I, kind: Kind) -> Self
-    where
-        I: Into<Instrument>,
-    {
-        Self {
+        Subscription {
             exchange,
             instrument: instrument.into(),
             kind,
-        }
-    }
-}
-
-impl<Exchange, Instrument, Kind> Validator for Subscription<Exchange, Instrument, Kind>
-where
-    Exchange: Connector,
-    Instrument: InstrumentData,
-{
-    fn validate(self) -> Result<Self, SocketError>
-    where
-        Self: Sized,
-    {
-        // Validate the Exchange supports the Subscription InstrumentKind
-        if exchange_supports_instrument_kind(Exchange::ID, self.instrument.kind()) {
-            Ok(self)
-        } else {
-            Err(SocketError::Unsupported {
-                entity: Exchange::ID.to_string(),
-                item: self.instrument.kind().to_string(),
-            })
         }
     }
 }
@@ -168,28 +161,27 @@ where
 #[allow(clippy::match_like_matches_macro)]
 pub fn exchange_supports_instrument_kind(
     exchange: ExchangeId,
-    instrument_kind: &InstrumentKind,
+    instrument_kind: &InstrumentKind<String>,
 ) -> bool {
-    use InstrumentKind::*;
-
     match (exchange, instrument_kind) {
         // Spot
-        (_, Spot) => true,
+        (_, InstrumentKind::Spot) => true,
 
         // Future - futures markets only
-        (_, Future) => false,
+        (_, InstrumentKind::Future(_)) => false,
 
         // Perpetual - only futures exchanges
-        (_, Perpetual) => false,
+        (_, InstrumentKind::Perpetual(_)) => false,
 
         // Option - no supported options exchanges currently
-        (_, Option) => false,
+        (_, InstrumentKind::Option(_)) => false,
     }
 }
 
 impl<Instrument> Validator for Subscription<ExchangeId, Instrument, SubKind>
 where
-    Instrument: InstrumentData,
+    Instrument: InstrumentData<Kind = InstrumentKind<String>>,
+    <Instrument as InstrumentData>::Kind: std::fmt::Display,
 {
     fn validate(self) -> Result<Self, SocketError>
     where
@@ -215,18 +207,17 @@ where
 /// ingestion of market data for the provided [`InstrumentKind`] and [`SubKind`] combination.
 pub fn exchange_supports_instrument_kind_sub_kind(
     exchange_id: &ExchangeId,
-    instrument_kind: &InstrumentKind,
+    instrument_kind: &InstrumentKind<String>,
     sub_kind: SubKind,
 ) -> bool {
-    use ExchangeId::*;
-    use InstrumentKind::*;
-    use SubKind::*;
-
     match (exchange_id, instrument_kind, sub_kind) {
         // Spot exchanges
-        (B3, Spot, PublicTrades | OrderBooksL1) => true,
-
-        (_, _, _) => false,
+        (
+            ExchangeId::Other,
+            InstrumentKind::Spot,
+            SubKind::PublicTrades | SubKind::OrderBooksL1,
+        ) => true,
+        _ => false,
     }
 }
 
@@ -287,7 +278,7 @@ mod tests {
 
     mod subscription {
         use super::*; // brings Map, SubscriptionId, InstrumentKind
-        use tucano_markets::MarketDataInstrument;
+        use tucano_instrument::MarketDataInstrument;
 
         // Removed nested module with unused imports (B3Exchange, OrderBooksL2, PublicTrades)
 

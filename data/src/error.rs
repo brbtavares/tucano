@@ -2,11 +2,8 @@
 use crate::subscription::SubKind;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use tucano_instrument::ExchangeId;
 use tucano_integration::{error::SocketError, subscription::SubscriptionId};
-use tucano_markets::{
-    exchange::ExchangeId,
-    // index::error::IndexError,
-};
 
 /// All errors generated in `data`.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]

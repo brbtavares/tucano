@@ -17,7 +17,10 @@ pub mod stateless;
 #[async_trait]
 pub trait ExchangeTransformer<Exchange, InstrumentKey, Kind>
 where
-    Self: Transformer<Output = MarketEvent<InstrumentKey, Kind::Event>, Error = DataError> + Sized,
+    Self: Transformer<
+            Output = MarketEvent<InstrumentKey, <Kind as SubscriptionKind>::Event>,
+            Error = DataError,
+        > + Sized,
     Kind: SubscriptionKind,
 {
     /// Initialise a new [`Self`], also fetching any market data snapshots required for the
@@ -26,7 +29,7 @@ where
     /// The [`mpsc::UnboundedSender`] can be used by [`Self`] to send messages back to the exchange.
     async fn init(
         instrument_map: Map<InstrumentKey>,
-        initial_snapshots: &[MarketEvent<InstrumentKey, Kind::Event>],
+        initial_snapshots: &[MarketEvent<InstrumentKey, <Kind as SubscriptionKind>::Event>],
         ws_sink_tx: mpsc::UnboundedSender<WsMessage>,
     ) -> Result<Self, DataError>;
 }

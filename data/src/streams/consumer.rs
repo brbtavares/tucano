@@ -2,7 +2,7 @@
 use crate::{
     error::DataError,
     event::MarketEvent,
-    exchange::StreamSelector,
+    // ...existing code...
     instrument::InstrumentData,
     streams::{
         reconnect,
@@ -11,14 +11,15 @@ use crate::{
         },
     },
     subscription::{display_subscriptions_without_exchange, Subscription, SubscriptionKind},
-    Identifier, MarketStream,
+    Identifier,
+    MarketStream,
 };
 use derive_more::Constructor;
 use futures::Stream;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use tracing::info;
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::ExchangeId;
 
 /// Default [`ReconnectionBackoffPolicy`] for a [`reconnecting`](`ReconnectingStream`) [`MarketStream`].
 pub const STREAM_RECONNECTION_POLICY: ReconnectionBackoffPolicy = ReconnectionBackoffPolicy {
@@ -43,41 +44,13 @@ pub type MarketStreamEvent<InstrumentKey, Kind> =
 /// The provided [`ReconnectionBackoffPolicy`] dictates how the exponential backoff scales
 /// between reconnections.
 pub async fn init_market_stream<Exchange, Instrument, Kind>(
-    policy: ReconnectionBackoffPolicy,
-    subscriptions: Vec<Subscription<Exchange, Instrument, Kind>>,
-) -> Result<impl Stream<Item = MarketStreamResult<Instrument::Key, Kind::Event>>, DataError>
-where
-    Exchange: StreamSelector<Instrument, Kind>,
-    Instrument: InstrumentData + Display,
-    Kind: SubscriptionKind + Display,
-    Subscription<Exchange, Instrument, Kind>:
-        Identifier<Exchange::Channel> + Identifier<Exchange::Market>,
-{
-    // Determine ExchangeId associated with these Subscriptions
-    let exchange = Exchange::ID;
-
-    // Determine StreamKey for use in logging
-    let stream_key = subscriptions
-        .first()
-        .map(|sub| StreamKey::new("market_stream", exchange, Some(sub.kind.as_str())))
-        .ok_or(DataError::SubscriptionsEmpty)?;
-
-    info!(
-        %exchange,
-        subscriptions = %display_subscriptions_without_exchange(&subscriptions),
-        ?policy,
-        ?stream_key,
-        "MarketStream with auto reconnect initialising"
+    _policy: ReconnectionBackoffPolicy,
+    _subscriptions: Vec<Subscription<Exchange, Instrument, Kind>>,
+) -> Result<(), DataError> {
+    // TODO: Implementação concreta de init_market_stream deve ser feita na crate exchanges
+    unimplemented!(
+        "A implementação concreta de init_market_stream deve ser feita na crate exchanges."
     );
-
-    Ok(init_reconnecting_stream(move || {
-        let subscriptions = subscriptions.clone();
-        async move { Exchange::Stream::init::<Exchange::SnapFetcher>(&subscriptions).await }
-    })
-    .await?
-    .with_reconnect_backoff(policy, stream_key)
-    .with_termination_on_error(|error| error.is_terminal(), stream_key)
-    .with_reconnection_events(exchange))
 }
 
 #[derive(

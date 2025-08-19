@@ -1,5 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 pub trait OnDisconnectStrategy<Clock, State, ExecutionTxs, Risk>
 where

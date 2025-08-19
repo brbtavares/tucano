@@ -13,7 +13,7 @@ use crate::{
 use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
 use tokio::sync::oneshot;
-use tucano_markets::ExchangeId;
+use tucano_instrument::ExchangeId;
 
 #[derive(Debug)]
 pub struct MockExchangeRequest {

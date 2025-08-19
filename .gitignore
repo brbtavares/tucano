@@ -1,8 +1,9 @@
 # Rust
-/target
+/target/
+**/target/
 
-# Lockfile
-Cargo.lock
+# Lockfile (only ignore at workspace root, not in crates)
+/Cargo.lock
 
 # Native libraries (DLLs, SOs, etc.)
 *.dll
@@ -11,8 +12,45 @@ Cargo.lock
 *.lib
 *.a
 
-# .env files
+# Environment files
 .env
+**/.env*
 
-# Utility files
-/utils
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# CI artifacts
+/.github/workflows/*.log
+
+# Backup files
+*~
+*.swp
+*.swo
+*.bak
+
+# Byproducts
+*.rlib
+*.exe
+*.pdb
+*.obj
+*.tmp
+
+# Coverage
+coverage/
+**/coverage/
+
+# xtask output
+xtask/tmp/
+xtask/.cache/
+
