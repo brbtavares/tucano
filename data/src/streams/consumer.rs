@@ -11,7 +11,8 @@ use crate::{
         },
     },
     subscription::{display_subscriptions_without_exchange, Subscription, SubscriptionKind},
-    Identifier, MarketStream,
+    Identifier,
+    MarketStream,
 };
 use derive_more::Constructor;
 use futures::Stream;
@@ -47,7 +48,9 @@ pub async fn init_market_stream<Exchange, Instrument, Kind>(
     _subscriptions: Vec<Subscription<Exchange, Instrument, Kind>>,
 ) -> Result<(), DataError> {
     // TODO: Implementação concreta de init_market_stream deve ser feita na crate exchanges
-    unimplemented!("A implementação concreta de init_market_stream deve ser feita na crate exchanges.");
+    unimplemented!(
+        "A implementação concreta de init_market_stream deve ser feita na crate exchanges."
+    );
 }
 
 #[derive(

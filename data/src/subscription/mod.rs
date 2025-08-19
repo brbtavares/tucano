@@ -140,8 +140,6 @@ where
     }
 }
 
-
-
 /// Determines whether the [`Connector`] associated with this [`ExchangeId`] supports the
 /// ingestion of market data for the provided [`InstrumentKind`].
 #[allow(clippy::match_like_matches_macro)]

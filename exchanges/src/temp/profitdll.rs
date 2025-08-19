@@ -8,12 +8,12 @@ pub enum CallbackEvent {}
 
 #[allow(dead_code)]
 pub enum OrderSide {
-	Buy,
-	Sell,
+    Buy,
+    Sell,
 }
 
 #[derive(Debug)]
 pub enum ProfitError {
-	ConnectionFailed(String),
-	// Add more variants as needed for stubbing
+    ConnectionFailed(String),
+    // Add more variants as needed for stubbing
 }

@@ -99,8 +99,6 @@ pub mod books;
 /// [`ExchangeTransformer`] implementations.
 pub mod transformer;
 
-
-
 /// Defines a generic identification type for the implementor.
 pub trait Identifier<T> {
     fn id(&self) -> T;
@@ -112,10 +110,6 @@ pub trait Identifier<T> {
 pub trait MarketStream {
     // Abstract marker trait for market streams.
 }
-
-
-
-
 
 // TODO: Implementação concreta de schedule_pings_to_exchange deve ser feita na crate exchanges
 // pub async fn schedule_pings_to_exchange(...) { unimplemented!() }

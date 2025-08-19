@@ -52,6 +52,8 @@ impl Subscriber for WebSocketSubscriber {
         _subscriptions: &[Subscription<Exchange, Instrument, Kind>],
     ) -> Result<Subscribed, SocketError> {
         // TODO: Implementação concreta de Subscriber::subscribe deve ser feita na crate exchanges
-        unimplemented!("A implementação concreta de Subscriber::subscribe deve ser feita na crate exchanges.");
+        unimplemented!(
+            "A implementação concreta de Subscriber::subscribe deve ser feita na crate exchanges."
+        );
     }
 }
