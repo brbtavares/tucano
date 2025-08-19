@@ -14,7 +14,6 @@
 //! ```
 
 // Re-export of internal crates with organized namespaces
-// Re-export of external crate tucano-profitdll to avoid local module name ambiguity
 pub use tucano_analytics as analytics;
 pub use tucano_core as core;
 pub use tucano_data as data;
