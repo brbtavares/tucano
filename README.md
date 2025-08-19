@@ -6,7 +6,7 @@
 <table>
     <tr>
         <td align="center" valign="middle" style="border: none;">
-            <img src="_assets/logo.png" alt="Logo Tucano" />
+            <img src="assets/logo.png" alt="Logo Tucano" />
         </td>
     </tr>
     <tr>
