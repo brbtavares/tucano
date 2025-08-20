@@ -9,7 +9,7 @@ use tucano_execution::{
     trade::{AssetFees, Trade, TradeId},
     AssetIndex, InstrumentIndex, QuoteAsset,
 };
-use tucano_markets::Side;
+use tucano_instrument::Side;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Constructor)]
 pub struct PositionManager<InstrumentKey = InstrumentIndex> {
@@ -66,9 +66,9 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// use tucano_core::engine::state::position::Position;
 /// use tucano_execution::order::id::{OrderId, StrategyId};
 /// use tucano_execution::trade::{AssetFees, Trade, TradeId};
-/// use tucano_markets::asset::QuoteAsset;
-/// use tucano_markets::instrument::name::InstrumentNameInternal;
-/// use tucano_markets::Side;
+/// use tucano_instrument::asset::QuoteAsset;
+/// use tucano_instrument::instrument::name::InstrumentNameInternal;
+/// use tucano_instrument::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -114,9 +114,9 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// use tucano_core::engine::state::position::Position;
 /// use tucano_execution::order::id::{OrderId, StrategyId};
 /// use tucano_execution::trade::{AssetFees, Trade, TradeId};
-/// use tucano_markets::asset::QuoteAsset;
-/// use tucano_markets::instrument::name::InstrumentNameInternal;
-/// use tucano_markets::Side;
+/// use tucano_instrument::asset::QuoteAsset;
+/// use tucano_instrument::instrument::name::InstrumentNameInternal;
+/// use tucano_instrument::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;

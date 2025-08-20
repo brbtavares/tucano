@@ -133,7 +133,7 @@ impl B3Instrument {
     }
 }
 
-/// Implement tucano_markets::Instrument trait for B3Instrument
+/// Implement tucano_instrument::Instrument trait for B3Instrument
 impl Instrument for B3Instrument {
     type Symbol = String;
 

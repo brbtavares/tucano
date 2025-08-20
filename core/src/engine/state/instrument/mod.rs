@@ -21,7 +21,7 @@ use tucano_execution::{
     AssetIndex, ExchangeIndex, InstrumentAccountSnapshot, InstrumentIndex, QuoteAsset,
 };
 use tucano_integration::{collection::FnvIndexMap, snapshot::Snapshot};
-use tucano_markets::{exchange::ExchangeId, ConcreteInstrument, Keyed};
+use tucano_instrument::{exchange::ExchangeId, ConcreteInstrument, Keyed};
 
 // ConcreteInstrument now defined in markets crate
 

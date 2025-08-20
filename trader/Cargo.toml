@@ -16,7 +16,7 @@ all-features = true
 [dependencies]
 # Tucano Ecosystem
 "tucano-execution" = { workspace = true }
-"tucano_instrument" = { workspace = true }
+"tucano-instrument" = { workspace = true }
 
 # Data Structures
 rust_decimal = { workspace = true }

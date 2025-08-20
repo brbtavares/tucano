@@ -6,8 +6,7 @@ use tucano_execution::client::mock::MockExecutionConfig;
 ///
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
-use tucano_markets::ConcreteInstrument; // updated import for shared instrument
-use tucano_markets::{exchange::ExchangeId, Underlying};
+use tucano_instrument::{exchange::ExchangeId, Underlying, ConcreteInstrument};
 
 /// Placeholder types for configuration
 pub type AssetNameExchange = String;

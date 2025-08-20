@@ -67,7 +67,7 @@ use tucano_data::streams::reconnect;
 // the aliases for semantic clarity until newtypes are reintroduced.
 use tucano_execution::AccountEvent; // alias types replaced locally by String
 use tucano_integration::channel::Channel;
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Provides an execution manager builder for ergonomically initialising multiple execution links
 /// to mock and live exchanges.

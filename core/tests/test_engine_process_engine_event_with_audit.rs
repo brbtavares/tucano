@@ -122,7 +122,7 @@ use tucano_execution::{
 };
 
 use tucano_core::engine::state::IndexedInstruments;
-use tucano_markets::{ExchangeId, Side}; // instrument list alias
+use tucano_instrument::{ExchangeId, Side}; // instrument list alias
 
 use tucano_risk::DefaultRiskManager;
 
@@ -932,9 +932,9 @@ fn build_engine(
 ) -> TestEngine {
     // Simplified instrument list using placeholder keys inst0/inst1
     let instruments: IndexedInstruments = vec![
-        tucano_markets::Keyed::new(
+        tucano_instrument::Keyed::new(
             "inst0".to_string(),
-            tucano_markets::ConcreteInstrument {
+            tucano_instrument::ConcreteInstrument {
                 symbol: "BASE".into(),
                 market: "spot".into(),
                 exchange: ExchangeId::Mock,
@@ -942,9 +942,9 @@ fn build_engine(
                 name_exchange: "BASEQUOTE".into(),
             },
         ),
-        tucano_markets::Keyed::new(
+        tucano_instrument::Keyed::new(
             "inst1".to_string(),
-            tucano_markets::ConcreteInstrument {
+            tucano_instrument::ConcreteInstrument {
                 symbol: "ALT".into(),
                 market: "spot".into(),
                 exchange: ExchangeId::Mock,

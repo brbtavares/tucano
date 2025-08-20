@@ -411,7 +411,7 @@ mod tests {
             Order, OrderKey, OrderKind, TimeInForce,
         },
     };
-    use tucano_markets::{exchange::ExchangeId, Side};
+    use tucano_instrument::{exchange::ExchangeId, Side};
 
     fn orders(
         orders: impl IntoIterator<Item = Order<ExchangeId, u64, ActiveOrderState>>,

@@ -2902,6 +2902,7 @@ dependencies = [
  "tucano-analytics",
  "tucano-data",
  "tucano-execution",
+ "tucano-instrument",
  "tucano-integration",
  "tucano-risk",
  "tucano-trader",
@@ -3028,6 +3029,7 @@ dependencies = [
  "tracing",
  "tucano-analytics",
  "tucano-execution",
+ "tucano-instrument",
  "tucano-trader",
 ]
 
@@ -3044,6 +3046,7 @@ dependencies = [
  "thiserror 2.0.15",
  "tracing",
  "tucano-execution",
+ "tucano-instrument",
 ]
 
 [[package]]

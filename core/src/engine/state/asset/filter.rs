@@ -1,7 +1,7 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 use serde::{Deserialize, Serialize};
 use tucano_integration::collection::one_or_many::OneOrMany;
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Asset filter.
 ///

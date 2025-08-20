@@ -24,7 +24,7 @@ use tucano_integration::{
     snapshot::SnapUpdates,
     FeedEnded, Terminal,
 };
-use tucano_markets::{ConcreteInstrument, Keyed};
+use tucano_instrument::{ConcreteInstrument, Keyed};
 
 /// Placeholder types
 pub type AssetNameInternal = String;

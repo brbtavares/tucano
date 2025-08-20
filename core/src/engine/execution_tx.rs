@@ -9,7 +9,7 @@ use tucano_integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
 };
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Collection of [`ExecutionRequest`] [`Tx`]s for each
 /// exchange [`ExecutionManager`](crate::execution::manager::ExecutionManager).

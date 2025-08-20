@@ -3,7 +3,7 @@ use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 use tucano_execution::ExchangeIndex; // rollback path B: external String key interface
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Placeholder for IndexedInstruments - reused from parent module
 use super::{IndexedInstruments, IndexedInstrumentsExt};

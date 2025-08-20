@@ -25,10 +25,10 @@ use tucano_execution::{
     QuoteAsset, UnindexedAccountSnapshot,
 };
 use tucano_integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot};
-use tucano_markets::{exchange::ExchangeId, ConcreteInstrument, Keyed}; // ExchangeId still used in connectivity
+use tucano_instrument::{exchange::ExchangeId, Keyed, Instrument}; // ExchangeId still used in connectivity
 
 /// Placeholder for IndexedInstruments
-pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, ConcreteInstrument>>;
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, Instrument>>;
 
 pub trait IndexedInstrumentsExt {
     fn exchanges(&self) -> Box<dyn Iterator<Item = ExchangeId> + '_>;
@@ -100,7 +100,7 @@ impl<GlobalData, InstrumentData> EngineState<GlobalData, InstrumentData> {
         instrument_data_init: FnInstrumentData,
     ) -> EngineStateBuilder<'_, GlobalData, FnInstrumentData>
     where
-        FnInstrumentData: Fn(&Keyed<InstrumentIndex, ConcreteInstrument>) -> InstrumentData,
+        FnInstrumentData: Fn(&Keyed<InstrumentIndex, Instrument>) -> InstrumentData,
     {
         EngineStateBuilder::new(instruments, global, instrument_data_init)
     }

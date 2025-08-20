@@ -229,7 +229,7 @@ pub mod test_utils {
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
-    use tucano_markets::Side;
+    use tucano_instrument::Side;
 
     // Placeholder type for integration
     type InstrumentNameInternal = String;

@@ -20,6 +20,7 @@ options = []
 [dependencies]
 "tucano-trader" = { workspace = true }
 "tucano-execution" = { workspace = true }
+"tucano-instrument" = { workspace = true }
 "tucano-analytics" = { workspace = true, optional = true }
 chrono = { workspace = true, features = ["serde"] }
 serde = { workspace = true, features = ["derive"] }

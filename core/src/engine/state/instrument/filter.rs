@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
 use tucano_integration::collection::one_or_many::OneOrMany;
-use tucano_markets::Underlying;
+use tucano_instrument::Underlying;
 
 /// Instrument filter.
 ///

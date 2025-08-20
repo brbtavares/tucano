@@ -104,8 +104,8 @@ use tucano_trader::{
 };
 
 /// Placeholder for IndexedInstruments
-use tucano_markets::{ConcreteInstrument, Keyed};
-pub type IndexedInstruments = Vec<Keyed<String, ConcreteInstrument>>;
+use tucano_instrument::{instrument, Keyed};
+pub type IndexedInstruments = Vec<Keyed<String, instrument>>;
 
 /// Defines the interface and implementations for different types of market data sources
 /// that can be used in backtests.

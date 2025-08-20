@@ -31,7 +31,7 @@ use tucano_execution::{
 };
 use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex}; // already tucano prefixed
 use tucano_integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
-use tucano_markets::exchange::ExchangeId;
+use tucano_instrument::exchange::ExchangeId;
 
 /// Placeholder types
 pub type AssetNameExchange = String;

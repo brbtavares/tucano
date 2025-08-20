@@ -624,7 +624,6 @@ mod tests {
     use rust_decimal_macros::dec;
     use tokio::sync::mpsc;
     use tucano_integration::snapshot::Snapshot;
-    // use tucano_markets::ExchangeId;
 
     #[derive(Debug)]
     struct DummyTransport {

@@ -170,7 +170,7 @@ mod tests {
     use super::*;
     use chrono::TimeDelta;
     use tucano_data::event::MarketEvent;
-    use tucano_markets::exchange::ExchangeId;
+    use tucano_instrument::exchange::ExchangeId;
 
     fn market_event(time_exchange: DateTime<Utc>) -> EngineEvent<()> {
         EngineEvent::Market(MarketStreamEvent::Item(MarketEvent {
