@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::{super::channel::BinanceChannel, BinanceLevel};
 use crate::{
     Identifier, books::OrderBook, event::MarketEvent, exchange::subscription::ExchangeSub,

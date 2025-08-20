@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::instrument::{
     kind::{future::FutureContract, option::OptionContract, perpetual::PerpetualContract},
     market_data::kind::{

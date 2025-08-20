@@ -1,4 +1,5 @@
 // Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use anyhow::Result;
 use cargo_metadata::MetadataCommand;
 use chrono::Datelike;
@@ -97,23 +98,25 @@ impl WorkspaceInfo {
 }
 
 impl CrateInfo {
-    pub fn local_size_mb(&self) -> String {
+    pub fn local_size_bytes(&self) -> String {
         match self.local_size {
-            Some(size) => format!("{:.2} MiB", size as f64 / (1024.0 * 1024.0)),
+            Some(size) => format!("{} B", size),
             None => "calculating...".to_string(),
         }
     }
 
-    pub fn published_size_mb(&self) -> String {
+    pub fn published_size_bytes(&self) -> String {
         match self.published_size {
-            Some(size) => format!("{:.2} MiB", size as f64 / (1024.0 * 1024.0)),
+            Some(size) => format!("{} B", size),
             None => "unknown".to_string(),
         }
     }
 
-    pub fn size_diff(&self) -> Option<i64> {
+    pub fn percent_diff(&self) -> Option<f64> {
         match (self.local_size, self.published_size) {
-            (Some(local), Some(published)) => Some(local as i64 - published as i64),
+            (Some(local), Some(published)) if published > 0 => {
+                Some(((local as f64 - published as f64) / published as f64) * 100.0)
+            }
             _ => None,
         }
     }
@@ -174,59 +177,6 @@ async fn fetch_crates_io_size(client: &reqwest::Client, crate_name: &str) -> Res
     }
 }
 
-// fn check_crate_disclaimer(crate_path: &PathBuf, template: &str) -> Result<bool> {
-//     use walkdir::WalkDir;
-
-//     let disclaimer_lines: Vec<&str> = template.lines().collect();
-//     if disclaimer_lines.is_empty() {
-//         return Ok(true); // No template, consider as having disclaimer
-//     }
-
-//     for entry in WalkDir::new(crate_path)
-//         .follow_links(true)
-//         .into_iter()
-//         .filter_map(|e| e.ok())
-//     {
-//         let path = entry.path();
-
-//         // Only check .rs files
-//         if path.extension().map_or(false, |ext| ext == "rs") {
-//             let content = std::fs::read_to_string(path)?;
-//             let lines: Vec<&str> = content.lines().collect();
-
-//             // Check if first lines match disclaimer template
-//             let mut has_disclaimer = true;
-//             for (i, template_line) in disclaimer_lines.iter().enumerate() {
-//                 if i >= lines.len() {
-//                     has_disclaimer = false;
-//                     break;
-//                 }
-
-//                 let actual_line = lines[i]
-//                     .trim_start_matches("//")
-//                     .trim_start_matches("/*")
-//                     .trim();
-//                 let template_line = template_line.trim();
-
-//                 if actual_line != template_line && !template_line.contains("{year}") {
-//                     has_disclaimer = false;
-//                     break;
-//                 }
-//             }
-
-//             if !has_disclaimer {
-//                 return Ok(false);
-//             }
-//         }
-//     }
-
-//     Ok(true)
-// }
-
 pub fn get_default_disclaimer() -> String {
-    format!(
-        r#"// Copyright (c) {year} Your Name
-// Licensed under the MIT License"#,
-        year = chrono::Utc::now().year_ce().1
-    )
+    "Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.".to_string()
 }

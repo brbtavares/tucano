@@ -51,6 +51,4 @@ coverage/
 **/coverage/
 
 # xtask output
-xtask/tmp/
-xtask/.cache/
-
+xtask/reports/

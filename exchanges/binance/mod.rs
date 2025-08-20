@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use self::{
     book::l1::BinanceOrderBookL1, channel::BinanceChannel, market::BinanceMarket,
     subscription::BinanceSubResponse, trade::BinanceTrade,

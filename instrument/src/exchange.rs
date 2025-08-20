@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use derive_more::{Constructor, Display};
 use serde::{Deserialize, Serialize};
 
@@ -74,6 +76,7 @@ pub enum ExchangeId {
     Mexc,
     Okx,
     Poloniex,
+    Profitdll,
 }
 
 impl ExchangeId {
@@ -122,6 +125,7 @@ impl ExchangeId {
             ExchangeId::Mexc => "mexc",
             ExchangeId::Okx => "okx",
             ExchangeId::Poloniex => "poloniex",
+            ExchangeId::Profitdll => "profitdll",
         }
     }
 }

@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::instrument::kind::option::{OptionExercise, OptionKind};
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;

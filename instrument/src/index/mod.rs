@@ -1,3 +1,5 @@
+// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     asset::{name::AssetNameInternal, Asset, AssetIndex, ExchangeAsset},
     exchange::{ExchangeId, ExchangeIndex},
