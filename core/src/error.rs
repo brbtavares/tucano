@@ -1,4 +1,3 @@
-
 //! # Core Error Types
 //!
 //! This module defines the main error types used in the core module of the Toucan framework.
@@ -48,26 +47,18 @@ pub enum ToucanError {
     /// Indexing errors for asset, instrument, or exchange
     #[error("IndexError: {0}")]
     IndexError(#[from] IndexError),
-
     /// Configuration errors (builder) of the execution system
-//! This module defines the main error types used in the core module of the Toucan framework.
-//! The main type `ToucanError` includes:
-//! use toucan_core::error::ToucanError;
-//! use toucan_core::error::ToucanError;
-//! fn handle_trading_error(error: ToucanError) {
-//!     match error {
-//!         ToucanError::MarketData(data_err) => {
-//!             eprintln!("Market data problem: {}", data_err);
-//!         }
-//!         ToucanError::Execution(exec_err) => {
-//!             eprintln!("Execution problem: {}", exec_err);
-//!         }
-//!         _ => eprintln!("Other error: {}", error),
-//!     }
-//! }
-/// Central error type for the core module of the Toucan framework.
     #[error("JoinError: {0}")]
     JoinError(String),
+    /// Errors from the data module (streaming, parsing, subscription)
+    #[error("MarketData: {0}")]
+    MarketData(#[from] DataError),
+    /// Execution errors (orders, balances, liquidations)
+    #[error("Execution: {0}")]
+    Execution(#[from] ExecutionError),
+    /// Indicates that the receiver side of a communication channel was dropped
+    #[error("ExecutionRxDropped: {0}")]
+    ExecutionRxDropped(RxDropped),
 }
 /// Indicates that the receiver side of a communication channel was dropped.
 ///

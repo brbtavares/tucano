@@ -28,7 +28,7 @@ use toucan_integration::{collection::one_or_many::OneOrMany, snapshot::Snapshot}
 use toucan_instrument::{exchange::ExchangeId, Keyed, Instrument}; // ExchangeId still used in connectivity
 
 /// Placeholder for IndexedInstruments
-pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, Instrument>>;
+pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, Instrument<ExchangeIndex, AssetIndex>>>;
 
 pub trait IndexedInstrumentsExt {
     fn exchanges(&self) -> Box<dyn Iterator<Item = ExchangeId> + '_>;

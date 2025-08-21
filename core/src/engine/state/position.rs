@@ -250,7 +250,7 @@ impl<InstrumentKey> Position<QuoteAsset, InstrumentKey> {
         use Side::*;
         match (self.side, trade.side) {
             // Increase LONG/SHORT Position
-            (buy, buy) | (sell, sell) => {
+            (Side::Buy, Side::Buy) | (Side::Sell, Side::Sell) => {
                 self.update_price_entry_average(trade);
                 self.quantity_abs += trade.quantity.abs();
                 if self.quantity_abs > self.quantity_abs_max {

@@ -107,7 +107,7 @@ where
         &self,
         exchange: &ExchangeIndex,
     ) -> Result<&Self::ExecutionTx, UnrecoverableEngineError> {
-        let id = ExchangeId::from(exchange.as_str());
+    let id = ExchangeId::from_str(exchange.as_str()).unwrap();
         self.0.get(&id).and_then(|tx| tx.as_ref()).ok_or_else(|| {
             UnrecoverableEngineError::IndexError(IndexError::ExchangeIndex(format!(
                 "failed to find ExecutionTx for ExchangeId: {exchange}. Available: {self:?}"

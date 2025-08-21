@@ -39,7 +39,7 @@ impl ConnectivityStates {
     /// If after the update all `ConnectivityState`s are healthy, the global health is set to
     /// `Health::Healthy`.
     pub fn update_from_account_event(&mut self, exchange: &ExchangeIndex) {
-        let exchange = ExchangeId::from(exchange.as_str());
+    let exchange = ExchangeId::from_str(exchange.as_str()).unwrap();
         if self.global == Health::Healthy {
             return;
         }
@@ -77,7 +77,7 @@ impl ConnectivityStates {
     /// If after the update all `ConnectivityState`s are healthy, the global health is set to
     /// `Health::Healthy`.
     pub fn update_from_market_event(&mut self, exchange: &ExchangeIndex) {
-        let exchange = ExchangeId::from(exchange.as_str());
+    let exchange = ExchangeId::from_str(exchange.as_str()).unwrap();
         if self.global == Health::Healthy {
             return;
         }
@@ -102,11 +102,11 @@ impl ConnectivityStates {
     // Index-based accessors (ExchangeIndex = String) retained; convert on lookup by parsing
     pub fn connectivity_index(&self, key: &ExchangeIndex) -> &ConnectivityState {
         // Attempt to parse into ExchangeId; fall back to panic for unknown
-        let id = ExchangeId::from(key.as_str());
+    let id = ExchangeId::from_str(key.as_str()).unwrap();
         self.connectivity(&id)
     }
     pub fn connectivity_index_mut(&mut self, key: &ExchangeIndex) -> &mut ConnectivityState {
-        let id = ExchangeId::from(key.as_str());
+    let id = ExchangeId::from_str(key.as_str()).unwrap();
         self.connectivity_mut(&id)
     }
 

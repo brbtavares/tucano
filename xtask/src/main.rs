@@ -5,6 +5,7 @@ mod workspace;
 use commands::*;
 use anyhow::Result;
 use clap::{Parser, Subcommand};
+use fmt;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -19,23 +20,6 @@ enum Commands {
     Fmt,
     /// Run clippy
     Clippy,
-    /// Check or fix disclaimers in files
-    Disclaimer {
-        /// Add missing disclaimers (default: only check)
-        #[arg(long)]
-        fix: bool,
-    },
-    /// Show inventory of all crates (types, functions, dependencies)
-    Inventory,
-    /// Show crate sizes comparison
-    Size,
-    /// Release crates to crates.io
-    Release {
-        #[arg(short, long)]
-        crate_name: Option<String>,
-        #[arg(long)]
-        dry_run: bool,
-    },
 }
 
 #[tokio::main]
@@ -47,22 +31,6 @@ async fn main() -> Result<()> {
         }
         Commands::Clippy => {
             clippy::run_clippy().await?
-        }
-        Commands::Disclaimer { fix } => {
-            if fix {
-                disclaimer::add_disclaimers(true).await?
-            } else {
-                disclaimer::check_disclaimers().await?
-            }
-        }
-        Commands::Inventory => {
-            inventory::run_inventory()?;
-        }
-        Commands::Size => {
-            size::show_size_comparison().await?;
-        }
-        Commands::Release { crate_name, dry_run } => {
-            release::release_crates(crate_name, dry_run).await?;
         }
     }
     Ok(())

@@ -252,7 +252,7 @@ pub mod utils {
         let digits_start = idx;
         let digits_len = chars.len() - digits_start;
         if digits_len < 2 {
-            // precisa de pelo menos 2 dígitos para ano / strike
+            // needs at least 2 digits for year / strike
             return None;
         }
         if digits_start == 0 {
@@ -264,7 +264,7 @@ pub mod utils {
             return None;
         }
         if letter_pos < 3 {
-            // subjacente muito curto, provavelmente não derivativo
+            // underlying too short, probably not a derivative
             return None;
         }
         let underlying = &ticker[..letter_pos];
