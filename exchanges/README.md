@@ -1,10 +1,10 @@
 # exchanges
 
-Crate para integrações e lógica de exchanges no workspace tucano.
+Crate for integrations and exchange logic in the toucan workspace.
 
-## Como usar
+## How to use
 
-Adicione `exchanges` como dependência em outros crates do workspace e utilize as funções/utilitários definidos aqui.
+Add `exchanges` as a dependency in other workspace crates and use the functions/utilities defined here.
 
 ```rust
 exchanges::hello_exchanges();

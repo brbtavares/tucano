@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! Testes unitários para mapeamento de erros NL_* -> ProfitError.
 
-use tucano_profitdll::{
+use toucan_profitdll::{
     ProfitError, NL_ASSET_NO_DATA, NL_DUPLICATE_RESOURCE, NL_EXCHANGE_UNKNOWN,
     NL_FILE_ALREADY_EXISTS, NL_HAS_STRATEGY_RUNNING, NL_INTERNAL_ERROR, NL_INVALID_ARGS,
     NL_INVALID_SERIE, NL_INVALID_TICKER, NL_LICENSE_NOT_ALLOWED, NL_MARKET_ONLY, NL_NOT_FOUND,

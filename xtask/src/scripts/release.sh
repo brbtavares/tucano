@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Simple release helper for tucano workspace.
+# Simple release helper for toucan workspace.
 # Usage: ./scripts/release.sh <crate> <new_version> [--publish]
-# Example: ./scripts/release.sh tucano-core 0.12.3 --publish
+# Example: ./scripts/release.sh toucan-core 0.12.3 --publish
 
 CRATE=${1:-}
 NEW_VERSION=${2:-}

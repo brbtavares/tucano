@@ -1,4 +1,4 @@
-# Tucano Execution
+# Toucan Execution
 
 > Order execution and account synchronization layer (global venues, with all concrete integrations implemented as local modules; `markets` contains only abstractions).
 

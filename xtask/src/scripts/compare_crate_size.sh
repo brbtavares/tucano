@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Compara o tamanho (em MiB) do pacote local da crate com a versão publicada no crates.io
+# Compares the size (in MiB) of the local crate package with the version published on crates.io
 # Uso: ./scripts/compare_crate_size.sh <crate> <versao>
-# Exemplo: ./scripts/compare_crate_size.sh tucano-core 0.12.3
+# Exemplo: ./scripts/compare_crate_size.sh toucan-core 0.12.3
 set -euo pipefail
 
 CRATE=${1:-}
@@ -30,6 +30,6 @@ DIFF_MIB=$(awk "BEGIN {printf \"%.2f\", $LOCAL_MIB-$PUBLISHED_MIB}")
 # 4. Exibir resultado
 printf "Local:      %7.2f MiB\n" "$LOCAL_MIB"
 printf "Publicado:  %7.2f MiB\n" "$PUBLISHED_MIB"
-printf "Diferença:  %7.2f MiB\n" "$DIFF_MIB"
+printf "Difference:  %7.2f MiB\n" "$DIFF_MIB"
 
 rm -rf "$TMPDIR"

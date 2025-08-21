@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use self::{
     mapper::{SubscriptionMapper, WebSocketSubMapper},
     validator::SubscriptionValidator,
@@ -14,7 +14,7 @@ use futures::SinkExt;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::debug;
-use tucano_integration::{
+use toucan_integration::{
     error::SocketError,
     protocol::websocket::{connect, WebSocket, WsMessage},
 };
@@ -51,9 +51,9 @@ impl Subscriber for WebSocketSubscriber {
     async fn subscribe<Exchange, Instrument, Kind>(
         _subscriptions: &[Subscription<Exchange, Instrument, Kind>],
     ) -> Result<Subscribed, SocketError> {
-        // TODO: Implementação concreta de Subscriber::subscribe deve ser feita na crate exchanges
+        // TODO: Concrete implementation of Subscriber::subscribe must be done in the exchanges crate
         unimplemented!(
-            "A implementação concreta de Subscriber::subscribe deve ser feita na crate exchanges."
+            "The concrete implementation of Subscriber::subscribe must be done in the exchanges crate."
         );
     }
 }

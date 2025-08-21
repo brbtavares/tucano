@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 /// Compatibility type aliases during the ongoing markets → execution refactor.
 ///
 /// Why aliases (pub type X = String)?
@@ -72,16 +72,16 @@ pub mod typed {
     );
 }
 
-// Re-export do markets - mantendo ExchangeId como enum original
-pub use tucano_instrument::{ExchangeId, Side};
+// Re-export from markets - keeping ExchangeId as the original enum
+pub use toucan_instrument::{ExchangeId, Side};
 
-// Import dos tipos de order necessários
+// Import required order types
 use crate::order::OrderKey;
 
-// Tipos de response compatíveis
+// Compatible response types
 pub type UnindexedOrderKey = OrderKey<String>;
 
-// Para compatibilidade com código antigo que esperava IndexError
+// For compatibility with old code that expected IndexError
 #[derive(
     Debug,
     Clone,
@@ -103,7 +103,7 @@ pub enum IndexError {
     ExchangeIndex(String),
 }
 
-// Conversions de &str/String -> IndexError helpers (ergonomia futura)
+// Conversions from &str/String -> IndexError helpers (future ergonomics)
 impl IndexError {
     pub fn asset<S: Into<String>>(s: S) -> Self {
         Self::AssetIndex(s.into())
@@ -117,49 +117,49 @@ impl IndexError {
 }
 
 // -----------------------------------------------------------------------------
-// Notas de design / migração de tipagem (resumo)
+// Design notes / typing migration (summary)
 // -----------------------------------------------------------------------------
 // Alias = String vs Newtype:
-//   pub type AssetIndex = String;  // alias: nenhum tipo novo, só outro nome.
-//   pub struct AssetIndex(String); // newtype: tipo distinto, segurança extra.
+//   pub type AssetIndex = String;  // alias: no new type, just another name.
+//   pub struct AssetIndex(String); // newtype: distinct type, extra safety.
 //
-// Situação atual:
-//   Mantemos aliases para velocidade de desenvolvimento e rollback simples.
-//   ExchangeId permanece enum canônico vindo de `markets`.
-//   AssetNameExchange / InstrumentNameExchange representam símbolos brutos de entrada.
-//   AssetIndex / InstrumentIndex representam identificadores internos (ainda Strings).
-//   AssetKey / InstrumentKey são aliases genéricos para parametrizar estruturas.
-//   QuoteAsset identifica o ativo de cotação/fees (ainda alias).
+// Current situation:
+//   We keep aliases for development speed and simple rollback.
+//   ExchangeId remains canonical enum from `markets`.
+//   AssetNameExchange / InstrumentNameExchange represent raw input symbols.
+//   AssetIndex / InstrumentIndex represent internal identifiers (still Strings).
+//   AssetKey / InstrumentKey are generic aliases to parameterize structures.
+//   QuoteAsset identifies the quote/fees asset (still an alias).
 //
-// Motivações para migrar futuramente para newtypes:
-//   * Segurança: impedir trocar InstrumentIndex por AssetIndex inadvertidamente.
-//   * Evolução: mudar representação interna (ex: String -> u32) sem quebrar API externa.
-//   * Validação: normalizar símbolos (B3 vs crypto) no construtor.
-//   * Performance: hashing mais barato / interning / armazenamento compacto.
+// Motivations to migrate to newtypes in the future:
+//   * Safety: prevent accidentally swapping InstrumentIndex for AssetIndex.
+//   * Evolution: change internal representation (e.g., String -> u32) without breaking external API.
+//   * Validation: normalize symbols (B3 vs crypto) in the constructor.
+//   * Performance: cheaper hashing / interning / compact storage.
 //
-// Eixos de classificação usados para cada tipo:
-//   Dimensão  : Exchange | Asset | Instrument | Quote
-//   Natureza  : Nome externo (NameExchange) | Índice interno (Index) | Id enum | Chave genérica (Key)
-//   Fluxo     : Entrada (APIs/streams) | Núcleo (engine/state) | Saída (analytics)
+// Classification axes used for each type:
+//   Dimension  : Exchange | Asset | Instrument | Quote
+//   Nature     : External name (NameExchange) | Internal index (Index) | Enum ID | Generic key (Key)
+//   Flow       : Input (APIs/streams) | Core (engine/state) | Output (analytics)
 //
-// Fases de migração sugeridas:
-//   F0: (atual) aliases = String.
-//   F1: Introduzir *Symbol newtypes (AssetSymbol, InstrumentSymbol) para NameExchange.
-//   F2: Introduzir AssetIndex/InstrumentIndex newtypes leves (String inside) com From<&str>.
-//   F3: Trocar mapas internos para usar newtypes como chave.
-//   F4: Otimizar representação (u32 / NonZeroU32) mantendo API pública.
-//   F5: (Opcional) Escopo por exchange: struct AssetId { exchange: ExchangeId, index: AssetIndex }.
+// Suggested migration phases:
+//   F0: (current) aliases = String.
+//   F1: Introduce *Symbol newtypes (AssetSymbol, InstrumentSymbol) for NameExchange.
+//   F2: Introduce lightweight AssetIndex/InstrumentIndex newtypes (String inside) with From<&str>.
+//   F3: Change internal maps to use newtypes as keys.
+//   F4: Optimize representation (u32 / NonZeroU32) while keeping public API.
+//   F5: (Optional) Scope by exchange: struct AssetId { exchange: ExchangeId, index: AssetIndex }.
 //
-// Critérios antes de migrar cada alias:
-//   1. Definir unicidade (global ou por exchange).
-//   2. Garantir round-trip (name -> index -> name) testado.
-//   3. Centralizar conversões (map.rs / indexer).
-//   4. Escrever invariantes em doc comments.
+// Criteria before migrating each alias:
+//   1. Define uniqueness (global or per exchange).
+//   2. Ensure round-trip (name -> index -> name) is tested.
+//   3. Centralize conversions (map.rs / indexer).
+//   4. Write invariants in doc comments.
 //
-// Próximos passos (quando decidido migrar):
-//   * Criar módulo definitivo (ex: execution::types) com newtypes.
-//   * Substituir usos nos mapas e indexer primeiro (ponto de menor superfície pública).
-//   * Ajustar traits de cliente (ExecutionClient) adicionando bounds genéricas se necessário.
-//   * Remover gradualmente aliases do compat.rs quando cobertura >90%.
+// Next steps (when migration is decided):
+//   * Create a definitive module (e.g., execution::types) with newtypes.
+//   * Replace uses in maps and indexer first (smallest public surface).
+//   * Adjust client traits (ExecutionClient) by adding generic bounds if needed.
+//   * Gradually remove aliases from compat.rs when coverage >90%.
 //
-// Este bloco serve como referência rápida para futuras refactors; manter atualizado conforme decisões.
+// This block serves as a quick reference for future refactors; keep updated as decisions are made.

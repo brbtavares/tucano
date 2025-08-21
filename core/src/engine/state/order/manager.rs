@@ -1,12 +1,12 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::state::order::in_flight_recorder::InFlightRequestRecorder;
 use std::fmt::Debug;
-use tucano_execution::order::{
+use toucan_execution::order::{
     request::OrderResponseCancel,
     state::{ActiveOrderState, OrderState},
     Order,
 };
-use tucano_integration::snapshot::Snapshot;
+use toucan_integration::snapshot::Snapshot;
 
 /// Synchronous order manager that tracks the lifecycle of active exchange orders.
 ///

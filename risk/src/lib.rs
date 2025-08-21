@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # 🛡️ Risk - Risk Management Module
 //!
 //! Comprehensive framework for risk management in algorithmic trading,
@@ -109,7 +109,7 @@ pub use check::*;
 use derive_more::{Constructor, Display, From};
 use serde::{Deserialize, Serialize};
 use std::{fmt::Debug, hash::Hash, marker::PhantomData};
-use tucano_execution::{
+use toucan_execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},
     ExchangeIndex, InstrumentIndex,
 };

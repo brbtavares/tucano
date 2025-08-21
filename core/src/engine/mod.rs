@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Core Engine - Algorithmic Trading System
 //!
 //! This module implements the heart of the algorithmic trading system, providing a flexible
@@ -143,11 +143,11 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::info;
-use tucano_analytics::summary::TradingSummaryGenerator;
-use tucano_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use tucano_execution::{AccountEvent, ExchangeIndex, InstrumentIndex, QuoteAsset};
-use tucano_integration::channel::Tx;
-use tucano_trader::{
+use toucan_analytics::summary::TradingSummaryGenerator;
+use toucan_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use toucan_execution::{AccountEvent, ExchangeIndex, InstrumentIndex, QuoteAsset};
+use toucan_integration::channel::Tx;
+use toucan_trader::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
 
@@ -623,9 +623,9 @@ impl<Clock, GlobalData, InstrumentData, ExecutionTxs, Strategy, Risk>
     where
         Clock: EngineClock,
     {
-        use tucano_analytics::summary::InstrumentNameInternal;
-        use tucano_execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
-        use tucano_integration::collection::FnvIndexMap;
+    use toucan_analytics::summary::InstrumentNameInternal;
+    use toucan_execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
+    use toucan_integration::collection::FnvIndexMap;
 
         // Populate instruments map using engine state's instrument keys
         let instruments: FnvIndexMap<InstrumentIndex, ()> = self

@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use serde::{Deserialize, Serialize};
-use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
-use tucano_integration::collection::one_or_many::OneOrMany;
-use tucano_instrument::Underlying;
+use toucan_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use toucan_integration::collection::one_or_many::OneOrMany;
+use toucan_instrument::Underlying;
 
 /// Instrument filter.
 ///

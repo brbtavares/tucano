@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Backtesting Framework
 //!
 //! This module provides a comprehensive backtesting framework for algorithmic trading strategies.
@@ -50,7 +50,7 @@
 //!
 //! ```rust,ignore
 //! use core::backtest::{BacktestSummary, market_data::BacktestMarketData};
-//! use tucano_analytics::time::TimeInterval;
+//! use toucan_analytics::time::TimeInterval;
 //!
 //! // Configuração do backtest
 //! let market_data = BacktestMarketData::load_from_csv("historical_data.csv").await?;
@@ -83,7 +83,7 @@ use crate::{
         state::{instrument::data::InstrumentDataState, EngineState},
         Processor,
     },
-    error::TucanoError,
+    error::ToucanError,
     risk::RiskManager,
     system::{builder::EngineFeedMode, config::ExecutionConfig},
 };
@@ -96,15 +96,15 @@ use futures::future::try_join_all;
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::{fmt::Debug, sync::Arc};
-use tucano_analytics::time::TimeInterval;
-use tucano_data::event::MarketEvent;
-use tucano_execution::{AccountEvent, InstrumentIndex};
-use tucano_trader::{
+use toucan_analytics::time::TimeInterval;
+use toucan_data::event::MarketEvent;
+use toucan_execution::{AccountEvent, InstrumentIndex};
+use toucan_trader::{
     AlgoStrategy, ClosePositionsStrategy, OnDisconnectStrategy, OnTradingDisabled,
 };
 
 /// Placeholder for IndexedInstruments
-use tucano_instrument::{instrument, Keyed};
+use toucan_instrument::{instrument, Keyed};
 pub type IndexedInstruments = Vec<Keyed<String, instrument>>;
 
 /// Defines the interface and implementations for different types of market data sources
@@ -162,7 +162,7 @@ pub async fn run_backtests<
         BacktestArgsConstant<MarketData, SummaryInterval, EngineState<GlobalData, InstrumentData>>,
     >,
     args_dynamic_iter: impl IntoIterator<Item = BacktestArgsDynamic<Strategy, Risk>>,
-) -> Result<MultiBacktestSummary<SummaryInterval>, TucanoError>
+) -> Result<MultiBacktestSummary<SummaryInterval>, ToucanError>
 where
     MarketData: BacktestMarketData<Kind = InstrumentData::MarketEventKind>,
     SummaryInterval: TimeInterval,
@@ -225,7 +225,7 @@ pub async fn backtest<MarketData, SummaryInterval, Strategy, Risk, GlobalData, I
         BacktestArgsConstant<MarketData, SummaryInterval, EngineState<GlobalData, InstrumentData>>,
     >,
     args_dynamic: BacktestArgsDynamic<Strategy, Risk>,
-) -> Result<BacktestSummary<SummaryInterval>, TucanoError>
+) -> Result<BacktestSummary<SummaryInterval>, ToucanError>
 where
     MarketData: BacktestMarketData<Kind = InstrumentData::MarketEventKind>,
     SummaryInterval: TimeInterval,

@@ -1,10 +1,10 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use self::builder::{multi::MultiStreamBuilder, StreamBuilder};
 use crate::subscription::SubscriptionKind;
 use fnv::FnvHashMap;
 use futures::Stream;
-use tucano_instrument::ExchangeId;
-use tucano_integration::channel::UnboundedRx;
+use toucan_instrument::ExchangeId;
+use toucan_integration::channel::UnboundedRx;
 
 /// Defines the [`StreamBuilder`] and [`MultiStreamBuilder`] APIs for ergonomically initialising
 /// [`MarketStream`](super::MarketStream) [`Streams`].

@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 #![cfg(all(target_os = "windows", feature = "real_dll"))]
-use tucano_profitdll::*;
+use toucan_profitdll::*;
 
 #[test]
 fn load_or_missing_symbol() {

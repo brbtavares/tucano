@@ -1,5 +1,5 @@
-// Módulo raiz para os comandos do xtask
-// Reexporta os submódulos
+// Root module for xtask commands
+// Reexports the submodules
 
 pub mod fmt;
 pub mod clippy;

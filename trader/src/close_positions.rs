@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Ported from former `strategy` crate: ClosePositionsStrategy and helpers.
 use rust_decimal::Decimal;
-use tucano_execution::{
+use toucan_execution::{
     order::{
         id::{ClientOrderId, StrategyId},
         request::{OrderRequestCancel, OrderRequestOpen, RequestOpen},
@@ -9,7 +9,7 @@ use tucano_execution::{
     },
     AssetIndex, ExchangeIndex, InstrumentIndex,
 };
-use tucano_instrument::Side;
+use toucan_instrument::Side;
 
 pub trait ClosePositionsStrategy<
     ExchangeKey = ExchangeIndex,

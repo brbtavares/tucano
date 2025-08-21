@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tucano_instrument::ExchangeId;
-use tucano_integration::error::SocketError;
+use toucan_instrument::ExchangeId;
+use toucan_integration::error::SocketError;
 
 // Temporary types for compatibility during migration
 pub type AssetIndex = String;

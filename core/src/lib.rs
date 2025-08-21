@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -35,47 +35,45 @@
 //! - Applies risk management rules
 //! - Maintains a complete audit of operations
 //!
-//! ## 🔄 Fluxo de Processamento
+//! ## 🔄 Processing Flow
 //!
 //! ```text
-//! Eventos de Mercado/Conta
+//! Market/Account Events
 //!           ↓
-//!      Engine Central
+//!      Central Engine
 //!           ↓
-//!    Estratégia + Risk
+//!    Strategy + Risk
 //!           ↓
-//!    Ordens Geradas
+//!    Orders Generated
 //!           ↓
 //!   Execution Clients
 //!           ↓
 //!      Exchanges
 //! ```
 //!
-//! ## 💡 Comandos Suportados
+//! ## 💡 Supported Commands
 //!
-//! - `CloseAllPositions`: Fecha todas as posições abertas
-//! - `OpenOrders`: Lista ordens abertas
-//! - `CancelOrders`: Cancela ordens específicas
-//! - `SetTradingState`: Controla estado de trading (enabled/disabled)
-//! - `GetPositions`: Consulta posições atuais
+//! - `CloseAllPositions`: Closes all open positions
+//! - `OpenOrders`: Lists open orders
+//! - `CancelOrders`: Cancels specific orders
+//! - `SetTradingState`: Controls trading state (enabled/disabled)
+//! - `GetPositions`: Queries current positions
 //!
-//! ## 🧩 Componentes Integrados
+//! ## 🛩️ Integrated Components
 //!
-//! - **EngineState**: Estado global com dados de mercado e conta
-//! - **TradingStrategy**: Interface para estratégias algorítmicas
-//! - **RiskManager**: Validação e controle de risco
-//! - **ExecutionClients**: Conectividade com exchanges
-//! - **AuditTrail**: Rastreamento completo de operações
+//! - **EngineState**: Global state with market and account data
+//! - **TradingStrategy**: Interface for algorithmic strategies
+//! - **RiskManager**: Validation and risk control
+//! - **ExecutionClients**: Connectivity with exchanges
+//! - **AuditTrail**: Complete operations tracking
 //!
-//! > Nota: Exemplos completos de uso foram removidos temporariamente dos doctests
-//! > até estabilização das APIs públicas. Para exemplos, consulte o diretório
-//! > `examples/` no repositório.
+//! > Note: Complete usage examples have been temporarily removed from doctests
+//! > until public APIs are stabilized. For examples, see the `examples/` directory in the repository.
 
-/// Core é um framework Rust para construção de sistemas profissionais de live-trading,
-/// paper-trading e back-testing. O Engine central facilita execução em muitos exchanges
-/// simultaneamente, e oferece flexibilidade para executar a maioria dos tipos de
-/// estratégias de trading. Permite ligar/desligar geração de ordens algorítmicas e pode
-/// executar Comandos emitidos de processos externos (ex: CloseAllPositions, OpenOrders, CancelOrders, etc.)
+/// Core is a Rust framework for building professional live-trading systems,
+/// paper-trading, and back-testing. The central Engine facilitates execution on many exchanges
+/// simultaneously and offers flexibility to run most types of trading strategies.
+/// It allows enabling/disabling algorithmic order generation and can execute commands issued from external processes (e.g., CloseAllPositions, OpenOrders, CancelOrders, etc.)
 use crate::{
     engine::{command::Command, state::trading::TradingState},
     execution::AccountStreamEvent,
@@ -84,12 +82,12 @@ use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use serde::{Deserialize, Serialize};
 use shutdown::Shutdown;
-use tucano_data::{
+use toucan_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
 };
-use tucano_execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
-use tucano_integration::Terminal;
+use toucan_execution::{AccountEvent, AssetIndex, ExchangeIndex, InstrumentIndex};
+use toucan_integration::Terminal;
 
 // Suppress unused extern crate warnings
 use prettytable as _;
@@ -111,16 +109,16 @@ pub mod logging;
 
 /// RiskManager interface for reviewing and optionally filtering algorithmic cancel and open
 /// order requests.
-pub use tucano_risk as risk;
-pub use tucano_trader as strategy; // temporary alias for backward compatibility
+pub use toucan_risk as risk;
+pub use toucan_trader as strategy; // temporary alias for backward compatibility
 
 /// Statistical algorithms for analysing datasets, financial metrics and financial summaries.
 ///
 /// eg/ `TradingSummary`, `TearSheet`, `SharpeRatio`, etc.
-pub use tucano_analytics as analytics; // transitional re-export
+pub use toucan_analytics as analytics; // transitional re-export
 
-// Strategy interfaces foram movidas para a crate `tucano-trader`.
-// Importar via: `use tucano_trader::{AlgoStrategy, ClosePositionsStrategy, ...};`
+// Strategy interfaces foram movidas para a crate `toucan-trader`.
+// Importar via: `use toucan_trader::{AlgoStrategy, ClosePositionsStrategy, ...};`
 
 /// Utilities for initialising and interacting with a full trading system.
 pub mod system;
@@ -223,13 +221,13 @@ impl Sequence {
 /// Core test utilities.
 pub mod test_utils {
     use crate::{engine::state::asset::AssetState, Timed};
-    use tucano_analytics::summary::asset::TearSheetAssetGenerator;
-    use tucano_execution::{
+    use toucan_analytics::summary::asset::TearSheetAssetGenerator;
+    use toucan_execution::{
         balance::{AssetBalance, Balance},
         order::id::{OrderId, StrategyId},
         trade::{AssetFees, Trade, TradeId},
     };
-    use tucano_instrument::Side;
+    use toucan_instrument::Side;
 
     // Placeholder type for integration
     type InstrumentNameInternal = String;

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     balance::AssetBalance,
     compat::*,
@@ -18,7 +18,7 @@ use crate::{
 };
 use derive_more::Constructor;
 use std::sync::Arc;
-use tucano_integration::{
+use toucan_integration::{
     snapshot::Snapshot,
     stream::indexed::{IndexedStream, Indexer},
 };

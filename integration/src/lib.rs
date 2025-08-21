@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -104,7 +104,7 @@
 
 // Silence transitional unused dependency warnings (must appear after inner crate docs)
 #[allow(unused_imports)]
-use tucano_instrument as _;
+use toucan_instrument as _;
 
 use crate::error::SocketError;
 use serde::{Deserialize, Serialize};

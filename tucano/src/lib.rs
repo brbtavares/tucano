@@ -1,32 +1,32 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-//! "tucano" facade crate
+
+//! "toucan" facade crate
 //!
 //! Provides a single entry point that re-exports the main modules
-//! of the Tucano ecosystem. Useful for users who prefer to depend on
+//! of the Toucan ecosystem. Useful for users who prefer to depend on
 //! just one crate.
 //!
 //! # Example
 //! ```rust
-//! use tucano::core; // access modules via re-export
-//! use tucano::markets::ExchangeId; // market enum
+//! use toucan::core; // access modules via re-export
+//! use toucan::markets::ExchangeId; // market enum
 //! let _exchange: ExchangeId = ExchangeId::B3;
-//! // Engine available at tucano::core::engine, construction requires specific dependencies.
+//! // Engine available at toucan::core::engine, construction requires specific dependencies.
 //! ```
 
 // Re-export of internal crates with organized namespaces
-pub use tucano_analytics as analytics;
-pub use tucano_core as core;
-pub use tucano_data as data;
-pub use tucano_execution as execution;
-pub use tucano_instrument as markets;
-pub use tucano_integration as integration;
-pub use tucano_risk as risk;
-pub use tucano_strategies as strategies;
-pub use tucano_trader as trader;
+pub use toucan_analytics as analytics;
+pub use toucan_core as core;
+pub use toucan_data as data;
+pub use toucan_execution as execution;
+pub use toucan_instrument as markets;
+pub use toucan_integration as integration;
+pub use toucan_risk as risk;
+pub use toucan_strategies as strategies;
+pub use toucan_trader as trader;
 
 // Flat (shallow) re-export of very frequently used symbols
-pub use tucano_core::{engine::Engine, EngineEvent, Sequence};
-pub use tucano_instrument::{ExchangeId, Side};
+pub use toucan_core::{engine::Engine, EngineEvent, Sequence};
+pub use toucan_instrument::{ExchangeId, Side};
 
 // Optional prelude for single import
 pub mod prelude {

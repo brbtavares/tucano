@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Shutdown Management
 //!
 //! This module provides traits and types for managing graceful shutdown of trading system components.
@@ -9,7 +9,7 @@
 //! ### Synchronous Shutdown
 //! For components that can shut down immediately without async operations:
 //! ```rust,ignore
-//! use tucano_core::shutdown::SyncShutdown;
+//! use toucan_core::shutdown::SyncShutdown;
 //!
 //! struct SimpleComponent;
 //!
@@ -26,7 +26,7 @@
 //! ### Asynchronous Shutdown
 //! For components that need to perform async operations during shutdown:
 //! ```rust,ignore
-//! use tucano_core::shutdown::AsyncShutdown;
+//! use toucan_core::shutdown::AsyncShutdown;
 //!
 //! struct AsyncComponent;
 //!
@@ -82,7 +82,7 @@ pub trait AsyncShutdown {
 ///
 /// ## Usage
 /// ```rust,ignore
-/// use tucano_core::{EngineEvent, shutdown::Shutdown};
+/// use toucan_core::{EngineEvent, shutdown::Shutdown};
 ///
 /// // Create a shutdown event
 /// let shutdown_event = EngineEvent::shutdown();

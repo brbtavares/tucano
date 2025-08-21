@@ -1,9 +1,9 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! Teste que garante comportamento previsível do wrapper send_order quando símbolo ausente.
 
 use rust_decimal::Decimal;
-use tucano_profitdll::*;
+use toucan_profitdll::*;
 
 #[tokio::test]
 async fn send_order_symbol_missing_is_error_or_ok() {

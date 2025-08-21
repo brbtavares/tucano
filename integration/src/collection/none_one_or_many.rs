@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # NoneOneOrMany<T>
 //!
 //! A type that represents zero, one, or multiple items - the most flexible collection variant.

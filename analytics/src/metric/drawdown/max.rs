@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::metric::drawdown::Drawdown;
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};

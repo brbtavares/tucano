@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use rust_decimal::Decimal;
 use smol_str::SmolStr;
 use std::time::Duration;
-use tucano_analytics::summary::TradingSummary;
+use toucan_analytics::summary::TradingSummary;
 
 /// Container for multiple [`BacktestSummary`]s and associated multi backtest metadata.
 #[derive(Debug)]

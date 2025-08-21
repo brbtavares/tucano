@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     balance::AssetBalance,
     client::mock::MockExecutionConfig,
@@ -27,8 +27,8 @@ use std::fmt::Debug;
 use tokio::sync::{broadcast, mpsc, oneshot};
 use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::{error, info};
-use tucano_instrument::{ExchangeId, MarketDataInstrument, Side};
-use tucano_integration::snapshot::Snapshot;
+use toucan_instrument::{ExchangeId, MarketDataInstrument, Side};
+use toucan_integration::snapshot::Snapshot;
 
 pub mod account;
 pub mod request;
@@ -263,7 +263,7 @@ impl MockExchange {
         let underlying = match self.find_instrument_data(&request.key.instrument) {
             Ok(_instrument) => {
                 // TODO: Implementar corretamente para nova arquitetura
-                use tucano_instrument::Underlying;
+                use toucan_instrument::Underlying;
                 Underlying::new("MOCK_BASE".to_string(), "MOCK_QUOTE".to_string())
             }
             Err(error) => return (build_open_order_err_response(request, error), None),

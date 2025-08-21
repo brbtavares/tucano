@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use barter_integration::{Validator, error::SocketError};
 use serde::{Deserialize, Serialize};

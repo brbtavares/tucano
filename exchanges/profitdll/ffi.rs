@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! Real FFI implementation (Windows + feature `real_dll`) for the Profit DLL.
 //!
@@ -33,7 +33,7 @@ use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal; // para to_f64
 
 /// Default return type of the DLL (**NResult**).
-pub type NResult = i32; // re-export local para facilitar (mantém igual)
+pub type NResult = i32; // local re-export for convenience (keeps the same)
 
 // ---- Assinaturas brutas (subset) ----
 
@@ -99,7 +99,7 @@ type GetOrderDetailsFn =
 
 /// Estrutura C para trade (**ProfitTrade**).
 ///
-/// Usada em callbacks e funções da DLL.
+/// Used in DLL callbacks and functions.
 #[repr(C)]
 pub struct ProfitTrade {
     pub ticker: *const c_char,
@@ -113,7 +113,7 @@ pub struct ProfitTrade {
     pub is_edit: c_int,
 }
 
-/// Estrutura C para atualização de livro de ofertas (**ProfitBookUpdate**).
+/// C structure for order book update (**ProfitBookUpdate**).
 #[repr(C)]
 pub struct ProfitBookUpdate {
     pub side: c_int,
@@ -124,7 +124,7 @@ pub struct ProfitBookUpdate {
     pub position: c_int,
 }
 
-/// Estrutura C para resumo diário (**ProfitDailySummary**).
+/// C structure for daily summary (**ProfitDailySummary**).
 #[repr(C)]
 pub struct ProfitDailySummary {
     pub ticker: *const c_char,
@@ -141,7 +141,7 @@ pub struct ProfitDailySummary {
     pub trades_seller: f64,
 }
 
-// SUPOSIÇÃO (layout a confirmar via header real): campos char* + doubles + i32 flags
+// ASSUMPTION (layout to be confirmed via real header): char* fields + doubles + i32 flags
 /// Estrutura C para ajuste corporativo (**ProfitAdjustHistoryV2**).
 #[repr(C)]
 struct ProfitAdjustHistoryV2 {
@@ -163,7 +163,7 @@ type BookCallbackRawV2 =
 type DailySummaryCallbackRawV2 =
     unsafe extern "system" fn(summary: *const ProfitDailySummary, ctx: *mut c_void);
 
-// Callback dedicado para histórico incremental (placeholder)
+// Dedicated callback for incremental history (placeholder)
 type HistoryTradeCallbackRaw =
     unsafe extern "system" fn(trade: *const ProfitTrade, ctx: *mut c_void);
 #[repr(C)]
@@ -206,7 +206,7 @@ struct COrderDetails {
 
 #[allow(non_snake_case)]
 struct ProfitRaw<'lib> {
-    // Alguns builds da DLL podem não expor Initialize/Finalize explicitamente: tratamos como opcionais.
+    // Some DLL builds may not explicitly export Initialize/Finalize: treat as optional.
     Initialize: Option<Symbol<'lib, unsafe extern "system" fn() -> NResult>>,
     _Finalize: Option<Symbol<'lib, unsafe extern "system" fn() -> NResult>>,
     SetStateCallback:
@@ -253,7 +253,7 @@ struct ProfitRaw<'lib> {
     SetHistoryTradeCallback: Option<
         Symbol<'lib, unsafe extern "system" fn(HistoryTradeCallbackRaw, *mut c_void) -> NResult>,
     >,
-    // --- Novos símbolos (histórico / ajustes / teórico / infra) ---
+    // --- New symbols (history / adjustments / theoretical / infra) ---
     GetHistoryTrades: Option<
         Symbol<'lib, unsafe extern "system" fn(*const c_char, *const c_char, i64, i64) -> NResult>,
     >, // (ticker, exchange, from_ms, to_ms)
@@ -326,8 +326,8 @@ unsafe extern "system" fn state_callback_trampoline(
     }
 }
 
-// (Demais trampolines e implementação idênticos ao original, omitidos por brevidade neste patch)
-// Para manter o foco do rename, versões completas devem ser copiadas conforme necessidade futura.
+// (Other trampolines and implementation identical to the original, omitted for brevity in this patch)
+// To keep the focus on the rename, full versions should be copied as needed in the future.
 
 pub struct ProfitConnector {
     _marker: (),
@@ -335,7 +335,7 @@ pub struct ProfitConnector {
 
 impl ProfitConnector {
     pub fn new(dll_path: Option<&str>) -> Result<Self, ProfitError> {
-        // Carrega instância global somente uma vez.
+    // Loads global instance only once.
         INSTANCE.get_or_try_init(|| {
             let path = dll_path.unwrap_or("ProfitDLL.dll");
             if std::env::var("PROFITDLL_DIAG")
@@ -378,7 +378,7 @@ impl ProfitConnector {
             *guard = tx;
         }
         unsafe {
-            // Unconditional trace (independente de variáveis) para confirmar entrada.
+            // Unconditional trace (regardless of variables) to confirm entry.
             eprintln!("[profitdll][TRACE] entered initialize_login (unconditional)");
             let diag = std::env::var("PROFITDLL_DIAG")
                 .map(|v| v == "1")
@@ -393,7 +393,7 @@ impl ProfitConnector {
                 );
             }
             if debug_steps || diag {
-                // Resumo de presença de símbolos opcionais / críticos para depuração.
+                // Summary of presence of optional / critical symbols for debugging.
                 eprintln!(
                     "[profitdll][STEP] Symbols: Initialize={:?} SetStateCallback=1 Login=1 \
 OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV2={:?} DailySumV1={:?} AccountCb={:?} InvalidTickerCb={:?} AdjustHistV2={:?} TheorPriceCb={:?} HistTradeCb={:?} GetHistoryTrades={:?}",
@@ -476,7 +476,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
                     eprintln!("[profitdll][DIAG] SetOrderCallback OK");
                 }
             }
-            // trade (preferência V2)
+            // trade (prefer V2)
             if let Some(ref cb_v2) = inst.raw.SetTradeCallbackV2 {
                 if diag {
                     eprintln!("[profitdll][DIAG] Registrando TradeCallbackV2...");
@@ -494,7 +494,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
                     eprintln!("[profitdll][DIAG] TradeCallback (V1) OK");
                 }
             }
-            // book (preferência V2)
+            // book (prefer V2)
             if let Some(ref cb_v2) = inst.raw.SetBookCallbackV2 {
                 if diag {
                     eprintln!("[profitdll][DIAG] Registrando BookCallbackV2...");
@@ -512,7 +512,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
                     eprintln!("[profitdll][DIAG] BookCallback (V1) OK");
                 }
             }
-            // daily summary (preferência V2)
+            // daily summary (prefer V2)
             if let Some(ref cb_v2) = inst.raw.SetDailySummaryCallbackV2 {
                 if diag {
                     eprintln!("[profitdll][DIAG] Registrando DailySummaryCallbackV2...");
@@ -562,7 +562,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
                     eprintln!("[profitdll][DIAG] AdjustHistoryCallbackV2 OK (placeholder)");
                 }
             }
-            // preço teórico - placeholder parcial
+            // theoretical price - partial placeholder
             if let Some(ref cb) = inst.raw.SetTheoreticalPriceCallback {
                 if diag {
                     eprintln!(
@@ -574,7 +574,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
                     eprintln!("[profitdll][DIAG] TheoreticalPriceCallback OK (placeholder)");
                 }
             }
-            // history trade callback - registrar após os demais
+            // history trade callback - register after the others
             if let Some(ref cb_hist) = inst.raw.SetHistoryTradeCallback {
                 if diag {
                     eprintln!(
@@ -674,7 +674,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
             }
         })
     }
-    /// Solicita histórico de trades (pull). Ainda não há parsing de retorno; callback incremental será adicionado em etapa futura.
+    /// Requests trade history (pull). There is still no return parsing; incremental callback will be added in a future step.
     pub fn get_history_trades(
         &self,
         ticker: &str,
@@ -703,7 +703,7 @@ OrderCb={:?} TradeCbV2={:?} TradeCbV1={:?} BookCbV2={:?} BookCbV1={:?} DailySumV
         })
     }
 }
-pub const SENTINEL_MARKET_OR_KEEP: f64 = -1.0; // preço/quantidade especial (-1 => inferido ou manter)
+pub const SENTINEL_MARKET_OR_KEEP: f64 = -1.0; // special price/quantity (-1 => inferred or keep)
 
 // -------------------------------------------------------------------------------------------------
 // Helpers
@@ -717,7 +717,7 @@ where
     f(inst)
 }
 
-// Busca símbolo obrigatório tentando múltiplos nomes (primeiro que existir).
+// Searches for required symbol by trying multiple names (first that exists).
 unsafe fn load_required_any<'lib, T>(
     lib: &'lib Library,
     candidates: &[&str],
@@ -742,7 +742,7 @@ unsafe fn load_required_any<'lib, T>(
     }
     // retorna erro com primeiro nome (ou placeholder se vazio)
     let first = candidates.first().copied().unwrap_or("<none>");
-    // Converter para 'static leakando (custo irrelevante pois ocorre só em erro de init)
+    // Convert to 'static leaking (irrelevant cost since it only occurs on init error)
     let leaked: &'static str = Box::leak(first.to_string().into_boxed_str());
     Err(ProfitError::MissingSymbol(leaked))
 }
@@ -757,7 +757,7 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
     macro_rules! must {
         ($name:ident : $t:ty) => {{
             if debug_load {
-                eprintln!("[profitdll][LOAD] Obrigatório: {}", stringify!($name));
+                eprintln!("[profitdll][LOAD] Required: {}", stringify!($name));
             }
             let res: Result<Symbol<$t>, _> = lib.get(concat!(stringify!($name), "\0").as_bytes());
             match res {
@@ -770,7 +770,7 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
                 Err(_) => {
                     if debug_load {
                         eprintln!(
-                            "[profitdll][LOAD][ERRO] Faltando obrigatório: {}",
+                            "[profitdll][LOAD][ERROR] Missing required: {}",
                             stringify!($name)
                         );
                     }
@@ -810,7 +810,7 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
     } else {
         vec![
             "Login".to_string(),       // nome esperado original
-            "ProfitLogin".to_string(), // variantes plausíveis
+            "ProfitLogin".to_string(), // plausible variants
             "APILogin".to_string(),
             "LoginUser".to_string(),
             "LoginA".to_string(),
@@ -856,7 +856,7 @@ unsafe fn load_symbols(lib: &Library) -> Result<ProfitRaw<'static>, ProfitError>
         FreePointer: opt!(FreePointer: unsafe extern "system" fn(*mut c_void)),
     };
     if debug_load {
-        eprintln!("[profitdll][LOAD] Concluído load_symbols");
+    eprintln!("[profitdll][LOAD] Finished load_symbols");
     }
     // Elevamos lifetime para 'static pois a Library vive dentro de OnceCell enquanto o processo estiver ativo
     Ok(std::mem::transmute::<ProfitRaw<'_>, ProfitRaw<'static>>(
@@ -1250,7 +1250,7 @@ unsafe extern "system" fn invalid_ticker_callback_trampoline(
     }
 }
 
-// Placeholder: assinatura exata de V2 de ajustes ainda não mapeada; recebemos ponteiro genérico.
+// Placeholder: exact signature of V2 adjustments not yet mapped; we receive a generic pointer.
 unsafe extern "system" fn adjust_history_callback_trampoline_v2(
     data: *const c_void,
     _ctx: *mut c_void,
@@ -1264,7 +1264,7 @@ unsafe extern "system" fn adjust_history_callback_trampoline_v2(
             .lock()
             .unwrap();
         if let Ok(sender) = inst.sender.inner.lock() {
-            // Opcional: diagnóstico hexdump inicial das primeiras bytes para mapear layout futuro.
+            // Optional: initial hexdump diagnostic of the first bytes to map future layout.
             if std::env::var("PROFITDLL_DIAG")
                 .map(|v| v == "1")
                 .unwrap_or(false)
@@ -1286,7 +1286,7 @@ unsafe extern "system" fn adjust_history_callback_trampoline_v2(
                 let rec = data as *const ProfitAdjustHistoryV2;
                 if !rec.is_null() {
                     let r = &*rec;
-                    // heurística simples: ticker e exchange não nulos e value não NaN
+                    // simple heuristic: ticker and exchange not null and value not NaN
                     if !r.ticker.is_null() && !r.exchange.is_null() && r.value.is_finite() {
                         CallbackEvent::AdjustHistory {
                             ticker: cstr_to_string(r.ticker),
@@ -1334,7 +1334,7 @@ unsafe extern "system" fn adjust_history_callback_trampoline_v2(
     }
 }
 
-// Placeholder teórico: parâmetros após preço não totalmente definidos; mapeamos price e quantity.
+// Theoretical placeholder: parameters after price not fully defined; we map price and quantity.
 unsafe extern "system" fn theoretical_price_callback_trampoline(
     ticker: *const c_char,
     exchange: *const c_char,

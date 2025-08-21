@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     balance::AssetBalance,
     order::{
@@ -13,7 +13,7 @@ use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use fnv::FnvHashMap;
-use tucano_instrument::ExchangeId;
+use toucan_instrument::ExchangeId;
 
 #[derive(Debug, Constructor)]
 pub struct AccountState {

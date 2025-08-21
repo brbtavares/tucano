@@ -1,47 +1,47 @@
 # ProfitDLL Export Mapping Status
 
-Gerado a partir de `profit.hpp` (C++ original) comparando com implementação atual em `profitdll/src/ffi.rs`.
+Generated from `profit.hpp` (original C++) comparing with current implementation in `profitdll/src/ffi.rs`.
 
-Legenda:
-- ✅ Implementado (ou equivalente) no Rust
-- ⚠️ Parcial / Semântica reduzida
-- ❌ Ausente
-- 📝 Planejado (prioridade alta)
+Legend:
+- ✅ Implemented (or equivalent) in Rust
+- ⚠️ Partial / Reduced semantics
+- ❌ Missing
+- 📝 Planned (high priority)
 
-## 1. Inicialização / Sessão
-| C++ Symbol | Status | Notas |
+## 1. Initialization / Session
+| C++ Symbol | Status | Notes |
 |------------|--------|-------|
-| DLLInitializeLogin | ✅ (Initialize + Login sequência atual) | Carregado como `Initialize` + `Login` separados no Rust. Callbacks ainda reduzidos. |
-| DLLInitializeMarketLogin | ❌ | Necessário segundo fluxo opcional (market). |
-| DLLFinalize | ✅ (Finalize) | Método `Finalize` carregado mas não exposto publicamente ainda. |
-| SetServerAndPort | ❌ | Config de endpoint. |
-| GetServerClock | ❌ | Clock servidor (sincronização). |
-| SetDayTrade | ❌ | Flag de day trade. |
-| SetEnabledHistOrder | ❌ | Habilita histórico de ordens. |
+| DLLInitializeLogin | ✅ (Initialize + Login current sequence) | Loaded as `Initialize` + `Login` separately in Rust. Callbacks still reduced. |
+| DLLInitializeMarketLogin | ❌ | Required for optional (market) flow. |
+| DLLFinalize | ✅ (Finalize) | `Finalize` method loaded but not yet publicly exposed. |
+| SetServerAndPort | ❌ | Endpoint config. |
+| GetServerClock | ❌ | Server clock (synchronization). |
+| SetDayTrade | ❌ | Day trade flag. |
+| SetEnabledHistOrder | ❌ | Enables order history. |
 
-## 2. Callbacks de Estado / Listas / Ajustes
-| C++ Callback Setter | Status | Notas |
+## 2. State Callbacks / Lists / Adjustments
+| C++ Callback Setter | Status | Notes |
 |---------------------|--------|-------|
-| SetStateCallback | ✅ | Usado. |
-| SetChangeCotationCallback | ❌ | Atualizações de cotação específicas. |
-| SetAssetListCallback | ❌ | Lista básica de ativos. |
-| SetAssetListInfoCallback | ❌ | Metadata ativo v1. |
-| SetAssetListInfoCallbackV2 | ❌ | Metadata ativo v2 (setor / subsetor / segmento). |
-| SetInvalidTickerCallback | ✅ (opcional) | Já carregado. |
-| SetAdjustHistoryCallback | ❌ | Ajustes corporativos v1. |
-| SetAdjustHistoryCallbackV2 | ⚠️ | Parsing heurístico inicial (layout suposto) + hexdump. |
-| SetTheoreticalPriceCallback | ⚠️ | Placeholder registrado (campos parciais). |
-| SeTConnectorBrokerAccountListChangedCallback | ❌ | Mudanças lista de contas. |
-| SetBrokerSubAccountListChangedCallback | ❌ | Mudanças subcontas. |
-| SetEnabledLogToDebug | ❌ | Ativar logs internos. |
+| SetStateCallback | ✅ | Used. |
+| SetChangeCotationCallback | ❌ | Specific quote updates. |
+| SetAssetListCallback | ❌ | Basic asset list. |
+| SetAssetListInfoCallback | ❌ | Asset metadata v1. |
+| SetAssetListInfoCallbackV2 | ❌ | Asset metadata v2 (sector / subsector / segment). |
+| SetInvalidTickerCallback | ✅ (optional) | Already loaded. |
+| SetAdjustHistoryCallback | ❌ | Corporate actions v1. |
+| SetAdjustHistoryCallbackV2 | ⚠️ | Initial heuristic parsing (assumed layout) + hexdump. |
+| SetTheoreticalPriceCallback | ⚠️ | Registered placeholder (partial fields). |
+| SeTConnectorBrokerAccountListChangedCallback | ❌ | Account list changes. |
+| SetBrokerSubAccountListChangedCallback | ❌ | Subaccount changes. |
+| SetEnabledLogToDebug | ❌ | Enable internal logs. |
 
 ## 3. Market Data Subscribe
-| C++ Symbol | Status | Notas |
+| C++ Symbol | Status | Notes |
 |------------|--------|-------|
 | SubscribeTicker / UnsubscribeTicker | ✅ | Implementado. |
-| SubscribePriceBook / UnsubscribePriceBook | ❌ | Book de preços (provavelmente snapshot Níveis). |
-| SubscribeOfferBook / UnsubscribeOfferBook | ❌ | Book de ofertas detalhado. |
-| SubscribeAdjustHistory / UnsubscribeAdjustHistory | ❌ | Stream de ajustes. |
+| SubscribePriceBook / UnsubscribePriceBook | ❌ | Price book (probably snapshot Levels). |
+| SubscribeOfferBook / UnsubscribeOfferBook | ❌ | Detailed offer book. |
+| SubscribeAdjustHistory / UnsubscribeAdjustHistory | ❌ | Adjustments stream. |
 
 ## 4. Market Data Callbacks
 | Callback | Status | Notas |
@@ -50,95 +50,95 @@ Legenda:
 | THistoryTradeCallback | ⚠️ | Placeholder callback registrado (mesma struct de trade). |
 | TNewDailyCallback | ⚠️ | Rust: DailySummary(V1/V2) — mapeado parcial. |
 | TPriceBookCallback | ⚠️ | Rust: BookCallback(V1/V2) sem oferta detalhada / arrays. |
-| TOfferBookCallback | ❌ | Ofertas (side + mudanças). |
-| TNewTinyBookCallBack | ❌ | Nível reduzido. |
-| TChangeStateTicker | ❌ | Estado de ticker. |
-| TAdjustHistoryCallback / V2 | ⚠️ | Heurística parse (campos podem mudar quando layout confirmado). |
-| TTheoreticalPriceCallback | ⚠️ | Placeholder (preço + qty). |
-| TConnectorBrokerAccountListChangedCallback | ❌ | Lista de contas. |
-| TConnectorBrokerSubAccountListChangedCallback | ❌ | Subcontas. |
-| TProgressCallBack | ❌ | Progresso (ex: carregamento histórico). |
-| TOrderChangeCallBack | ❌ | Atualizações ricas de ordem (temos só snapshot parcial via GetOrderDetails em callback de order). |
-| THistoryCallBack (ordens) | ❌ | Histórico de ordens. |
+| TOfferBookCallback | ❌ | Offers (side + changes). |
+| TNewTinyBookCallBack | ❌ | Reduced level. |
+| TChangeStateTicker | ❌ | Ticker state. |
+| TAdjustHistoryCallback / V2 | ⚠️ | Heuristic parse (fields may change when layout is confirmed). |
+| TTheoreticalPriceCallback | ⚠️ | Placeholder (price + qty). |
+| TConnectorBrokerAccountListChangedCallback | ❌ | Account list. |
+| TConnectorBrokerSubAccountListChangedCallback | ❌ | Subaccounts. |
+| TProgressCallBack | ❌ | Progress (e.g., historical loading). |
+| TOrderChangeCallBack | ❌ | Rich order updates (we only have partial snapshot via GetOrderDetails in order callback). |
+| THistoryCallBack (orders) | ❌ | Order history. |
 | TAccountCallback | ✅ | Carregado como SetAccountCallback. |
 
-## 5. Ordens / Execução
-| C++ Symbol | Status | Notas |
+## 5. Orders / Execution
+| C++ Symbol | Status | Notes |
 |------------|--------|-------|
-| SendBuyOrder / SendSellOrder | ❌ | Rust tem `SendOrder` genérico (não separado). |
-| SendStopBuyOrder / SendStopSellOrder | ❌ | Faltam stop orders. |
-| SendMarketBuyOrder / SendMarketSellOrder | ❌ | Market orders dedicadas. |
-| SendZeroPosition | ❌ | Zerar posição. |
-| SendCancelOrder | ❌ | Cancelar ordem específica (temos V2? não). |
-| SendCancelOrders | ❌ | Cancelar por ticker. |
-| SendCancelAllOrders | ❌ | Cancelar todas ordens. |
-| SendChangeOrder | ⚠️ | Existe `SendChangeOrderV2` opcional; assinatura diferente. |
-| GetOrder | ❌ | Query individual. |
-| GetOrders | ❌ | Query lista. |
-| GetOrderProfitID | ❌ | Lookup por ProfitID. |
-| GetOrderDetails | ✅ (opcional) | Usado em callback de ordem para snapshot. |
+| SendBuyOrder / SendSellOrder | ❌ | Rust has generic `SendOrder` (not separated). |
+| SendStopBuyOrder / SendStopSellOrder | ❌ | Stop orders missing. |
+| SendMarketBuyOrder / SendMarketSellOrder | ❌ | Dedicated market orders. |
+| SendZeroPosition | ❌ | Zero position. |
+| SendCancelOrder | ❌ | Cancel specific order (do we have V2? no). |
+| SendCancelOrders | ❌ | Cancel by ticker. |
+| SendCancelAllOrders | ❌ | Cancel all orders. |
+| SendChangeOrder | ⚠️ | There is an optional `SendChangeOrderV2`; different signature. |
+| GetOrder | ❌ | Individual query. |
+| GetOrders | ❌ | List query. |
+| GetOrderProfitID | ❌ | Lookup by ProfitID. |
+| GetOrderDetails | ✅ (optional) | Used in order callback for snapshot. |
 
-## 6. Posições / Contas / Agents
-| C++ Symbol | Status | Notas |
+## 6. Positions / Accounts / Agents
+| C++ Symbol | Status | Notes |
 |------------|--------|-------|
-| GetPosition | ❌ | Retorna blob; exige parsing (estrutura Position). |
-| EnumerateAllPositionAssets | ❌ | Enumeração de ativos com posição. |
-| GetAccount | ❌ | Enumerar contas. |
-| GetAgentNameByID / GetAgentShortNameByID | ❌ | Identidade de agentes. |
-| GetAgentNameLength / GetAgentName | ❌ | Versão segura para buffer. |
+| GetPosition | ❌ | Returns blob; requires parsing (Position structure). |
+| EnumerateAllPositionAssets | ❌ | Enumeration of assets with position. |
+| GetAccount | ❌ | Enumerate accounts. |
+| GetAgentNameByID / GetAgentShortNameByID | ❌ | Agent identity. |
+| GetAgentNameLength / GetAgentName | ❌ | Safe version for buffer. |
 
-## 7. Histórico / Dados
-| C++ Symbol | Status | Notas |
+## 7. History / Data
+| C++ Symbol | Status | Notes |
 |------------|--------|-------|
-| GetHistoryTrades | ⚠️ | Mock implementado + stub FFI; falta parse real. |
-| GetLastDailyClose | ❌ | Fechamento diário. |
+| GetHistoryTrades | ⚠️ | Mock implemented + FFI stub; real parse missing. |
+| GetLastDailyClose | ❌ | Daily close. |
 
-## 8. Infra / Utilitários
-| C++ Symbol | Status | Notas |
+## 8. Infra / Utilities
+| C++ Symbol | Status | Notes |
 |------------|--------|-------|
-| FreePointer | ⚠️ | Wrapper ForeignBuffer criado; ainda sem parse real. |
+| FreePointer | ⚠️ | Wrapper ForeignBuffer created; still without real parse. |
 
-## 9. Estruturas ausentes no Rust
-Precisaremos mapear em `repr(C)` + conversões:
-- TAssetID (wchar_t* ticker, bolsa, feed)
+## 9. Structures missing in Rust
+We will need to map in `repr(C)` + conversions:
+- TAssetID (wchar_t* ticker, exchange, feed)
 - TConnectorAccountIdentifier / TConnectorAssetIdentifier
-- Position + sub strings (buffer packed)
-- Trade / TradeCandle (para histórico e realtime se V2 não usado)
+- Position + sub strings (packed buffer)
+- Trade / TradeCandle (for history and realtime if V2 not used)
 - BookOffer arrays (OfferBookCallback)
 
-## 10. Prioridade de Implementação Proposta
-1. Histórico & Ajustes:
-   - GetHistoryTrades (pull) + THistoryTradeCallback (push incremental)
-   - SubscribeAdjustHistory / callbacks de ajuste (V2 direto)
-2. Market Data Profundidade:
-   - OfferBookCallback (separar do Book V2 atual) + SubscribeOfferBook
-3. Execução essencial:
+## 10. Proposed Implementation Priority
+1. History & Adjustments:
+   - GetHistoryTrades (pull) + THistoryTradeCallback (incremental push)
+   - SubscribeAdjustHistory / adjustment callbacks (direct V2)
+2. Market Data Depth:
+   - OfferBookCallback (separate from current Book V2) + SubscribeOfferBook
+3. Essential Execution:
    - SendBuyOrder / Sell / Market / Stop / CancelAll / ZeroPosition
    - GetPosition + FreePointer parsing
-4. Metadados de Ativos:
+4. Asset Metadata:
    - SetAssetListInfoCallbackV2 + SetAssetListCallback
-5. Posições / Contas:
+5. Positions / Accounts:
    - EnumerateAllPositionAssets / GetAccount / Account & Broker callbacks
-6. Utilidades:
+6. Utilities:
    - GetServerClock / SetServerAndPort / GetLastDailyClose
-7. Complementos:
+7. Complements:
    - AgentName APIs, TheoreticalPrice, ChangeStateTicker, ChangeCotation
 
-## 11. Abordagem Técnica
-- Adicionar módulo `ffi_types.rs` com structs/ conversões wide → UTF-8 (`widestring` crate) sob cfg windows + real_dll.
-- Extender `ProfitRaw` com símbolos opcionais novos; manter gating incremental (não quebrar builds).
-- Introduzir enum de eventos enriquecido (`CallbackEvent` expandido) para novos callbacks com feature flags (ex: feature `md_extended`).
-- Buffers: usar `Vec<u8>` + ponteiros; liberar via `FreePointer` imediatamente após parse; garantir `unsafe` encapsulado.
-- Wide Strings: converter via `U16CStr` -> `String` (lossy fallback).
+## 11. Technical Approach
+- Add `ffi_types.rs` module with structs/conversions wide → UTF-8 (`widestring` crate) under cfg windows + real_dll.
+- Extend `ProfitRaw` with new optional symbols; keep incremental gating (do not break builds).
+- Introduce enriched event enum (`CallbackEvent` expanded) for new callbacks with feature flags (e.g., feature `md_extended`).
+- Buffers: use `Vec<u8>` + pointers; free via `FreePointer` immediately after parse; ensure `unsafe` is encapsulated.
+- Wide Strings: convert via `U16CStr` -> `String` (lossy fallback).
 
-## 12. Riscos / Cuidados
-- Diferença semântica entre `InitializeLogin` e `InitializeMarketLogin` (ordem de callbacks e requisitos de progress callback).
-- Potencial reentrância: documentação avisa para não chamar funções da DLL dentro dos callbacks; design: enfileirar dados e processar fora.
-- Sincronização: ampliar `SenderState` ou criar múltiplos canais (ex: separar channel de ordem vs market) para backpressure.
-- Memória: garantir que `FreePointer` seja chamado exatamente uma vez por buffer.
+## 12. Risks / Cautions
+- Semantic difference between `InitializeLogin` and `InitializeMarketLogin` (order of callbacks and progress callback requirements).
+- Potential reentrancy: documentation warns not to call DLL functions inside callbacks; design: queue data and process outside.
+- Synchronization: expand `SenderState` or create multiple channels (e.g., separate order vs market channel) for backpressure.
+- Memory: ensure `FreePointer` is called exactly once per buffer.
 
-## 13. Próximos Passos Automatizáveis
-Script (futuro) para validar exports vs mapping e produzir diff automático.
+## 13. Next Automatable Steps
+Script (future) to validate exports vs mapping and produce automatic diff.
 
 ---
-Gerado automaticamente – editar conforme novas funções forem adicionadas.
+Automatically generated – edit as new functions are added.

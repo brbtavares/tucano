@@ -1,47 +1,47 @@
-# Tucano Examples
+# Toucan Examples
 
-Conjunto de binários de demonstração. Cada exemplo suporta backend real (Windows + `--features real_dll`) ou mock (qualquer SO / `PROFITDLL_FORCE_MOCK=1` / fallback automático se DLL indisponível).
+Set of demonstration binaries. Each example supports real backend (Windows + `--features real_dll`) or mock (any OS / `PROFITDLL_FORCE_MOCK=1` / automatic fallback if DLL unavailable).
 
-## Binários
-Todos localizados em `examples/src/`:
-| Bin | Descrição |
-|-----|-----------|
-| `example_1_live_login` | Login + subscribe de um ticker e impressão dos primeiros eventos |
-| `example_2_get_history_trades` | Solicita histórico de trades em um intervalo e imprime `HistoryTrade` |
-| `mock_minimal` | Minimal: login (mock), subscribe, envia ordem simulada e lê alguns eventos |
-| `tucano-examples` | Bin de índice: lista os exemplos disponíveis |
+## Binaries
+All located in `examples/src/`:
+| Bin | Description |
+|-----|-------------|
+| `example_1_live_login` | Login + subscribe to a ticker and print the first events |
+| `example_2_get_history_trades` | Requests trade history in a range and prints `HistoryTrade` |
+| `mock_minimal` | Minimal: login (mock), subscribe, sends simulated order and reads some events |
+| `toucan-examples` | Index bin: lists available examples |
 
-## Execução Rápida
-Mock forçado (qualquer SO):
+## Quick Execution
+Forced mock (any OS):
 ```bash
-PROFITDLL_FORCE_MOCK=1 cargo run -p tucano-examples --bin example_1_live_login
+PROFITDLL_FORCE_MOCK=1 cargo run -p toucan-examples --bin example_1_live_login
 ```
 Live (Windows + DLL):
 ```bash
-cargo run -p tucano-examples --features real_dll --bin example_1_live_login
+cargo run -p toucan-examples --features real_dll --bin example_1_live_login
 ```
-Histórico:
+History:
 ```bash
-cargo run -p tucano-examples --features real_dll --bin example_2_get_history_trades
+cargo run -p toucan-examples --features real_dll --bin example_2_get_history_trades
 ```
 Minimal:
 ```bash
-cargo run -p tucano-examples --bin mock_minimal
+cargo run -p toucan-examples --bin mock_minimal
 ```
 
-## Variáveis de Ambiente Principais
-| Variável | Uso |
-|----------|-----|
-| `PROFIT_USER` / `PROFIT_PASSWORD` | Credenciais (mock aceita qualquer valor) |
-| `PROFIT_ACTIVATION_KEY` | Opcional |
-| `PROFITDLL_PATH` | Caminho da DLL real |
-| `PROFITDLL_FORCE_MOCK=1` | Força backend mock |
-| `PROFITDLL_DIAG=1` | Logs de diagnóstico do carregamento/callbacks |
-| `PROFITDLL_STRICT=1` | Falha se não conseguir backend real (sem fallback para mock) |
-| `EX1_TICKER` / `EX1_EXCHANGE` | Ticker do Example 1 (default PETR4 / B) |
-| `HIST_TICKER` / `HIST_EXCHANGE` | Ticker do Example 2 (default PETR4 / B) |
-| `INTERVAL_START` | Início intervalo Example 2 (ex: 2025-08-15T10:30) |
-| `INTERVAL_MINUTES` | Duração em minutos (Example 2, default 5) |
+## Main Environment Variables
+| Variable | Usage |
+|----------|-------|
+| `PROFIT_USER` / `PROFIT_PASSWORD` | Credentials (mock accepts any value) |
+| `PROFIT_ACTIVATION_KEY` | Optional |
+| `PROFITDLL_PATH` | Real DLL path |
+| `PROFITDLL_FORCE_MOCK=1` | Forces mock backend |
+| `PROFITDLL_DIAG=1` | Diagnostic logs for loading/callbacks |
+| `PROFITDLL_STRICT=1` | Fails if real backend not available (no fallback to mock) |
+| `EX1_TICKER` / `EX1_EXCHANGE` |  Example 1 Ticker (default PETR4 / B) |
+| `HIST_TICKER` / `HIST_EXCHANGE` | Example 2 Ticker (default PETR4 / B) |
+| `INTERVAL_START` | Example 2 interval start (e.g., 2025-08-15T10:30) |
+| `INTERVAL_MINUTES` | Duration in minutes (Example 2, default 5) |
 
 Exemplo `.env` (live):
 ```env
@@ -57,23 +57,23 @@ INTERVAL_MINUTES=5
 ```
 
 ## Troubleshooting
-| Sintoma | Possível causa | Mitigação |
+| Symptom | Possible cause | Mitigation |
 |---------|----------------|-----------|
-| "Backend não é real_dll" | Ausência de feature / não Windows / DLL faltando | Compilar com `--features real_dll` em Windows e conferir `PROFITDLL_PATH` |
-| Sem eventos após subscribe | Credenciais/licença / ticker inválido | Verificar vars e usar `PROFITDLL_DIAG=1` |
-| Histórico vazio | Intervalo sem trades / callback parcial | Ajustar `INTERVAL_START` / `INTERVAL_MINUTES` |
-| MissingSymbol / símbolo ausente | Versão da DLL incompatível | Atualizar binding ou DLL |
-| Fallback inesperado para mock | DLL não carregou e `PROFITDLL_STRICT` ausente | Definir `PROFITDLL_STRICT=1` para abortar |
+| "Backend is not real_dll" | Feature missing / not Windows / DLL missing | Build with `--features real_dll` on Windows and check `PROFITDLL_PATH` |
+| No events after subscribe | Credentials/license / invalid ticker | Check vars and use `PROFITDLL_DIAG=1` |
+| Empty history | Interval without trades / partial callback | Adjust `INTERVAL_START` / `INTERVAL_MINUTES` |
+| MissingSymbol / missing symbol | Incompatible DLL version | Update binding or DLL |
+| Unexpected fallback to mock | DLL did not load and `PROFITDLL_STRICT` missing | Set `PROFITDLL_STRICT=1` to abort |
 
 ## Roadmap
-- [x] Mock mínimo
+- [x] Minimal mock
 - [x] Login + subscribe
-- [x] Histórico (pull)
-- [ ] Envio de ordens (live) completo
-- [ ] Book nível 2 avançado
-- [ ] Métricas streaming (VWAP, agregações)
-- [ ] Progresso / confirmação fim histórico
-- [ ] CLI args para parametrizar todos exemplos
+- [x] History (pull)
+- [ ] Full live order sending
+- [ ] Advanced level 2 book
+- [ ] Streaming metrics (VWAP, aggregations)
+- [ ] Progress / end-of-history confirmation
+- [ ] CLI args to parameterize all examples
 
 ---
-Licença: Apache-2.0 OR MIT.
+License: Apache-2.0 OR MIT.

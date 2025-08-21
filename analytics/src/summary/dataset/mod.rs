@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{algorithm::welford_online, summary::dataset::dispersion::Dispersion};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
@@ -29,7 +29,7 @@ pub mod dispersion;
 /// # Example
 /// ```
 /// use rust_decimal_macros::dec;
-/// use tucano_analytics::summary::dataset::DataSetSummary;
+/// use toucan_analytics::summary::dataset::DataSetSummary;
 ///
 /// // Initialise empty DataSetSummary
 /// let mut stats = DataSetSummary::default();

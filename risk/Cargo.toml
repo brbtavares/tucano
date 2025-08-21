@@ -1,24 +1,24 @@
 [package]
-name = "tucano-risk"
+name = "toucan-risk"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-documentation = "https://docs.rs/tucano-risk"
+documentation = "https://docs.rs/toucan-risk"
 description = "Interfaces and implementations for risk management"
 keywords = ["trading","risk","risk-management"]
 categories = ["finance","algorithms"]
 
 [package.metadata.docs.rs]
 all-features = true
-repository = "https://github.com/brbtavares/tucano"
-description = "Interfaces and implementations for risk management for the Tucano ecosystem"
+repository = "https://github.com/brbtavares/toucan"
+description = "Interfaces and implementations for risk management for the Toucan ecosystem"
 keywords = ["trading","risk","risk-management","finance"]
 categories = ["finance","algorithms"]
 
 [dependencies]
-"tucano-execution" = { workspace = true }
+"toucan-execution" = { workspace = true }
 serde = { version = "1", features = ["derive"] }
 rust_decimal = { version = "1", features = ["serde"] }
 derive_more = { version = "1", features = ["constructor", "display", "from"] }

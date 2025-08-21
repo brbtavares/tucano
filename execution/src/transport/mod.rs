@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Transport layer abstractions for execution clients.
 //!
 //! Goal: isolate connectivity / protocol (DLLs, HTTP, WS) from higher-level

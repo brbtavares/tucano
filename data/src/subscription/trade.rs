@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::SubscriptionKind;
 use serde::{Deserialize, Serialize};
-// use tucano_macros::{DeSubKind, SerSubKind}; // removed: crate no longer exists
-use tucano_instrument::Side;
+// use toucan_macros::{DeSubKind, SerSubKind}; // removed: crate no longer exists
+use toucan_instrument::Side;
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`PublicTrade`]
 /// [`MarketEvent<T>`](crate::event::MarketEvent) events.

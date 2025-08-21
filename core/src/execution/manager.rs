@@ -1,14 +1,14 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::execution::{
     error::ExecutionError,
     request::{ExecutionRequest, RequestFuture},
     AccountStreamEvent,
 };
-use tucano_data::streams::{
+use toucan_data::streams::{
     consumer::StreamKey,
     reconnect::stream::{init_reconnecting_stream, ReconnectingStream, ReconnectionBackoffPolicy},
 };
-use tucano_execution::{
+use toucan_execution::{
     client::ExecutionClient,
     error::{ConnectivityError, OrderError, UnindexedOrderError},
     indexer::{AccountEventIndexer, IndexedAccountStream},
@@ -22,13 +22,13 @@ use tucano_execution::{
     },
     AccountEvent, AccountEventKind,
 };
-use tucano_execution::{AssetIndex, ExchangeIndex, IndexError, InstrumentIndex};
-use tucano_integration::{
+use toucan_execution::{AssetIndex, ExchangeIndex, IndexError, InstrumentIndex};
+use toucan_integration::{
     channel::{mpsc_unbounded, Tx, UnboundedTx},
     snapshot::Snapshot,
     stream::merge::merge,
 };
-use tucano_instrument::exchange::ExchangeId;
+use toucan_instrument::exchange::ExchangeId;
 
 /// Placeholder types for name compatibility
 pub type AssetNameExchange = String;

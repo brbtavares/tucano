@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! Auxiliary FFI types and utilities (wide strings, pointer wrappers) used by the real Profit DLL layer.
 //!
@@ -19,7 +19,7 @@ pub unsafe fn utf16_ptr_to_string(ptr: *const u16) -> String {
     if ptr.is_null() {
         return String::new();
     }
-    // Descobre comprimento até nul (scan linear).
+    // Finds length up to null (linear scan).
     let mut len = 0usize;
     loop {
         let v = *ptr.add(len);

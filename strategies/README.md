@@ -1,6 +1,6 @@
-# tucano-strategies
+# toucan-strategies
 
-Collection of example/reference strategies for the **Tucano** ecosystem.
+Collection of example/reference strategies for the **Toucan** ecosystem.
 
 Includes (optional features):
 - momentum
@@ -11,7 +11,7 @@ Includes (optional features):
 Usage:
 ```toml
 [dependencies]
-tucano-strategies = { version = "0.1", features = ["momentum"] }
+toucan-strategies = { version = "0.1", features = ["momentum"] }
 ```
 
 MIT License.

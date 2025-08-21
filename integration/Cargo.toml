@@ -1,11 +1,11 @@
 [package]
-name = "tucano-integration"
+name = "toucan-integration"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-documentation = "https://docs.rs/tucano-integration"
+documentation = "https://docs.rs/toucan-integration"
 description = "Web integration framework (HTTP/WebSocket) for venues/exchanges"
 keywords = ["trading","integration","http","websocket"]
 categories = ["finance","api-bindings"]
@@ -17,8 +17,8 @@ all-features = true
 tokio-test = { workspace = true }
 
 [dependencies]
-# Tucano Ecosystem
-"tucano-instrument" = { workspace = true }
+# Toucan Ecosystem
+"toucan-instrument" = { workspace = true }
 
 # Logging
 tracing = { workspace = true }

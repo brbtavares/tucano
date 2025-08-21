@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use self::{
     book::l1::BinanceOrderBookL1, channel::BinanceChannel, market::BinanceMarket,
@@ -21,7 +21,7 @@ use url::Url;
 /// [`BinanceFuturesUsd`](futures::BinanceFuturesUsd).
 pub mod book;
 
-/// Defines the type that translates a Tucano [`Subscription`](crate::subscription::Subscription)
+/// Defines the type that translates a Toucan [`Subscription`](crate::subscription::Subscription)
 /// into an exchange [`Connector`] specific channel used for generating [`Connector::requests`].
 pub mod channel;
 
@@ -29,7 +29,7 @@ pub mod channel;
 /// [`BinanceFuturesUsd`](futures::BinanceFuturesUsd).
 pub mod futures;
 
-/// Defines the type that translates a Tucano [`Subscription`](crate::subscription::Subscription)
+/// Defines the type that translates a Toucan [`Subscription`](crate::subscription::Subscription)
 /// into an exchange [`Connector`] specific market used for generating [`Connector::requests`].
 pub mod market;
 

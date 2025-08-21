@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     books::{
         map::{OrderBookMap, OrderBookMapMulti},
@@ -71,5 +71,5 @@ where
 ///
 /// See `examples/order_books_l2_manager` for how to use this initialisation paradigm.
 pub async fn init_multi_order_book_l2_manager() {
-    unimplemented!("A implementação concreta de init_multi_order_book_l2_manager deve ser feita na crate exchanges.");
+    unimplemented!("The concrete implementation of init_multi_order_book_l2_manager must be done in the exchanges crate.");
 }

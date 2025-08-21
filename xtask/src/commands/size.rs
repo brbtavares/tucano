@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use anyhow::Result;
 
 pub async fn show_size_comparison() -> Result<()> {

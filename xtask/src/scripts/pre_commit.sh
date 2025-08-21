@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Local pre-commit quality gate for Tucano workspace.
+# Local pre-commit quality gate for Toucan workspace.
 # Run formatting, lint, deny, tests (fast subset) before allowing commit.
 # Usage (install hook): ln -sf ../../scripts/pre_commit.sh .git/hooks/pre-commit
 # Or run manually: ./scripts/pre_commit.sh

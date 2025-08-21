@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use self::rest::RestRequest;
 use crate::error::SocketError;
 use reqwest::StatusCode;

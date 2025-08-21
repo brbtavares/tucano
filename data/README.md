@@ -1,4 +1,4 @@
-# Tucano Data
+# Toucan Data
 
 > Layer for ingestion, normalization, and distribution of market events for global sources. All concrete exchange/broker integrations are now implemented as local modules here. The `markets` crate contains only abstractions (traits, enums, types).
 
@@ -49,11 +49,11 @@ The **data** crate centralizes the modeling of market events (ticks, trades, boo
 - Book/depth snapshots – to be detailed.
 - Incremental book (diffs) not implemented.
 
-## 🚧 Pendências
-- Suporte a diferentes frequências (agg de 1s/1m) nativamente.
-- Compressão e serialização eficiente (Parquet / Arrow) para histórico.
-- Backfill de gaps de conexão.
-- Canal de latência (timestamp triplo: source, receive, process).
+## 🚧 Pending
+- Native support for different frequencies (1s/1m aggregation).
+- Efficient compression and serialization (Parquet / Arrow) for history.
+- Backfill of connection gaps.
+- Latency channel (triple timestamp: source, receive, process).
 
 
 

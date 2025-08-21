@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 /// Top-level trading system architecture for composing trading engines with execution components.
 ///
 /// This module provides an architecture for building and running trading systems composed of the
@@ -17,8 +17,8 @@ use crate::{
 };
 use std::fmt::Debug;
 use tokio::task::{JoinError, JoinHandle};
-use tucano_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
-use tucano_integration::{
+use toucan_execution::order::request::{OrderRequestCancel, OrderRequestOpen};
+use toucan_integration::{
     channel::{Tx, UnboundedRx, UnboundedTx},
     collection::one_or_many::OneOrMany,
     snapshot::SnapUpdates,

@@ -1,4 +1,4 @@
-# Tucano Integration
+# Toucan Integration
 
 > Communication abstractions (channels, protocols) and transformation to connect external sources (WebSocket, HTTP, future FIX) to the ecosystem. All concrete exchange/broker integrations are now implemented as local modules in `data` or `integration`. This crate provides only abstractions and building blocks.
 

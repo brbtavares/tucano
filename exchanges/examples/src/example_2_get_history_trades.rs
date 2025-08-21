@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! # Example 2: History Trades Interval (Pull + Optional Incremental)
 //!
@@ -15,17 +15,17 @@
 //!
 //! Execution:
 //! ```bash
-//! cargo run -p tucano-examples --bin example_2_get_history_trades --features real_dll
+//! cargo run -p toucan-examples --bin example_2_get_history_trades --features real_dll
 //! ```
 //! or mock:
 //! ```bash
-//! PROFITDLL_FORCE_MOCK=1 cargo run -p tucano-examples --bin example_2_get_history_trades
+//! PROFITDLL_FORCE_MOCK=1 cargo run -p toucan-examples --bin example_2_get_history_trades
 //! ```
 //!
 //! License: Apache-2.0 OR MIT.
 
 use std::time::Duration;
-use tucano_profitdll::{backend_kind, new_backend, CallbackEvent, Credentials};
+use toucan_profitdll::{backend_kind, new_backend, CallbackEvent, Credentials};
 
 fn brasil_ts_ms(y: i32, m: u32, d: u32, hh: u32, mm: u32) -> i64 {
     use chrono::{Duration, NaiveDate, TimeZone, Utc};
@@ -69,7 +69,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     })?;
     let kind = backend_kind(&*backend);
     eprintln!("[example_2_get_history_trades][DEBUG] Backend created: kind={kind}");
-    // Diagnóstico explícito para modo live
+    // Explicit diagnostic for live mode
     #[cfg(all(target_os = "windows", feature = "real_dll"))]
     {
         let strict = std::env::var("PROFITDLL_STRICT").unwrap_or_default() == "1";

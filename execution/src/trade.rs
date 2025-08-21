@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     order::id::{OrderId, StrategyId},
     QuoteAsset,
@@ -9,7 +9,7 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt::{Display, Formatter};
-use tucano_instrument::Side;
+use toucan_instrument::Side;
 
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, From)]
 pub struct TradeId<T = SmolStr>(pub T);
@@ -66,7 +66,7 @@ pub struct AssetFees<AssetKey> {
 impl AssetFees<QuoteAsset> {
     pub fn quote_fees(fees: Decimal) -> Self {
         Self {
-            asset: "QUOTE".to_string(), // QuoteAsset agora é String
+            asset: "QUOTE".to_string(), // QuoteAsset is now String
             fees,
         }
     }
@@ -75,7 +75,7 @@ impl AssetFees<QuoteAsset> {
 impl Default for AssetFees<QuoteAsset> {
     fn default() -> Self {
         Self {
-            asset: "QUOTE".to_string(), // QuoteAsset agora é String
+            asset: "QUOTE".to_string(), // QuoteAsset is now String
             fees: Decimal::ZERO,
         }
     }

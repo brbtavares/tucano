@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{subscription::Subscription, Identifier};
 use serde::Deserialize;
-use tucano_integration::subscription::SubscriptionId;
+use toucan_integration::subscription::SubscriptionId;
 
 /// Defines an exchange specific market and channel combination used by an exchange
 /// [`Connector`](super::Connector) to build the

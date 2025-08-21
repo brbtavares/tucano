@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::SubscriptionKind;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use tucano_instrument::Side;
+use toucan_instrument::Side;
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`Liquidation`]
 /// [`MarketEvent<T>`](crate::event::MarketEvent) events.

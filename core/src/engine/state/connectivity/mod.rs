@@ -1,9 +1,9 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
-use tucano_execution::ExchangeIndex; // rollback path B: external String key interface
-use tucano_instrument::exchange::ExchangeId;
+use toucan_execution::ExchangeIndex; // rollback path B: external String key interface
+use toucan_instrument::exchange::ExchangeId;
 
 /// Placeholder for IndexedInstruments - reused from parent module
 use super::{IndexedInstruments, IndexedInstrumentsExt};

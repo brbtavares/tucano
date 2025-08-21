@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! # Example 1: Login & Subscribe (Live or Mock)
 //!
@@ -22,11 +22,11 @@
 //!
 //! Run (live if possible, otherwise mock):
 //! ```bash
-//! cargo run -p tucano-examples --bin example_1_live_login --features real_dll
+//! cargo run -p toucan-examples --bin example_1_live_login --features real_dll
 //! ```
 //! or (force mock):
 //! ```bash
-//! PROFITDLL_FORCE_MOCK=1 cargo run -p tucano-examples --bin example_1_live_login
+//! PROFITDLL_FORCE_MOCK=1 cargo run -p toucan-examples --bin example_1_live_login
 //! ```
 //!
 //! Behavior:
@@ -38,7 +38,7 @@
 //!
 //! License: Apache-2.0 OR MIT.
 
-use tucano_profitdll::{backend_kind, new_backend, Credentials};
+use toucan_profitdll::{backend_kind, new_backend, Credentials};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

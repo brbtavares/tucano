@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # 🔧 Macros - Code Generation Utilities
 //!
 //! Crate containing Rust procedural macros to automate boilerplate code generation
@@ -20,7 +20,7 @@
 //! ## 💡 Usage Example
 //!
 //! ```rust,ignore
-//! use tucano_macros::{DeExchange, SerExchange};
+//! use toucan_macros::{DeExchange, SerExchange};
 //!
 //! #[derive(DeExchange, SerExchange)]
 //! struct B3Exchange {
@@ -61,17 +61,17 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::DeriveInput;
 
-/// Macro procedural para derivar automaticamente implementação de `Deserialize` para exchanges.
+/// Procedural macro to automatically derive `Deserialize` implementation for exchanges.
 ///
-/// Gera código que:
-/// 1. Deserializa uma string do input
-/// 2. Compara com o ID esperado do exchange (constante `ID`)
-/// 3. Retorna o exchange se corresponder ou erro se não corresponder
+/// Generates code that:
+/// 1. Deserializes a string from input
+/// 2. Compares with the expected exchange ID (constant `ID`)
+/// 3. Returns the exchange if it matches or an error if it does not
 ///
-/// # Requisitos
-/// O tipo deve ter uma constante `ID: &'static str` definida.
+/// # Requirements
+/// The type must have a constant `ID: &'static str` defined.
 ///
-/// # Exemplo
+/// # Example
 /// ```rust,ignore
 /// #[derive(DeExchange)]
 /// struct B3Exchange;
@@ -82,9 +82,9 @@ use syn::DeriveInput;
 /// ```
 #[proc_macro_derive(DeExchange)]
 pub fn de_exchange_derive(input: TokenStream) -> TokenStream {
-    // Parse da árvore sintática abstrata do Rust com Syn de TokenStream -> DeriveInput
+    // Parse the Rust abstract syntax tree with Syn from TokenStream -> DeriveInput
     let ast: DeriveInput = syn::parse(input)
-        .expect("de_exchange_derive() falhou ao fazer parse do TokenStream de entrada");
+    .expect("de_exchange_derive() failed to parse input TokenStream");
 
     // Determina o nome do exchange
     let exchange = &ast.ident;
@@ -114,15 +114,15 @@ pub fn de_exchange_derive(input: TokenStream) -> TokenStream {
     TokenStream::from(generated)
 }
 
-/// Macro procedural para derivar automaticamente implementação de `Serialize` para exchanges.
+/// Procedural macro to automatically derive `Serialize` implementation for exchanges.
 ///
-/// Gera código que serializa o exchange usando seu ID único definido
-/// na constante `ID`. Garante consistência com a deserialização.
+/// Generates code that serializes the exchange using its unique ID defined
+/// in the constant `ID`. Ensures consistency with deserialization.
 ///
-/// # Requisitos
-/// O tipo deve ter uma constante `ID: &'static str` definida.
+/// # Requirements
+/// The type must have a constant `ID: &'static str` defined.
 ///
-/// # Exemplo
+/// # Example
 /// ```rust,ignore
 /// #[derive(SerExchange)]
 /// struct B3Exchange;
@@ -133,9 +133,9 @@ pub fn de_exchange_derive(input: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro_derive(SerExchange)]
 pub fn ser_exchange_derive(input: TokenStream) -> TokenStream {
-    // Parse da árvore sintática abstrata do Rust com Syn de TokenStream -> DeriveInput
+    // Parse the Rust abstract syntax tree with Syn from TokenStream -> DeriveInput
     let ast: DeriveInput = syn::parse(input)
-        .expect("ser_exchange_derive() falhou ao fazer parse do TokenStream de entrada");
+    .expect("ser_exchange_derive() failed to parse input TokenStream");
 
     // Determina o Exchange
     let exchange = &ast.ident;

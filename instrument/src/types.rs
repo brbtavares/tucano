@@ -1,6 +1,6 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 
-//! Common types for tucano-instrument, moved from instrument/lib.rs for proper re-export
+
+//! Common types for toucan-instrument, moved from instrument/lib.rs for proper re-export
 
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};

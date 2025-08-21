@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 /// Grouping of [Welford Online](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm)
 /// algorithms for calculating running values such as mean and variance in one pass through.
 pub mod welford_online {

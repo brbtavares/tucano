@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::state::{IndexedInstruments, IndexedInstrumentsExt};
 use crate::{
     engine::{clock::EngineClock, execution_tx::MultiExchangeTxMap},
-    error::TucanoError,
+    error::ToucanError,
     execution::{
         error::ExecutionError, manager::ExecutionManager, request::ExecutionRequest,
         AccountStreamEvent, Execution,
@@ -16,10 +16,10 @@ use tokio::{
     sync::{broadcast, mpsc},
     task::{JoinError, JoinHandle},
 };
-use tucano_data::streams::{
+use toucan_data::streams::{
     consumer::STREAM_RECONNECTION_POLICY, reconnect::stream::ReconnectingStream,
 };
-use tucano_execution::{
+use toucan_execution::{
     client::{
         mock::{MockExecution, MockExecutionClientConfig, MockExecutionConfig},
         ExecutionClient,
@@ -29,9 +29,9 @@ use tucano_execution::{
     map::generate_execution_instrument_map,
     UnindexedAccountEvent,
 };
-use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex}; // already tucano prefixed
-use tucano_integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
-use tucano_instrument::exchange::ExchangeId;
+use toucan_execution::{AssetIndex, ExchangeIndex, InstrumentIndex}; // already toucan prefixed
+use toucan_integration::channel::{mpsc_unbounded, Channel, UnboundedTx};
+use toucan_instrument::exchange::ExchangeId;
 
 /// Placeholder types
 pub type AssetNameExchange = String;
@@ -107,7 +107,7 @@ impl<'a> ExecutionBuilder<'a> {
         mut self,
         config: MockExecutionConfig,
         clock: Clock,
-    ) -> Result<Self, TucanoError>
+    ) -> Result<Self, ToucanError>
     where
         Clock: EngineClock + Clone + Send + Sync + 'static,
     {
@@ -150,7 +150,7 @@ impl<'a> ExecutionBuilder<'a> {
         self,
         config: Client::Config,
         request_timeout: Duration,
-    ) -> Result<Self, TucanoError>
+    ) -> Result<Self, ToucanError>
     where
         Client: ExecutionClient + Send + Sync + 'static,
         Client::AccountStream: Send,
@@ -164,7 +164,7 @@ impl<'a> ExecutionBuilder<'a> {
         exchange: ExchangeId,
         config: Client::Config,
         request_timeout: Duration,
-    ) -> Result<Self, TucanoError>
+    ) -> Result<Self, ToucanError>
     where
         Client: ExecutionClient + Send + Sync + 'static,
         Client::AccountStream: Send,
@@ -180,7 +180,7 @@ impl<'a> ExecutionBuilder<'a> {
             .insert(exchange, (exchange_index_clone, execution_tx))
             .is_some()
         {
-            return Err(TucanoError::ExecutionBuilder(format!(
+            return Err(ToucanError::ExecutionBuilder(format!(
                 "ExecutionBuilder does not support duplicate mocked ExecutionManagers: {exchange}"
             )));
         }
@@ -263,7 +263,7 @@ impl ExecutionBuild {
     /// - Faz spawn de tasks tokio com os runners de [`MockExchange`].
     /// - Inicializa todos os [`ExecutionManager`] e seus AccountStreams.
     /// - Retorna o `MultiExchangeTxMap` e o AccountStream multi‑exchange.
-    pub async fn init(self) -> Result<Execution, TucanoError> {
+    pub async fn init(self) -> Result<Execution, ToucanError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
@@ -278,14 +278,14 @@ impl ExecutionBuild {
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<Execution, TucanoError> {
+    ) -> Result<Execution, ToucanError> {
         self.init_internal(runtime).await
     }
 
     async fn init_internal(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<Execution, TucanoError> {
+    ) -> Result<Execution, ToucanError> {
         let handles = self.futures.init_with_runtime(runtime).await?;
 
         Ok(Execution {
@@ -309,7 +309,7 @@ impl ExecutionBuildFutures {
     /// - Faz spawn de tasks tokio com os runners de [`MockExchange`].
     /// - Inicializa todos os [`ExecutionManager`] e seus AccountStreams.
     /// - Faz spawn de tasks para encaminhar AccountStreams para o AccountStream multi‑exchange
-    pub async fn init(self) -> Result<ExecutionHandles, TucanoError> {
+    pub async fn init(self) -> Result<ExecutionHandles, ToucanError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
@@ -324,14 +324,14 @@ impl ExecutionBuildFutures {
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<ExecutionHandles, TucanoError> {
+    ) -> Result<ExecutionHandles, ToucanError> {
         self.init_internal(runtime).await
     }
 
     async fn init_internal(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<ExecutionHandles, TucanoError> {
+    ) -> Result<ExecutionHandles, ToucanError> {
         let mock_exchanges = self
             .mock_exchange_run_futures
             .into_iter()

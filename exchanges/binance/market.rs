@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use super::Binance;
 use crate::{Identifier, instrument::MarketInstrumentData, subscription::Subscription};
@@ -8,7 +8,7 @@ use barter_instrument::{
 use serde::{Deserialize, Serialize};
 use smol_str::{SmolStr, StrExt, format_smolstr};
 
-/// Type that defines how to translate a Tucano [`Subscription`] into a [`Binance`]
+/// Type that defines how to translate a Toucan [`Subscription`] into a [`Binance`]
 /// market that can be subscribed to.
 ///
 /// See docs: <https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams>

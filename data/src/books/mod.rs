@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::subscription::book::OrderBookEvent;
 use chrono::{DateTime, Utc};
 use derive_more::Display;

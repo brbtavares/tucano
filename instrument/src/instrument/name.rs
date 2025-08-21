@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use crate::{asset::name::AssetNameExchange, exchange::ExchangeId};
 use derive_more::Display;

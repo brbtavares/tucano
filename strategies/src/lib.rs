@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Grouped concrete strategies (enabled via feature flags).
 
 pub mod shared;

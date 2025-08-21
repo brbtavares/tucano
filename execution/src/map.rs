@@ -1,13 +1,13 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{compat::*, error::KeyError};
 use fnv::FnvHashMap;
-use tucano_instrument::Keyed;
-use tucano_integration::collection::{FnvIndexMap, FnvIndexSet};
+use toucan_instrument::Keyed;
+use toucan_integration::collection::{FnvIndexMap, FnvIndexSet};
 
 // Use the core representation of IndexedInstruments (Vec<Keyed<InstrumentIndex, MarketDataInstrument>>)
 // without creating a hard compile-time dependency (keep lightweight placeholder for now).
 // We'll accept any slice of Keyed instrument indices from the caller.
-use tucano_instrument::MarketDataInstrument;
+use toucan_instrument::MarketDataInstrument;
 pub type IndexedInstruments = Vec<Keyed<InstrumentIndex, MarketDataInstrument>>;
 
 /// Indexed instrument map used to associate the internal Toucan representation of instruments and
@@ -28,8 +28,8 @@ pub struct ExecutionInstrumentMap {
     pub instrument_names: FnvHashMap<InstrumentNameExchange, TInstrumentIndex>,
 }
 
-// MIGRATION STEP: se a feature `typed_indices` estiver ativa, reexporta os newtypes
-// e define aliases locais para uso interno deste módulo.
+// MIGRATION STEP: if the `typed_indices` feature is active, reexports the newtypes
+// and defines local aliases for internal use in this module.
 #[cfg(feature = "typed_indices")]
 use crate::compat::typed as typed_indices;
 #[cfg(feature = "typed_indices")]
@@ -82,9 +82,9 @@ impl ExecutionInstrumentMap {
         &self,
         asset: AssetIndex,
     ) -> Result<&AssetNameExchange, KeyError> {
-        // Quando a feature typed_indices está ativa, precisamos procurar o nome correspondente
-        // pelo valor (índice) armazenado. Como é um HashMap name -> index, fazemos uma busca linear.
-        // Custo aceitável enquanto os índices são pequenos; pode ser otimizado (mapa reverso) se necessário.
+    // When the typed_indices feature is active, we need to look up the corresponding name
+    // by the stored value (index). Since it's a HashMap name -> index, we do a linear search.
+    // Acceptable cost while indices are small; can be optimized (reverse map) if needed.
         #[cfg(feature = "typed_indices")]
         {
             self.asset_names

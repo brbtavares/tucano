@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     summary::{
         asset::{TearSheetAsset, TearSheetAssetGenerator},
@@ -6,8 +6,8 @@ use crate::{
     },
     time::TimeInterval,
 };
-use tucano_execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
-use tucano_integration::collection::FnvIndexMap;
+use toucan_execution::{balance::AssetBalance, AssetIndex, InstrumentIndex};
+use toucan_integration::collection::FnvIndexMap;
 
 // Placeholder name types for integration - these will be properly defined during full integration
 #[derive(Debug, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]

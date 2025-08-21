@@ -1,11 +1,11 @@
 [package]
-name = "tucano-core"
+name = "toucan-core"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-documentation = "https://docs.rs/tucano-core"
+documentation = "https://docs.rs/toucan-core"
 description = "Engine core: backtesting, live trading, orchestration and state"
 keywords = ["trading","engine","backtesting","live","orchestration"]
 categories = ["finance","algorithms"]
@@ -16,14 +16,14 @@ spin_sleep = { workspace = true }
 tokio = { workspace = true, features = ["fs"]}
 
 [dependencies]
-## Tucano Ecosystem
-"tucano-analytics" = { workspace = true }
-"tucano-risk" = { workspace = true }
-"tucano-integration" = { workspace = true }
-"tucano-data" = { workspace = true }
-"tucano-execution" = { workspace = true }
-"tucano-trader" = { workspace = true }
-"tucano-instrument" = { workspace = true }
+## Toucan Ecosystem
+"toucan-analytics" = { workspace = true }
+"toucan-risk" = { workspace = true }
+"toucan-integration" = { workspace = true }
+"toucan-data" = { workspace = true }
+"toucan-execution" = { workspace = true }
+"toucan-trader" = { workspace = true }
+"toucan-instrument" = { workspace = true }
 
 ## Logging
 tracing = { workspace = true }

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     balance::AssetBalance,
     error::UnindexedOrderError,
@@ -13,7 +13,7 @@ use crate::{
 use crate::{AssetNameExchange, InstrumentNameExchange, QuoteAsset};
 use chrono::{DateTime, Utc};
 use tokio::sync::oneshot;
-use tucano_instrument::ExchangeId;
+use toucan_instrument::ExchangeId;
 
 #[derive(Debug)]
 pub struct MockExchangeRequest {

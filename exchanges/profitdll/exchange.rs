@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! B3 Exchange implementation
 
 use serde::{Deserialize, Serialize};
-use tucano_instrument::{Exchange, ExchangeId};
+use toucan_instrument::{Exchange, ExchangeId};
 
 /// B3 Exchange struct
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

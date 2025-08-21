@@ -1,9 +1,9 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::subscription::SubKind;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tucano_instrument::ExchangeId;
-use tucano_integration::{error::SocketError, subscription::SubscriptionId};
+use toucan_instrument::ExchangeId;
+use toucan_integration::{error::SocketError, subscription::SubscriptionId};
 
 /// All errors generated in `data`.
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]

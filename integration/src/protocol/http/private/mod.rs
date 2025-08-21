@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use self::encoder::Encoder;
 use super::{rest::RestRequest, BuildStrategy};
 use crate::error::SocketError;

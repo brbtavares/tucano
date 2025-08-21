@@ -1,10 +1,10 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
-use crate::error::TucanoError;
+
+use crate::error::ToucanError;
 use chrono::{DateTime, Utc};
 use futures::Stream;
 use std::{future::Future, sync::Arc};
-use tucano_data::streams::consumer::MarketStreamEvent;
-use tucano_execution::InstrumentIndex;
+use toucan_data::streams::consumer::MarketStreamEvent;
+use toucan_execution::InstrumentIndex;
 
 /// Interface that provides the backtest MarketStream and associated
 /// [`HistoricalClock`](crate::engine::clock::HistoricalClock).
@@ -13,7 +13,7 @@ pub trait BacktestMarketData {
     type Kind;
 
     /// Return the `DateTime<Utc>` of the first event in the market data `Stream`.
-    fn time_first_event(&self) -> impl Future<Output = Result<DateTime<Utc>, TucanoError>>;
+    fn time_first_event(&self) -> impl Future<Output = Result<DateTime<Utc>, ToucanError>>;
 
     /// Return a `Stream` of `MarketStreamEvent`s.
     fn stream(
@@ -21,7 +21,7 @@ pub trait BacktestMarketData {
     ) -> impl Future<
         Output = Result<
             impl Stream<Item = MarketStreamEvent<InstrumentIndex, Self::Kind>> + Send + 'static,
-            TucanoError,
+            ToucanError,
         >,
     >;
 }
@@ -42,7 +42,7 @@ where
 {
     type Kind = Kind;
 
-    async fn time_first_event(&self) -> Result<DateTime<Utc>, TucanoError> {
+    async fn time_first_event(&self) -> Result<DateTime<Utc>, ToucanError> {
         Ok(self.time_first_event)
     }
 
@@ -50,7 +50,7 @@ where
         &self,
     ) -> Result<
         impl Stream<Item = MarketStreamEvent<InstrumentIndex, Self::Kind>> + Send + 'static,
-        TucanoError,
+    ToucanError,
     > {
         let events = Arc::clone(&self.events);
         let lazy_clone_iter = (0..events.len()).map(move |index| events[index].clone());

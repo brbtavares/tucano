@@ -1,12 +1,12 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use tucano_execution::client::mock::MockExecutionConfig;
+use toucan_execution::client::mock::MockExecutionConfig;
 /// Configuration module for trading system components.
 ///
 /// Provides data structures for configuring various aspects of a trading system,
 /// including instruments and execution components.
-use tucano_instrument::{exchange::ExchangeId, Underlying, ConcreteInstrument};
+use toucan_instrument::{exchange::ExchangeId, Underlying, ConcreteInstrument};
 
 /// Placeholder types for configuration
 pub type AssetNameExchange = String;

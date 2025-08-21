@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use anyhow::Result;
 use cargo_metadata::MetadataCommand;
@@ -158,8 +158,8 @@ fn calculate_crate_size(crate_path: &PathBuf) -> Result<u64> {
 }
 
 async fn fetch_crates_io_size(client: &reqwest::Client, crate_name: &str) -> Result<u64> {
-    // Isso é uma estimativa - crates.io não fornece tamanho diretamente
-    // Você pode fazer download do .crate file e verificar o tamanho
+    // This is an estimate - crates.io does not provide size directly
+    // You can download the .crate file and check the size
     let url = format!("https://crates.io/api/v1/crates/{}", crate_name);
 
     let response = client
@@ -169,8 +169,8 @@ async fn fetch_crates_io_size(client: &reqwest::Client, crate_name: &str) -> Res
         .await?;
 
     if response.status().is_success() {
-        // Por enquanto retornar um placeholder
-        // Implementação completa requer download do arquivo .crate
+    // For now return a placeholder
+    // Full implementation requires downloading the .crate file
         Ok(1024 * 50) // ~50KB placeholder
     } else {
         anyhow::bail!("Failed to fetch crate info from crates.io");

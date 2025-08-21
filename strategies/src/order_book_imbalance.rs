@@ -1,14 +1,14 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Simple order book imbalance strategy.
 //!
 //! Reusable in both live and backtest modes.
 //! Does not depend on technical indicators; only compares aggregated bid vs ask volume.
 
 use rust_decimal::Decimal;
-use tucano_execution::order::request::OrderRequestOpen;
-use tucano_execution::{ExchangeIndex, InstrumentIndex};
-use tucano_instrument::Side;
-use tucano_trader::AlgoStrategy;
+use toucan_execution::order::request::OrderRequestOpen;
+use toucan_execution::{ExchangeIndex, InstrumentIndex};
+use toucan_instrument::Side;
+use toucan_trader::AlgoStrategy;
 
 /// Configuration for the imbalance strategy.
 #[derive(Debug, Clone)]
@@ -67,14 +67,14 @@ impl<C: AsRef<OrderBookImbalanceConfig>> AlgoStrategy<ExchangeIndex, InstrumentI
         _state: &Self::State,
     ) -> (
         impl IntoIterator<
-            Item = tucano_execution::order::request::OrderRequestCancel<
+            Item = toucan_execution::order::request::OrderRequestCancel<
                 ExchangeIndex,
                 InstrumentIndex,
             >,
         >,
         impl IntoIterator<Item = OrderRequestOpen<ExchangeIndex, InstrumentIndex>>,
     ) {
-        // Sem acesso real ao livro aqui — retornar vazio até integração com dados.
+    // No real access to the book here — return empty until data integration.
         (Vec::new(), Vec::new())
     }
 }

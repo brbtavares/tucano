@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # OneOrMany<T>
 //!
 //! A type that represents exactly one item or multiple items (never empty).

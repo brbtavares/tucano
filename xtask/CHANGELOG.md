@@ -9,15 +9,15 @@
 
 ### Changed
 - Workspace modularization: created the `exchanges` crate to house concrete exchange integrations.
-- Removed concrete implementations and generics from `tucano-data`, leaving only abstractions.
+- Removed concrete implementations and generics from `toucan-data`, leaving only abstractions.
 - Updated imports and dependencies in all crates to reflect the new architecture.
 - Added `pub mod temp;` in `exchanges` to expose temporary integrations.
 - Updated examples and binaries to use the new import paths.
 
 ### Removed
 - Removed all modules and references to old `brokers` and `profitdll`.
-- Removed all generics and trait bounds from builders in `tucano-data`.
-- Removed concrete exchange implementations from `tucano-data`.
+- Removed all generics and trait bounds from builders in `toucan-data`.
+- Removed concrete exchange implementations from `toucan-data`.
 
 ### Fixed
 - Fixed import errors and cyclic dependencies after the migration.

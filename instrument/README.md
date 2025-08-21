@@ -1,14 +1,14 @@
-# tucano-instrument
+# toucan-instrument
 
-[![Crates.io](https://img.shields.io/crates/v/tucano-instrument.svg)](https://crates.io/crates/tucano-instrument)
-[![Docs.rs](https://docs.rs/tucano-instrument/badge.svg)](https://docs.rs/tucano-instrument)
+[![Crates.io](https://img.shields.io/crates/v/toucan-instrument.svg)](https://crates.io/crates/toucan-instrument)
+[![Docs.rs](https://docs.rs/toucan-instrument/badge.svg)](https://docs.rs/toucan-instrument)
 
-Instrument and exchange key abstractions for the Tucano trading framework.
+Instrument and exchange key abstractions for the Toucan trading framework.
 
 ---
 
 ## Overview
-This crate provides core types and traits for representing financial instruments, exchanges, and related keys. It is a foundational building block for other Tucano ecosystem crates, ensuring consistent modeling of assets, instruments, and exchange identifiers.
+This crate provides core types and traits for representing financial instruments, exchanges, and related keys. It is a foundational building block for other Toucan ecosystem crates, ensuring consistent modeling of assets, instruments, and exchange identifiers.
 
 ## Features
 - Instrument, Exchange, and Asset key types
@@ -17,7 +17,7 @@ This crate provides core types and traits for representing financial instruments
 
 ## Example
 ```rust
-use tucano_instrument::{Instrument, ExchangeKey, AssetKey};
+use toucan_instrument::{Instrument, ExchangeKey, AssetKey};
 
 let exchange = ExchangeKey::from("binance");
 let asset = AssetKey::from("btc");
@@ -29,7 +29,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-tucano-instrument = { path = "../instrument" }
+toucan-instrument = { path = "../instrument" }
 ```
 
 ## License

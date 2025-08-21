@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Shared modules (indicators, utilities) among strategies.
 
 /// Empty state that can be reused by strategies that do not yet

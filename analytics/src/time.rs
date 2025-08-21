@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use chrono::TimeDelta;
 use serde::{Deserialize, Serialize};
 use smol_str::{format_smolstr, SmolStr};
@@ -11,7 +11,7 @@ use std::fmt::Debug;
 ///
 /// # Examples
 /// ```rust
-/// use tucano_analytics::time::{TimeInterval, Daily, Annual252, Annual365};
+/// use toucan_analytics::time::{TimeInterval, Daily, Annual252, Annual365};
 ///
 /// // Daily TimeInterval
 /// let daily = Daily;

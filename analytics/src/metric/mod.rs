@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # 📊 Métricas Financeiras
 //!
 //! Módulo contendo implementações de métricas essenciais para análise quantitativa
@@ -24,8 +24,8 @@
 //! Cálculo do Sharpe Ratio (estatísticas fictícias) e geração de drawdown usando `DrawdownGenerator`:
 //!
 //! ```rust
-//! use tucano_analytics::metric::sharpe::SharpeRatio;
-//! use tucano_analytics::metric::drawdown::DrawdownGenerator;
+//! use toucan_analytics::metric::sharpe::SharpeRatio;
+//! use toucan_analytics::metric::drawdown::DrawdownGenerator;
 //! use rust_decimal_macros::dec;
 //! use chrono::{DateTime, Utc};
 //!
@@ -47,8 +47,8 @@
 //! assert!(dd.is_some());
 //! // Cálculo simples de Sharpe em base diária (valores hipotéticos)
 //! # {
-//! use tucano_analytics::metric::sharpe::SharpeRatio;
-//! use tucano_analytics::time::Daily;
+//! use toucan_analytics::metric::sharpe::SharpeRatio;
+//! use toucan_analytics::time::Daily;
 //! use rust_decimal_macros::dec;
 //! let risk_free = dec!(0.0015); // 0.15%
 //! let mean_ret  = dec!(0.0025); // 0.25%

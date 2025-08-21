@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     error::DataError,
     streams::consumer::MarketStreamResult,
@@ -12,7 +12,7 @@ use crate::{
 use chrono::{DateTime, Utc};
 use derive_more::From;
 use serde::{Deserialize, Serialize};
-use tucano_instrument::{ExchangeId, MarketDataInstrument};
+use toucan_instrument::{ExchangeId, MarketDataInstrument};
 
 /// Convenient new type containing a collection of [`MarketEvent<T>`](MarketEvent)s.
 #[derive(Debug)]

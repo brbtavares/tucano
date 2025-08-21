@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     balance::AssetBalance,
     error::{UnindexedClientError, UnindexedOrderError},
@@ -13,9 +13,9 @@ use crate::{
 use chrono::{DateTime, Utc};
 use futures::Stream;
 use std::future::Future;
-use tucano_instrument::ExchangeId;
+use toucan_instrument::ExchangeId;
 
-// Tipos temporários para compatibilidade
+// Temporary types for compatibility
 pub type AssetNameExchange = String;
 pub type InstrumentNameExchange = String;
 pub type QuoteAsset = String;

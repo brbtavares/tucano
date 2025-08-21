@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     engine::{
         action::send_requests::{SendCancelsAndOpensOutput, SendRequests, SendRequestsOutput},
@@ -11,12 +11,12 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use tucano_execution::{
+use toucan_execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen, RequestCancel, RequestOpen},
     ExchangeIndex, InstrumentIndex,
 };
-use tucano_integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
-use tucano_trader::AlgoStrategy;
+use toucan_integration::collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany};
+use toucan_trader::AlgoStrategy;
 
 /// Trait that defines how the [`Engine`] generates and sends algorithmic order requests.
 ///

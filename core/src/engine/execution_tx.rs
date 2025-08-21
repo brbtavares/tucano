@@ -1,15 +1,15 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     engine::error::{IndexError, UnrecoverableEngineError},
     execution::request::ExecutionRequest,
 };
 use std::fmt::Debug;
-use tucano_execution::{ExchangeIndex, InstrumentIndex};
-use tucano_integration::{
+use toucan_execution::{ExchangeIndex, InstrumentIndex};
+use toucan_integration::{
     channel::{Tx, UnboundedTx},
     collection::FnvIndexMap,
 };
-use tucano_instrument::exchange::ExchangeId;
+use toucan_instrument::exchange::ExchangeId;
 
 /// Collection of [`ExecutionRequest`] [`Tx`]s for each
 /// exchange [`ExecutionManager`](crate::execution::manager::ExecutionManager).

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     error::DataError,
     event::MarketEvent,
@@ -6,7 +6,7 @@ use crate::{
 };
 use async_trait::async_trait;
 use tokio::sync::mpsc;
-use tucano_integration::{protocol::websocket::WsMessage, Transformer};
+use toucan_integration::{protocol::websocket::WsMessage, Transformer};
 
 /// Generic stateless [`ExchangeTransformer`] often used for transforming
 /// [`PublicTrades`](crate::subscription::trade::PublicTrades) streams.

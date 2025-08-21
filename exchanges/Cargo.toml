@@ -1,7 +1,7 @@
 [package]
-name = "tucano_exchanges"
+name = "toucan_exchanges"
 version = "0.1.0"
 edition = "2021"
-description = "Crate para integrações e lógica de exchanges no workspace tucano."
+description = "Crate for integrations and exchange logic in the toucan workspace."
 
 [dependencies]

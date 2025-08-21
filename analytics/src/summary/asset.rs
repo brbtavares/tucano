@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::LocalSnapshot;
 use crate::metric::drawdown::{
     max::{MaxDrawdown, MaxDrawdownGenerator},
@@ -6,7 +6,7 @@ use crate::metric::drawdown::{
     Drawdown, DrawdownGenerator,
 };
 use serde::{Deserialize, Serialize};
-use tucano_execution::balance::{AssetBalance, Balance};
+use toucan_execution::balance::{AssetBalance, Balance};
 
 /// TearSheet summarising the trading session changes for an Asset.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Default)]
@@ -81,7 +81,7 @@ mod tests {
     use crate::test_utils::time_plus_days;
     use chrono::{DateTime, Utc};
     use rust_decimal_macros::dec;
-    use tucano_execution::AssetIndex;
+    use toucan_execution::AssetIndex;
 
     fn balance(balance: Balance, time: DateTime<Utc>) -> AssetBalance<AssetIndex> {
         AssetBalance {

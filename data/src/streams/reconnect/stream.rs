@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::streams::{consumer::StreamKey, reconnect::Event};
 use derive_more::Constructor;
 use futures::Stream;
@@ -6,7 +6,7 @@ use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::{convert, fmt::Debug, future, future::Future};
 use tracing::{error, info, warn};
-use tucano_integration::channel::Tx;
+use toucan_integration::channel::Tx;
 
 /// Utilities for handling a continually reconnecting [`Stream`] initialised via the
 /// [`init_reconnecting_stream`] function.

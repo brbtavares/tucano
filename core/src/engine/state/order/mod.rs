@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::state::order::{
     in_flight_recorder::InFlightRequestRecorder, manager::OrderManager,
 };
@@ -7,7 +7,7 @@ use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
 use std::{collections::hash_map::Entry, fmt::Debug};
 use tracing::{debug, error, warn};
-use tucano_execution::{
+use toucan_execution::{
     order::{
         id::ClientOrderId,
         request::{OrderRequestCancel, OrderRequestOpen, OrderResponseCancel},
@@ -16,7 +16,7 @@ use tucano_execution::{
     },
     ExchangeIndex, InstrumentIndex,
 };
-use tucano_integration::snapshot::Snapshot;
+use toucan_integration::snapshot::Snapshot;
 
 pub mod in_flight_recorder;
 pub mod manager;
@@ -402,7 +402,7 @@ mod tests {
     use chrono::{DateTime, Utc};
     use rust_decimal_macros::dec;
     use smol_str::SmolStr;
-    use tucano_execution::{
+    use toucan_execution::{
         error::{ConnectivityError, OrderError},
         order::{
             id::{ClientOrderId, OrderId, StrategyId},
@@ -411,7 +411,7 @@ mod tests {
             Order, OrderKey, OrderKind, TimeInForce,
         },
     };
-    use tucano_instrument::{exchange::ExchangeId, Side};
+    use toucan_instrument::{exchange::ExchangeId, Side};
 
     fn orders(
         orders: impl IntoIterator<Item = Order<ExchangeId, u64, ActiveOrderState>>,

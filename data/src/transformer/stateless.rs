@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::ExchangeTransformer;
 use crate::{
     error::DataError,
@@ -11,8 +11,8 @@ use async_trait::async_trait;
 use serde::Deserialize;
 use std::marker::PhantomData;
 use tokio::sync::mpsc;
-use tucano_instrument::ExchangeId;
-use tucano_integration::{
+use toucan_instrument::ExchangeId;
+use toucan_integration::{
     protocol::websocket::WsMessage, subscription::SubscriptionId, Transformer,
 };
 
@@ -73,7 +73,7 @@ where
         match self.instrument_map.find(&subscription_id) {
             Ok(instrument) => {
                 MarketIter::<InstrumentKey, <Kind as SubscriptionKind>::Event>::from((
-                    ExchangeId::Other, // Valor fixo temporário, ajuste conforme necessário
+                    ExchangeId::Other, // Temporary fixed value, adjust as needed
                     instrument.clone(),
                     input,
                 ))

@@ -1,13 +1,13 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 
-//! Erros e códigos (**NL_***) unificados entre mock e FFI ProfitDLL.
+
+//! Unified errors and codes (**NL_***) between mock and FFI ProfitDLL.
 //!
-//! Todos os códigos e enums seguem a especificação oficial da DLL (ver [MANUAL.md](../MANUAL.md#erros)).
+//! All codes and enums follow the official DLL specification (see [MANUAL.md](../MANUAL.md#erros)).
 
-/// Tipo de retorno padrão da DLL (**NResult**).
+/// Default return type of the DLL (**NResult**).
 pub type NResult = i32;
 
-// Códigos **NL_*** (extendidos conforme manual). Valores negativos (HRESULT signed style).
+// **NL_*** codes (extended as per manual). Negative values (HRESULT signed style).
 pub const NL_OK: NResult = 0;
 pub const NL_INTERNAL_ERROR: NResult = -2147483647;
 pub const NL_NOT_INITIALIZED: NResult = -2147483646;
@@ -40,23 +40,23 @@ pub const NL_FILE_ALREADY_EXISTS: NResult = -2147483618;
 pub const NL_INVALID_TICKER: NResult = -2147483617;
 pub const NL_NOT_MASTER_ACCOUNT: NResult = -2147483616;
 
-/// Enum de erros unificados da interface ProfitDLL (**ProfitError**).
+/// Unified error enum for the ProfitDLL interface (**ProfitError**).
 ///
-/// Cada variante corresponde a um código **NL_*** ou erro de integração descrito no [MANUAL.md](../MANUAL.md#erros).
+/// Each variant corresponds to an **NL_*** code or integration error described in [MANUAL.md](../MANUAL.md#erros).
 #[non_exhaustive]
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
 pub enum ProfitError {
-    #[error("Erro interno DLL (**NL_INTERNAL_ERROR**)")]
+    #[error("DLL internal error (**NL_INTERNAL_ERROR**)")]
     Internal,
-    #[error("DLL não inicializada (**NL_NOT_INITIALIZED**)")]
+    #[error("DLL not initialized (**NL_NOT_INITIALIZED**)")]
     NotInitialized,
-    #[error("Argumentos inválidos (**NL_INVALID_ARGS**)")]
+    #[error("Invalid arguments (**NL_INVALID_ARGS**)")]
     InvalidArgs,
-    #[error("Aguardando servidor (**NL_WAITING_SERVER**)")]
+    #[error("Waiting for server (**NL_WAITING_SERVER**)")]
     WaitingServer,
-    #[error("Sem login (**NL_NO_LOGIN**)")]
+    #[error("No login (**NL_NO_LOGIN**)")]
     NoLogin,
-    #[error("Sem licença (**NL_NO_LICENSE**)")]
+    #[error("No license (**NL_NO_LICENSE**)")]
     NoLicense,
     #[error("Fora de faixa (**NL_OUT_OF_RANGE**)")]
     OutOfRange,

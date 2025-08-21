@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use super::BinanceChannel;
 use crate::{
@@ -107,7 +107,7 @@ where
         .map(|market| ExchangeSub::from((BinanceChannel::TRADES, market)).id())
 }
 
-/// Deserialize a [`BinanceTrade`] "buyer_is_maker" boolean field to a Tucano [`Side`].
+/// Deserialize a [`BinanceTrade`] "buyer_is_maker" boolean field to a Toucan [`Side`].
 ///
 /// Variants:
 /// buyer_is_maker => Side::Sell

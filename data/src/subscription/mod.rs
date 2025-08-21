@@ -1,17 +1,17 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 
-use tucano_instrument::asset::name::AssetNameInternal;
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
+use toucan_instrument::asset::name::AssetNameInternal;
+
 use crate::instrument::InstrumentData;
 use derive_more::Display;
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
 use smol_str::{format_smolstr, ToSmolStr};
 use std::{borrow::Borrow, fmt::Debug, hash::Hash};
-use tucano_instrument::{
+use toucan_instrument::{
     ExchangeId, InstrumentKind, Keyed, MarketDataInstrument, MarketDataInstrumentKind,
 };
-use tucano_integration::{
+use toucan_integration::{
     error::SocketError, protocol::websocket::WsMessage, subscription::SubscriptionId, Validator,
 };
 
@@ -280,7 +280,7 @@ mod tests {
 
     mod subscription {
         use super::*; // brings Map, SubscriptionId, InstrumentKind
-        use tucano_instrument::MarketDataInstrument;
+    use toucan_instrument::MarketDataInstrument;
 
         // Removed nested module with unused imports (B3Exchange, OrderBooksL2, PublicTrades)
 

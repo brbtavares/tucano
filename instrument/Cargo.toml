@@ -1,5 +1,5 @@
 [package]
-name = "tucano-instrument"
+name = "toucan-instrument"
 version = "0.1.0"
 edition = "2021"
 

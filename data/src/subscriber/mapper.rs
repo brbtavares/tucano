@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     // ...existing code...
     instrument::InstrumentData,
@@ -7,7 +7,7 @@ use crate::{
 };
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
-use tucano_integration::subscription::SubscriptionId;
+use toucan_integration::subscription::SubscriptionId;
 
 /// Defines how to map a collection of Toucan [`Subscription`]s into exchange specific
 /// [`SubscriptionMeta`], containing subscription payloads that are sent to the exchange.
@@ -26,7 +26,7 @@ impl SubscriptionMapper for WebSocketSubMapper {
     fn map<Exchange, Instrument, Kind>(
         _subscriptions: &[Subscription<Exchange, Instrument, Kind>],
     ) -> SubscriptionMeta<()> {
-        // TODO: Implementação concreta de SubscriptionMapper::map deve ser feita na crate exchanges
-        unimplemented!("A implementação concreta de SubscriptionMapper::map deve ser feita na crate exchanges.");
+    // TODO: Concrete implementation of SubscriptionMapper::map must be done in the exchanges crate
+    unimplemented!("The concrete implementation of SubscriptionMapper::map must be done in the exchanges crate.");
     }
 }

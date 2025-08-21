@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::subscription::SubscriptionId;
 use reqwest::Error;
 use thiserror::Error;

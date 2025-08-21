@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::{StreamBuilder, Streams};
 use crate::{
     error::DataError,
@@ -7,8 +7,8 @@ use crate::{
 };
 use futures_util::StreamExt;
 use std::{collections::HashMap, fmt::Debug, future::Future, pin::Pin};
-use tucano_instrument::ExchangeId;
-use tucano_integration::channel::Channel;
+use toucan_instrument::ExchangeId;
+use toucan_integration::channel::Channel;
 
 /// Communicative type alias representing the [`Future`] result of a [`StreamBuilder::init`] call
 /// generated whilst executing [`MultiStreamBuilder::add`].
@@ -51,15 +51,15 @@ impl<Output> MultiStreamBuilder<Output> {
     /// method is invoked.
     #[allow(clippy::should_implement_trait)]
     pub fn add(self, _builder: StreamBuilder) -> Self {
-        // TODO: Implementação concreta de add deve ser feita na crate exchanges
-        unimplemented!("A implementação concreta de MultiStreamBuilder::add deve ser feita na crate exchanges.");
+    // TODO: Concrete implementation of add must be done in the exchanges crate
+    unimplemented!("The concrete implementation of MultiStreamBuilder::add must be done in the exchanges crate.");
     }
 
     /// Initialise each [`StreamBuilder<SubscriptionKind>`](StreamBuilder) that was added to the
     /// [`MultiStreamBuilder`] and map all [`Streams<SubscriptionKind::Event>`](Streams) into a common
     /// [`Streams<Output>`](Streams).
     pub async fn init(self) -> Result<Streams<Output>, DataError> {
-        // TODO: Implementação concreta de init deve ser feita na crate exchanges
-        unimplemented!("A implementação concreta de MultiStreamBuilder::init deve ser feita na crate exchanges.");
+    // TODO: Concrete implementation of init must be done in the exchanges crate
+    unimplemented!("The concrete implementation of MultiStreamBuilder::init must be done in the exchanges crate.");
     }
 }

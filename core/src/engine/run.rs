@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     engine::{
         audit::{context::EngineContext, AuditTick, Auditor},
@@ -9,7 +9,7 @@ use crate::{
 use futures::{Stream, StreamExt};
 use std::fmt::Debug;
 use tracing::info;
-use tucano_integration::{
+use toucan_integration::{
     channel::{ChannelTxDroppable, Tx},
     FeedEnded, Terminal,
 };

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Engine Event Processing Integration Test
 //!
 //! This comprehensive integration test validates the complete event processing flow
@@ -72,7 +72,7 @@
 //! - **Audit Trail**: Ensuring complete audit log generation
 //! - **Performance Metrics**: Validating PnL calculations and trading statistics
 
-use tucano_core::{
+use toucan_core::{
     engine::{
         action::{
             generate_algo_orders::GenerateAlgoOrdersOutput,
@@ -103,13 +103,13 @@ use tucano_core::{
     EngineEvent, Sequence, Timed,
 };
 
-use tucano_data::{
+use toucan_data::{
     event::{DataKind, MarketEvent},
     streams::consumer::MarketStreamEvent,
     subscription::trade::PublicTrade,
 };
 
-use tucano_execution::{
+use toucan_execution::{
     balance::{AssetBalance, Balance},
     order::{
         id::{ClientOrderId, OrderId, StrategyId},
@@ -121,12 +121,12 @@ use tucano_execution::{
     AccountEvent, AccountEventKind, AccountSnapshot,
 };
 
-use tucano_core::engine::state::IndexedInstruments;
-use tucano_instrument::{ExchangeId, Side}; // instrument list alias
+use toucan_core::engine::state::IndexedInstruments;
+use toucan_instrument::{ExchangeId, Side}; // instrument list alias
 
-use tucano_risk::DefaultRiskManager;
+use toucan_risk::DefaultRiskManager;
 
-use tucano_trader::{
+use toucan_trader::{
     algo::AlgoStrategy, close_positions::ClosePositionsStrategy,
     on_disconnect::OnDisconnectStrategy, on_trading_disabled::OnTradingDisabled,
 };
@@ -135,7 +135,7 @@ use chrono::{DateTime, Utc};
 use fnv::FnvHashMap;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
-use tucano_integration::{
+use toucan_integration::{
     channel::{mpsc_unbounded, UnboundedTx},
     collection::{none_one_or_many::NoneOneOrMany, one_or_many::OneOrMany},
     snapshot::Snapshot,
@@ -932,9 +932,9 @@ fn build_engine(
 ) -> TestEngine {
     // Simplified instrument list using placeholder keys inst0/inst1
     let instruments: IndexedInstruments = vec![
-        tucano_instrument::Keyed::new(
+    toucan_instrument::Keyed::new(
             "inst0".to_string(),
-            tucano_instrument::ConcreteInstrument {
+            toucan_instrument::ConcreteInstrument {
                 symbol: "BASE".into(),
                 market: "spot".into(),
                 exchange: ExchangeId::Mock,
@@ -942,9 +942,9 @@ fn build_engine(
                 name_exchange: "BASEQUOTE".into(),
             },
         ),
-        tucano_instrument::Keyed::new(
+    toucan_instrument::Keyed::new(
             "inst1".to_string(),
-            tucano_instrument::ConcreteInstrument {
+            toucan_instrument::ConcreteInstrument {
                 symbol: "ALT".into(),
                 market: "spot".into(),
                 exchange: ExchangeId::Mock,

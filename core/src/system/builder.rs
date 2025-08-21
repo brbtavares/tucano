@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::state::IndexedInstruments;
 use crate::{
     engine::{
@@ -9,7 +9,7 @@ use crate::{
         state::{builder::EngineStateBuilder, trading::TradingState, EngineState},
         Engine, Processor,
     },
-    error::TucanoError,
+    error::ToucanError,
     execution::{
         builder::{ExecutionBuildFutures, ExecutionBuilder},
         AccountStreamEvent,
@@ -17,14 +17,14 @@ use crate::{
     shutdown::SyncShutdown,
     system::{config::ExecutionConfig, System, SystemAuxillaryHandles},
 };
-use tucano_data::streams::reconnect::stream::ReconnectingStream;
-use tucano_execution::{balance::Balance, InstrumentIndex};
-use tucano_integration::{
+use toucan_data::streams::reconnect::stream::ReconnectingStream;
+use toucan_execution::{balance::Balance, InstrumentIndex};
+use toucan_integration::{
     channel::{mpsc_unbounded, Channel, ChannelTxDroppable},
     snapshot::SnapUpdates,
     FeedEnded, Terminal,
 };
-use tucano_instrument::{ConcreteInstrument, Keyed};
+use toucan_instrument::{ConcreteInstrument, Keyed};
 
 /// Placeholder types
 pub type AssetNameInternal = String;
@@ -61,7 +61,7 @@ pub enum AuditMode {
     Disabled,
 }
 
-/// Argumentos necessários para construir um sistema de trading completo Tucano.
+/// Argumentos necessários para construir um sistema de trading completo Toucan.
 ///
 /// Contém todos os componentes para montar e inicializar o sistema (Engine + infraestrutura).
 #[derive(Debug, Clone, PartialEq, Constructor)]
@@ -93,7 +93,7 @@ pub struct SystemArgs<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnIns
     pub instrument_data_init: FnInstrumentData,
 }
 
-/// Builder para construir um sistema de trading completo Tucano.
+/// Builder para construir um sistema de trading completo Toucan.
 #[derive(Debug)]
 pub struct SystemBuilder<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData> {
     args: SystemArgs<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>,
@@ -184,7 +184,7 @@ impl<'a, Clock, Strategy, Risk, MarketStream, GlobalData, FnInstrumentData>
             Event,
             MarketStream,
         >,
-        TucanoError,
+    ToucanError,
     >
     where
         Clock: EngineClock + Clone + Send + Sync + 'static,
@@ -308,7 +308,7 @@ where
     /// Inicializa o sistema usando o runtime tokio atual.
     ///
     /// Spawn de todas as tasks necessárias e retorna a instância `System` em execução.
-    pub async fn init(self) -> Result<System<Engine, Event>, TucanoError> {
+    pub async fn init(self) -> Result<System<Engine, Event>, ToucanError> {
         self.init_internal(tokio::runtime::Handle::current()).await
     }
 
@@ -318,14 +318,14 @@ where
     pub async fn init_with_runtime(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<System<Engine, Event>, TucanoError> {
+    ) -> Result<System<Engine, Event>, ToucanError> {
         self.init_internal(runtime).await
     }
 
     async fn init_internal(
         self,
         runtime: tokio::runtime::Handle,
-    ) -> Result<System<Engine, Event>, TucanoError> {
+    ) -> Result<System<Engine, Event>, ToucanError> {
         let Self {
             mut engine,
             engine_feed_mode,

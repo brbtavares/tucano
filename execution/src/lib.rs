@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -89,7 +89,7 @@
 
 // Silence transitional unused deps (must appear after inner crate docs)
 #[allow(unused_imports)]
-use {serde_json as _, tucano_data as _};
+use {serde_json as _, toucan_data as _};
 
 use crate::{
     balance::AssetBalance,
@@ -100,9 +100,9 @@ use chrono::{DateTime, Utc};
 use derive_more::{Constructor, From};
 use order::state::OrderState;
 use serde::{Deserialize, Serialize};
-use tucano_integration::snapshot::Snapshot;
+use toucan_integration::snapshot::Snapshot;
 
-// Módulo de compatibilidade para migração
+// Compatibility module for migration
 pub mod compat;
 pub use compat::*;
 
@@ -133,7 +133,7 @@ pub struct AccountEvent<
     InstrumentKey = InstrumentIndex,
 > {
     pub exchange: ExchangeKey,
-    // Fase 1: introdução opcional de Broker/Account (multi-corretora)
+    // Phase 1: optional introduction of Broker/Account (multi-broker)
     pub broker: Option<BrokerId>,
     pub account: Option<AccountId>,
     pub kind: AccountEventKind<ExchangeKey, AssetKey, InstrumentKey>,

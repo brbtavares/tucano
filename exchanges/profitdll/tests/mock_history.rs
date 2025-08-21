@@ -1,6 +1,6 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 
-use tucano_profitdll::*;
+
+use toucan_profitdll::*;
 
 #[tokio::test]
 async fn mock_history_trades_generation() {

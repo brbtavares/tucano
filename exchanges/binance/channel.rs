@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use super::{Binance, futures::BinanceFuturesUsd};
 use crate::{
@@ -12,7 +12,7 @@ use crate::{
 };
 use serde::Serialize;
 
-/// Type that defines how to translate a Tucano [`Subscription`] into a [`Binance`]
+/// Type that defines how to translate a Toucan [`Subscription`] into a [`Binance`]
 /// channel to be subscribed to.
 ///
 /// See docs: <https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams>

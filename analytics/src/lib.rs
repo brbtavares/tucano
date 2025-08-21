@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //!
 //! # 📊 Analytics - Financial Analysis Module
 //!
@@ -34,7 +34,7 @@
 //! Simple Sharpe Ratio calculation using pre-computed statistics from a return series:
 //!
 //! ```rust
-//! use tucano_analytics::metric::sharpe::SharpeRatio;
+//! use toucan_analytics::metric::sharpe::SharpeRatio;
 //! use rust_decimal_macros::dec;
 //! use chrono::TimeDelta;
 //!
@@ -51,8 +51,8 @@
 //! Another example calculating Sharpe on a daily basis:
 //!
 //! ```rust
-//! use tucano_analytics::metric::sharpe::SharpeRatio;
-//! use tucano_analytics::time::Daily;
+//! use toucan_analytics::metric::sharpe::SharpeRatio;
+//! use toucan_analytics::time::Daily;
 //! use rust_decimal_macros::dec;
 //!
 //! let risk_free = dec!(0.0015);    // 0.15%
@@ -119,7 +119,7 @@ pub trait Timed {
 ///
 /// # Example
 /// ```rust
-/// use tucano_analytics::{TimedValue, Timed};
+/// use toucan_analytics::{TimedValue, Timed};
 /// use chrono::Utc;
 ///
 /// let price = TimedValue::new(100.50_f64, Utc::now());

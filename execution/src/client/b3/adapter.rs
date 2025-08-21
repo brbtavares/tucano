@@ -1,10 +1,10 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! Event adapter for converting ProfitDLL events to Toucan AccountEvents
 
 use crate::{balance::AssetBalance, error::AssetNameExchange, UnindexedAccountEvent};
 // use crate::profitdll::{CallbackEvent, OrderSide};
 
-use tucano_instrument::Side;
+use toucan_instrument::Side;
 
 // Removed: CallbackEvent conversion is obsolete after refactor.
 

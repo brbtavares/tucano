@@ -1,12 +1,12 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
 
-//! Build script para configurar linkagem da ProfitDLL em Windows
+
+//! Build script to configure linking of ProfitDLL on Windows
 //!
-//! Este script configura automaticamente a linkagem da ProfitDLL.dll
-//! quando compilando para Windows, incluindo:
-//! - Localização automática da DLL
-//! - Configuração de diretórios de busca
-//! - Validação de arquivos necessários
+//! This script automatically configures linking of ProfitDLL.dll
+//! when compiling for Windows, including:
+//! - Automatic DLL location
+//! - Search directory configuration
+//! - Validation of required files
 
 use std::env;
 use std::path::Path;
@@ -14,26 +14,26 @@ use std::path::Path;
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
 
-    // Configuração específica para Windows
+    // Windows-specific configuration
     if cfg!(target_os = "windows") {
         configure_windows_dll();
     } else {
-        println!("cargo:warning=ProfitDLL só é suportada em Windows. Usando implementação mock.");
+    println!("cargo:warning=ProfitDLL is only supported on Windows. Using mock implementation.");
     }
 }
 
 fn configure_windows_dll() {
-    println!("🔧 Configurando ProfitDLL para Windows...");
+    println!("🔧 Configuring ProfitDLL for Windows...");
 
-    // Diretórios padrão onde a ProfitDLL pode estar instalada
+    // Default directories where ProfitDLL may be installed
     let possible_paths = vec!["C:\\ProfitDLL", ".", "./lib", "./dll"];
 
-    // Tentar localizar ProfitDLL.dll
+    // Try to locate ProfitDLL.dll
     let mut dll_found = false;
     for path in &possible_paths {
         let dll_path = Path::new(path).join("ProfitDLL.dll");
         if dll_path.exists() {
-            println!("✅ ProfitDLL.dll encontrada em: {path}");
+            println!("✅ ProfitDLL.dll found at: {path}");
             println!("cargo:rustc-link-search=native={path}");
             dll_found = true;
             break;
@@ -41,11 +41,11 @@ fn configure_windows_dll() {
     }
 
     if !dll_found {
-        // Verificar variável de ambiente
+        // Check environment variable
         if let Ok(dll_path) = env::var("PROFITDLL_PATH") {
             let dll_file = Path::new(&dll_path).join("ProfitDLL.dll");
             if dll_file.exists() {
-                println!("✅ ProfitDLL.dll encontrada via PROFITDLL_PATH: {dll_path}");
+                println!("✅ ProfitDLL.dll found via PROFITDLL_PATH: {dll_path}");
                 println!("cargo:rustc-link-search=native={dll_path}");
                 dll_found = true;
             }
@@ -53,23 +53,23 @@ fn configure_windows_dll() {
     }
 
     if dll_found {
-        // Não configuramos linkagem estática: carregamento dinâmico puro via libloading.
-        // Definir feature condicional
+        // We do not configure static linking: pure dynamic loading via libloading.
+        // Set conditional feature
         println!("cargo:rustc-cfg=feature=\"real_dll\"");
 
-        println!("🚀 ProfitDLL configurada com sucesso!");
+        println!("🚀 ProfitDLL successfully configured!");
     } else {
-        println!("⚠️  ProfitDLL.dll não encontrada. Para usar a DLL real:");
-        println!("   1. Instale a ProfitDLL da Nelógica");
-        println!("   2. Ou defina PROFITDLL_PATH com o caminho da DLL");
-        println!("   3. Ou coloque ProfitDLL.dll no diretório do projeto");
-        println!("   Usando implementação mock.");
+        println!("⚠️  ProfitDLL.dll not found. To use the real DLL:");
+    println!("   1. Install ProfitDLL from Nelogica");
+        println!("   2. Or set PROFITDLL_PATH with the DLL path");
+        println!("   3. Or place ProfitDLL.dll in the project directory");
+        println!("   Using mock implementation.");
 
-        // Definir feature para mock
+        // Set feature for mock
         println!("cargo:rustc-cfg=feature=\"mock_dll\"");
     }
 
-    // Configurações adicionais do Windows
+    // Additional Windows configurations
     println!("cargo:rustc-link-lib=kernel32");
     println!("cargo:rustc-link-lib=user32");
 }

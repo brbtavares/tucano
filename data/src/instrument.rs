@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use tucano_instrument::{InstrumentKind, Keyed, MarketDataInstrument};
+use toucan_instrument::{InstrumentKind, Keyed, MarketDataInstrument};
 
 /// Instrument related data that defines an associated unique `Id`.
 ///
@@ -20,7 +20,7 @@ where
     InstrumentKey: Debug + Clone + Eq + Send + Sync,
 {
     type Key = InstrumentKey;
-    type Kind = tucano_instrument::MarketDataInstrumentKind;
+    type Kind = toucan_instrument::MarketDataInstrumentKind;
 
     fn key(&self) -> &Self::Key {
         &self.key
@@ -33,7 +33,7 @@ where
 
 impl InstrumentData for MarketDataInstrument {
     type Key = Self;
-    type Kind = tucano_instrument::MarketDataInstrumentKind;
+    type Kind = toucan_instrument::MarketDataInstrumentKind;
 
     fn key(&self) -> &Self::Key {
         self
@@ -82,5 +82,5 @@ where
     }
 }
 
-// Implementação From removida temporariamente - incompatível com nova arquitetura híbrida
-// TODO: Reimplementar usando traits markets ao invés de campos específicos
+// From implementation temporarily removed - incompatible with new hybrid architecture
+// TODO: Reimplement using market traits instead of specific fields

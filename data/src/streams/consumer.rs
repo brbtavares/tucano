@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     error::DataError,
     event::MarketEvent,
@@ -19,7 +19,7 @@ use futures::Stream;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use tracing::info;
-use tucano_instrument::ExchangeId;
+use toucan_instrument::ExchangeId;
 
 /// Default [`ReconnectionBackoffPolicy`] for a [`reconnecting`](`ReconnectingStream`) [`MarketStream`].
 pub const STREAM_RECONNECTION_POLICY: ReconnectionBackoffPolicy = ReconnectionBackoffPolicy {
@@ -47,9 +47,9 @@ pub async fn init_market_stream<Exchange, Instrument, Kind>(
     _policy: ReconnectionBackoffPolicy,
     _subscriptions: Vec<Subscription<Exchange, Instrument, Kind>>,
 ) -> Result<(), DataError> {
-    // TODO: Implementação concreta de init_market_stream deve ser feita na crate exchanges
+    // TODO: Concrete implementation of init_market_stream must be done in the exchanges crate
     unimplemented!(
-        "A implementação concreta de init_market_stream deve ser feita na crate exchanges."
+        "The concrete implementation of init_market_stream must be done in the exchanges crate."
     );
 }
 

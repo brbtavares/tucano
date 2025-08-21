@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -6,7 +6,7 @@ use std::{
     pin::Pin,
     task::{Context, Poll},
 };
-use tucano_execution::{
+use toucan_execution::{
     order::request::{OrderRequestCancel, OrderRequestOpen},
     ExchangeIndex, InstrumentIndex,
 };

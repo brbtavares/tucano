@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 //! # Execution Management
 //!
 //! High-level module for routing execution requests and account management.
@@ -61,13 +61,13 @@
 //! ```
 
 use crate::{engine::execution_tx::MultiExchangeTxMap, execution::builder::ExecutionHandles};
-use tucano_data::streams::reconnect;
+use toucan_data::streams::reconnect;
 // Transition note: we purposefully avoid importing alias types (AssetIndex, ExchangeIndex,
 // InstrumentIndex) here to demonstrate direct String usage. Other modules may retain
 // the aliases for semantic clarity until newtypes are reintroduced.
-use tucano_execution::AccountEvent; // alias types replaced locally by String
-use tucano_integration::channel::Channel;
-use tucano_instrument::exchange::ExchangeId;
+use toucan_execution::AccountEvent; // alias types replaced locally by String
+use toucan_integration::channel::Channel;
+use toucan_instrument::exchange::ExchangeId;
 
 /// Provides an execution manager builder for ergonomically initialising multiple execution links
 /// to mock and live exchanges.

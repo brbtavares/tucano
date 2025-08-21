@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     // ...existing code...
     subscription::{Map, SubscriptionKind},
@@ -7,7 +7,7 @@ use async_trait::async_trait;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tracing::debug;
-use tucano_integration::{
+use toucan_integration::{
     error::SocketError,
     protocol::{
         websocket::{WebSocket, WebSocketParser, WsMessage},
@@ -40,7 +40,7 @@ impl SubscriptionValidator for WebSocketSubValidator {
         _instrument_map: Map<()>,
         _websocket: &mut WebSocket,
     ) -> Result<(Map<()>, Vec<WsMessage>), SocketError> {
-        // TODO: Implementação concreta de SubscriptionValidator::validate deve ser feita na crate exchanges
-        unimplemented!("A implementação concreta de SubscriptionValidator::validate deve ser feita na crate exchanges.");
+    // TODO: Concrete implementation of SubscriptionValidator::validate must be done in the exchanges crate
+    unimplemented!("The concrete implementation of SubscriptionValidator::validate must be done in the exchanges crate.");
     }
 }

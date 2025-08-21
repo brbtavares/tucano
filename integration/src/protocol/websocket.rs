@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{error::SocketError, protocol::StreamParser};
 use bytes::Bytes;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};

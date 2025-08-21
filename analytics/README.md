@@ -1,10 +1,10 @@
 
-# Tucano Analytics
+# Toucan Analytics
 
 > Metrics, statistics, and performance summarization layer for strategies and backtests on B3.
 
 ## 🎯 Role in the Platform
-The **analytics** crate provides calculations for return, risk, and operational efficiency consumed by `core` (auditing), `risk` (dynamic limits), and external interfaces (dashboards/reports). It transforms events (trades, positions, accumulated PnL) into consolidated indicators within the Tucano ecosystem.
+The **analytics** crate provides calculations for return, risk, and operational efficiency consumed by `core` (auditing), `risk` (dynamic limits), and external interfaces (dashboards/reports). It transforms events (trades, positions, accumulated PnL) into consolidated indicators within the Toucan ecosystem.
 
 | Responsibility         | Description                                                                 |
 |------------------------|-----------------------------------------------------------------------------|
@@ -39,23 +39,23 @@ The **analytics** crate provides calculations for return, risk, and operational 
 | `risk`          | Feeding adaptive limits (e.g., realized volatility)           |
 | `strategy`      | Feedback loop for optimization/adaptation                     |
 
-## ✅ Concluído
-- Métricas clássicas (Sharpe, Sortino, Calmar, Profit Factor, Win Rate) implementadas.
-- Estrutura de summary modular inicial.
-- Suporte básico a intervalos de tempo.
+## ✅ Completed
+- Classic metrics (Sharpe, Sortino, Calmar, Profit Factor, Win Rate) implemented.
+- Initial modular summary structure.
+- Basic support for time intervals.
 
-## 🧪 Parcial / Em Progresso
-- Drawdown avançado (curvas de recuperação e duração) – básico presente.
-- Composição multi‑estratégia / multi‑fundo (falta agregação hierárquica).
-- Persistência incremental dos cálculos (não implementado).
+## � Partial / In Progress
+- Advanced drawdown (recovery and duration curves) – basic present.
+- Multi-strategy / multi-fund composition (hierarchical aggregation missing).
+- Incremental persistence of calculations (not implemented).
 
-## 🚧 Pendências / Roadmap
-- Métricas específicas de microestrutura B3 (slippage, efetividade de execução por leilão / intraday).  
-- KPIs de latência (integração com timestamps de `execution`).  
-- Exportadores (CSV / Parquet / gRPC).  
-- Séries rolling em tempo real via canal assíncrono.  
+## � Pending / Roadmap
+- Specific B3 microstructure metrics (slippage, execution effectiveness by auction / intraday).
+- Latency KPIs (integration with `execution` timestamps).
+- Exporters (CSV / Parquet / gRPC).
+- Real-time rolling series via asynchronous channel.  
 
-## 🏁 Exemplo Básico (conceitual)
+## 🏁 Basic Example (conceptual)
 ```rust
 use analytics::metric::sharpe::SharpeRatio; // assinatura ilustrativa
 
@@ -64,8 +64,8 @@ let sharpe = SharpeRatio::compute(&returns, 0.0);
 println!("Sharpe: {:.2}", sharpe.value());
 ```
 
-## 🇧🇷 Contexto B3
-Os cálculos irão suportar classes de instrumentos típicos (ações, índice, mini‑índice, dólar, mini‑dólar, ouro, bitcoin futuros) com normalização de retornos por contrato ou fator de ajuste (a definir). Ajustes específicos (ex: multiplicadores de pontos do índice e dólar) ainda precisam ser integrados.
+## 🇧🇷 B3 Context
+The calculations will support typical instrument classes (stocks, index, mini-index, dollar, mini-dollar, gold, bitcoin futures) with return normalization per contract or adjustment factor (to be defined). Specific adjustments (e.g., index and dollar point multipliers) still need to be integrated.
 
 ## 📌 Notas
-*Alguns nomes podem mudar quando a API pública for estabilizada. Até lá, evitar dependência rígida externa.*
+*Some names may change when the public API is stabilized. Until then, avoid rigid external dependencies.*

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //! Neutral abstraction layer (Linux/Windows) for use in examples.
 //!
@@ -14,7 +14,7 @@ use tokio::sync::mpsc::UnboundedReceiver;
 /// Credentials structure for logging into the Profit DLL.
 ///
 /// Parameters:
-/// - **activation_key**: Activation key provided by Nelógica.
+/// - **activation_key**: Activation key provided by Nelogica.
 /// - **user**: Username registered on the platform.
 /// - **password**: User password.
 ///
@@ -59,49 +59,49 @@ impl Credentials {
 pub trait ProfitBackend: Send + Sync + Any {
     /// Initializes login in the DLL (**InitializeLogin**).
     ///
-    /// Parâmetros:
-    /// - **creds**: [`Credentials`] contendo activation_key, user e password.
+    /// Parameters:
+    /// - **creds**: [`Credentials`] containing activation_key, user and password.
     ///
-    /// Retorna: [`UnboundedReceiver<CallbackEvent>`] para eventos assíncronos.
+    /// Returns: [`UnboundedReceiver<CallbackEvent>`] for asynchronous events.
     ///
-    /// Erros: [`ProfitError`] conforme códigos NL_*.
+    /// Errors: [`ProfitError`] as per NL_* codes.
     async fn initialize_login(
         &self,
         creds: &Credentials,
     ) -> Result<UnboundedReceiver<CallbackEvent>, ProfitError>;
 
-    /// Solicita inscrição em um ticker (**SubscribeTicker**).
+    /// Requests subscription to a ticker (**SubscribeTicker**).
     ///
-    /// Parâmetros:
-    /// - **ticker**: Código do ativo.
-    /// - **exchange**: Bolsa.
+    /// Parameters:
+    /// - **ticker**: Asset code.
+    /// - **exchange**: Exchange.
     fn subscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError>;
 
-    /// Cancela inscrição em um ticker (**UnsubscribeTicker**).
+    /// Cancels subscription to a ticker (**UnsubscribeTicker**).
     ///
-    /// Parâmetros:
-    /// - **ticker**: Código do ativo.
-    /// - **exchange**: Bolsa.
+    /// Parameters:
+    /// - **ticker**: Asset code.
+    /// - **exchange**: Exchange.
     fn unsubscribe_ticker(&self, ticker: &str, exchange: &str) -> Result<(), ProfitError>;
 
-    /// Envia ordem (**SendOrder**).
+    /// Sends order (**SendOrder**).
     ///
-    /// Parâmetros:
-    /// - **order**: [`SendOrder`] com todos os campos obrigatórios.
+    /// Parameters:
+    /// - **order**: [`SendOrder`] with all required fields.
     fn send_order(&self, order: &SendOrder) -> Result<(), ProfitError>;
 
-    /// Cancela ordem existente pelo ID (**CancelOrder**).
+    /// Cancels existing order by ID (**CancelOrder**).
     ///
-    /// Parâmetros:
-    /// - **order_id**: Identificador da ordem.
+    /// Parameters:
+    /// - **order_id**: Order identifier.
     fn cancel_order(&self, order_id: i64) -> Result<(), ProfitError>;
 
-    /// Altera ordem existente (**ChangeOrder**).
+    /// Changes existing order (**ChangeOrder**).
     ///
-    /// Parâmetros:
-    /// - **order_id**: Identificador da ordem.
-    /// - **new_price**: Novo preço (opcional).
-    /// - **new_qty**: Nova quantidade (opcional).
+    /// Parameters:
+    /// - **order_id**: Order identifier.
+    /// - **new_price**: New price (optional).
+    /// - **new_qty**: New quantity (optional).
     fn change_order(
         &self,
         order_id: i64,
@@ -109,13 +109,13 @@ pub trait ProfitBackend: Send + Sync + Any {
         new_qty: Option<rust_decimal::Decimal>,
     ) -> Result<(), ProfitError>;
 
-    /// Solicita histórico de trades (**GetHistoryTrades**).
+    /// Requests trade history (**GetHistoryTrades**).
     ///
-    /// Parâmetros:
-    /// - **ticker**: Código do ativo.
-    /// - **exchange**: Bolsa.
-    /// - **from_ms**: Timestamp inicial (ms).
-    /// - **to_ms**: Timestamp final (ms).
+    /// Parameters:
+    /// - **ticker**: Asset code.
+    /// - **exchange**: Exchange.
+    /// - **from_ms**: Initial timestamp (ms).
+    /// - **to_ms**: Final timestamp (ms).
     fn request_history_trades(
         &self,
         ticker: &str,
@@ -128,7 +128,7 @@ pub trait ProfitBackend: Send + Sync + Any {
     fn shutdown(&self) {}
 }
 
-// ------------------ Implementação para o mock ------------------
+// ------------------ Mock implementation ------------------
 
 #[async_trait::async_trait]
 impl ProfitBackend for mock::ProfitConnector {
@@ -174,7 +174,7 @@ impl ProfitBackend for mock::ProfitConnector {
     }
 }
 
-// ------------------ Implementação para a DLL real ------------------
+// ------------------ Real DLL implementation ------------------
 
 #[cfg(all(target_os = "windows", feature = "real_dll"))]
 #[async_trait::async_trait]
@@ -218,10 +218,10 @@ impl ProfitBackend for crate::ffi::ProfitConnector {
     fn shutdown(&self) {}
 }
 
-/// Estratégia de seleção do backend:
-/// 1. Se var `PROFITDLL_FORCE_MOCK=1` -> mock.
-/// 2. Senão, em Windows + feature tenta DLL real (caminho de `PROFITDLL_PATH` se definido).
-/// 3. Fallback final: mock.
+/// Backend selection strategy:
+/// 1. If var `PROFITDLL_FORCE_MOCK=1` -> mock.
+/// 2. Otherwise, on Windows + feature tries real DLL (path from `PROFITDLL_PATH` if set).
+/// 3. Final fallback: mock.
 pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
     let force_mock = env::var("PROFITDLL_FORCE_MOCK")
         .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
@@ -273,13 +273,13 @@ pub fn new_backend() -> Result<Box<dyn ProfitBackend>, ProfitError> {
         .unwrap_or(false)
     {
         eprintln!(
-            "[profitdll][DIAG] new_backend: retornando mock (condições para real não satisfeitas)"
+            "[profitdll][DIAG] new_backend: returning mock (conditions for real not satisfied)"
         );
     }
     Ok(Box::new(mock::ProfitConnector::new(None)?))
 }
 
-/// Retorna o tipo concreto do backend para fins de logging / diagnóstico.
+/// Returns the concrete backend type for logging / diagnostics purposes.
 pub fn backend_kind(b: &dyn ProfitBackend) -> &'static str {
     if b.type_id() == TypeId::of::<mock::ProfitConnector>() {
         return "mock";

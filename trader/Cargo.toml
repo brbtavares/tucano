@@ -1,11 +1,11 @@
 [package]
-name = "tucano-trader"
+name = "toucan-trader"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-documentation = "https://docs.rs/tucano-trader"
+documentation = "https://docs.rs/toucan-trader"
 description = "Core abstractions for strategies (traits and types)"
 keywords = ["trading","strategy","framework"]
 categories = ["finance","algorithms"]
@@ -14,9 +14,9 @@ categories = ["finance","algorithms"]
 all-features = true
 
 [dependencies]
-# Tucano Ecosystem
-"tucano-execution" = { workspace = true }
-"tucano-instrument" = { workspace = true }
+# Toucan Ecosystem
+"toucan-execution" = { workspace = true }
+"toucan-instrument" = { workspace = true }
 
 # Data Structures
 rust_decimal = { workspace = true }

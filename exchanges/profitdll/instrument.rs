@@ -1,8 +1,8 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::instrument::InstrumentData;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use tucano_instrument::{
+use toucan_instrument::{
     Instrument,
     InstrumentKind, // Import trait from simplified instrument
 };
@@ -133,7 +133,7 @@ impl B3Instrument {
     }
 }
 
-/// Implement tucano_instrument::Instrument trait for B3Instrument
+/// Implement toucan_instrument::Instrument trait for B3Instrument
 impl Instrument for B3Instrument {
     type Symbol = String;
 

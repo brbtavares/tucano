@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::Streams;
 use crate::{
     error::DataError,
@@ -17,8 +17,8 @@ use std::{
     future::Future,
     pin::Pin,
 };
-use tucano_instrument::ExchangeId;
-use tucano_integration::{channel::Channel, Validator};
+use toucan_instrument::ExchangeId;
+use toucan_integration::{channel::Channel, Validator};
 
 /// Defines the [`MultiStreamBuilder`](multi::MultiStreamBuilder) API for ergonomically
 /// initialising a common [`Streams<Output>`](Streams) from multiple

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::compat::*;
 use crate::{error::OrderError, order::id::OrderId};
 use chrono::{DateTime, Utc};

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 // use markets::index::error::IndexError;
 use derive_more::Constructor;
 use futures::Stream;

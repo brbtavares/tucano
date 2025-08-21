@@ -1,10 +1,10 @@
 
-# Tucano Core Module
+# Toucan Core Module
 
 > This initial section was added to contextualize the Brazilian scope (B3 / ProfitDLL) and the current implementation status. The original English content remains below as comprehensive documentation.
 
 ## 🇧🇷 Overview (B3 / Brazilian Market)
-The **Core** module is the "brain" of the Tucano platform. It coordinates state, events, and orchestrates the interaction between Strategy, Risk, Execution, Data, Metrics, and Markets. Here, algorithmic trading of B3 stocks and derivatives (stocks, index, mini-index, dollar, mini-dollar, bitcoin futures, gold, etc.) will be consolidated in a unified way.
+The **Core** module is the "brain" of the Toucan platform. It coordinates state, events, and orchestrates the interaction between Strategy, Risk, Execution, Data, Metrics, and Markets. Here, algorithmic trading of B3 stocks and derivatives (stocks, index, mini-index, dollar, mini-dollar, bitcoin futures, gold, etc.) will be consolidated in a unified way.
 
 ## 🎯 Role in the Architecture
 | Responsibility         | Description                                                                 |
@@ -62,7 +62,7 @@ This section summarizes the current state focused on the Brazilian market. The r
 
 ---
 
-The **Core** module is the central orchestration layer of the Tucano algorithmic trading framework. It provides the main trading engine, system coordination, execution management, and foundational components that enable professional-grade live trading, paper trading, and backtesting capabilities.
+The **Core** module is the central orchestration layer of the Toucan algorithmic trading framework. It provides the main trading engine, system coordination, execution management, and foundational components that enable professional-grade live trading, paper trading, and backtesting capabilities.
 
 ## 🏗️ Architecture Overview
 
@@ -448,22 +448,22 @@ audit_filter = true
 
 ## 🛡️ Error Handling
 
-The core module provides comprehensive error handling through the `TucanoError` type:
+The core module provides comprehensive error handling through the `ToucanError` type:
 
 ```rust
-use core::error::TucanoError;
+use core::error::ToucanError;
 
 match trading_result {
     Ok(success) => println!("Trade executed: {:?}", success),
-    Err(TucanoError::MarketData(data_err)) => {
+    Err(ToucanError::MarketData(data_err)) => {
         eprintln!("Market data issue: {}", data_err);
         // Handle data connectivity issues
     },
-    Err(TucanoError::Execution(exec_err)) => {
+    Err(ToucanError::Execution(exec_err)) => {
         eprintln!("Execution failed: {}", exec_err);
         // Handle order execution failures
     },
-    Err(TucanoError::IndexError(index_err)) => {
+    Err(ToucanError::IndexError(index_err)) => {
         eprintln!("Invalid instrument/exchange: {}", index_err);
         // Handle configuration issues
     },
@@ -491,7 +491,7 @@ When contributing to the core module:
 
 ## 📄 License
 
-This module is part of the Tucano trading framework and follows the same licensing terms.
+This module is part of the Toucan trading framework and follows the same licensing terms.
 - **`audit/`** - Comprehensive audit trail and state replication
 - **`clock.rs`** - Time management for live trading and backtesting
 - **`command.rs`** - External command interface (CloseAllPositions, etc.)
@@ -717,7 +717,7 @@ The core module includes extensive test utilities:
 - `Engine<T>` - Main trading engine
 - `EngineEvent<T>` - Universal event type
 - `EngineState` - Complete system state
-- `TucanoError` - Comprehensive error type
+- `ToucanError` - Comprehensive error type
 - `Sequence` - Event sequence tracking
 
 ### Key Traits
@@ -743,4 +743,4 @@ When contributing to the core module:
 
 ## 📄 License
 
-This module is part of the Tucano trading framework. See the main project license for details.
+This module is part of the Toucan trading framework. See the main project license for details.

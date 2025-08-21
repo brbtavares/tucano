@@ -1,15 +1,15 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::error;
-use tucano_execution::{
+use toucan_execution::{
     trade::{AssetFees, Trade, TradeId},
     AssetIndex, InstrumentIndex, QuoteAsset,
 };
-use tucano_instrument::Side;
+use toucan_instrument::Side;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize, Constructor)]
 pub struct PositionManager<InstrumentKey = InstrumentIndex> {
@@ -63,12 +63,12 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 /// # Examples
 /// ## Partially Reduce LONG Position
 /// ```rust,ignore
-/// use tucano_core::engine::state::position::Position;
-/// use tucano_execution::order::id::{OrderId, StrategyId};
-/// use tucano_execution::trade::{AssetFees, Trade, TradeId};
-/// use tucano_instrument::asset::QuoteAsset;
-/// use tucano_instrument::instrument::name::InstrumentNameInternal;
-/// use tucano_instrument::Side;
+/// use toucan_core::engine::state::position::Position;
+/// use toucan_execution::order::id::{OrderId, StrategyId};
+/// use toucan_execution::trade::{AssetFees, Trade, TradeId};
+/// use toucan_instrument::asset::QuoteAsset;
+/// use toucan_instrument::instrument::name::InstrumentNameInternal;
+/// use toucan_instrument::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -111,12 +111,12 @@ impl<InstrumentKey> PositionManager<InstrumentKey> {
 ///
 /// ## Flip Position - Close SHORT and Open LONG
 /// ```rust,ignore
-/// use tucano_core::engine::state::position::Position;
-/// use tucano_execution::order::id::{OrderId, StrategyId};
-/// use tucano_execution::trade::{AssetFees, Trade, TradeId};
-/// use tucano_instrument::asset::QuoteAsset;
-/// use tucano_instrument::instrument::name::InstrumentNameInternal;
-/// use tucano_instrument::Side;
+/// use toucan_core::engine::state::position::Position;
+/// use toucan_execution::order::id::{OrderId, StrategyId};
+/// use toucan_execution::trade::{AssetFees, Trade, TradeId};
+/// use toucan_instrument::asset::QuoteAsset;
+/// use toucan_instrument::instrument::name::InstrumentNameInternal;
+/// use toucan_instrument::Side;
 /// use chrono::{DateTime, Utc};
 /// use std::str::FromStr;
 /// use rust_decimal_macros::dec;
@@ -250,7 +250,7 @@ impl<InstrumentKey> Position<QuoteAsset, InstrumentKey> {
         use Side::*;
         match (self.side, trade.side) {
             // Increase LONG/SHORT Position
-            (Buy, Buy) | (Sell, Sell) => {
+            (buy, buy) | (sell, sell) => {
                 self.update_price_entry_average(trade);
                 self.quantity_abs += trade.quantity.abs();
                 if self.quantity_abs > self.quantity_abs_max {
@@ -264,7 +264,7 @@ impl<InstrumentKey> Position<QuoteAsset, InstrumentKey> {
                 (Some(self), None)
             }
             // Reduce LONG/SHORT Position
-            (Buy, Sell) | (Sell, Buy) if self.quantity_abs > trade.quantity.abs() => {
+            (buy, sell) | (sell, buy) if self.quantity_abs > trade.quantity.abs() => {
                 // Update pnl_realised
                 self.update_pnl_realised(trade.quantity, trade.price, trade.fees.fees);
 
@@ -279,7 +279,7 @@ impl<InstrumentKey> Position<QuoteAsset, InstrumentKey> {
                 (Some(self), None)
             }
             // Close LONG/SHORT Position (exactly)
-            (Buy, Sell) | (Sell, Buy) if self.quantity_abs == trade.quantity.abs() => {
+            (buy, sell) | (sell, buy) if self.quantity_abs == trade.quantity.abs() => {
                 self.quantity_abs -= trade.quantity.abs();
                 self.fees_exit.fees += trade.fees.fees;
                 self.time_exchange_update = trade.time_exchange;
@@ -290,7 +290,7 @@ impl<InstrumentKey> Position<QuoteAsset, InstrumentKey> {
             }
 
             // Close LONG/SHORT Position & open SHORT/LONG with remaining trade.quantity
-            (Buy, Sell) | (Sell, Buy) if self.quantity_abs < trade.quantity.abs() => {
+            (buy, sell) | (sell, buy) if self.quantity_abs < trade.quantity.abs() => {
                 // Trade flips Position, so generate theoretical initial Trade for next Position
                 let next_position_quantity = trade.quantity.abs() - self.quantity_abs;
                 let next_position_fee_enter =

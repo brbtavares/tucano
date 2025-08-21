@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::summary::dataset::DataSetSummary;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};

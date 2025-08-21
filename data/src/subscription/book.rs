@@ -1,11 +1,11 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use super::SubscriptionKind;
 use crate::books::{mid_price, volume_weighted_mid_price, Level, OrderBook};
 use chrono::{DateTime, Utc};
 use derive_more::Constructor;
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-// use tucano_macros::{DeSubKind, SerSubKind}; // removed: crate no longer exists
+// use toucan_macros::{DeSubKind, SerSubKind}; // removed: crate no longer exists
 
 /// Toucan [`Subscription`](super::Subscription) [`SubscriptionKind`] that yields [`OrderBookL1`]
 /// market events.

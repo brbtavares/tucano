@@ -1,6 +1,6 @@
-# tucano-trader
+# toucan-trader
 
-Core strategy abstractions (traits, types, and helpers) for the **Tucano** ecosystem.
+Core strategy abstractions (traits, types, and helpers) for the **Toucan** ecosystem.
 
 This crate defines:
 
@@ -14,7 +14,7 @@ Add to your `Cargo.toml` (after publishing):
 
 ```toml
 [dependencies]
-tucano-trader = "0.1"
+toucan-trader = "0.1"
 ```
 
 ## License

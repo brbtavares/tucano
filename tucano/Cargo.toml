@@ -1,11 +1,11 @@
 [package]
-name = "tucano"
+name = "toucan"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-description = "Unified facade for the Tucano ecosystem (algorithmic trading)"
-repository = "https://github.com/brbtavares/tucano"
-documentation = "https://docs.rs/tucano"
+description = "Unified facade for the Toucan ecosystem (algorithmic trading)"
+repository = "https://github.com/brbtavares/toucan"
+documentation = "https://docs.rs/toucan"
 readme = "../README.md"
 keywords = ["trading","finance","rust"]
 categories = ["finance","algorithms"]
@@ -13,14 +13,14 @@ authors = ["Bruno Tavares <brbtavares@users.noreply.github.com>"]
 
 [dependencies]
 # Re-export targets
-"tucano-core" = { workspace = true }
-"tucano-data" = { workspace = true }
-"tucano-execution" = { workspace = true }
-"tucano-risk" = { workspace = true }
-"tucano-trader" = { workspace = true }
-"tucano-strategies" = { workspace = true }
-"tucano-analytics" = { workspace = true }
-"tucano-integration" = { workspace = true }
+"toucan-core" = { workspace = true }
+"toucan-data" = { workspace = true }
+"toucan-execution" = { workspace = true }
+"toucan-risk" = { workspace = true }
+"toucan-trader" = { workspace = true }
+"toucan-strategies" = { workspace = true }
+"toucan-analytics" = { workspace = true }
+"toucan-integration" = { workspace = true }
 [features]
 ## Aggregator feature for convenience
 full = []

@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 //!
 //! Isolated integration with ProfitDLL. Provides types, events, and (optionally)

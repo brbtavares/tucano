@@ -1,4 +1,4 @@
-# Tucano Risk
+# Toucan Risk
 
 > Validation and risk control layer before orders reach the venue.
 
@@ -38,15 +38,15 @@ The **risk** crate implements checks to protect capital, ensure compliance with 
 - Integration with runtime metrics.
 
 ## 🚧 Pending
-- Política de agregação (primeiro falha vs coletar todos os motivos).
-- Modo simulação vs produção (thresholds distintos).
-- Auditoria de decisões (log estruturado / métricas de bloqueio).
+ - Aggregation policy (fail on first vs collect all reasons).
+ - Simulation mode vs production (different thresholds).
+ - Decision audit (structured log / blocking metrics).
 
 
 
 ## Exemplo (conceitual)
 ```rust
-// pseudo-código
+// pseudo-code
 if risk_manager.validate(&order).is_ok() {
    submit(order)
 }

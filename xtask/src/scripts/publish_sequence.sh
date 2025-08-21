@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
-# Sequential publish script for Tucano crates.
+# Sequential publish script for Toucan crates.
 # Usage: ./scripts/publish_sequence.sh
 # Requires: CARGO_REGISTRY_TOKEN (cargo login) already configured.
 # Aborts on first failure.
 set -euo pipefail
 
 ORDER=(
-  "tucano-markets"
-  "tucano-integration"
-  "tucano-data"
-  "tucano-execution"
-  "tucano-trader"
-  "tucano-risk"
-  "tucano-analytics"
-  "tucano-core"
-  "tucano-strategies"
-  "tucano"
+  "toucan-instrument"
+  "toucan-integration"
+  "toucan-data"
+  "toucan-execution"
+  "toucan-trader"
+  "toucan-risk"
+  "toucan-analytics"
+  "toucan-core"
+  "toucan-strategies"
+  "toucan"
 )
 
 step() {
@@ -28,7 +28,7 @@ step() {
   sleep 30
 }
 
-echo "Tucano publish sequence start"
+echo "Toucan publish sequence start"
 
 for crate in "${ORDER[@]}"; do
   step "$crate"

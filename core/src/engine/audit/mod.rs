@@ -1,12 +1,12 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::{
     audit::context::EngineContext, clock::EngineClock, error::UnrecoverableEngineError, Engine,
     EngineOutput, UpdateFromAccountOutput, UpdateFromMarketOutput,
 };
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
-use tucano_integration::{collection::none_one_or_many::NoneOneOrMany, FeedEnded, Terminal};
-use tucano_trader::{OnDisconnectStrategy, OnTradingDisabled};
+use toucan_integration::{collection::none_one_or_many::NoneOneOrMany, FeedEnded, Terminal};
+use toucan_trader::{OnDisconnectStrategy, OnTradingDisabled};
 
 /// Defines data structures that represent the context an `Engine` [`AuditTick`] was generated.
 pub mod context;

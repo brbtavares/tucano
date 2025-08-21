@@ -1,12 +1,12 @@
 [package]
-name = "tucano-analytics"
+name = "toucan-analytics"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-documentation = "https://docs.rs/tucano-analytics"
-description = "Metrics, statistics, and summaries (drawdown, Sharpe, TearSheet) for the Tucano ecosystem"
+documentation = "https://docs.rs/toucan-analytics"
+description = "Metrics, statistics, and summaries (drawdown, Sharpe, TearSheet) for the Toucan ecosystem"
 keywords = ["trading","analytics","metrics","finance"]
 categories = ["finance","algorithms"]
 
@@ -21,6 +21,6 @@ fnv = "1.0"
 uuid = { version = "1.0", features = ["serde"] }
 smol_str = { workspace = true }
 prettytable = "0.10"
-"tucano-execution" = { workspace = true }
-"tucano-integration" = { workspace = true }
+"toucan-execution" = { workspace = true }
+"toucan-integration" = { workspace = true }
 rust_decimal_macros = { version = "1" }

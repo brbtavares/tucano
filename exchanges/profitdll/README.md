@@ -1,12 +1,12 @@
 <div align="center">
 
 
-# tucano-profitdll
+# toucan-profitdll
 
 Isolated integration layer (types + abstractions + optional FFI) with **ProfitDLL** (Nelógica).
 
-[![Crates.io](https://img.shields.io/crates/v/tucano-profitdll.svg)](https://crates.io/crates/tucano-profitdll)
-[![Docs](https://img.shields.io/docsrs/tucano-profitdll)](https://docs.rs/tucano-profitdll)
+[![Crates.io](https://img.shields.io/crates/v/toucan-profitdll.svg)](https://crates.io/crates/toucan-profitdll)
+[![Docs](https://img.shields.io/docsrs/toucan-profitdll)](https://docs.rs/toucan-profitdll)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](../LICENSE)
 
 </div>
@@ -29,14 +29,14 @@ Provides:
 
 ```toml
 [dependencies]
-profitdll = { package = "tucano-profitdll", version = "0.1" }
+profitdll = { package = "toucan-profitdll", version = "0.1" }
 ```
 
 To use the real DLL (Windows + installed/licensed DLL):
 
 ```toml
 [dependencies]
-profitdll = { package = "tucano-profitdll", version = "0.1", features = ["real_dll"] }
+profitdll = { package = "toucan-profitdll", version = "0.1", features = ["real_dll"] }
 ```
 
 
@@ -59,7 +59,7 @@ PROFITDLL_FORCE_MOCK=1                  # forces mock
 
 ## 🧪 Quick Example
 ```rust,no_run
-use profitdll::{new_backend, SendOrder}; // alias for tucano-profitdll
+use profitdll::{new_backend, SendOrder}; // alias for toucan-profitdll
 use rust_decimal::Decimal;
 
 #[tokio::main]

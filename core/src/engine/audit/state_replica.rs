@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::{
     engine::{
         audit::{context::EngineContext, AuditTick, EngineAudit},
@@ -11,9 +11,9 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use tracing::{info, info_span};
-use tucano_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
-use tucano_execution::{AccountEvent, InstrumentIndex};
-use tucano_integration::Terminal;
+use toucan_data::{event::MarketEvent, streams::consumer::MarketStreamEvent};
+use toucan_execution::{AccountEvent, InstrumentIndex};
+use toucan_integration::Terminal;
 
 pub const AUDIT_REPLICA_STATE_UPDATE_SPAN_NAME: &str = "audit_replica_state_update_span";
 

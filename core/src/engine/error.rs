@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tucano_integration::Unrecoverable;
+use toucan_integration::Unrecoverable;
 
 /// Placeholder for index-related errors
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Deserialize, Serialize, Error)]

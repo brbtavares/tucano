@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::{
     action::{
         generate_algo_orders::GenerateAlgoOrdersOutput,
@@ -9,11 +9,11 @@ use crate::engine::{
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
-use tucano_execution::{
+use toucan_execution::{
     order::request::{RequestCancel, RequestOpen},
     ExchangeIndex, InstrumentIndex,
 };
-use tucano_integration::collection::one_or_many::OneOrMany;
+use toucan_integration::collection::one_or_many::OneOrMany;
 
 /// Defines the `Engine` action for cancelling open order requests.
 pub mod cancel_orders;

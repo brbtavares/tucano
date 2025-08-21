@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 use crate::engine::{
     action::send_requests::{SendCancelsAndOpensOutput, SendRequests},
     execution_tx::ExecutionTxMap,
@@ -8,8 +8,8 @@ use crate::engine::{
     Engine,
 };
 use std::fmt::Debug;
-use tucano_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
-use tucano_trader::ClosePositionsStrategy;
+use toucan_execution::{AssetIndex, ExchangeIndex, InstrumentIndex};
+use toucan_trader::ClosePositionsStrategy;
 
 /// Trait that defines how the [`Engine`] generates & sends order requests for closing open
 /// positions.

@@ -1,7 +1,7 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use crate::error::ConnectivityError;
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 // B3 execution client implementation using ProfitDLL
 //
 // This module provides the B3ExecutionClient that integrates with the Brazilian
@@ -36,7 +36,7 @@ use tokio::sync::{mpsc, Mutex};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 
 // Legacy: use crate::profitdll::ProfitError;
-use tucano_instrument::{ExchangeId, Side};
+use toucan_instrument::{ExchangeId, Side};
 /// Configuration for B3 execution client
 #[derive(Debug, Clone)]
 pub struct B3Config {
@@ -305,7 +305,7 @@ impl B3ExecutionClient {
         tokio::spawn(async move {
             use crate::order::{id::ClientOrderId, state::Open};
             use crate::trade::{AssetFees, Trade, TradeId};
-            use tucano_integration::snapshot::Snapshot; // needed for constructing OrderSnapshot events
+            use toucan_integration::snapshot::Snapshot; // needed for constructing OrderSnapshot events
             while let Some(evt) = rx.recv().await {
                 match evt {
                     TransportEvent::OrderAccepted { client_cid, id } => {
@@ -625,7 +625,7 @@ mod tests {
     use futures::StreamExt;
     use rust_decimal_macros::dec;
     use tokio::sync::mpsc;
-    use tucano_integration::snapshot::Snapshot;
+    use toucan_integration::snapshot::Snapshot;
 
     #[derive(Debug)]
     struct DummyTransport {
@@ -884,7 +884,7 @@ mod tests {
         } else {
             panic!("expected trade event");
         }
-        if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(
+    if let crate::AccountEventKind::OrderSnapshot(toucan_integration::snapshot::Snapshot(
             order,
         )) = snapshot_evt.kind
         {
@@ -959,7 +959,7 @@ mod tests {
         fn extract_filled(
             evt: &crate::AccountEvent<ExchangeId, String, String>,
         ) -> Option<Decimal> {
-            if let crate::AccountEventKind::OrderSnapshot(tucano_integration::snapshot::Snapshot(
+            if let crate::AccountEventKind::OrderSnapshot(toucan_integration::snapshot::Snapshot(
                 order,
             )) = &evt.kind
             {

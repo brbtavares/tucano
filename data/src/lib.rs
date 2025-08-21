@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 #![forbid(unsafe_code)]
 #![warn(
     unused,
@@ -110,5 +110,5 @@ pub trait MarketStream {
     // Abstract marker trait for market streams.
 }
 
-// TODO: Implementação concreta de schedule_pings_to_exchange deve ser feita na crate exchanges
+// TODO: Concrete implementation of schedule_pings_to_exchange must be done in the exchanges crate
 // pub async fn schedule_pings_to_exchange(...) { unimplemented!() }

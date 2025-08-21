@@ -1,4 +1,4 @@
-// Mini-Disclaimer: Educational/experimental use; not investment advice or affiliation; see README & DISCLAIMER.
+
 
 use super::super::book::BinanceLevel;
 use crate::{
@@ -602,7 +602,7 @@ mod tests {
     }
 
     #[test]
-    fn test_update_tucano_order_book_with_sequenced_updates() {
+    fn test_update_toucan_order_book_with_sequenced_updates() {
         struct TestCase {
             sequencer: BinanceSpotOrderBookL2Sequencer,
             book: OrderBook,
@@ -694,14 +694,14 @@ mod tests {
         for (index, mut test) in tests.into_iter().enumerate() {
             if let Some(valid_update) = test.sequencer.validate_sequence(test.input_update).unwrap()
             {
-                let tucano_update = OrderBookEvent::Update(OrderBook::new(
+                let toucan_update = OrderBookEvent::Update(OrderBook::new(
                     valid_update.last_update_id,
                     None,
                     valid_update.bids,
                     valid_update.asks,
                 ));
 
-                test.book.update(&tucano_update);
+                test.book.update(&toucan_update);
             }
 
             assert_eq!(test.book, test.expected, "TC{index} failed");

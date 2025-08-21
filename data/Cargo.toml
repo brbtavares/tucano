@@ -1,11 +1,11 @@
 [package]
-name = "tucano-data"
+name = "toucan-data"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-repository = "https://github.com/brbtavares/tucano"
+repository = "https://github.com/brbtavares/toucan"
 readme = "README.md"
-documentation = "https://docs.rs/tucano-data"
+documentation = "https://docs.rs/toucan-data"
 description = "Normalized WebSocket ingestion of public data (focus B3)"
 keywords = ["trading","marketdata","websocket","b3"]
 categories = ["finance","api-bindings"]
@@ -17,9 +17,9 @@ all-features = true
 rust_decimal_macros = { workspace = true }
 
 [dependencies]
-## Tucano Ecosystem
-"tucano-integration" = { workspace = true }
-"tucano-instrument" = { workspace = true }
+## Toucan Ecosystem
+"toucan-integration" = { workspace = true }
+"toucan-instrument" = { workspace = true }
 
 ## ProfitDLL
 ## Logging
