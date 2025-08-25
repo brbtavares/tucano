@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 # TUI
-ratatui = "0.26"
+ratatui = "0.29"
 crossterm = "0.27"
 
 # CLI e estruturas
